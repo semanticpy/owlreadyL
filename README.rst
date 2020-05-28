@@ -469,6 +469,7 @@ version 2 - 0.24
 
 * Support intersection of searches (e.g. World.search(...) & World.search(...))
 * Add owlready2.reasoning.JAVA_MEMORY
+* Move development repository to Git
 * Bugfixes:
   - Fix parsing of NTriples files that do not end with a new line
   - Fix KeyError with Prop.python_name when several properties share the same name
