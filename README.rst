@@ -483,7 +483,7 @@ version 2 - 0.24
 Links
 -----
 
-Owlready2 on BitBucket (development repository): https://bitbucket.org/jibalamy/owlready2
+Owlready2 on BitBucket (Git development repository): https://bitbucket.org/jibalamy/owlready2
 
 Owlready2 on PyPI (Python Package Index, stable release): https://pypi.python.org/pypi/Owlready2
 
