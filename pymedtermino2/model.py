@@ -156,7 +156,7 @@ class _DescendantList(FirstList, _LazyListMixin):
     self.include_self = include_self
     self.no_double    = no_double
     
-  def _populate(self):
+  def _get_content(self):
     return list(self.__iter__())
   
   def __iter__(self):

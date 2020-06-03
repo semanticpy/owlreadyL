@@ -478,6 +478,12 @@ version 2 - 0.24
   - Fix World.as_rdflib_graph().get_context(onto) for ontology added after the creation of the RDFLIB graph
   - Fix destroying SWRL rules
   - Fix disjoint with non-atomic classes
+ 
+version 2 - 0.25
+****************
+   
+* Bugfixes:
+  - Fix Concept.descendant_concepts() in PymedTermino2
     
     
 Links
