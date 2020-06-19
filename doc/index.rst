@@ -36,6 +36,7 @@ Table of content
    onto.rst
    class.rst
    properties.rst
+   datatype.rst
    restriction.rst
    disjoint.rst
    mixing_python_owl.rst

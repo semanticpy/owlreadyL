@@ -5817,8 +5817,7 @@ WHERE {
     onto = world.get_ontology("http://www.test.org/t.owl")
     
     with onto:
-      class p(Thing >> Hex):
-        pass
+      class p(Thing >> Hex): pass
       
       class C(Thing): pass
 
