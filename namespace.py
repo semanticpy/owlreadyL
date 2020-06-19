@@ -352,7 +352,7 @@ WHERE q1.p=? AND q1.o=?
           d = None
           Prop = self.world._props.get(k)
           if Prop is None:
-            k2 = _universal_iri_2_abbrev.get(k) or k
+            k2 = _universal_iri_2_abbrev.get(k) or self.world._abbreviate(k, create_if_missing = False) or k
           else:
             if Prop.inverse_property:
               k2 = (Prop.storid, Prop.inverse.storid)
@@ -413,7 +413,7 @@ def _clear_cache():
   for i in d.keys():
     pass
 
-
+WORLDS = weakref.WeakSet()
 class World(_GraphManager):
   def __init__(self, backend = "sqlite", filename = ":memory:", dbname = "owlready2_quadstore", **kargs):
     global owl_world
@@ -431,6 +431,7 @@ class World(_GraphManager):
     if not owl_world is None:
       self._entities.update(owl_world._entities) # add OWL entities in the world
       self._props.update(owl_world._props)
+      WORLDS.add(self)
       
     if filename:
       self.set_backend(backend, filename, dbname, **kargs)
@@ -666,7 +667,6 @@ class World(_GraphManager):
       c = c[0]
       for onto in self.ontologies.values():
         if onto.graph.c == c: return onto._parse_bnode(bnode)
-      
       
      
 class Ontology(Namespace, _GraphManager):

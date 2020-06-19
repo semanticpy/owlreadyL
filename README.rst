@@ -481,7 +481,8 @@ version 2 - 0.24
  
 version 2 - 0.25
 ****************
-   
+
+* Allow the declaration of custom datatypes with declare_datatype()
 * Bugfixes:
   - Fix Concept.descendant_concepts() in PymedTermino2
     

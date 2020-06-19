@@ -183,6 +183,21 @@ def set_datatype_iri(datatype, iri):
   _universal_datatype_2_abbrev         [datatype] =  _universal_iri_2_abbrev[iri]
   _universal_datatype_2_abbrev_unparser[datatype] = (_universal_iri_2_abbrev[iri], unparser)
 
+  
+def declare_datatype(datatype, iri, parser, unparser):
+  storid = _universal_abbrev(iri)
+  from owlready2 import WORLDS
+  for world in WORLDS:
+    world.graph.execute("INSERT INTO resources VALUES (?,?)", (storid, iri))
+    if world.graph._abbreviate_d:
+      world.graph._abbreviate_d  [iri]    = storid
+      world.graph._unabbreviate_d[storid] = iri
+      
+  _universal_datatype_2_abbrev         [datatype] =  storid
+  _universal_datatype_2_abbrev_unparser[datatype] = (storid, unparser)
+  _universal_abbrev_2_datatype         [storid]   =  datatype
+  _universal_abbrev_2_datatype_parser  [storid]   = (datatype, parser)
+  return storid
 
 owl_alldisjointproperties = _universal_abbrev("http://www.w3.org/2002/07/owl#AllDisjointProperties")
 owl_equivalentproperty    = _universal_abbrev("http://www.w3.org/2002/07/owl#equivalentProperty")

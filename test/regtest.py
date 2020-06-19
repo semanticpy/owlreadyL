@@ -5800,6 +5800,41 @@ WHERE {
       s.add((p,o))
     assert s == { (xmls_maxlength, 8) }
 
+  def test_datatype_3(self):
+    class Hex(object):
+      def __init__(self, value):
+        self.value = value
+    
+    def parser(s): return Hex(int(s, 16))
+    def unparser(x):
+      h = hex(x.value)[2:]
+      if len(h) % 2 != 0: return "0%s" % h
+      return h
+    
+    hex_storid = declare_datatype(Hex, "http://www.w3.org/2001/XMLSchema#hexBinary", parser, unparser)
+
+    world = self.new_world()
+    onto = world.get_ontology("http://www.test.org/t.owl")
+    
+    with onto:
+      class p(Thing >> Hex):
+        pass
+      
+      class C(Thing): pass
+
+      c1 = C()
+      c1.p.append(Hex(14))
+      
+    self.assert_triple(c1.storid, p.storid, "0e", hex_storid, world)
+
+    c1 = C = None
+    import owlready2.namespace
+    owlready2.namespace._cache = [None] * 1000
+    import gc
+    gc.collect(); gc.collect(); gc.collect()
+    
+    assert onto.c1.p[0].value == 14
+    
     
   def test_inverse_1(self):
     world = self.new_world()
