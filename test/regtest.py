@@ -3675,6 +3675,27 @@ I took a placebo
 
     assert comment[C.is_a[-1]] == ["A comment on a restriction."]
     
+  def test_annotation_19(self):
+    w = self.new_world()
+    o = w.get_ontology("http://test.org/onto.owl")
+    
+    with o:
+      class p(Thing >> Thing): pass
+      class C(Thing): pass
+      
+      c1 = C()
+      c2 = C()
+      c1.p.append(c2)
+      comment[c1, p, c2].append("commentaire")
+      comment[c1, p, c2].append("commentaire 2")
+      
+      a = comment[comment[c1, p, c2], comment, "commentaire"]
+      a.append("commentaire d'un commentaire")
+      
+      b = comment[a, comment, "commentaire d'un commentaire"]
+      b.append("commentaire d'un commentaire d'un commentaire")
+
+      self.assert_triple(-3, comment.storid, *o._to_rdf("commentaire d'un commentaire d'un commentaire"), world = w)
       
   def test_import_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/2/test_mixed.owl").load()

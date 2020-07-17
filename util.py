@@ -115,7 +115,7 @@ class CallbackListWithLanguage(CallbackList):
   get_lang = __getattr__
   
   def __setattr__(self, attr, values):
-    if attr.startswith("_"):
+    if attr.startswith("_") or (len(attr) > 2):
       super.__setattr__(self, attr, values)
     else:
       if len(attr) != 2: raise AttributeError("'%s' is not a language code (must be 2-char string)!" % attr)

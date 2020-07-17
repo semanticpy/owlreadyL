@@ -483,6 +483,7 @@ version 2 - 0.25
 ****************
 
 * Allow the declaration of custom datatypes with declare_datatype()
+* Support the annotation of annotations (e.g. a comment on a comment)
 * Bugfixes:
   - Fix Concept.descendant_concepts() in PymedTermino2
     
