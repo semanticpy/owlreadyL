@@ -105,7 +105,28 @@ class PropertyClass(EntityClass):
         Prop.class_property_type = class_property_type
         
         
+  def _check_update(Prop, onto):
+    if onto._has_obj_triple_spo(Prop.storid):
+      Prop._range  = None
+      Prop._domain = None
+      type.__setattr__(Prop, "_property_chain", None)
+      
+      Prop._python_name = (Prop.namespace.world._get_data_triple_sp_od(Prop.storid, owlready_python_name) or (Prop.name, ""))[0]
+      
+      _class_property_type = CallbackList(
+        (o for o, d in Prop.namespace.world._get_data_triples_sp_od(Prop.storid, owlready_class_property_type)),
+        Prop, PropertyClass._class_property_type_changed)
+      type.__setattr__(Prop, "_class_property_type", _class_property_type)
+      
+      if issubclass(Prop, ObjectProperty):
+        Prop._define_inverse_property()
         
+      return True
+    
+    if issubclass(Prop, ObjectProperty) and onto._has_obj_triple_spo(None, owl_inverse_property, Prop.storid):
+      Prop._define_inverse_property()
+      return True
+      
   def _add_is_a_triple(Prop, base):
     if   base in _CLASS_PROPS: pass
     elif base in _TYPE_PROPS:  Prop.namespace.ontology._add_obj_triple_spo(Prop.storid, rdf_type       , base.storid)
@@ -422,23 +443,23 @@ class ObjectPropertyClass(ReasoningPropertyClass):
   def __init__(Prop, name, bases, obj_dict):
     super().__init__(name, bases, obj_dict)
     
-    #if issubclass_python(Prop, SymmetricProperty):
     if SymmetricProperty in Prop.is_a:
       type.__setattr__(Prop, "_inverse_storid", Prop.storid)
       Prop._inverse_property = Prop
-      
     else:
-      for inverse_storid in Prop.namespace.world._get_obj_triples_sp_o(Prop.storid, owl_inverse_property):
+      Prop._define_inverse_property()
+
+  def _define_inverse_property(Prop):
+    for inverse_storid in Prop.namespace.world._get_obj_triples_sp_o(Prop.storid, owl_inverse_property):
+      if inverse_storid > 0: break
+    else:
+      for inverse_storid in Prop.namespace.world._get_obj_triples_po_s(owl_inverse_property, Prop.storid):
         if inverse_storid > 0: break
-      else:
-        for inverse_storid in Prop.namespace.world._get_obj_triples_po_s(owl_inverse_property, Prop.storid):
-          if inverse_storid > 0: break
-        else: inverse_storid = 0
-      #inverse_storid = Prop.namespace.world._get_obj_triples_sp_o(Prop.storid, owl_inverse_property) or Prop.namespace.world._get_obj_triples_po_s(owl_inverse_property, Prop.storid)
-      type.__setattr__(Prop, "_inverse_storid", inverse_storid or 0)
-      if inverse_storid: type.__setattr__(Prop, "_inverse_property", Prop.namespace.world._get_by_storid(inverse_storid))
-      else:              type.__setattr__(Prop, "_inverse_property", None)
-      
+      else: inverse_storid = 0
+    type.__setattr__(Prop, "_inverse_storid", inverse_storid or 0)
+    if inverse_storid: type.__setattr__(Prop, "_inverse_property", Prop.namespace.world._get_by_storid(inverse_storid))
+    else:              type.__setattr__(Prop, "_inverse_property", None)
+    
   def get_inverse_property(Prop):
     return Prop._inverse_property
   

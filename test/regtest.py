@@ -2431,6 +2431,37 @@ class Test(BaseTest, unittest.TestCase):
 
     sync_reasoner(world, debug = 0)
     assert p.equivalent_to == [bottomObjectProperty]
+
+  def test_prop_49(self):
+    w1 = self.new_world()
+    onto1 = w1.get_ontology("http://test.org/t1.owl")
+    onto2 = w1.get_ontology("http://test.org/t2.owl")
+    
+    with onto1:
+      class p(Thing >> Thing): pass
+      class i(Thing >> Thing): pass
+      class C(Thing): pass
+      
+    o1 = BytesIO()
+    onto1.save(o1)
+    
+    with onto2:
+      p.inverse = i
+      p.range.append(C)
+      p.domain.append(C)
+      p.python_name = "my_prop"
+      
+    o2 = BytesIO()
+    onto2.save(o2)
+    
+    w2 = self.new_world()
+    onto1 = w2.get_ontology("http://test.org/t1.owl").load(fileobj = BytesIO(o1.getvalue()))
+    onto2 = w2.get_ontology("http://test.org/t2.owl").load(fileobj = BytesIO(o2.getvalue()))
+    
+    assert onto1.C in onto1.p.range
+    assert onto1.C in onto1.p.domain
+    assert onto1.p.python_name == "my_prop"
+    assert onto1.p.inverse     is  onto1.i
     
     
   def test_prop_inverse_1(self):

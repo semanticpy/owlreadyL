@@ -833,8 +833,14 @@ class Ontology(Namespace, _GraphManager):
     return self
   
   def _load_properties(self):
+    # Update props from other ontologies, if needed
+    for prop in list(self.world._props.values()):
+      if prop.namespace.world is owl_world: continue
+      if prop._check_update(self) and _LOG_LEVEL:
+        print("* Owlready2 * Reseting property %s: new triples are now available." % prop)
+        
+    # Loads new props
     props = []
-    #for i in self.graph.execute("select * from quads").fetchall(): print(i)
     for prop_storid in itertools.chain(self._get_obj_triples_po_s(rdf_type, owl_object_property), self._get_obj_triples_po_s(rdf_type, owl_data_property), self._get_obj_triples_po_s(rdf_type, owl_annotation_property)):
       Prop = self.world._get_by_storid(prop_storid)
       python_name_d = self.world._get_data_triple_sp_od(prop_storid, owlready_python_name)

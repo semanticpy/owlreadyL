@@ -486,7 +486,7 @@ version 2 - 0.25
 * Support the annotation of annotations (e.g. a comment on a comment)
 * Bugfixes:
   - Fix Concept.descendant_concepts() in PymedTermino2
-    
+  - Update already loaded properties when new ontologies are loaded
     
 Links
 -----
