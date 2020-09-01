@@ -487,6 +487,8 @@ version 2 - 0.25
 * Bugfixes:
   - Fix Concept.descendant_concepts() in PymedTermino2
   - Update already loaded properties when new ontologies are loaded
+  - Now accept %xx quoted characters in file:// URL
+    
     
 Links
 -----

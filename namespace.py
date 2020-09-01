@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import importlib
+import importlib, urllib.request, urllib.parse
 
 from owlready2.base import *
 from owlready2.base import _universal_abbrev_2_iri, _universal_iri_2_abbrev, _universal_abbrev_2_datatype, _universal_datatype_2_abbrev
@@ -1142,7 +1142,7 @@ class Metadata(object):
   
 def _open_onto_file(base_iri, name, mode = "r", only_local = False):
   if base_iri.endswith("#") or base_iri.endswith("/"): base_iri = base_iri[:-1]
-  if base_iri.startswith("file://"): return open(base_iri[7:], mode)
+  if base_iri.startswith("file://"): return open(urllib.parse.unquote(base_iri[7:]), mode)
   for dir in onto_path:
     for ext in ["", ".owl", ".rdf", ".n3"]:
       filename = os.path.join(dir, "%s%s" % (name, ext))
@@ -1153,7 +1153,7 @@ def _open_onto_file(base_iri, name, mode = "r", only_local = False):
 
 def _get_onto_file(base_iri, name, mode = "r", only_local = False):
   if base_iri.endswith("#") or base_iri.endswith("/"): base_iri = base_iri[:-1]
-  if base_iri.startswith("file://"): return base_iri[7:]
+  if base_iri.startswith("file://"): return urllib.parse.unquote(base_iri[7:])
   
   for dir in onto_path:
     filename = os.path.join(dir, base_iri.rsplit("/", 1)[-1])
