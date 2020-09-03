@@ -558,7 +558,7 @@ class World(_GraphManager):
             Class = self._get_by_storid(obj, None, ThingClass, main_onto)
             if isinstance(Class, EntityClass): types.append(Class)
             elif Class is None: raise ValueError("Cannot get '%s'!" % obj)
-
+            
       if main_type is None: # Try to guess it
         if   self._has_obj_triple_spo(None, rdf_type, storid) or self._has_obj_triple_spo(None, rdfs_subclassof, storid) or self._has_obj_triple_spo(storid, rdfs_subclassof, None): main_type = ThingClass
         elif self._has_obj_triple_spo(storid, None, None) or self._has_data_triple_spod(storid, None, None, None): main_type = Thing
@@ -844,6 +844,9 @@ class Ontology(Namespace, _GraphManager):
     for prop_storid in itertools.chain(self._get_obj_triples_po_s(rdf_type, owl_object_property), self._get_obj_triples_po_s(rdf_type, owl_data_property), self._get_obj_triples_po_s(rdf_type, owl_annotation_property)):
       Prop = self.world._get_by_storid(prop_storid)
       python_name_d = self.world._get_data_triple_sp_od(prop_storid, owlready_python_name)
+      
+      if not isinstance(Prop, PropertyClass):
+        raise TypeError("'%s' belongs to more than one entity types (cannot be both a property and a class/an individual)!" % Prop.iri)
       
       if python_name_d is None:
         props.append(Prop.python_name)
@@ -1165,6 +1168,15 @@ def _get_onto_file(base_iri, name, mode = "r", only_local = False):
   if (mode.startswith("w")): return os.path.join(onto_path[0], "%s.owl" % name)
   raise FileNotFoundError
 
+
+# def convert_with_owlapi(orig, format = "nt"):
+#   import tempfile
+#   fileno, filename = tempfile.mkstemp()
+#   command = [owlready2.JAVA_EXE, "-cp", owlready2.reasoning._HERMIT_CLASSPATH, "Save", orig, format, filename]
+#   print(" ".join(command))
+#   output = subprocess.check_output(command, stderr = subprocess.STDOUT)
+#   return filename
+  
 
 
 owl_world = World(filename = None)
