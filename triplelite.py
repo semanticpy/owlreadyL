@@ -1598,6 +1598,26 @@ UNION ALL SELECT objs.s FROM objs, %s WHERE objs.o=%s.x AND objs.p=%s)
           self.tables.append(transit_name)
           self.conditions.append("q%s.s = %s.x" % (i, transit_name))
           
+      elif k == " subproperty_of":
+        if n > 1: self.conditions.append("q%s.s = q%s.s" % (i, self.target))
+        if   isinstance(v, (_UnionSearchList, _PopulatedUnionSearchList)):
+          for search in v.searches: self.transits.extend(search.transits)
+          self.alternatives.append(v.explode(lambda target: [
+            ["q%s.s = q%s.s" % (i, self.target), "q%s.p = %s" % (i, rdfs_subpropertyof), "q%s.o = q%s.s" % (i, target)] ]))
+        elif isinstance(v, (_SearchMixin, _PopulatedSearchList)):
+          self.conditions.append("q%s.p = %s AND q%s.o = q%s.s" % (i, rdfs_subpropertyof, i, v.target))
+          self.nested_searchs.append(v)
+          self.nested_searchs.extend(v.nested_searchs)
+        else:
+          if isinstance(v, Or): v = "), (".join(str(c.storid) for c in v.Classes)
+          transit_name = "transit_%s" % i
+          self.transits.append("""%s(x)
+AS (      VALUES (%s)
+UNION ALL SELECT objs.s FROM objs, %s WHERE objs.o=%s.x AND objs.p=%s)
+""" % (transit_name, v, transit_name, transit_name, rdfs_subpropertyof))
+          self.tables.append(transit_name)
+          self.conditions.append("q%s.s = %s.x" % (i, transit_name))
+          
       elif isinstance(k, tuple): # Prop with inverse
         if n == 1: # Does not work if it is the FIRST => add a dumb first.
           n += 1

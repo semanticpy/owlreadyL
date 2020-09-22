@@ -167,6 +167,7 @@ arguments. The supported keywords are:
 * **type**, for searching Individuals of a given Class
 * **subclass_of**, for searching subclasses of a given Class
 * **is_a**, for searching both Individuals and subclasses of a given Class
+* **subproperty_of**, for searching subproperty of a given Property
 * any object, data or annotation property name
 
 Special arguments are:

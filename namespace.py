@@ -343,7 +343,7 @@ WHERE q1.p=? AND q1.o=?
       for v in v0:
         if   k == "iri":
           prop_vals.append((" iri", v, None))
-        elif (k == "is_a") or (k == "subclass_of") or (k == "type"):
+        elif (k == "is_a") or (k == "subclass_of") or (k == "type") or (k == "subproperty_of"):
           if   isinstance(v, (_SearchMixin, Or)): v2 = v
           elif isinstance(v, int):                v2 = v
           else:                                   v2 = v.storid
