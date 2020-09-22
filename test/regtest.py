@@ -2587,7 +2587,26 @@ class Test(BaseTest, unittest.TestCase):
     assert c3.sym_prop == []
     assert c3.sub_prop == []
     
+  def test_prop_inverse_10(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/onto.owl")
     
+    with o:
+      class prop (ObjectProperty): pass
+      class iprop(ObjectProperty): inverse_property = prop
+      class C(Thing): pass
+
+      c1 = C()
+      c2 = C()
+      c3 = C()
+      c1.prop.append(c2)
+      c2.prop.append(c3)
+      
+      assert c2.iprop == [c1]
+      assert list( prop.get_relations()) == [(c1, c2), (c2, c3)]
+      assert list(iprop.get_relations()) == [(c2, c1), (c3, c2)]
+      
+      
   def test_construct_not_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
     assert n.NonPizza.__bases__ == (Thing,)

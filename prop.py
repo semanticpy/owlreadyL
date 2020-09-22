@@ -420,6 +420,12 @@ class Property(metaclass = PropertyClass):
       s = Prop.namespace.world._get_by_storid(s)
       o = Prop.namespace.ontology._to_python(o, d)
       yield s, o
+    if Prop._inverse_storid:
+      for s,p,o,d in Prop.namespace.world._get_triples_spod_spod(None, Prop._inverse_storid, None, ""):
+        s = Prop.namespace.world._get_by_storid(s)
+        o = Prop.namespace.ontology._to_python(o, d)
+        yield o, s
+        
       
       
 class ReasoningPropertyClass(PropertyClass):
