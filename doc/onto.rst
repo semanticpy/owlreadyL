@@ -174,6 +174,7 @@ Special arguments are:
 
 * **_use_str_as_loc_str**: whether to treats plain Python strings as strings in any language (default is True)
 * **_case_sensitive**: whether to take lower/upper case into consideration (default is True)
+* **_bm25**: if True, returns a list of (entity, relevance) pairs instead of just the entities (default is False)
 
 The value associated to each keyword can be a single value or a list of several values.
 A star * can be used as a jocker in string values.

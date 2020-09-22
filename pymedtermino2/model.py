@@ -87,8 +87,8 @@ class MetaConcept(ThingClass):
     
   def imply(Class, other): return issubclass(Class, other)
   
-  def search(Class, keywords):
-    return Class.namespace.world.search(label = FTS(keywords), terminology = Class) | Class.namespace.world.search(synonyms = FTS(keywords), terminology = Class)
+  def search(Class, keywords, **kargs):
+    return Class.namespace.world.search(label = FTS(keywords), terminology = Class, **kargs) | Class.namespace.world.search(synonyms = FTS(keywords), terminology = Class, **kargs)
   
   def full_code(Class):
     return u"%s:%s" % (Class.terminology.name, Class.name)

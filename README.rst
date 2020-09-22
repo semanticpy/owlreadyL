@@ -485,6 +485,7 @@ version 2 - 0.25
 * Allow the declaration of custom datatypes with declare_datatype()
 * Support the annotation of annotations (e.g. a comment on a comment)
 * search() now support the "subproperty_of" argument
+* search() now support the "bm25" argument (for full-text searches)
 * Bugfixes:
   - Fix Concept.descendant_concepts() in PymedTermino2
   - Update already loaded properties when new ontologies are loaded

@@ -334,7 +334,7 @@ WHERE q1.p=? AND q1.o=?
         sub = self._get_obj_triple_po_s(rdfs_subclassof, s)
         if sub is None: yield self._parse_bnode(s)
         
-  def search(self, _use_str_as_loc_str = True, _case_sensitive = True, **kargs):
+  def search(self, _use_str_as_loc_str = True, _case_sensitive = True, _bm25 = False, **kargs):
     from owlready2.triplelite import _SearchList, _SearchMixin
     
     prop_vals = []
@@ -375,7 +375,7 @@ WHERE q1.p=? AND q1.o=?
                 
           prop_vals.append((k2, v2, d))
           
-    return _SearchList(self.world, prop_vals, None, _case_sensitive)
+    return _SearchList(self.world, prop_vals, None, _case_sensitive, _bm25)
     
   def search_one(self, **kargs): return self.search(**kargs).first()
   
