@@ -1066,11 +1066,11 @@ class IndividualValueList(CallbackListWithLanguage):
         obj.namespace.ontology._del_obj_triple_spo(obj.storid, self._Prop.storid, removed.storid)
         if inverse:
           obj.namespace.ontology._del_obj_triple_spo(removed.storid, inverse.storid, obj.storid) # Also remove inverse
-        removed.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
+        if hasattr(removed.__dict__, "pop"): removed.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
         
       for added in new - old:
         obj.namespace.ontology._add_obj_triple_spo(obj.storid, self._Prop.storid, added.storid)
-        added.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
+        if hasattr(added.__dict__, "pop"): added.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
         
     elif self._Prop._owl_type == owl_data_property:
       for removed in old - new:
