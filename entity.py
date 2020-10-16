@@ -476,7 +476,9 @@ class ThingClass(EntityClass):
   def instances(Class, world = None):
     if Class.namespace.world is owl_world:
       import owlready2
-      return (world or owlready2.default_world).world.search(type = Class)
+      world = (world or owlready2.default_world).world
+      if Class is Thing: return world.individuals()
+      return world.search(type = Class)
     return Class.namespace.world.search(type = Class)
   
   def direct_instances(Class, world = None):

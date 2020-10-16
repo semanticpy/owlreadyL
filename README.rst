@@ -493,7 +493,9 @@ version 2 - 0.25
   - Improve error message on punned entities
   - Property.get_relations() now considers inverse properties
   - Fix "AttributeError: 'mappingproxy' object has no attribute 'pop'" error
+  - Fix Thing.instances()
     
+  
 Links
 -----
 

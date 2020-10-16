@@ -1523,6 +1523,17 @@ class Test(BaseTest, unittest.TestCase):
     assert set(Person.ancestors()) == set([Person, Thing])
     assert set(Person.ancestors(include_constructs = True)) == set([Person, Thing, love.some(Person)])
     
+  def test_individual_24(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    
+    with onto:
+      class C(Thing): pass
+
+    c = C()
+
+    assert list(Thing.instances(world)) == [c]
+
     
   def test_prop_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
