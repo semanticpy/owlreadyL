@@ -35,7 +35,6 @@ from owlready2.annotation      import *
 from owlready2.reasoning       import *
 from owlready2.reasoning       import _keep_most_specific
 from owlready2.close           import *
-from owlready2.render          import dl_render_concept_str, dl_render_class_str, dl_render_prop_str, dl_render_terminology_str
 
 import owlready2.namespace, owlready2.entity, owlready2.prop, owlready2.class_construct, owlready2.triplelite
 owlready2.triplelite.Or                     = Or

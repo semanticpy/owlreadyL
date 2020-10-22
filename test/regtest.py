@@ -6829,14 +6829,15 @@ http://test.org/t.owl#c1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type
     destroy_entity(r2)
     
     assert len(list(world.variables())) == 0
-
-  def test_render(self):
+    
+    
+  def test_dl_render_1(self):
     world = self.new_world()
     n = world.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/2/test_reasoning.owl").load()
-    print(dl_render_class_str(n.Cheese))
-    assert dl_render_class_str(n.Cheese) == """Cheese ⊑ Topping
+    from owlready2.dl_render import dl_render_class_str
+    assert set(dl_render_class_str(n.Cheese).split("\n")) == set("""Cheese ⊑ Topping
 Cheese ⊓ Meat ⊑ ⊥
-Cheese ⊓ Vegetable ⊑ ⊥"""
+Cheese ⊓ Vegetable ⊑ ⊥""".split("\n"))
 
 
 class Paper(BaseTest, unittest.TestCase):

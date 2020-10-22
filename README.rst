@@ -495,6 +495,11 @@ version 2 - 0.25
   - Fix "AttributeError: 'mappingproxy' object has no attribute 'pop'" error
   - Fix Thing.instances()
     
+version 2 - 0.26
+****************
+
+* Module owlready2.dl_render allows rendering entities to Description Logics (contributed by Simon Bin)
+
   
 Links
 -----
