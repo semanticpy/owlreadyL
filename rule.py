@@ -128,8 +128,8 @@ class Imp(Thing):
           atom, args = atom
           atom = atom.value
           if atom in _BUILTINS:           atom = BuiltinAtom(builtin = atom)
-          elif atom == "SameAs":          atom = SameIndividualAtom()
-          elif atom == "DifferentFrom":   atom = DifferentIndividualsAtom()
+          elif atom.casefold() == "SameAs".casefold():          atom = SameIndividualAtom()
+          elif atom.casefold() == "DifferentFrom".casefold():   atom = DifferentIndividualsAtom()
           elif atom in _NAME_2_DATARANGE: atom = DataRangeAtom(datarange = _NAME_2_DATARANGE[atom])
           else:
             entity = _find_entity(atom, namespaces)
@@ -138,7 +138,7 @@ class Imp(Thing):
             elif isinstance(entity, DataPropertyClass):   atom = DatavaluedPropertyAtom(property_predicate = entity)
             
           arguments = []
-          for arg in args:
+          for arg in args:.casefold()
             if   arg.name == "VAR":   arguments.append(self.get_variable(arg.value))
             elif arg.name == "NAME":  arguments.append(_find_entity(arg.value, namespaces))
             else:                     arguments.append(arg.value)
