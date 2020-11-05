@@ -138,7 +138,7 @@ class Imp(Thing):
             elif isinstance(entity, DataPropertyClass):   atom = DatavaluedPropertyAtom(property_predicate = entity)
             
           arguments = []
-          for arg in args:.casefold()
+          for arg in args:
             if   arg.name == "VAR":   arguments.append(self.get_variable(arg.value))
             elif arg.name == "NAME":  arguments.append(_find_entity(arg.value, namespaces))
             else:                     arguments.append(arg.value)
