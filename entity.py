@@ -575,8 +575,9 @@ class ThingClass(EntityClass):
     if attr in SPECIAL_ATTRS:
       super().__setattr__(attr, value)
       return
-    
-    Prop = Class.namespace.world._props.get(attr)
+
+    if Class.namespace.world is owl_world: Prop = CURRENT_NAMESPACES.get()[-1].world._props.get(attr)
+    else:                                  Prop = Class.namespace.world._props.get(attr)
     if Prop is None: raise AttributeError("'%s' property is not defined." % attr)
     
     if   value is None:               value = []

@@ -257,7 +257,10 @@ class PropertyClass(EntityClass):
     
     
   def __getattr__(Prop, attr):
-    Annot = Prop.namespace.world._props.get(attr)
+    if Prop.namespace.world is owl_world: Annot = CURRENT_NAMESPACES.get()[-1].world._props.get(attr)
+    else:                                 Annot = Prop.namespace.world._props.get(attr)
+    #l = CURRENT_NAMESPACES.get()
+    #Annot = ((l and l[-1]) or Prop.namespace).world._props.get(attr)
     if Annot is None:
       raise AttributeError("'%s' annotation property is not defined." % attr)
     if not issubclass_python(Annot, AnnotationProperty):
