@@ -502,7 +502,8 @@ version 2 - 0.26
 * Bugfixes:
   - Adjustment in the comparison of strings  from SameAs and DiferrentFrom,  allowing equal comparison regardless of the case-sensitive (contributed by Thiago Feijó)
   - Fix transitive equivalent_to relations between classes and OWL constructs
-    
+  - Fix AnnotationProperty[entity] where entity is a predefined OWL entity (e.g. comment or Thing)
+
 
 Links
 -----

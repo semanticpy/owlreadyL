@@ -122,14 +122,10 @@ class AnnotationPropertyClass(PropertyClass):
         r = getattr(entity, Annot._python_name)
         if isinstance(r, list): return r # May not be a list if hacked (e.g. Concept.terminology)
       return Annot._get_values_for_individual(entity)
-      
+    
   def __setitem__(Annot, index, values):
     if not isinstance(values, list): values = [values]
-    
-    if isinstance(index, tuple):
-      Annot[index].reinit(values)
-    else:
-      return setattr(index, Annot.python_name, values)
+    Annot[index].reinit(values)
     
   def __call__(Prop, type, c, *args):
     raise ValueError("Cannot create a property value restriction on an annotation property!")
