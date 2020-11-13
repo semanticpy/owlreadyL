@@ -499,8 +499,11 @@ version 2 - 0.26
 ****************
 
 * Module owlready2.dl_render allows rendering entities to Description Logics (contributed by Simon Bin)
+* Bugfixes:
+  - Adjustment in the comparison of strings  from SameAs and DiferrentFrom,  allowing equal comparison regardless of the case-sensitive (contributed by Thiago Feijó)
+  - Fix transitive equivalent_to relations between classes and OWL constructs
+    
 
-  
 Links
 -----
 

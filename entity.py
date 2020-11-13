@@ -203,11 +203,12 @@ class EntityClass(type):
     old = frozenset(old)
     
     for x in old - new:
-      Class.namespace.ontology._del_obj_triple_spo(Class.storid, Class._owl_equivalent, x    .storid)
+      Class.namespace.ontology._del_obj_triple_spo(Class.storid, Class._owl_equivalent, x.storid)
       if isinstance(x, Construct): x._set_ontology(None)
       else: # Invalidate it
         if not x.equivalent_to._indirect is None:
-          for x2 in x.equivalent_to._indirect: x2._equivalent_to._indirect = None
+          for x2 in x.equivalent_to._indirect:
+            if not isinstance(x2, Construct): x2._equivalent_to._indirect = None
           x._equivalent_to._indirect = None
       
     for x in new - old:
@@ -216,7 +217,8 @@ class EntityClass(type):
           
       else: # Invalidate it
         if not x.equivalent_to._indirect is None:
-          for x2 in x.equivalent_to._indirect: x2._equivalent_to._indirect = None
+          for x2 in x.equivalent_to._indirect:
+            if not isinstance(x2, Construct): x2._equivalent_to._indirect = None
           x._equivalent_to._indirect = None
       Class.namespace.ontology._add_obj_triple_spo(Class.storid, Class._owl_equivalent, x.storid)
       

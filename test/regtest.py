@@ -1129,7 +1129,23 @@ class Test(BaseTest, unittest.TestCase):
     assert owlready2.reasoning._keep_most_specific([A, B, C, AC]) == {AC}
     assert owlready2.reasoning._keep_most_specific([A, B, C, AC, A2]) == {AC, A2}
     
-    
+  def test_class_27(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test")
+    with o:
+      class A(owlready2.Thing): pass
+      class B(owlready2.Thing): pass
+      class C(owlready2.Thing): pass
+      
+      A.equivalent_to = [owlready2.Not(B)]
+      C.equivalent_to = [A]
+      
+      assert set(A.         equivalent_to) == { Not(B) }
+      assert set(A.INDIRECT_equivalent_to) == { Not(B), C }
+      assert set(C.         equivalent_to) == { A }
+      assert set(C.INDIRECT_equivalent_to) == { Not(B), A }
+      
+      
   def test_individual_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
     
