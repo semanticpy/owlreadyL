@@ -19,7 +19,8 @@
 
 import os, os.path, sys, glob
 
-HERE = os.path.dirname(sys.argv[0]) or "."
+# get the absolute path of the directory of this file
+HERE = os.path.dirname(os.path.abspath(sys.modules.get(__name__).__file__))
 
 if len(sys.argv) <= 1: sys.argv.append("install")
 
@@ -28,7 +29,7 @@ import setuptools
 version = open(os.path.join(HERE, "__init__.py")).read().split('VERSION = "', 1)[1].split('"', 1)[0]
 
 def do_setup(extensions):
-  setuptools.setup(
+  return setuptools.setup(
   name         = "Owlready2",
   version      = version,
   license      = "LGPLv3+",
@@ -55,7 +56,7 @@ def do_setup(extensions):
     "Topic :: Software Development :: Libraries :: Python Modules",
     ],
   
-  package_dir  = {"owlready2" : "."},
+  package_dir  = {"owlready2" : HERE},
   packages     = ["owlready2", "owlready2.pymedtermino2"],
   package_data = {"owlready2" : ["owlready_ontology.owl",
                                  "hermit/*.*", "hermit/org/semanticweb/HermiT/*", "hermit/org/semanticweb/HermiT/cli/*", "hermit/org/semanticweb/HermiT/hierarchy/*",
@@ -71,7 +72,21 @@ try:
     setuptools.Extension("owlready2_optimized", ["owlready2_optimized.pyx"]),
   ]
   extensions = Cython.Build.cythonize(extensions, compiler_directives = { "language_level" : 3 })
-  do_setup(extensions)
+  dist = do_setup(extensions)
   
 except:
-  do_setup([])
+  dist = do_setup([])
+
+
+if len(sys.argv) >= 2 and sys.argv[1] == "develop":
+    # `python setup.py develop` (and `pip install -e .`) assumes a directory structure
+    # where the package to be installed lives in a subirectory.
+    # However, to maintain backward compatibility, this package is structured
+    # differently. To allow `python setup.py develop` anyway, we do some manual
+    # tweaks.
+
+    # Note: relative import not possible here due to PEP 338
+    # Thus, we use an absolute import assuming that the name is unique
+    # noinspection PyUnresolvedReferences
+    from setup_develop_mode import install_develop_mode
+    install_develop_mode(dist)
