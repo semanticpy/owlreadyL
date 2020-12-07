@@ -3233,6 +3233,14 @@ I took a placebo
     i = [i for i in onto.e.data_prop if isinstance(i, str)][0]
     assert i.lang == "en"
     
+  def test_hermit_reasoning_1(self):
+    world = self.new_world()
+    ontoA = world.get_ontology("A.owl").load()
+    ontoB = world.get_ontology("B.owl").load()
+    ontoC = world.get_ontology("C.owl").load()
+    
+    sync_reasoner_hermit(world)
+    
     
   def test_disjoint_1(self):
     world = self.new_world()

@@ -119,10 +119,11 @@ def sync_reasoner_hermit(x = None, infer_property_values = False, debug = 1, kee
     else:                          ontology = world.get_ontology(_INFERRENCES_ONTOLOGY)
     
     tmp = tempfile.NamedTemporaryFile("wb", delete = False)
+    def save_filter(graph, s, p, o, d): return p != owl_imports
     if isinstance(x, list):
-      for o in x: o.save(tmp, format = "ntriples", commit = False)
+      for o in x: o.save(tmp, format = "ntriples", filter = save_filter, commit = False)
     else:
-      world.save(tmp, format = "ntriples")
+      world.save(tmp, format = "ntriples", filter = save_filter)
     tmp.close()
     command = [owlready2.JAVA_EXE, "-Xmx%sM" % JAVA_MEMORY, "-cp", _HERMIT_CLASSPATH, "org.semanticweb.HermiT.cli.CommandLine", "-c", "-O", "-D", "-I", "file:///%s" % tmp.name.replace('\\','/')]
     if infer_property_values: command.append("-Y")

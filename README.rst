@@ -504,7 +504,8 @@ version 2 - 0.26
   - Fix transitive equivalent_to relations between classes and OWL constructs
   - Fix AnnotationProperty[entity] where entity is a predefined OWL entity (e.g. comment or Thing)
   - Fix entity.AnnotationProperty where entity is a predefined OWL entity (e.g. comment or Thing)
-
+  - Fix HermiT when reasoning on several ontologies with imports statement
+    
 
 Links
 -----
