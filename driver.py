@@ -259,26 +259,6 @@ def _save(f, format, graph, filter = None):
         
       f.write(("%s %s %s .\n" % (s, p, o)).encode("utf8"))
       
-  elif format == "ntriples-hermit":
-    _unabbreviate = lru_cache(None)(graph._unabbreviate)
-    
-    for s,p,o,d in graph._iter_triples():
-      if filter and callable(filter) and not filter(graph, s, p, o, d): continue
-      if p == owl_imports: continue
-      if   s < 0: s = "_:%s" % (-s)
-      else:       s = "<%s>" % _unabbreviate(s)
-      p = "<%s>" % _unabbreviate(p)
-      if d is None:
-        if o < 0: o = "_:%s" % (-o)
-        else:     o = "<%s>" % _unabbreviate(o)
-      else:
-        if isinstance(o, str):  o = o.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
-        if   isinstance(d, str) and d.startswith("@"): o = '"%s"%s' % (o, d)
-        elif d == 0:                                   o = '"%s"' % o
-        else:                                          o = '"%s"^^<%s>' % (o, _unabbreviate(d)) # Unabbreviate datatype's iri
-        
-      f.write(("%s %s %s .\n" % (s, p, o)).encode("utf8"))
-      
   elif format == "nquads":
     _unabbreviate = lru_cache(None)(graph._unabbreviate)
     
