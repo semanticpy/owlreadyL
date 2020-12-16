@@ -545,7 +545,7 @@ class World(_GraphManager):
       is_a_bnodes = []
       for graph, obj in self._get_obj_triples_sp_co(storid, rdf_type):
         if main_onto is None: main_onto = self.graph.context_2_user_context(graph)
-        if   obj == owl_class:               main_type = ThingClass
+        if   obj == owl_class: main_type = ThingClass
         elif obj == owl_object_property:     main_type = ObjectPropertyClass;     types.append(ObjectProperty)
         elif obj == owl_data_property:       main_type = DataPropertyClass;       types.append(DataProperty)
         elif obj == owl_annotation_property: main_type = AnnotationPropertyClass; types.append(AnnotationProperty)
@@ -554,6 +554,9 @@ class World(_GraphManager):
         else:
           if not main_type: main_type = Thing
           if obj < 0: is_a_bnodes.append((self.graph.context_2_user_context(graph), obj))
+          elif obj == storid:
+            print("* Owlready2 * Warning: ignoring cyclic type of, involving storid %s\n" % storid, file = sys.stderr)
+            continue # A type A
           else:
             Class = self._get_by_storid(obj, None, ThingClass, main_onto)
             if isinstance(Class, EntityClass): types.append(Class)

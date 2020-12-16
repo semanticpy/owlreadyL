@@ -505,6 +505,7 @@ version 2 - 0.26
   - Fix AnnotationProperty[entity] where entity is a predefined OWL entity (e.g. comment or Thing)
   - Fix entity.AnnotationProperty where entity is a predefined OWL entity (e.g. comment or Thing)
   - Fix HermiT when reasoning on several ontologies with imports statement
+  - Ignore "A type A", with a warning
     
 
 Links
