@@ -3239,7 +3239,7 @@ I took a placebo
     ontoB = world.get_ontology("B.owl").load()
     ontoC = world.get_ontology("C.owl").load()
     
-    sync_reasoner_hermit(world)
+    sync_reasoner_hermit(world, debug = 0)
     
     
   def test_disjoint_1(self):
