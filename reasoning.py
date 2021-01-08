@@ -236,8 +236,6 @@ def sync_reasoner_pellet(x = None, infer_property_values = False, infer_data_pro
     if infer_property_values:      command.insert(-2, "--infer-prop-values")
     if infer_data_property_values: command.insert(-2, "--infer-data-prop-values")
 
-    command_explain = [owlready2.JAVA_EXE, "-Xmx%sM" % JAVA_MEMORY, "-cp", _PELLET_CLASSPATH, "pellet.Pellet", "explain", "--ignore-imports", tmp.name]
-
     if debug:
       import time
       print("* Owlready2 * Running Pellet...", file = sys.stderr)
@@ -248,14 +246,15 @@ def sync_reasoner_pellet(x = None, infer_property_values = False, infer_data_pro
       output = subprocess.run(command, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = True).stdout
     except subprocess.CalledProcessError as e:
       if (e.returncode == 1) and (b"ERROR: Ontology is inconsistent" in (e.stderr or b"")): # XXX
-        msg1 = (e.stderr or e.output or b"").decode("utf8")
-
-        process = subprocess.run(command_explain, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = False)
-        msg2 = "This is the output of `pellet explain`: \n {}\n{}". \
-                format(process.stdout.decode("utf8"), process.stderr.decode("utf8"))
-
-        raise OwlReadyInconsistentOntologyError("Java error message is: {}\n{}".format(msg1, msg2))
-
+        msg = (e.stderr or e.output or b"").decode("utf8")
+        
+        if debug > 1:
+          command_explain = [owlready2.JAVA_EXE, "-Xmx%sM" % JAVA_MEMORY, "-cp", _PELLET_CLASSPATH, "pellet.Pellet", "explain", "--ignore-imports", tmp.name]
+          process = subprocess.run(command_explain, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = False)
+          msg += "\nThis is the output of `pellet explain`: \n {}\n{}".format(process.stdout.decode("utf8"), process.stderr.decode("utf8"))
+          
+        raise OwlReadyInconsistentOntologyError("Java error message is: %s" % msg)
+      
       else:
         raise OwlReadyJavaError("Java error message is:\n%s" % (e.stderr or e.output or b"").decode("utf8"))
 
