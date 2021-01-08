@@ -172,7 +172,12 @@ as follows:
    >>> if Nothing in Drug.equivalent_to:
    ...       print("Drug is inconsistent!")
 
-   
+.. note::
+
+   To debug an inconsistent ontology the ``explain`` command of the Pellet reasoner can provide some useful information.
+   The output of this command is shown if for ``sync_reasoner_pellet(...)`` the keyword argument ``debug`` has a value >=2 (default is 1).
+   However, note that the additional call to ``pellet explain`` might take more time than the reasoning itself.
+
 
 Querying inferred classification
 --------------------------------
