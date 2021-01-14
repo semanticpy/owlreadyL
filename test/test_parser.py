@@ -1,6 +1,12 @@
 import sys, os
 
-HERE = os.path.dirname(__file__)
+"""
+This file contains automatic tests for the parser of Owlready2.
+
+For testing dependencies see README.md in this directory.
+"""
+
+HERE = os.path.abspath(os.path.dirname(__file__))
 
 def rm(f):
   try:    os.unlink(f)
@@ -140,9 +146,9 @@ elif len(sys.argv) > 1:
   
 else:
   rdf_files = [
-    "/home/jiba/src/owlready2/test/test.owl",
-    "/home/jiba/src/owlready2/test/test_ns.owl",
-    "/home/jiba/src/owlready2/test/test_breakline.owl",
+    "%s/test.owl" % HERE,
+    "%s/test_ns.owl" % HERE,
+    "%s/test_breakline.owl" % HERE,
     "/home/jiba/telechargements/base_med/aeo.owl",
     "/home/jiba/telechargements/base_med/agro.owl",
     "/home/jiba/telechargements/base_med/bfo.owl",
@@ -152,6 +158,12 @@ else:
     "/home/jiba/telechargements/base_med/vto.owl",
     "/home/jiba/telechargements/base_med/go.owl",
   ]
+
+  # exclude files which are not available
+  # TODO: decide whether to include the .owl files in the repo
+  if not os.path.isdir("/home/jiba"):
+      rdf_files = rdf_files[:3]
+
   force_variant = None
   
 
