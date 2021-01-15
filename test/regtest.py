@@ -2,6 +2,12 @@
 import sys, os, unittest, tempfile, atexit, datetime
 from io import StringIO, BytesIO
 
+"""
+This file contains regression tests for Owlready2.
+
+For testing dependencies see README.md in this directory.
+"""
+
 try:
   import rdflib
 except:
