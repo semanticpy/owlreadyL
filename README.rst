@@ -513,6 +513,7 @@ version 2 - 0.27
 * When Pellet is called with debug >= 2 on an inconsistent ontology, Pellet explain output is displayed (contributed by Carsten Knoll)
 * Update doc theme (contributed by Carsten Knoll)
 * Adapt setup.py to allow 'python setup.py  develop' and 'pip install -e .' (contributed by Carsten Knoll)
+* Add 'url' argument to Ontology.load() method
 
 
 Links

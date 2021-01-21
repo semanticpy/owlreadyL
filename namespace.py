@@ -755,7 +755,7 @@ class Ontology(Namespace, _GraphManager):
         if cached.storid in _entities: del _entities[cached.storid]
         _cache[i] = None
         
-  def load(self, only_local = False, fileobj = None, reload = False, reload_if_newer = False, **args):
+  def load(self, only_local = False, fileobj = None, reload = False, reload_if_newer = False, url = None, **args):
     if self.loaded and (not reload): return self
     if self.base_iri == "http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#":
       f = os.path.join(os.path.dirname(__file__), "owlready_ontology.owl")
@@ -772,7 +772,7 @@ class Ontology(Namespace, _GraphManager):
     if f.startswith("http:") or f.startswith("https:"):
       if  reload or (self.graph.get_last_update_time() == 0.0): # Never loaded
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
-        try:     fileobj = urllib.request.urlopen(f)
+        try:     fileobj = urllib.request.urlopen(url or f)
         except:  raise OwlReadyOntologyParsingError("Cannot download '%s'!" % f)
         try:     new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
         finally: fileobj.close()
