@@ -62,7 +62,7 @@ def all_combinations(l):
 
 class Graph(BaseMainGraph):
   _SUPPORT_CLONING = True
-  def __init__(self, filename, clone = None, exclusive = True, sqlite_tmp_dir = "", world = None, profiling = False):
+  def __init__(self, filename, clone = None, exclusive = True, sqlite_tmp_dir = "", world = None, profiling = False, read_only = False):
     exists        = os.path.exists(filename) and os.path.getsize(filename) # BEFORE creating db!
     initialize_db = (clone is None) and ((filename == ":memory:") or (not exists))
     
@@ -70,14 +70,24 @@ class Graph(BaseMainGraph):
       if exists: raise ValueError("Cannot save existent quadstore in '%s': File already exists! Use a new filename for saving quadstore or, for opening an already existent quadstore, do not create any triple before calling set_backend()." % filename)
       
     if sqlite_tmp_dir: os.environ["SQLITE_TMPDIR"] = sqlite_tmp_dir
-    
-    if exclusive:
-      self.db = sqlite3.connect(filename, isolation_level = "EXCLUSIVE", check_same_thread = False)
-      self.db.execute("""PRAGMA locking_mode = EXCLUSIVE""")
+
+    if read_only:
+      if exclusive:
+        self.db = sqlite3.connect("file:%s?mode=ro" % filename, isolation_level = "EXCLUSIVE", check_same_thread = False, uri = True)
+        self.db.execute("""PRAGMA locking_mode = EXCLUSIVE""")
+        self.db.execute("""PRAGMA query_only = 1""")
+      else:
+        self.db = sqlite3.connect("file:%s?mode=ro" % filename, check_same_thread = False, uri = True)
+        self.db.execute("""PRAGMA locking_mode = NORMAL""")
+        self.db.execute("""PRAGMA query_only = 1""")
     else:
-      self.db = sqlite3.connect(filename, check_same_thread = False)
-      self.db.execute("""PRAGMA locking_mode = NORMAL""")
-    
+      if exclusive:
+        self.db = sqlite3.connect(filename, isolation_level = "EXCLUSIVE", check_same_thread = False)
+        self.db.execute("""PRAGMA locking_mode = EXCLUSIVE""")
+      else:
+        self.db = sqlite3.connect(filename, check_same_thread = False)
+        self.db.execute("""PRAGMA locking_mode = NORMAL""")
+        
     if sqlite_tmp_dir:
       try: self.db.execute("""PRAGMA temp_store_directory = '%s'""" % sqlite_tmp_dir)
       except: pass # Deprecated PRAGMA

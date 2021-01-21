@@ -16,6 +16,8 @@ if "-f" in sys.argv:
   default_world.set_backend(filename = "/home/jiba/tmp/go.sqlite3", exclusive = True) #, profiling = True)
   #default_world.set_backend("postgresql", user = "jiba")
   #default_world.set_backend("mysql", user = "jiba")
+if "-fro" in sys.argv:
+  default_world.set_backend(filename = "/home/jiba/tmp/go.sqlite3", exclusive = True, read_only = True) #, profiling = True)
   
 onto_path.append(os.path.dirname(__file__))
 onto_path.append("/home/jiba/telechargements/base_med/")

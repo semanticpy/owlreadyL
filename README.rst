@@ -514,6 +514,7 @@ version 2 - 0.27
 * Update doc theme (contributed by Carsten Knoll)
 * Adapt setup.py to allow 'python setup.py  develop' and 'pip install -e .' (contributed by Carsten Knoll)
 * Add 'url' argument to Ontology.load() method
+* Add 'read_only' argument to World.set_backend() method
 
 
 Links
