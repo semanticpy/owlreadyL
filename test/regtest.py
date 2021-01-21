@@ -5687,7 +5687,7 @@ multiple lines with " and ’ and \ and & and < and > and é."""
       
     assert p2.has_topping == []
     
-  def test_rdflib_11(self):
+  def test_rdflib_11a(self):
     world = self.new_world()
     onto = world.get_ontology("http://test.org/onto.owl")
     with onto:
@@ -5746,7 +5746,7 @@ WHERE {
     
     assert comment[c2, p, c1] == []
     
-  def test_rdflib_12(self):
+  def test_rdflib_12a(self):
     world = self.new_world()
     onto1 = world.get_ontology("http://test.org/onto1.owl")
 
