@@ -5757,7 +5757,6 @@ WHERE {
     assert not graph.get_context(onto2) is None
 
   def test_rdflib_13(self):
-    # currently there is a bug in graph.query_owlreadyrq) when `list(graph.query(rq)) returns [False] or [True]
     world = self.new_world()
     onto = world.get_ontology("http://test.org/onto.owl")
     with onto:
@@ -5777,14 +5776,11 @@ ask where
 }}
 """
 
-
     res1 = list(graph.query(rq_template.format("C2b", "C2")))
     assert res1 == [True]
 
     res2 = list(graph.query(rq_template.format("C2", "C1")))
     assert res2 == [False]
-
-    # the following is currently broken (TypeError: 'bool' object is not iterable):
 
     res3 = list(graph.query_owlready(rq_template.format("C2b", "C2")))
     assert res3 == [True]
