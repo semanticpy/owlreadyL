@@ -6302,8 +6302,82 @@ WHERE {
       
       c1 = C()
       c1.name = "c1"
+    
+  def test_destroy_19(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test.owl")
+    
+    with o:
+      class p(Thing >> Thing): pass
+      class C(Thing): pass
+      C.is_a.append(p.some(Thing))
       
-
+    destroy_entity(C)
+    assert w.graph.execute("SELECT COUNT() FROM quads WHERE s<0").fetchone()[0] == 0
+    
+  def test_destroy_20(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test.owl")
+    
+    with o:
+      class p(Thing >> Thing): pass
+      class C(Thing): pass
+      class D(Thing): pass
+      C.is_a.append(p.some(Thing))
+      w.graph.execute("INSERT INTO objs VALUES (?,?,?,?)", (1, D.storid, 9, -1))
+      
+    destroy_entity(C)
+    assert w.graph.execute("SELECT COUNT() FROM quads WHERE s<0").fetchone()[0] != 0
+    
+  def test_destroy_21(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test.owl")
+    
+    with o:
+      class p(Thing >> float): pass
+      class C(Thing): pass
+      class D(Thing): equivalent_to = [ C & (p >= 5.0) ]
+      
+    destroy_entity(p)
+    assert w.graph.execute("SELECT COUNT() FROM quads WHERE s<0").fetchone()[0] == 0
+    
+  def test_destroy_22(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test.owl")
+    
+    with o:
+      class p(Thing >> float): pass
+      class C(Thing): pass
+      class D(Thing): equivalent_to = [ C & (p >= 5.0) ]
+      
+    destroy_entity(D)
+    assert w.graph.execute("SELECT COUNT() FROM quads WHERE s<0").fetchone()[0] == 0
+    
+  def test_destroy_23(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test.owl")
+    
+    with o:
+      class p(Thing >> float): pass
+      class C(Thing): pass
+      class D(Thing): equivalent_to = [ (p >= 5.0) ]
+      
+    D.equivalent_to = []
+    assert w.graph.execute("SELECT COUNT() FROM quads WHERE s<0").fetchone()[0] == 0
+    
+  def test_destroy_24(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test.owl")
+    
+    with o:
+      class p(Thing >> float): pass
+      class C(Thing): pass
+      class D(Thing): equivalent_to = [ C & (p >= 5.0) ]
+      
+    destroy_entity(C)
+    assert w.graph.execute("SELECT COUNT() FROM quads WHERE s<0").fetchone()[0] == 0
+    
+    
   def test_observe_1(self):
     import owlready2.observe
 

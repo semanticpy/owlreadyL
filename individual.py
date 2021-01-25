@@ -110,20 +110,22 @@ class Thing(metaclass = ThingClass):
     return _cache_entity(object.__new__(Class))
   
   def __init__(self, name = None, namespace = None, **kargs):
-    self.namespace = namespace or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or self.__class__.namespace
     if   isinstance(name, int):
       is_new = True
+      self.namespace = namespace or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or self.__class__.namespace
       iri = ""
       self._name = ""
     elif name:
       is_new = not "storid" in self.__dict__
+      if is_new: self.namespace = namespace or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or self.__class__.namespace
       iri = "%s%s" % (self.namespace.base_iri, name)
       self._name = name
     else:
       is_new = True
+      self.namespace = namespace or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or self.__class__.namespace
       iri = self.namespace.world._new_numbered_iri("%s%s" % (self.namespace.base_iri, self.generate_default_name()))
       self._name = iri[len(self.namespace.base_iri):]
-      
+    
     if is_new:
       self.__dict__["_equivalent_to"] = None
       if isinstance(name, int): self.storid = name or self.namespace.world.graph.new_blank_node()

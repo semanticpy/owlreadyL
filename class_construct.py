@@ -343,6 +343,10 @@ class Restriction(ClassConstruct):
         else:
           ontology._add_obj_triple_spo(self.storid, owl_onclass, o)
           
+  #def _destroy_triples(self, ontology):
+  #  print("DESTROY TRIPLE", self, self.storid)
+  #  ClassConstruct._destroy_triples(self, ontology)
+    
   def __getattr__(self, attr):
     if   attr == "value":
       if (self.type == SOME) or (self.type == ONLY) or (self.type == HAS_SELF):
@@ -546,10 +550,6 @@ class ConstrainedDatatype(ClassConstruct):
       if not v is None:
         s.append("%s = %s" % (k, v))
     return "ConstrainedDatatype(%s, %s)" % (self.base_datatype.__name__, ", ".join(s))
-  
-  def _destroy_triples(self, ontology):
-    ClassConstruct._destroy_triples(self, ontology)
-    ontology._del_list(self._list_bnode)
     
   def _create_triples (self, ontology):
     ClassConstruct._create_triples(self, ontology)
@@ -567,4 +567,11 @@ class ConstrainedDatatype(ClassConstruct):
         ontology._set_data_triple_spod(bn, rdfs_name, v, value_datatype_abbrev)
         l.append((bn, None))
     ontology._set_list_as_rdf(self._list_bnode, l)
+    
+  def _destroy_triples(self, ontology):
+    ClassConstruct._destroy_triples(self, ontology)
+    for bn, dropit in ontology._parse_list_as_rdf(self._list_bnode):
+      ontology._del_obj_triple_spo(bn, None, None)
+      ontology._del_data_triple_spod(bn, None, None, None)
+    ontology._del_list(self._list_bnode)
     

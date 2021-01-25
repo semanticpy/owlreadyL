@@ -863,6 +863,7 @@ def destroy_entity(e, undoable = False):
   if undoable: undoer_objs = []; undoer_datas = []; undoer_bnodes = []; undoer_relations = []
   else:        undoer_objs = undoer_datas = None; undoer_bnodes = None; undoer_relations = None
   
+  
   if   hasattr(e, "__destroy__"): e.__destroy__(undoer_objs, undoer_datas)
   
   elif isinstance(e, PropertyClass):
@@ -897,10 +898,11 @@ def destroy_entity(e, undoable = False):
     if undoer_bnodes: undoer_bnodes.append(bnode)
     
     class_construct = e.namespace.ontology._bnodes.pop(bnode, None)
-    if class_construct:
+    if class_construct and class_construct.ontology: # No ontology => already removed
       for subclass in class_construct.subclasses(True):
         if   isinstance(subclass, EntityClass) or isinstance(subclass, Thing):
-          subclass.is_a.remove(class_construct)
+          if class_construct in subclass.is_a: subclass.is_a         .remove(class_construct)
+          else:                                subclass.equivalent_to.remove(class_construct)
           
   def relation_updater(destroyed_storids, storid, relations):
     if undoer_relations is not None: undoer_relations.append((destroyed_storids, storid, relations))
@@ -937,7 +939,7 @@ def destroy_entity(e, undoable = False):
           if r:
             try: del o.__dict__[r.python_name]
             except: pass
-          
+
   e.namespace.world.graph.destroy_entity(e.storid, destroyer, relation_updater, undoer_objs, undoer_datas)
   
   e.namespace.world._entities.pop(e.storid, None)

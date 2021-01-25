@@ -515,6 +515,9 @@ version 2 - 0.27
 * Adapt setup.py to allow 'python setup.py  develop' and 'pip install -e .' (contributed by Carsten Knoll)
 * Add 'url' argument to Ontology.load() method
 * Add 'read_only' argument to World.set_backend() method
+* Bugfixes:
+  - Fix destroy_entity(), was leaking some RDF triples when class contructs or equivalent_to were involved
+  - Fix 'Class1(entityname); Class2(entityname)' (was changing the individual namespace)
 
 
 Links

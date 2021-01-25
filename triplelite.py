@@ -873,9 +873,7 @@ SELECT x FROM transit""", (p, o, p)).fetchall(): yield x
         destroyed_storids.add(blank_using)
         self._destroy_collect_storids(destroyed_storids, modified_relations, blank_using)
         
-    for (c, blank_using) in list(self.execute("""SELECT c, s FROM objs WHERE o=? AND p=%s AND s < 0""" % (
-      rdf_first,
-    ), (storid,))):
+    for (c, blank_using) in list(self.execute("""SELECT c, s FROM objs WHERE o=? AND p=%s AND s < 0""" % (rdf_first,), (storid,))):
       list_user, root, previouss, nexts, length = self._rdf_list_analyze(blank_using)
       destroyed_storids.update(previouss)
       destroyed_storids.add   (blank_using)
@@ -884,6 +882,13 @@ SELECT x FROM transit""", (p, o, p)).fetchall(): yield x
         destroyed_storids.add(list_user)
         self._destroy_collect_storids(destroyed_storids, modified_relations, list_user)
         
+    for (c, blank_used) in list(self.execute("""
+SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WHERE q2.o=q1.o) = 1;
+""", (storid,))):
+      if not blank_used in destroyed_storids:
+        destroyed_storids.add(blank_used)
+        self._destroy_collect_storids(destroyed_storids, modified_relations, blank_used)
+      
   def _rdf_list_analyze(self, blank):
     previouss = []
     nexts     = []
@@ -931,6 +936,7 @@ SELECT x FROM transit""", (p, o, p)).fetchall(): yield x
     # Two separate loops because high level destruction must be ended before removing from the quadstore (high level may need the quadstore)
     for storid in destroyed_storids:
       destroyer(storid)
+      
       
     for storid in destroyed_storids:
       if undoer_objs is not None:
