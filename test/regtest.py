@@ -5687,7 +5687,7 @@ multiple lines with " and ’ and \ and & and < and > and é."""
       
     assert p2.has_topping == []
     
-  def test_rdflib_11(self):
+  def test_rdflib_11a(self):
     world = self.new_world()
     onto = world.get_ontology("http://test.org/onto.owl")
     with onto:
@@ -5746,7 +5746,7 @@ WHERE {
     
     assert comment[c2, p, c1] == []
     
-  def test_rdflib_12(self):
+  def test_rdflib_12a(self):
     world = self.new_world()
     onto1 = world.get_ontology("http://test.org/onto1.owl")
 
@@ -5755,8 +5755,39 @@ WHERE {
     
     onto2 = world.get_ontology("http://test.org/onto2.owl")
     assert not graph.get_context(onto2) is None
-    
-    
+
+  def test_rdflib_13(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C1(Thing): pass
+      class C2(Thing): pass
+      class C2b(C2): pass
+
+    graph = world.as_rdflib_graph()
+
+    rq_template = """
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix : <http://test.org/onto.owl#>
+
+ask where
+{{
+    :{} rdfs:subClassOf :{} .
+}}
+"""
+
+    res1 = list(graph.query(rq_template.format("C2b", "C2")))
+    assert res1 == [True]
+
+    res2 = list(graph.query(rq_template.format("C2", "C1")))
+    assert res2 == [False]
+
+    res3 = list(graph.query_owlready(rq_template.format("C2b", "C2")))
+    assert res3 == [True]
+
+    res4 = list(graph.query_owlready(rq_template.format("C2", "C1")))
+    assert res4 == [False]
+
   def test_refactor_1(self):
     world = self.new_world()
     n = world.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test").load()

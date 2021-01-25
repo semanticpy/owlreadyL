@@ -267,7 +267,12 @@ class TripleLiteRDFlibGraph(rdflib.Graph):
   def query_owlready(self, query, *args, **kargs):
     r = self.query(query, *args, **kargs)
     for line in r:
-      line2 = [self._rdflib_2_owlready(i) for i in line]
+      try:
+          iter_line = iter(line)
+      except TypeError:
+          yield line
+          continue
+      line2 = [self._rdflib_2_owlready(i) for i in iter_line]
       yield line2
       
   # def update(self, query, *args, **kargs):
