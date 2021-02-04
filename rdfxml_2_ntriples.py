@@ -169,11 +169,10 @@ def parse(f, on_prepare_obj = None, on_prepare_data = None, new_blank = None, de
       else:
         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#resource")
         if iri:
-          if not ":" in iri:
-            if not iri:                 iri = xml_base
-            elif   iri.startswith("#"): iri = xml_base + iri
-            elif   iri.startswith("/"): iri = xml_dir  + iri[1:]
-            else:                       iri = urllib.parse.urljoin(xml_dir, iri)
+          if   iri.startswith("#"): iri = xml_base + iri
+          elif iri.startswith("/"): iri = xml_dir  + iri[1:]
+          elif not iri:             iri = xml_base
+          elif not ":" in iri:      iri = urllib.parse.urljoin(xml_dir, iri)
           if iri.endswith("/"): iri = iri[:-1]
           stack.append(["Resource", iri])
           
@@ -208,11 +207,10 @@ def parse(f, on_prepare_obj = None, on_prepare_data = None, new_blank = None, de
           if dont_create_unnamed_bn: iri = new_fake_blank()
           else:                      iri = new_blank()
       else:
-        if not ":" in iri:
-          if not iri:                 iri = xml_base
-          elif   iri.startswith("#"): iri = xml_base + iri
-          elif   iri.startswith("/"): iri = xml_dir  + iri[1:]
-          else:                       iri = urllib.parse.urljoin(xml_dir, iri)
+        if   iri.startswith("#"): iri = xml_base + iri
+        elif iri.startswith("/"): iri = xml_dir  + iri[1:]
+        elif not iri:             iri = xml_base
+        elif not ":" in iri:      iri = urllib.parse.urljoin(xml_dir, iri)
           
       if tag != "http://www.w3.org/1999/02/22-rdf-syntax-ns#Description":
         if not is_fake_bn(iri):

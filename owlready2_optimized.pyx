@@ -209,11 +209,10 @@ def parse_rdfxml(object f, list objs, list datas, object insert_objs, object ins
       else:
         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#resource")
         if not iri is None:
-          if not ":" in iri:
-            if not iri:                 iri = xml_base
-            elif   iri.startswith("#"): iri = xml_base + iri
-            elif   iri.startswith("/"): iri = xml_dir  + iri[1:]
-            else:                       iri = urljoin(xml_dir, iri)
+          if   iri.startswith("#"): iri = xml_base + iri
+          elif iri.startswith("/"): iri = xml_dir  + iri[1:]
+          elif not iri:             iri = xml_base
+          elif not ":" in iri:      iri = urljoin(xml_dir, iri)
           if iri.endswith("/"): iri = iri[:-1]
           stack.append(["Resource", _abbreviate(iri)])
           
@@ -246,11 +245,10 @@ def parse_rdfxml(object f, list objs, list datas, object insert_objs, object ins
           iri2 = new_blank()
           if dont_create_unnamed_bn: fake_blanks.add(iri2)
       else:
-        if not ":" in iri:
-          if not iri:                 iri = xml_base
-          elif   iri.startswith("#"): iri = xml_base + iri
-          elif   iri.startswith("/"): iri = xml_dir  + iri[1:]
-          else:                       iri = urljoin(xml_dir, iri)
+        if   iri.startswith("#"): iri = xml_base + iri
+        elif iri.startswith("/"): iri = xml_dir  + iri[1:]
+        elif not iri:             iri = xml_base
+        elif not ":" in iri:      iri = urljoin(xml_dir, iri)
         if iri.endswith("/"): iri = iri[:-1]
         iri2 = _abbreviate(iri)
           

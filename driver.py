@@ -314,28 +314,30 @@ def _save(f, format, graph, filter = None):
       
     xmlns_abbbrevs = set(xmlns.values())
     @lru_cache(None)
-    def abbrev(x):
-      splitted   = x.rsplit("#", 1)
-      splitted_s = x.rsplit("/", 1)
-      if   (len(splitted  ) == 2) and (len(splitted_s) == 2) and (len(splitted[1]) < len(splitted_s[1])):
-        left = splitted[0] + "#"
-      elif (len(splitted_s) == 2):
-        splitted = splitted_s
-        left = splitted[0] + "/"
-      else: return x
+    def abbrev(storid):
+      x = graph._unabbreviate(storid).replace("&", "&amp;")
+      
+      splitat = max(x.rfind("/"), x.rfind("#"), x.rfind(":"))
+      if splitat == -1: return x
+      left = x[:splitat + 1]
       
       xmln = xmlns.get(left)
       if not xmln:
-        xmln0 = splitted[0].rsplit("/", 1)[1][:4]
+        splitted = left[:-1].rsplit("/", 1)
+        if len(splitted) == 2:
+          xmln0 = left[:-1].rsplit("/", 1)[1][:4].replace("#", "").replace(":", "")
+        else:
+          xmln0 = left[:4].replace("#", "").replace(":", "")
+          
         if not xmln0[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ": xmln0 = "x_" + xmln0
         xmln  = xmln0 + ":"
         i = 2
-        while xmln in xmlns_abbbrevs:  xmln = "%s%s:" % (xmln0, i) ; i += 1
+        while xmln in xmlns_abbbrevs: xmln = "%s%s:" % (xmln0, i) ; i += 1
         
         xmlns[left] = xmln = xmln
         xmlns_abbbrevs.add(xmln)
         
-      return xmln + splitted[1]
+      return xmln + x[splitat + 1:]
     
     lines  = []
     liness = {}
@@ -439,13 +441,13 @@ def _save(f, format, graph, filter = None):
         type = "rdf:Description"
         
       if (p == rdf_type) and (type == "rdf:Description") and (not o < 0):
-        t = abbrev(_unabbreviate(o))
+        t = abbrev(o)
         if not t in bad_types:
           type = t
           if type.startswith("#"): type = type[1:]
           continue
         
-      p = abbrev(_unabbreviate(p))
+      p = abbrev(p)
       if p.startswith("#"): p = p[1:]
       
       if  not d is None:

@@ -4978,6 +4978,29 @@ multiple lines with " and ’ and \ and & and < and > and é."""
     # Verify that Cython PYX version is used
     import owlready2_optimized
     
+  def test_format_28(self):
+    world = self.new_world()
+    onto = get_ontology("https://test.org/o#")
+    
+    with onto:
+      class C(Thing): pass
+      class p(Thing >> str): pass
+      
+      c = C()
+      c.p = ["sss"]
+      
+      C.name = "TEST:C"
+      p.name = "TEST:p"
+
+    tmp = self.new_tmp_file()
+    onto.save(tmp)
+
+    world = self.new_world()
+    onto = get_ontology(tmp).load()
+
+    c = list(onto.individuals())[0]
+    assert c.__class__.iri == "https://test.org/o#TEST:C"
+    
     
   def test_search_1(self):
     world = self.new_world()

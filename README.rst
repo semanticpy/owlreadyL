@@ -516,6 +516,7 @@ version 2 - 0.27
 * Add 'url' argument to Ontology.load() method
 * Add 'read_only' argument to World.set_backend() method
 * Bugfixes:
+  - Fix XML/RDF file parsing/writing for entity having ':' in their name
   - Fix destroy_entity(), was leaking some RDF triples when class contructs or equivalent_to were involved
   - Fix 'Class1(entityname); Class2(entityname)' (was changing the individual namespace)
 
