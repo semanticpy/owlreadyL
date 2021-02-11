@@ -257,8 +257,15 @@ class PropertyClass(EntityClass):
     
     
   def __getattr__(Prop, attr):
-    if Prop.namespace.world is owl_world: Annot = CURRENT_NAMESPACES.get()[-1].world._props.get(attr)
-    else:                                 Annot = Prop.namespace.world._props.get(attr)
+    if Prop.namespace.world is owl_world:
+      l = CURRENT_NAMESPACES.get()
+      if l: world = l[-1]
+      else:
+        from owlready2 import default_world
+        world = default_world
+      Annot = world._props.get(attr)
+    else:
+      Annot = Prop.namespace.world._props.get(attr)
     #l = CURRENT_NAMESPACES.get()
     #Annot = ((l and l[-1]) or Prop.namespace).world._props.get(attr)
     if Annot is None:

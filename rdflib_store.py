@@ -104,7 +104,7 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
       triplelite = l[-1].ontology.graph
       
     sub = None
-    if   (s > 0) and (s in self.world._entities):        sub = self.world._entities[s]
+    if   (s > 0) and (s in self.world._entities):    sub = self.world._entities[s]
     elif (s < 0) and (s in triplelite.onto._bnodes): sub = triplelite.onto._bnodes[s]
     if not sub is None:
       prop = self.world._entities.get(p)

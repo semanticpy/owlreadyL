@@ -1,4 +1,5 @@
-# Mon atelier "base de données en ligne"
+# -*- coding: utf-8 -*-
+# Owlready2
 # Copyright (C) 2017-2018 Jean-Baptiste LAMY
 #
 # This is a striped-down and dependence-less version of RPLY, from Alex Gaynor
@@ -436,32 +437,18 @@ class LRParser(object):
           lookahead = None
           continue
         elif t < 0:
-          current_state = self._reduce_production(
-            t, symstack, statestack, state
-          )
+          current_state = self._reduce_production(t, symstack, statestack, state)
           continue
         else:
           n = symstack[-1]
           return n
       else:
-        # TODO: actual error handling here
         if self.error_handler is not None:
           if state is None: self.error_handler(lookahead)
           else:             self.error_handler(state, lookahead)
           raise AssertionError("For now, error_handler must raise.")
         else:
-          #print(self.lr_table.default_reductions)
-          #print()
-          #print(self.lr_table.lr_action)
-          #print()
-          #print(self.lr_table.lr_action[current_state])
-          #print()
-          #print(statestack, current_state)
-          #print()
-          #print(ltype)
-          #print()
-          #print("Error:", lookahead)
-          raise ParsingError(None, lookahead.source_pos)
+          raise ParsingError("Error at %s" % lookahead, lookahead.source_pos)
         
   def _reduce_production(self, t, symstack, statestack, state):
     # reduce a symbol on the stack and emit a production
