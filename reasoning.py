@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import re, tempfile
+import re, tempfile, sys
 
 import owlready2
 from owlready2.base            import *
@@ -80,6 +80,10 @@ _TYPES = { FunctionalProperty, InverseFunctionalProperty, TransitiveProperty, Sy
 
 JAVA_MEMORY = 2000
 
+if (sys.platform == "win32") or (sys.platform == "cygwin"):
+  _subprocess_kargs = { "creationflags" : subprocess.CREATE_NO_WINDOW }
+else:
+  _subprocess_kargs = {}
 
 def _keep_most_specific(s, consider_equivalence = True):
   r = set()
@@ -134,7 +138,7 @@ def sync_reasoner_hermit(x = None, infer_property_values = False, debug = 1, kee
       t0 = time.time()
       
     try:
-      output = subprocess.check_output(command, stderr = subprocess.STDOUT)
+      output = subprocess.check_output(command, stderr = subprocess.STDOUT, **_subprocess_kargs)
     except subprocess.CalledProcessError as e:
       if (e.returncode == 1) and (b"Inconsistent ontology" in (e.output or b"")):
         raise OwlReadyInconsistentOntologyError()
@@ -243,14 +247,14 @@ def sync_reasoner_pellet(x = None, infer_property_values = False, infer_data_pro
       t0 = time.time()
     
     try:
-      output = subprocess.run(command, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = True).stdout
+      output = subprocess.run(command, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = True, **_subprocess_kargs).stdout
     except subprocess.CalledProcessError as e:
       if (e.returncode == 1) and (b"ERROR: Ontology is inconsistent" in (e.stderr or b"")): # XXX
         msg = (e.stderr or e.output or b"").decode("utf8")
         
         if debug > 1:
           command_explain = [owlready2.JAVA_EXE, "-Xmx%sM" % JAVA_MEMORY, "-cp", _PELLET_CLASSPATH, "pellet.Pellet", "explain", "--ignore-imports", tmp.name]
-          process = subprocess.run(command_explain, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = False)
+          process = subprocess.run(command_explain, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = False, **_subprocess_kargs)
           msg += "\nThis is the output of `pellet explain`: \n {}\n{}".format(process.stdout.decode("utf8"), process.stderr.decode("utf8"))
           
         raise OwlReadyInconsistentOntologyError("Java error message is: %s" % msg)

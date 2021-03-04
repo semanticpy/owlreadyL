@@ -910,7 +910,7 @@ struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_2_parse_rdfxml {
 };
 
 
-/* "owlready2_optimized.pyx":536
+/* "owlready2_optimized.pyx":526
  * 
  * 
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):             # <<<<<<<<<<<<<<
@@ -6316,7 +6316,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  *           elif iri.startswith("/"): iri = xml_dir  + iri[1:]
  *           elif not iri:             iri = xml_base             # <<<<<<<<<<<<<<
  *           elif not ":" in iri:      iri = urljoin(xml_dir, iri)
- *           #if iri.startswith("#") or (not ":" in iri):
+ *           if iri.endswith("/"): iri = iri[:-1]
  */
         __pyx_t_5 = (__pyx_v_iri != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_iri) != 0);
         __pyx_t_1 = ((!__pyx_t_5) != 0);
@@ -6331,8 +6331,8 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  *           elif iri.startswith("/"): iri = xml_dir  + iri[1:]
  *           elif not iri:             iri = xml_base
  *           elif not ":" in iri:      iri = urljoin(xml_dir, iri)             # <<<<<<<<<<<<<<
- *           #if iri.startswith("#") or (not ":" in iri):
- *           #  if not iri:                 iri = xml_base
+ *           if iri.endswith("/"): iri = iri[:-1]
+ *           stack.append(["Resource", _abbreviate(iri)])
  */
         if (unlikely(__pyx_v_iri == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
@@ -6395,42 +6395,42 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         }
         __pyx_L8:;
 
-        /* "owlready2_optimized.pyx":221
- *           #  elif   iri.startswith("/"): iri = xml_dir  + iri[1:]
- *           #  else:                       iri = urljoin(xml_dir, iri)
+        /* "owlready2_optimized.pyx":216
+ *           elif not iri:             iri = xml_base
+ *           elif not ":" in iri:      iri = urljoin(xml_dir, iri)
  *           if iri.endswith("/"): iri = iri[:-1]             # <<<<<<<<<<<<<<
  *           stack.append(["Resource", _abbreviate(iri)])
  * 
  */
         if (unlikely(__pyx_v_iri == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "endswith");
-          __PYX_ERR(0, 221, __pyx_L1_error)
+          __PYX_ERR(0, 216, __pyx_L1_error)
         }
-        __pyx_t_5 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, 1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 221, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, 1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 216, __pyx_L1_error)
         if ((__pyx_t_5 != 0)) {
           if (unlikely(__pyx_v_iri == Py_None)) {
             PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-            __PYX_ERR(0, 221, __pyx_L1_error)
+            __PYX_ERR(0, 216, __pyx_L1_error)
           }
-          __pyx_t_2 = __Pyx_PyUnicode_Substring(__pyx_v_iri, 0, -1L); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 221, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyUnicode_Substring(__pyx_v_iri, 0, -1L); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 216, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_2));
           __pyx_t_2 = 0;
         }
 
-        /* "owlready2_optimized.pyx":222
- *           #  else:                       iri = urljoin(xml_dir, iri)
+        /* "owlready2_optimized.pyx":217
+ *           elif not ":" in iri:      iri = urljoin(xml_dir, iri)
  *           if iri.endswith("/"): iri = iri[:-1]
  *           stack.append(["Resource", _abbreviate(iri)])             # <<<<<<<<<<<<<<
  * 
  *         else:
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 222, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 217, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 222, __pyx_L1_error)
+          __PYX_ERR(0, 217, __pyx_L1_error)
         }
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 222, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 217, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_8 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -6444,10 +6444,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         }
         __pyx_t_2 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_8, __pyx_v_iri) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_iri);
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 222, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 217, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = PyList_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 222, __pyx_L1_error)
+        __pyx_t_3 = PyList_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 217, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_INCREF(__pyx_n_u_Resource);
         __Pyx_GIVEREF(__pyx_n_u_Resource);
@@ -6455,7 +6455,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         __Pyx_GIVEREF(__pyx_t_2);
         PyList_SET_ITEM(__pyx_t_3, 1, __pyx_t_2);
         __pyx_t_2 = 0;
-        __pyx_t_4 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 222, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 217, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
         /* "owlready2_optimized.pyx":211
@@ -6468,7 +6468,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         goto __pyx_L7;
       }
 
-      /* "owlready2_optimized.pyx":225
+      /* "owlready2_optimized.pyx":220
  * 
  *         else:
  *           iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#nodeID")             # <<<<<<<<<<<<<<
@@ -6478,15 +6478,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
       /*else*/ {
         if (unlikely(__pyx_v_attrs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-          __PYX_ERR(0, 225, __pyx_L1_error)
+          __PYX_ERR(0, 220, __pyx_L1_error)
         }
-        __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_7, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 225, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_7, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 220, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 225, __pyx_L1_error)
+        if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 220, __pyx_L1_error)
         __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_3));
         __pyx_t_3 = 0;
 
-        /* "owlready2_optimized.pyx":227
+        /* "owlready2_optimized.pyx":222
  *           iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#nodeID")
  * 
  *           if iri:             # <<<<<<<<<<<<<<
@@ -6496,52 +6496,52 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         __pyx_t_5 = (__pyx_v_iri != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_iri) != 0);
         if (__pyx_t_5) {
 
-          /* "owlready2_optimized.pyx":228
+          /* "owlready2_optimized.pyx":223
  * 
  *           if iri:
  *             iri2 = node_2_blanks[iri]             # <<<<<<<<<<<<<<
  *             known_nodes.add(iri2)
  *             stack.append(["Resource", iri2])
  */
-          if (unlikely(!__pyx_cur_scope->__pyx_v_node_2_blanks)) { __Pyx_RaiseClosureNameError("node_2_blanks"); __PYX_ERR(0, 228, __pyx_L1_error) }
-          __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_node_2_blanks, __pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 228, __pyx_L1_error)
+          if (unlikely(!__pyx_cur_scope->__pyx_v_node_2_blanks)) { __Pyx_RaiseClosureNameError("node_2_blanks"); __PYX_ERR(0, 223, __pyx_L1_error) }
+          __pyx_t_3 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_node_2_blanks, __pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 223, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 228, __pyx_L1_error)
+          __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 223, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __pyx_v_iri2 = __pyx_t_7;
 
-          /* "owlready2_optimized.pyx":229
+          /* "owlready2_optimized.pyx":224
  *           if iri:
  *             iri2 = node_2_blanks[iri]
  *             known_nodes.add(iri2)             # <<<<<<<<<<<<<<
  *             stack.append(["Resource", iri2])
  *           else:
  */
-          if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 229, __pyx_L1_error) }
+          if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 224, __pyx_L1_error) }
           if (unlikely(__pyx_cur_scope->__pyx_v_known_nodes == Py_None)) {
             PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "add");
-            __PYX_ERR(0, 229, __pyx_L1_error)
+            __PYX_ERR(0, 224, __pyx_L1_error)
           }
-          __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 229, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 224, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_4 = PySet_Add(__pyx_cur_scope->__pyx_v_known_nodes, __pyx_t_3); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 229, __pyx_L1_error)
+          __pyx_t_4 = PySet_Add(__pyx_cur_scope->__pyx_v_known_nodes, __pyx_t_3); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 224, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-          /* "owlready2_optimized.pyx":230
+          /* "owlready2_optimized.pyx":225
  *             iri2 = node_2_blanks[iri]
  *             known_nodes.add(iri2)
  *             stack.append(["Resource", iri2])             # <<<<<<<<<<<<<<
  *           else:
  *             stack.append(["Literal", ""])
  */
-          if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 230, __pyx_L1_error) }
+          if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 225, __pyx_L1_error) }
           if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
             PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-            __PYX_ERR(0, 230, __pyx_L1_error)
+            __PYX_ERR(0, 225, __pyx_L1_error)
           }
-          __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 230, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 225, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
-          __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 230, __pyx_L1_error)
+          __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 225, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_INCREF(__pyx_n_u_Resource);
           __Pyx_GIVEREF(__pyx_n_u_Resource);
@@ -6549,10 +6549,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
           __Pyx_GIVEREF(__pyx_t_3);
           PyList_SET_ITEM(__pyx_t_2, 1, __pyx_t_3);
           __pyx_t_3 = 0;
-          __pyx_t_4 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 230, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 225, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-          /* "owlready2_optimized.pyx":227
+          /* "owlready2_optimized.pyx":222
  *           iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#nodeID")
  * 
  *           if iri:             # <<<<<<<<<<<<<<
@@ -6562,7 +6562,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
           goto __pyx_L10;
         }
 
-        /* "owlready2_optimized.pyx":232
+        /* "owlready2_optimized.pyx":227
  *             stack.append(["Resource", iri2])
  *           else:
  *             stack.append(["Literal", ""])             # <<<<<<<<<<<<<<
@@ -6570,12 +6570,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  *             current_attrs   = attrs
  */
         /*else*/ {
-          if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 232, __pyx_L1_error) }
+          if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 227, __pyx_L1_error) }
           if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
             PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-            __PYX_ERR(0, 232, __pyx_L1_error)
+            __PYX_ERR(0, 227, __pyx_L1_error)
           }
-          __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 232, __pyx_L1_error)
+          __pyx_t_2 = PyList_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 227, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_INCREF(__pyx_n_u_Literal);
           __Pyx_GIVEREF(__pyx_n_u_Literal);
@@ -6583,10 +6583,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
           __Pyx_INCREF(__pyx_kp_u_);
           __Pyx_GIVEREF(__pyx_kp_u_);
           PyList_SET_ITEM(__pyx_t_2, 1, __pyx_kp_u_);
-          __pyx_t_4 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 232, __pyx_L1_error)
+          __pyx_t_4 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 227, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-          /* "owlready2_optimized.pyx":233
+          /* "owlready2_optimized.pyx":228
  *           else:
  *             stack.append(["Literal", ""])
  *             current_content = ""             # <<<<<<<<<<<<<<
@@ -6598,7 +6598,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
           __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_current_content, __pyx_kp_u_);
           __Pyx_GIVEREF(__pyx_kp_u_);
 
-          /* "owlready2_optimized.pyx":234
+          /* "owlready2_optimized.pyx":229
  *             stack.append(["Literal", ""])
  *             current_content = ""
  *             current_attrs   = attrs             # <<<<<<<<<<<<<<
@@ -6612,27 +6612,27 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         }
         __pyx_L10:;
 
-        /* "owlready2_optimized.pyx":236
+        /* "owlready2_optimized.pyx":231
  *             current_attrs   = attrs
  * 
  *           if (tag == "http://www.w3.org/2002/07/owl#annotatedSource") or (tag == "http://www.w3.org/2002/07/owl#annotatedTarget"):             # <<<<<<<<<<<<<<
  *             dont_create_unnamed_bn = True
  * 
  */
-        __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 236, __pyx_L1_error)
+        __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 231, __pyx_L1_error)
         __pyx_t_9 = (__pyx_t_1 != 0);
         if (!__pyx_t_9) {
         } else {
           __pyx_t_5 = __pyx_t_9;
           goto __pyx_L12_bool_binop_done;
         }
-        __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_2, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 236, __pyx_L1_error)
+        __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_2, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 231, __pyx_L1_error)
         __pyx_t_1 = (__pyx_t_9 != 0);
         __pyx_t_5 = __pyx_t_1;
         __pyx_L12_bool_binop_done:;
         if (__pyx_t_5) {
 
-          /* "owlready2_optimized.pyx":237
+          /* "owlready2_optimized.pyx":232
  * 
  *           if (tag == "http://www.w3.org/2002/07/owl#annotatedSource") or (tag == "http://www.w3.org/2002/07/owl#annotatedTarget"):
  *             dont_create_unnamed_bn = True             # <<<<<<<<<<<<<<
@@ -6641,7 +6641,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
           __pyx_cur_scope->__pyx_v_dont_create_unnamed_bn = 1;
 
-          /* "owlready2_optimized.pyx":236
+          /* "owlready2_optimized.pyx":231
  *             current_attrs   = attrs
  * 
  *           if (tag == "http://www.w3.org/2002/07/owl#annotatedSource") or (tag == "http://www.w3.org/2002/07/owl#annotatedTarget"):             # <<<<<<<<<<<<<<
@@ -6664,7 +6664,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":240
+  /* "owlready2_optimized.pyx":235
  * 
  *     else:
  *       iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#about", None)             # <<<<<<<<<<<<<<
@@ -6674,15 +6674,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
   /*else*/ {
     if (unlikely(__pyx_v_attrs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-      __PYX_ERR(0, 240, __pyx_L1_error)
+      __PYX_ERR(0, 235, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_8, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_8, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 235, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 240, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 235, __pyx_L1_error)
     __pyx_v_iri = ((PyObject*)__pyx_t_2);
     __pyx_t_2 = 0;
 
-    /* "owlready2_optimized.pyx":241
+    /* "owlready2_optimized.pyx":236
  *     else:
  *       iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#about", None)
  *       if iri is None:             # <<<<<<<<<<<<<<
@@ -6693,7 +6693,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
     __pyx_t_1 = (__pyx_t_5 != 0);
     if (__pyx_t_1) {
 
-      /* "owlready2_optimized.pyx":242
+      /* "owlready2_optimized.pyx":237
  *       iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#about", None)
  *       if iri is None:
  *         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#ID", None)             # <<<<<<<<<<<<<<
@@ -6702,15 +6702,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
       if (unlikely(__pyx_v_attrs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-        __PYX_ERR(0, 242, __pyx_L1_error)
+        __PYX_ERR(0, 237, __pyx_L1_error)
       }
-      __pyx_t_2 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_9, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_9, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 237, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 242, __pyx_L1_error)
+      if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 237, __pyx_L1_error)
       __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_2));
       __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":243
+      /* "owlready2_optimized.pyx":238
  *       if iri is None:
  *         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#ID", None)
  *         if iri: iri = "#%s" % iri             # <<<<<<<<<<<<<<
@@ -6719,13 +6719,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
       __pyx_t_1 = (__pyx_v_iri != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_iri) != 0);
       if (__pyx_t_1) {
-        __pyx_t_2 = PyUnicode_Format(__pyx_kp_u_s_3, __pyx_v_iri); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 243, __pyx_L1_error)
+        __pyx_t_2 = PyUnicode_Format(__pyx_kp_u_s_3, __pyx_v_iri); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 238, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_2));
         __pyx_t_2 = 0;
       }
 
-      /* "owlready2_optimized.pyx":241
+      /* "owlready2_optimized.pyx":236
  *     else:
  *       iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#about", None)
  *       if iri is None:             # <<<<<<<<<<<<<<
@@ -6734,7 +6734,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
     }
 
-    /* "owlready2_optimized.pyx":244
+    /* "owlready2_optimized.pyx":239
  *         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#ID", None)
  *         if iri: iri = "#%s" % iri
  *       if iri is None:             # <<<<<<<<<<<<<<
@@ -6745,7 +6745,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
     __pyx_t_5 = (__pyx_t_1 != 0);
     if (__pyx_t_5) {
 
-      /* "owlready2_optimized.pyx":245
+      /* "owlready2_optimized.pyx":240
  *         if iri: iri = "#%s" % iri
  *       if iri is None:
  *         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#nodeID")             # <<<<<<<<<<<<<<
@@ -6754,15 +6754,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
       if (unlikely(__pyx_v_attrs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-        __PYX_ERR(0, 245, __pyx_L1_error)
+        __PYX_ERR(0, 240, __pyx_L1_error)
       }
-      __pyx_t_2 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_7, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 245, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_7, Py_None); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 240, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 245, __pyx_L1_error)
+      if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 240, __pyx_L1_error)
       __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_2));
       __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":246
+      /* "owlready2_optimized.pyx":241
  *       if iri is None:
  *         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#nodeID")
  *         if iri:             # <<<<<<<<<<<<<<
@@ -6772,38 +6772,38 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
       __pyx_t_5 = (__pyx_v_iri != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_iri) != 0);
       if (__pyx_t_5) {
 
-        /* "owlready2_optimized.pyx":247
+        /* "owlready2_optimized.pyx":242
  *         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#nodeID")
  *         if iri:
  *           iri2 = node_2_blanks[iri]             # <<<<<<<<<<<<<<
  *           known_nodes.add(iri2)
  *         else:
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_node_2_blanks)) { __Pyx_RaiseClosureNameError("node_2_blanks"); __PYX_ERR(0, 247, __pyx_L1_error) }
-        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_node_2_blanks, __pyx_v_iri); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 247, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_node_2_blanks)) { __Pyx_RaiseClosureNameError("node_2_blanks"); __PYX_ERR(0, 242, __pyx_L1_error) }
+        __pyx_t_2 = __Pyx_PyObject_Dict_GetItem(__pyx_cur_scope->__pyx_v_node_2_blanks, __pyx_v_iri); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 242, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 247, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 242, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_v_iri2 = __pyx_t_7;
 
-        /* "owlready2_optimized.pyx":248
+        /* "owlready2_optimized.pyx":243
  *         if iri:
  *           iri2 = node_2_blanks[iri]
  *           known_nodes.add(iri2)             # <<<<<<<<<<<<<<
  *         else:
  *           iri2 = new_blank()
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 248, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 243, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_known_nodes == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "add");
-          __PYX_ERR(0, 248, __pyx_L1_error)
+          __PYX_ERR(0, 243, __pyx_L1_error)
         }
-        __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 248, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 243, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_4 = PySet_Add(__pyx_cur_scope->__pyx_v_known_nodes, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 248, __pyx_L1_error)
+        __pyx_t_4 = PySet_Add(__pyx_cur_scope->__pyx_v_known_nodes, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 243, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "owlready2_optimized.pyx":246
+        /* "owlready2_optimized.pyx":241
  *       if iri is None:
  *         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#nodeID")
  *         if iri:             # <<<<<<<<<<<<<<
@@ -6813,7 +6813,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         goto __pyx_L17;
       }
 
-      /* "owlready2_optimized.pyx":250
+      /* "owlready2_optimized.pyx":245
  *           known_nodes.add(iri2)
  *         else:
  *           iri2 = new_blank()             # <<<<<<<<<<<<<<
@@ -6821,7 +6821,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  *       else:
  */
       /*else*/ {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 250, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 245, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
         __pyx_t_3 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_8 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -6835,14 +6835,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         }
         __pyx_t_2 = (__pyx_t_8) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_8) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 250, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 245, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 250, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 245, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_v_iri2 = __pyx_t_7;
 
-        /* "owlready2_optimized.pyx":251
+        /* "owlready2_optimized.pyx":246
  *         else:
  *           iri2 = new_blank()
  *           if dont_create_unnamed_bn: fake_blanks.add(iri2)             # <<<<<<<<<<<<<<
@@ -6851,20 +6851,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
         __pyx_t_5 = (__pyx_cur_scope->__pyx_v_dont_create_unnamed_bn != 0);
         if (__pyx_t_5) {
-          if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 251, __pyx_L1_error) }
+          if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 246, __pyx_L1_error) }
           if (unlikely(__pyx_cur_scope->__pyx_v_fake_blanks == Py_None)) {
             PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "add");
-            __PYX_ERR(0, 251, __pyx_L1_error)
+            __PYX_ERR(0, 246, __pyx_L1_error)
           }
-          __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 251, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 246, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
-          __pyx_t_4 = PySet_Add(__pyx_cur_scope->__pyx_v_fake_blanks, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 251, __pyx_L1_error)
+          __pyx_t_4 = PySet_Add(__pyx_cur_scope->__pyx_v_fake_blanks, __pyx_t_2); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 246, __pyx_L1_error)
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         }
       }
       __pyx_L17:;
 
-      /* "owlready2_optimized.pyx":244
+      /* "owlready2_optimized.pyx":239
  *         iri = attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#ID", None)
  *         if iri: iri = "#%s" % iri
  *       if iri is None:             # <<<<<<<<<<<<<<
@@ -6874,7 +6874,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
       goto __pyx_L16;
     }
 
-    /* "owlready2_optimized.pyx":253
+    /* "owlready2_optimized.pyx":248
  *           if dont_create_unnamed_bn: fake_blanks.add(iri2)
  *       else:
  *         if   iri.startswith("#"): iri = xml_base + iri             # <<<<<<<<<<<<<<
@@ -6884,19 +6884,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
     /*else*/ {
       if (unlikely(__pyx_v_iri == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "startswith");
-        __PYX_ERR(0, 253, __pyx_L1_error)
+        __PYX_ERR(0, 248, __pyx_L1_error)
       }
-      __pyx_t_5 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__2, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 253, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__2, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 248, __pyx_L1_error)
       if ((__pyx_t_5 != 0)) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_xml_base)) { __Pyx_RaiseClosureNameError("xml_base"); __PYX_ERR(0, 253, __pyx_L1_error) }
-        __pyx_t_2 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_xml_base, __pyx_v_iri); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 253, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_xml_base)) { __Pyx_RaiseClosureNameError("xml_base"); __PYX_ERR(0, 248, __pyx_L1_error) }
+        __pyx_t_2 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_xml_base, __pyx_v_iri); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 248, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_2));
         __pyx_t_2 = 0;
         goto __pyx_L19;
       }
 
-      /* "owlready2_optimized.pyx":254
+      /* "owlready2_optimized.pyx":249
  *       else:
  *         if   iri.startswith("#"): iri = xml_base + iri
  *         elif iri.startswith("/"): iri = xml_dir  + iri[1:]             # <<<<<<<<<<<<<<
@@ -6905,18 +6905,18 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
       if (unlikely(__pyx_v_iri == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "startswith");
-        __PYX_ERR(0, 254, __pyx_L1_error)
+        __PYX_ERR(0, 249, __pyx_L1_error)
       }
-      __pyx_t_5 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 254, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 249, __pyx_L1_error)
       if ((__pyx_t_5 != 0)) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_xml_dir)) { __Pyx_RaiseClosureNameError("xml_dir"); __PYX_ERR(0, 254, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_xml_dir)) { __Pyx_RaiseClosureNameError("xml_dir"); __PYX_ERR(0, 249, __pyx_L1_error) }
         if (unlikely(__pyx_v_iri == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 254, __pyx_L1_error)
+          __PYX_ERR(0, 249, __pyx_L1_error)
         }
-        __pyx_t_2 = __Pyx_PyUnicode_Substring(__pyx_v_iri, 1, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 254, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyUnicode_Substring(__pyx_v_iri, 1, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 249, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_3 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_xml_dir, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 254, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_xml_dir, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 249, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_3));
@@ -6924,39 +6924,39 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         goto __pyx_L19;
       }
 
-      /* "owlready2_optimized.pyx":255
+      /* "owlready2_optimized.pyx":250
  *         if   iri.startswith("#"): iri = xml_base + iri
  *         elif iri.startswith("/"): iri = xml_dir  + iri[1:]
  *         elif not iri:             iri = xml_base             # <<<<<<<<<<<<<<
  *         elif not ":" in iri:      iri = urljoin(xml_dir, iri)
- *         #if iri.startswith("#") or (not ":" in iri):
+ *         if iri.endswith("/"): iri = iri[:-1]
  */
       __pyx_t_5 = (__pyx_v_iri != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_iri) != 0);
       __pyx_t_1 = ((!__pyx_t_5) != 0);
       if (__pyx_t_1) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_xml_base)) { __Pyx_RaiseClosureNameError("xml_base"); __PYX_ERR(0, 255, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_xml_base)) { __Pyx_RaiseClosureNameError("xml_base"); __PYX_ERR(0, 250, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v_xml_base);
         __Pyx_DECREF_SET(__pyx_v_iri, __pyx_cur_scope->__pyx_v_xml_base);
         goto __pyx_L19;
       }
 
-      /* "owlready2_optimized.pyx":256
+      /* "owlready2_optimized.pyx":251
  *         elif iri.startswith("/"): iri = xml_dir  + iri[1:]
  *         elif not iri:             iri = xml_base
  *         elif not ":" in iri:      iri = urljoin(xml_dir, iri)             # <<<<<<<<<<<<<<
- *         #if iri.startswith("#") or (not ":" in iri):
- *         #  if not iri:                 iri = xml_base
+ *         if iri.endswith("/"): iri = iri[:-1]
+ *         iri2 = _abbreviate(iri)
  */
       if (unlikely(__pyx_v_iri == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 256, __pyx_L1_error)
+        __PYX_ERR(0, 251, __pyx_L1_error)
       }
-      __pyx_t_1 = (__Pyx_PyUnicode_ContainsTF(__pyx_kp_u__11, __pyx_v_iri, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 256, __pyx_L1_error)
+      __pyx_t_1 = (__Pyx_PyUnicode_ContainsTF(__pyx_kp_u__11, __pyx_v_iri, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 251, __pyx_L1_error)
       __pyx_t_5 = (__pyx_t_1 != 0);
       if (__pyx_t_5) {
-        __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_urljoin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 256, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_urljoin); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 251, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_xml_dir)) { __Pyx_RaiseClosureNameError("xml_dir"); __PYX_ERR(0, 256, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_xml_dir)) { __Pyx_RaiseClosureNameError("xml_dir"); __PYX_ERR(0, 251, __pyx_L1_error) }
         __pyx_t_8 = NULL;
         __pyx_t_7 = 0;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -6972,7 +6972,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_2)) {
           PyObject *__pyx_temp[3] = {__pyx_t_8, __pyx_cur_scope->__pyx_v_xml_dir, __pyx_v_iri};
-          __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 256, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 251, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_GOTREF(__pyx_t_3);
         } else
@@ -6980,13 +6980,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_2)) {
           PyObject *__pyx_temp[3] = {__pyx_t_8, __pyx_cur_scope->__pyx_v_xml_dir, __pyx_v_iri};
-          __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 256, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_2, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 251, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
           __Pyx_GOTREF(__pyx_t_3);
         } else
         #endif
         {
-          __pyx_t_6 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 256, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 251, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           if (__pyx_t_8) {
             __Pyx_GIVEREF(__pyx_t_8); PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_8); __pyx_t_8 = NULL;
@@ -6997,48 +6997,48 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
           __Pyx_INCREF(__pyx_v_iri);
           __Pyx_GIVEREF(__pyx_v_iri);
           PyTuple_SET_ITEM(__pyx_t_6, 1+__pyx_t_7, __pyx_v_iri);
-          __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 256, __pyx_L1_error)
+          __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_t_6, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 251, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_3);
           __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         }
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 256, __pyx_L1_error)
+        if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 251, __pyx_L1_error)
         __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_3));
         __pyx_t_3 = 0;
       }
       __pyx_L19:;
 
-      /* "owlready2_optimized.pyx":262
- *         #  elif   iri.startswith("/"): iri = xml_dir  + iri[1:]
- *         #  else:                       iri = urljoin(xml_dir, iri)
+      /* "owlready2_optimized.pyx":252
+ *         elif not iri:             iri = xml_base
+ *         elif not ":" in iri:      iri = urljoin(xml_dir, iri)
  *         if iri.endswith("/"): iri = iri[:-1]             # <<<<<<<<<<<<<<
  *         iri2 = _abbreviate(iri)
  * 
  */
       if (unlikely(__pyx_v_iri == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "endswith");
-        __PYX_ERR(0, 262, __pyx_L1_error)
+        __PYX_ERR(0, 252, __pyx_L1_error)
       }
-      __pyx_t_5 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, 1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 262, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, 1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 252, __pyx_L1_error)
       if ((__pyx_t_5 != 0)) {
         if (unlikely(__pyx_v_iri == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 262, __pyx_L1_error)
+          __PYX_ERR(0, 252, __pyx_L1_error)
         }
-        __pyx_t_3 = __Pyx_PyUnicode_Substring(__pyx_v_iri, 0, -1L); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 262, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyUnicode_Substring(__pyx_v_iri, 0, -1L); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 252, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_3));
         __pyx_t_3 = 0;
       }
 
-      /* "owlready2_optimized.pyx":263
- *         #  else:                       iri = urljoin(xml_dir, iri)
+      /* "owlready2_optimized.pyx":253
+ *         elif not ":" in iri:      iri = urljoin(xml_dir, iri)
  *         if iri.endswith("/"): iri = iri[:-1]
  *         iri2 = _abbreviate(iri)             # <<<<<<<<<<<<<<
  * 
  *       if tag != "http://www.w3.org/1999/02/22-rdf-syntax-ns#Description":
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 263, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 253, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_2 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -7052,60 +7052,60 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
       }
       __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_v_iri) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_iri);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 263, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 253, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 263, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 253, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_v_iri2 = __pyx_t_7;
     }
     __pyx_L16:;
 
-    /* "owlready2_optimized.pyx":265
+    /* "owlready2_optimized.pyx":255
  *         iri2 = _abbreviate(iri)
  * 
  *       if tag != "http://www.w3.org/1999/02/22-rdf-syntax-ns#Description":             # <<<<<<<<<<<<<<
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag)))
  */
-    __pyx_t_5 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_10, Py_NE)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 265, __pyx_L1_error)
+    __pyx_t_5 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_10, Py_NE)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 255, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_5 != 0);
     if (__pyx_t_1) {
 
-      /* "owlready2_optimized.pyx":266
+      /* "owlready2_optimized.pyx":256
  * 
  *       if tag != "http://www.w3.org/1999/02/22-rdf-syntax-ns#Description":
  *         if not iri2 in fake_blanks:             # <<<<<<<<<<<<<<
  *           objs.append((iri2, _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag)))
  *         if iri2 < 0:
  */
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 266, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 256, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 266, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 256, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_fake_blanks == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 266, __pyx_L1_error)
+        __PYX_ERR(0, 256, __pyx_L1_error)
       }
-      __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_t_3, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 266, __pyx_L1_error)
+      __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_t_3, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 256, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_5 = (__pyx_t_1 != 0);
       if (__pyx_t_5) {
 
-        /* "owlready2_optimized.pyx":267
+        /* "owlready2_optimized.pyx":257
  *       if tag != "http://www.w3.org/1999/02/22-rdf-syntax-ns#Description":
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag)))             # <<<<<<<<<<<<<<
  *         if iri2 < 0:
  *           add_to_bn(bns, known_nodes,  iri2, "REL", _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag))
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 267, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 257, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 267, __pyx_L1_error)
+          __PYX_ERR(0, 257, __pyx_L1_error)
         }
-        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 267, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 257, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 267, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 257, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_8 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -7119,10 +7119,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         }
         __pyx_t_2 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_8, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_11) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_11);
         __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 267, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 257, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 267, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 257, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_8 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_10 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
@@ -7136,10 +7136,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         }
         __pyx_t_6 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_10, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-        if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 267, __pyx_L1_error)
+        if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 257, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-        __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 267, __pyx_L1_error)
+        __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 257, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_8);
         __Pyx_GIVEREF(__pyx_t_3);
         PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_3);
@@ -7150,10 +7150,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         __pyx_t_3 = 0;
         __pyx_t_2 = 0;
         __pyx_t_6 = 0;
-        __pyx_t_4 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_8); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 267, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_8); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 257, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-        /* "owlready2_optimized.pyx":266
+        /* "owlready2_optimized.pyx":256
  * 
  *       if tag != "http://www.w3.org/1999/02/22-rdf-syntax-ns#Description":
  *         if not iri2 in fake_blanks:             # <<<<<<<<<<<<<<
@@ -7162,7 +7162,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
       }
 
-      /* "owlready2_optimized.pyx":268
+      /* "owlready2_optimized.pyx":258
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag)))
  *         if iri2 < 0:             # <<<<<<<<<<<<<<
@@ -7172,20 +7172,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
       __pyx_t_5 = ((__pyx_v_iri2 < 0) != 0);
       if (__pyx_t_5) {
 
-        /* "owlready2_optimized.pyx":269
+        /* "owlready2_optimized.pyx":259
  *           objs.append((iri2, _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag)))
  *         if iri2 < 0:
  *           add_to_bn(bns, known_nodes,  iri2, "REL", _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag))             # <<<<<<<<<<<<<<
  * 
  *       if stack[-1][0] == "Collection":
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 269, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 259, __pyx_L1_error) }
         __pyx_t_8 = __pyx_cur_scope->__pyx_v_bns;
         __Pyx_INCREF(__pyx_t_8);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 269, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 259, __pyx_L1_error) }
         __pyx_t_6 = __pyx_cur_scope->__pyx_v_known_nodes;
         __Pyx_INCREF(__pyx_t_6);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 269, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 259, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_10 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -7199,12 +7199,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         }
         __pyx_t_2 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_10, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_11) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_11);
         __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 269, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 259, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 269, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 259, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_10 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -7218,7 +7218,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         }
         __pyx_t_2 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_10, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 259, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __pyx_f_19owlready2_optimized_add_to_bn(__pyx_t_8, ((PyObject*)__pyx_t_6), __pyx_v_iri2, __pyx_n_u_REL, __pyx_t_7, __pyx_t_2, NULL);
@@ -7226,7 +7226,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "owlready2_optimized.pyx":268
+        /* "owlready2_optimized.pyx":258
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag)))
  *         if iri2 < 0:             # <<<<<<<<<<<<<<
@@ -7235,7 +7235,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
       }
 
-      /* "owlready2_optimized.pyx":265
+      /* "owlready2_optimized.pyx":255
  *         iri2 = _abbreviate(iri)
  * 
  *       if tag != "http://www.w3.org/1999/02/22-rdf-syntax-ns#Description":             # <<<<<<<<<<<<<<
@@ -7244,51 +7244,51 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  */
     }
 
-    /* "owlready2_optimized.pyx":271
+    /* "owlready2_optimized.pyx":261
  *           add_to_bn(bns, known_nodes,  iri2, "REL", _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag))
  * 
  *       if stack[-1][0] == "Collection":             # <<<<<<<<<<<<<<
  *         stack[-1][1].append(iri2)
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 271, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 261, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 271, __pyx_L1_error)
+      __PYX_ERR(0, 261, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 271, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 261, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 271, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 261, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_5 = (__Pyx_PyUnicode_Equals(__pyx_t_6, __pyx_n_u_Collection, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 271, __pyx_L1_error)
+    __pyx_t_5 = (__Pyx_PyUnicode_Equals(__pyx_t_6, __pyx_n_u_Collection, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 261, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (__pyx_t_5) {
 
-      /* "owlready2_optimized.pyx":272
+      /* "owlready2_optimized.pyx":262
  * 
  *       if stack[-1][0] == "Collection":
  *         stack[-1][1].append(iri2)             # <<<<<<<<<<<<<<
  * 
  *       else:
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 272, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 262, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 272, __pyx_L1_error)
+        __PYX_ERR(0, 262, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 262, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_6, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_6, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 262, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 262, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_4 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_6); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 272, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_6); if (unlikely(__pyx_t_4 == ((int)-1))) __PYX_ERR(0, 262, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "owlready2_optimized.pyx":271
+      /* "owlready2_optimized.pyx":261
  *           add_to_bn(bns, known_nodes,  iri2, "REL", _abbreviate("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), _abbreviate(tag))
  * 
  *       if stack[-1][0] == "Collection":             # <<<<<<<<<<<<<<
@@ -7298,7 +7298,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
       goto __pyx_L24;
     }
 
-    /* "owlready2_optimized.pyx":275
+    /* "owlready2_optimized.pyx":265
  * 
  *       else:
  *         if stack[-1][0] == "Literal": stack[-1][0] = "Resource"             # <<<<<<<<<<<<<<
@@ -7306,47 +7306,47 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
  * 
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 275, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 265, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 275, __pyx_L1_error)
+        __PYX_ERR(0, 265, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 275, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 265, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_6, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 275, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_6, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 265, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_5 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_Literal, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 275, __pyx_L1_error)
+      __pyx_t_5 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_Literal, Py_EQ)); if (unlikely(__pyx_t_5 < 0)) __PYX_ERR(0, 265, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       if (__pyx_t_5) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 275, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 265, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 275, __pyx_L1_error)
+          __PYX_ERR(0, 265, __pyx_L1_error)
         }
-        __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 275, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 265, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        if (unlikely(__Pyx_SetItemInt(__pyx_t_2, 0, __pyx_n_u_Resource, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 275, __pyx_L1_error)
+        if (unlikely(__Pyx_SetItemInt(__pyx_t_2, 0, __pyx_n_u_Resource, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 265, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       }
 
-      /* "owlready2_optimized.pyx":276
+      /* "owlready2_optimized.pyx":266
  *       else:
  *         if stack[-1][0] == "Literal": stack[-1][0] = "Resource"
  *         stack[-1][1] = iri2             # <<<<<<<<<<<<<<
  * 
  * 
  */
-      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 276, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 266, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 276, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 266, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 276, __pyx_L1_error)
+        __PYX_ERR(0, 266, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 276, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 266, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (unlikely(__Pyx_SetItemInt(__pyx_t_6, 1, __pyx_t_2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 276, __pyx_L1_error)
+      if (unlikely(__Pyx_SetItemInt(__pyx_t_6, 1, __pyx_t_2, long, 1, __Pyx_PyInt_From_long, 0, 0, 1) < 0)) __PYX_ERR(0, 266, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     }
@@ -7381,7 +7381,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_4startElement(PyO
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":279
+/* "owlready2_optimized.pyx":269
  * 
  * 
  *   def endElement(str tag):             # <<<<<<<<<<<<<<
@@ -7399,7 +7399,7 @@ static PyObject *__pyx_pw_19owlready2_optimized_12parse_rdfxml_7endElement(PyObj
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("endElement (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tag), (&PyUnicode_Type), 1, "tag", 1))) __PYX_ERR(0, 279, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tag), (&PyUnicode_Type), 1, "tag", 1))) __PYX_ERR(0, 269, __pyx_L1_error)
   __pyx_r = __pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(__pyx_self, ((PyObject*)__pyx_v_tag));
 
   /* function exit code */
@@ -7443,7 +7443,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
   __pyx_outer_scope = (struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_2_parse_rdfxml *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "owlready2_optimized.pyx":287
+  /* "owlready2_optimized.pyx":277
  *     cdef list triples
  * 
  *     if tag_is_predicate:             # <<<<<<<<<<<<<<
@@ -7453,19 +7453,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
   __pyx_t_1 = (__pyx_cur_scope->__pyx_v_tag_is_predicate != 0);
   if (__pyx_t_1) {
 
-    /* "owlready2_optimized.pyx":288
+    /* "owlready2_optimized.pyx":278
  * 
  *     if tag_is_predicate:
  *       parse_type, value = stack.pop()             # <<<<<<<<<<<<<<
  * 
  *       if stack[-1][0] == "Collection": iri2 = stack[-1][1][-1]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 288, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 278, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 288, __pyx_L1_error)
+      __PYX_ERR(0, 278, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 288, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 278, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     if ((likely(PyTuple_CheckExact(__pyx_t_2))) || (PyList_CheckExact(__pyx_t_2))) {
       PyObject* sequence = __pyx_t_2;
@@ -7473,7 +7473,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 288, __pyx_L1_error)
+        __PYX_ERR(0, 278, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -7486,15 +7486,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_t_3);
       __Pyx_INCREF(__pyx_t_4);
       #else
-      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 288, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 278, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 288, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 278, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       #endif
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_5 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 288, __pyx_L1_error)
+      __pyx_t_5 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 278, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_t_6 = Py_TYPE(__pyx_t_5)->tp_iternext;
@@ -7502,7 +7502,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       __Pyx_GOTREF(__pyx_t_3);
       index = 1; __pyx_t_4 = __pyx_t_6(__pyx_t_5); if (unlikely(!__pyx_t_4)) goto __pyx_L4_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_4);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_5), 2) < 0) __PYX_ERR(0, 288, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_6(__pyx_t_5), 2) < 0) __PYX_ERR(0, 278, __pyx_L1_error)
       __pyx_t_6 = NULL;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       goto __pyx_L5_unpacking_done;
@@ -7510,55 +7510,55 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_6 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 288, __pyx_L1_error)
+      __PYX_ERR(0, 278, __pyx_L1_error)
       __pyx_L5_unpacking_done:;
     }
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 288, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 278, __pyx_L1_error)
     __pyx_v_parse_type = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
     __pyx_v_value = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":290
+    /* "owlready2_optimized.pyx":280
  *       parse_type, value = stack.pop()
  * 
  *       if stack[-1][0] == "Collection": iri2 = stack[-1][1][-1]             # <<<<<<<<<<<<<<
  *       else:                            iri2 = stack[-1][1]
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 290, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 280, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 290, __pyx_L1_error)
+      __PYX_ERR(0, 280, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 290, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 290, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_t_4, __pyx_n_u_Collection, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 290, __pyx_L1_error)
+    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_t_4, __pyx_n_u_Collection, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 280, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     if (__pyx_t_1) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 290, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 280, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 290, __pyx_L1_error)
+        __PYX_ERR(0, 280, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 280, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_4, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_4, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 280, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_2, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 280, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 290, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 280, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_v_iri2 = __pyx_t_7;
       goto __pyx_L6;
     }
 
-    /* "owlready2_optimized.pyx":291
+    /* "owlready2_optimized.pyx":281
  * 
  *       if stack[-1][0] == "Collection": iri2 = stack[-1][1][-1]
  *       else:                            iri2 = stack[-1][1]             # <<<<<<<<<<<<<<
@@ -7566,34 +7566,34 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  *       if   tag == "http://www.w3.org/2002/07/owl#annotatedSource":
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 291, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 281, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 291, __pyx_L1_error)
+        __PYX_ERR(0, 281, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 291, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 281, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_4, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 291, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_4, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 281, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 291, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 281, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       __pyx_v_iri2 = __pyx_t_7;
     }
     __pyx_L6:;
 
-    /* "owlready2_optimized.pyx":293
+    /* "owlready2_optimized.pyx":283
  *       else:                            iri2 = stack[-1][1]
  * 
  *       if   tag == "http://www.w3.org/2002/07/owl#annotatedSource":             # <<<<<<<<<<<<<<
  *         dont_create_unnamed_bn = False
  *         axiom_annotation_sources[iri2] = value
  */
-    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 293, __pyx_L1_error)
+    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 283, __pyx_L1_error)
     __pyx_t_8 = (__pyx_t_1 != 0);
     if (__pyx_t_8) {
 
-      /* "owlready2_optimized.pyx":294
+      /* "owlready2_optimized.pyx":284
  * 
  *       if   tag == "http://www.w3.org/2002/07/owl#annotatedSource":
  *         dont_create_unnamed_bn = False             # <<<<<<<<<<<<<<
@@ -7602,24 +7602,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       __pyx_cur_scope->__pyx_v_dont_create_unnamed_bn = 0;
 
-      /* "owlready2_optimized.pyx":295
+      /* "owlready2_optimized.pyx":285
  *       if   tag == "http://www.w3.org/2002/07/owl#annotatedSource":
  *         dont_create_unnamed_bn = False
  *         axiom_annotation_sources[iri2] = value             # <<<<<<<<<<<<<<
  *         if isinstance(value, int) and (value in fake_blanks):
  *           triples_with_unnamed_bn[iri2].insert(0, (_abbreviate(tag), value, parser.CurrentLineNumber, parser.CurrentColumnNumber))
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_axiom_annotation_sources)) { __Pyx_RaiseClosureNameError("axiom_annotation_sources"); __PYX_ERR(0, 295, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_axiom_annotation_sources)) { __Pyx_RaiseClosureNameError("axiom_annotation_sources"); __PYX_ERR(0, 285, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_axiom_annotation_sources == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 295, __pyx_L1_error)
+        __PYX_ERR(0, 285, __pyx_L1_error)
       }
-      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 295, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 285, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (unlikely(PyDict_SetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_sources, __pyx_t_2, __pyx_v_value) < 0)) __PYX_ERR(0, 295, __pyx_L1_error)
+      if (unlikely(PyDict_SetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_sources, __pyx_t_2, __pyx_v_value) < 0)) __PYX_ERR(0, 285, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":296
+      /* "owlready2_optimized.pyx":286
  *         dont_create_unnamed_bn = False
  *         axiom_annotation_sources[iri2] = value
  *         if isinstance(value, int) and (value in fake_blanks):             # <<<<<<<<<<<<<<
@@ -7633,31 +7633,31 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         __pyx_t_8 = __pyx_t_9;
         goto __pyx_L9_bool_binop_done;
       }
-      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 296, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 286, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_fake_blanks == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 296, __pyx_L1_error)
+        __PYX_ERR(0, 286, __pyx_L1_error)
       }
-      __pyx_t_9 = (__Pyx_PySet_ContainsTF(__pyx_v_value, __pyx_cur_scope->__pyx_v_fake_blanks, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 296, __pyx_L1_error)
+      __pyx_t_9 = (__Pyx_PySet_ContainsTF(__pyx_v_value, __pyx_cur_scope->__pyx_v_fake_blanks, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 286, __pyx_L1_error)
       __pyx_t_1 = (__pyx_t_9 != 0);
       __pyx_t_8 = __pyx_t_1;
       __pyx_L9_bool_binop_done:;
       if (__pyx_t_8) {
 
-        /* "owlready2_optimized.pyx":297
+        /* "owlready2_optimized.pyx":287
  *         axiom_annotation_sources[iri2] = value
  *         if isinstance(value, int) and (value in fake_blanks):
  *           triples_with_unnamed_bn[iri2].insert(0, (_abbreviate(tag), value, parser.CurrentLineNumber, parser.CurrentColumnNumber))             # <<<<<<<<<<<<<<
  *           tag_is_predicate = not tag_is_predicate
  *           return
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn)) { __Pyx_RaiseClosureNameError("triples_with_unnamed_bn"); __PYX_ERR(0, 297, __pyx_L1_error) }
-        __pyx_t_4 = __Pyx_GetItemInt(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn, __pyx_v_iri2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 297, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn)) { __Pyx_RaiseClosureNameError("triples_with_unnamed_bn"); __PYX_ERR(0, 287, __pyx_L1_error) }
+        __pyx_t_4 = __Pyx_GetItemInt(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn, __pyx_v_iri2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 287, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_insert); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 297, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_4, __pyx_n_s_insert); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 287, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 297, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 287, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_5 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_10 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
@@ -7671,16 +7671,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_4 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_10, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 297, __pyx_L1_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 287, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v_parser)) { __Pyx_RaiseClosureNameError("parser"); __PYX_ERR(0, 297, __pyx_L1_error) }
-        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentLineNumber); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 297, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_parser)) { __Pyx_RaiseClosureNameError("parser"); __PYX_ERR(0, 287, __pyx_L1_error) }
+        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentLineNumber); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 287, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_parser)) { __Pyx_RaiseClosureNameError("parser"); __PYX_ERR(0, 297, __pyx_L1_error) }
-        __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentColumnNumber); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 297, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_parser)) { __Pyx_RaiseClosureNameError("parser"); __PYX_ERR(0, 287, __pyx_L1_error) }
+        __pyx_t_10 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentColumnNumber); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 287, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_11 = PyTuple_New(4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 297, __pyx_L1_error)
+        __pyx_t_11 = PyTuple_New(4); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 287, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_4);
@@ -7709,7 +7709,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         #if CYTHON_FAST_PYCALL
         if (PyFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[3] = {__pyx_t_10, __pyx_int_0, __pyx_t_11};
-          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 297, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 287, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
@@ -7718,14 +7718,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         #if CYTHON_FAST_PYCCALL
         if (__Pyx_PyFastCFunction_Check(__pyx_t_3)) {
           PyObject *__pyx_temp[3] = {__pyx_t_10, __pyx_int_0, __pyx_t_11};
-          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 297, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyCFunction_FastCall(__pyx_t_3, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 287, __pyx_L1_error)
           __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         } else
         #endif
         {
-          __pyx_t_5 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 297, __pyx_L1_error)
+          __pyx_t_5 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 287, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_5);
           if (__pyx_t_10) {
             __Pyx_GIVEREF(__pyx_t_10); PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_10); __pyx_t_10 = NULL;
@@ -7736,14 +7736,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
           __Pyx_GIVEREF(__pyx_t_11);
           PyTuple_SET_ITEM(__pyx_t_5, 1+__pyx_t_7, __pyx_t_11);
           __pyx_t_11 = 0;
-          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 297, __pyx_L1_error)
+          __pyx_t_2 = __Pyx_PyObject_Call(__pyx_t_3, __pyx_t_5, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 287, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
           __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         }
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "owlready2_optimized.pyx":298
+        /* "owlready2_optimized.pyx":288
  *         if isinstance(value, int) and (value in fake_blanks):
  *           triples_with_unnamed_bn[iri2].insert(0, (_abbreviate(tag), value, parser.CurrentLineNumber, parser.CurrentColumnNumber))
  *           tag_is_predicate = not tag_is_predicate             # <<<<<<<<<<<<<<
@@ -7752,7 +7752,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
         __pyx_cur_scope->__pyx_v_tag_is_predicate = (!(__pyx_cur_scope->__pyx_v_tag_is_predicate != 0));
 
-        /* "owlready2_optimized.pyx":299
+        /* "owlready2_optimized.pyx":289
  *           triples_with_unnamed_bn[iri2].insert(0, (_abbreviate(tag), value, parser.CurrentLineNumber, parser.CurrentColumnNumber))
  *           tag_is_predicate = not tag_is_predicate
  *           return             # <<<<<<<<<<<<<<
@@ -7763,7 +7763,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         __pyx_r = Py_None; __Pyx_INCREF(Py_None);
         goto __pyx_L0;
 
-        /* "owlready2_optimized.pyx":296
+        /* "owlready2_optimized.pyx":286
  *         dont_create_unnamed_bn = False
  *         axiom_annotation_sources[iri2] = value
  *         if isinstance(value, int) and (value in fake_blanks):             # <<<<<<<<<<<<<<
@@ -7772,7 +7772,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":293
+      /* "owlready2_optimized.pyx":283
  *       else:                            iri2 = stack[-1][1]
  * 
  *       if   tag == "http://www.w3.org/2002/07/owl#annotatedSource":             # <<<<<<<<<<<<<<
@@ -7782,35 +7782,35 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       goto __pyx_L7;
     }
 
-    /* "owlready2_optimized.pyx":301
+    /* "owlready2_optimized.pyx":291
  *           return
  * 
  *       elif tag == "http://www.w3.org/2002/07/owl#annotatedProperty":             # <<<<<<<<<<<<<<
  *         axiom_annotation_props[iri2] = value
  * 
  */
-    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_3, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 301, __pyx_L1_error)
+    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_3, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 291, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_8 != 0);
     if (__pyx_t_1) {
 
-      /* "owlready2_optimized.pyx":302
+      /* "owlready2_optimized.pyx":292
  * 
  *       elif tag == "http://www.w3.org/2002/07/owl#annotatedProperty":
  *         axiom_annotation_props[iri2] = value             # <<<<<<<<<<<<<<
  * 
  *       elif tag == "http://www.w3.org/2002/07/owl#annotatedTarget":
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_axiom_annotation_props)) { __Pyx_RaiseClosureNameError("axiom_annotation_props"); __PYX_ERR(0, 302, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_axiom_annotation_props)) { __Pyx_RaiseClosureNameError("axiom_annotation_props"); __PYX_ERR(0, 292, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_axiom_annotation_props == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 302, __pyx_L1_error)
+        __PYX_ERR(0, 292, __pyx_L1_error)
       }
-      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 302, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 292, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (unlikely(PyDict_SetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_props, __pyx_t_2, __pyx_v_value) < 0)) __PYX_ERR(0, 302, __pyx_L1_error)
+      if (unlikely(PyDict_SetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_props, __pyx_t_2, __pyx_v_value) < 0)) __PYX_ERR(0, 292, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":301
+      /* "owlready2_optimized.pyx":291
  *           return
  * 
  *       elif tag == "http://www.w3.org/2002/07/owl#annotatedProperty":             # <<<<<<<<<<<<<<
@@ -7820,18 +7820,18 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       goto __pyx_L7;
     }
 
-    /* "owlready2_optimized.pyx":304
+    /* "owlready2_optimized.pyx":294
  *         axiom_annotation_props[iri2] = value
  * 
  *       elif tag == "http://www.w3.org/2002/07/owl#annotatedTarget":             # <<<<<<<<<<<<<<
  *         dont_create_unnamed_bn = False
  *         axiom_annotation_targets[iri2] = value
  */
-    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_2, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 304, __pyx_L1_error)
+    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_2, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 294, __pyx_L1_error)
     __pyx_t_8 = (__pyx_t_1 != 0);
     if (__pyx_t_8) {
 
-      /* "owlready2_optimized.pyx":305
+      /* "owlready2_optimized.pyx":295
  * 
  *       elif tag == "http://www.w3.org/2002/07/owl#annotatedTarget":
  *         dont_create_unnamed_bn = False             # <<<<<<<<<<<<<<
@@ -7840,24 +7840,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       __pyx_cur_scope->__pyx_v_dont_create_unnamed_bn = 0;
 
-      /* "owlready2_optimized.pyx":306
+      /* "owlready2_optimized.pyx":296
  *       elif tag == "http://www.w3.org/2002/07/owl#annotatedTarget":
  *         dont_create_unnamed_bn = False
  *         axiom_annotation_targets[iri2] = value             # <<<<<<<<<<<<<<
  *         if isinstance(value, int) and (value in fake_blanks):
  *           triples_with_unnamed_bn[iri2].append((_abbreviate(tag), value, parser.CurrentLineNumber, parser.CurrentColumnNumber))
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_axiom_annotation_targets)) { __Pyx_RaiseClosureNameError("axiom_annotation_targets"); __PYX_ERR(0, 306, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_axiom_annotation_targets)) { __Pyx_RaiseClosureNameError("axiom_annotation_targets"); __PYX_ERR(0, 296, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_axiom_annotation_targets == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 306, __pyx_L1_error)
+        __PYX_ERR(0, 296, __pyx_L1_error)
       }
-      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 306, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 296, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      if (unlikely(PyDict_SetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_targets, __pyx_t_2, __pyx_v_value) < 0)) __PYX_ERR(0, 306, __pyx_L1_error)
+      if (unlikely(PyDict_SetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_targets, __pyx_t_2, __pyx_v_value) < 0)) __PYX_ERR(0, 296, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":307
+      /* "owlready2_optimized.pyx":297
  *         dont_create_unnamed_bn = False
  *         axiom_annotation_targets[iri2] = value
  *         if isinstance(value, int) and (value in fake_blanks):             # <<<<<<<<<<<<<<
@@ -7871,28 +7871,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         __pyx_t_8 = __pyx_t_9;
         goto __pyx_L12_bool_binop_done;
       }
-      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 307, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 297, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_fake_blanks == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 307, __pyx_L1_error)
+        __PYX_ERR(0, 297, __pyx_L1_error)
       }
-      __pyx_t_9 = (__Pyx_PySet_ContainsTF(__pyx_v_value, __pyx_cur_scope->__pyx_v_fake_blanks, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 307, __pyx_L1_error)
+      __pyx_t_9 = (__Pyx_PySet_ContainsTF(__pyx_v_value, __pyx_cur_scope->__pyx_v_fake_blanks, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 297, __pyx_L1_error)
       __pyx_t_1 = (__pyx_t_9 != 0);
       __pyx_t_8 = __pyx_t_1;
       __pyx_L12_bool_binop_done:;
       if (__pyx_t_8) {
 
-        /* "owlready2_optimized.pyx":308
+        /* "owlready2_optimized.pyx":298
  *         axiom_annotation_targets[iri2] = value
  *         if isinstance(value, int) and (value in fake_blanks):
  *           triples_with_unnamed_bn[iri2].append((_abbreviate(tag), value, parser.CurrentLineNumber, parser.CurrentColumnNumber))             # <<<<<<<<<<<<<<
  *           tag_is_predicate = not tag_is_predicate
  *           return
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn)) { __Pyx_RaiseClosureNameError("triples_with_unnamed_bn"); __PYX_ERR(0, 308, __pyx_L1_error) }
-        __pyx_t_2 = __Pyx_GetItemInt(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn, __pyx_v_iri2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 308, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn)) { __Pyx_RaiseClosureNameError("triples_with_unnamed_bn"); __PYX_ERR(0, 298, __pyx_L1_error) }
+        __pyx_t_2 = __Pyx_GetItemInt(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn, __pyx_v_iri2, int, 1, __Pyx_PyInt_From_int, 0, 1, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 298, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 308, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 298, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_5 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_11 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
@@ -7906,16 +7906,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_3 = (__pyx_t_11) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_11, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_11); __pyx_t_11 = 0;
-        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 308, __pyx_L1_error)
+        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 298, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v_parser)) { __Pyx_RaiseClosureNameError("parser"); __PYX_ERR(0, 308, __pyx_L1_error) }
-        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentLineNumber); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 308, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_parser)) { __Pyx_RaiseClosureNameError("parser"); __PYX_ERR(0, 298, __pyx_L1_error) }
+        __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentLineNumber); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 298, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_parser)) { __Pyx_RaiseClosureNameError("parser"); __PYX_ERR(0, 308, __pyx_L1_error) }
-        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentColumnNumber); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 308, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_parser)) { __Pyx_RaiseClosureNameError("parser"); __PYX_ERR(0, 298, __pyx_L1_error) }
+        __pyx_t_11 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentColumnNumber); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 298, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 308, __pyx_L1_error)
+        __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 298, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_GIVEREF(__pyx_t_3);
         PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_3);
@@ -7929,11 +7929,11 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         __pyx_t_3 = 0;
         __pyx_t_5 = 0;
         __pyx_t_11 = 0;
-        __pyx_t_12 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_10); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 308, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_10); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 298, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
 
-        /* "owlready2_optimized.pyx":309
+        /* "owlready2_optimized.pyx":299
  *         if isinstance(value, int) and (value in fake_blanks):
  *           triples_with_unnamed_bn[iri2].append((_abbreviate(tag), value, parser.CurrentLineNumber, parser.CurrentColumnNumber))
  *           tag_is_predicate = not tag_is_predicate             # <<<<<<<<<<<<<<
@@ -7942,7 +7942,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
         __pyx_cur_scope->__pyx_v_tag_is_predicate = (!(__pyx_cur_scope->__pyx_v_tag_is_predicate != 0));
 
-        /* "owlready2_optimized.pyx":310
+        /* "owlready2_optimized.pyx":300
  *           triples_with_unnamed_bn[iri2].append((_abbreviate(tag), value, parser.CurrentLineNumber, parser.CurrentColumnNumber))
  *           tag_is_predicate = not tag_is_predicate
  *           return             # <<<<<<<<<<<<<<
@@ -7953,7 +7953,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         __pyx_r = Py_None; __Pyx_INCREF(Py_None);
         goto __pyx_L0;
 
-        /* "owlready2_optimized.pyx":307
+        /* "owlready2_optimized.pyx":297
  *         dont_create_unnamed_bn = False
  *         axiom_annotation_targets[iri2] = value
  *         if isinstance(value, int) and (value in fake_blanks):             # <<<<<<<<<<<<<<
@@ -7962,7 +7962,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":304
+      /* "owlready2_optimized.pyx":294
  *         axiom_annotation_props[iri2] = value
  * 
  *       elif tag == "http://www.w3.org/2002/07/owl#annotatedTarget":             # <<<<<<<<<<<<<<
@@ -7972,51 +7972,51 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
     }
     __pyx_L7:;
 
-    /* "owlready2_optimized.pyx":313
+    /* "owlready2_optimized.pyx":303
  * 
  * 
  *       if   parse_type == "Resource":             # <<<<<<<<<<<<<<
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate(tag), value))
  */
-    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_v_parse_type, __pyx_n_u_Resource, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 313, __pyx_L1_error)
+    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_v_parse_type, __pyx_n_u_Resource, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 303, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_8 != 0);
     if (__pyx_t_1) {
 
-      /* "owlready2_optimized.pyx":314
+      /* "owlready2_optimized.pyx":304
  * 
  *       if   parse_type == "Resource":
  *         if not iri2 in fake_blanks:             # <<<<<<<<<<<<<<
  *           objs.append((iri2, _abbreviate(tag), value))
  * 
  */
-      __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 314, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 304, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 314, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 304, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_fake_blanks == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 314, __pyx_L1_error)
+        __PYX_ERR(0, 304, __pyx_L1_error)
       }
-      __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_t_10, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 314, __pyx_L1_error)
+      __pyx_t_1 = (__Pyx_PySet_ContainsTF(__pyx_t_10, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 304, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       __pyx_t_8 = (__pyx_t_1 != 0);
       if (__pyx_t_8) {
 
-        /* "owlready2_optimized.pyx":315
+        /* "owlready2_optimized.pyx":305
  *       if   parse_type == "Resource":
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate(tag), value))             # <<<<<<<<<<<<<<
  * 
  *         if iri2 < 0:
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 315, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 305, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 315, __pyx_L1_error)
+          __PYX_ERR(0, 305, __pyx_L1_error)
         }
-        __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 315, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 305, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 315, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 305, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_11 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_5 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_11))) {
@@ -8030,10 +8030,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_5, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 315, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 305, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 315, __pyx_L1_error)
+        __pyx_t_11 = PyTuple_New(3); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 305, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_GIVEREF(__pyx_t_10);
         PyTuple_SET_ITEM(__pyx_t_11, 0, __pyx_t_10);
@@ -8044,10 +8044,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         PyTuple_SET_ITEM(__pyx_t_11, 2, __pyx_v_value);
         __pyx_t_10 = 0;
         __pyx_t_2 = 0;
-        __pyx_t_12 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_11); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 315, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_11); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 305, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-        /* "owlready2_optimized.pyx":314
+        /* "owlready2_optimized.pyx":304
  * 
  *       if   parse_type == "Resource":
  *         if not iri2 in fake_blanks:             # <<<<<<<<<<<<<<
@@ -8056,7 +8056,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":317
+      /* "owlready2_optimized.pyx":307
  *           objs.append((iri2, _abbreviate(tag), value))
  * 
  *         if iri2 < 0:             # <<<<<<<<<<<<<<
@@ -8066,20 +8066,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       __pyx_t_8 = ((__pyx_v_iri2 < 0) != 0);
       if (__pyx_t_8) {
 
-        /* "owlready2_optimized.pyx":318
+        /* "owlready2_optimized.pyx":308
  * 
  *         if iri2 < 0:
  *           add_to_bn(bns, known_nodes,  iri2, "REL", _abbreviate(tag), value)             # <<<<<<<<<<<<<<
  * 
  *         if value < 0:
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 318, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 308, __pyx_L1_error) }
         __pyx_t_11 = __pyx_cur_scope->__pyx_v_bns;
         __Pyx_INCREF(__pyx_t_11);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 318, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 308, __pyx_L1_error) }
         __pyx_t_2 = __pyx_cur_scope->__pyx_v_known_nodes;
         __Pyx_INCREF(__pyx_t_2);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 318, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 308, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_5 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
@@ -8093,16 +8093,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_10 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_3, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 318, __pyx_L1_error)
+        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 308, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_10); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 318, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_t_10); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 308, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __pyx_f_19owlready2_optimized_add_to_bn(__pyx_t_11, ((PyObject*)__pyx_t_2), __pyx_v_iri2, __pyx_n_u_REL, __pyx_t_7, __pyx_v_value, NULL);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "owlready2_optimized.pyx":317
+        /* "owlready2_optimized.pyx":307
  *           objs.append((iri2, _abbreviate(tag), value))
  * 
  *         if iri2 < 0:             # <<<<<<<<<<<<<<
@@ -8111,33 +8111,33 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":320
+      /* "owlready2_optimized.pyx":310
  *           add_to_bn(bns, known_nodes,  iri2, "REL", _abbreviate(tag), value)
  * 
  *         if value < 0:             # <<<<<<<<<<<<<<
  *           add_to_bn(bns, known_nodes,  value, "INV", _abbreviate(tag), iri2)
  * 
  */
-      __pyx_t_2 = PyObject_RichCompare(__pyx_v_value, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 320, __pyx_L1_error)
-      __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 320, __pyx_L1_error)
+      __pyx_t_2 = PyObject_RichCompare(__pyx_v_value, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 310, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_2); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 310, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       if (__pyx_t_8) {
 
-        /* "owlready2_optimized.pyx":321
+        /* "owlready2_optimized.pyx":311
  * 
  *         if value < 0:
  *           add_to_bn(bns, known_nodes,  value, "INV", _abbreviate(tag), iri2)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 321, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 311, __pyx_L1_error) }
         __pyx_t_2 = __pyx_cur_scope->__pyx_v_bns;
         __Pyx_INCREF(__pyx_t_2);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 321, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 311, __pyx_L1_error) }
         __pyx_t_11 = __pyx_cur_scope->__pyx_v_known_nodes;
         __Pyx_INCREF(__pyx_t_11);
-        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_value); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 321, __pyx_L1_error)
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 321, __pyx_L1_error) }
+        __pyx_t_7 = __Pyx_PyInt_As_int(__pyx_v_value); if (unlikely((__pyx_t_7 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 311, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 311, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_5 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
@@ -8151,19 +8151,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_10 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_3, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 321, __pyx_L1_error)
+        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 311, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_t_10); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 321, __pyx_L1_error)
+        __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_t_10); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 311, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-        __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 321, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 311, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __pyx_f_19owlready2_optimized_add_to_bn(__pyx_t_2, ((PyObject*)__pyx_t_11), __pyx_t_7, __pyx_n_u_INV, __pyx_t_13, __pyx_t_10, NULL);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
 
-        /* "owlready2_optimized.pyx":320
+        /* "owlready2_optimized.pyx":310
  *           add_to_bn(bns, known_nodes,  iri2, "REL", _abbreviate(tag), value)
  * 
  *         if value < 0:             # <<<<<<<<<<<<<<
@@ -8172,7 +8172,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":313
+      /* "owlready2_optimized.pyx":303
  * 
  * 
  *       if   parse_type == "Resource":             # <<<<<<<<<<<<<<
@@ -8182,46 +8182,46 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       goto __pyx_L14;
     }
 
-    /* "owlready2_optimized.pyx":324
+    /* "owlready2_optimized.pyx":314
  * 
  * 
  *       elif parse_type == "Literal":             # <<<<<<<<<<<<<<
  *         o = current_content
  *         d = current_attrs.get("http://www.w3.org/XML/1998/namespacelang")
  */
-    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_v_parse_type, __pyx_n_u_Literal, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 324, __pyx_L1_error)
+    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_v_parse_type, __pyx_n_u_Literal, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 314, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_8 != 0);
     if (__pyx_t_1) {
 
-      /* "owlready2_optimized.pyx":325
+      /* "owlready2_optimized.pyx":315
  * 
  *       elif parse_type == "Literal":
  *         o = current_content             # <<<<<<<<<<<<<<
  *         d = current_attrs.get("http://www.w3.org/XML/1998/namespacelang")
  *         if d is None:
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 325, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 315, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v_current_content);
       __pyx_v_o = __pyx_cur_scope->__pyx_v_current_content;
 
-      /* "owlready2_optimized.pyx":326
+      /* "owlready2_optimized.pyx":316
  *       elif parse_type == "Literal":
  *         o = current_content
  *         d = current_attrs.get("http://www.w3.org/XML/1998/namespacelang")             # <<<<<<<<<<<<<<
  *         if d is None:
  *           d = current_attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#datatype", 0)
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_current_attrs)) { __Pyx_RaiseClosureNameError("current_attrs"); __PYX_ERR(0, 326, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_current_attrs)) { __Pyx_RaiseClosureNameError("current_attrs"); __PYX_ERR(0, 316, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_current_attrs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-        __PYX_ERR(0, 326, __pyx_L1_error)
+        __PYX_ERR(0, 316, __pyx_L1_error)
       }
-      __pyx_t_10 = __Pyx_PyDict_GetItemDefault(__pyx_cur_scope->__pyx_v_current_attrs, __pyx_kp_u_http_www_w3_org_XML_1998_namespa_2, Py_None); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 326, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyDict_GetItemDefault(__pyx_cur_scope->__pyx_v_current_attrs, __pyx_kp_u_http_www_w3_org_XML_1998_namespa_2, Py_None); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 316, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __pyx_v_d = __pyx_t_10;
       __pyx_t_10 = 0;
 
-      /* "owlready2_optimized.pyx":327
+      /* "owlready2_optimized.pyx":317
  *         o = current_content
  *         d = current_attrs.get("http://www.w3.org/XML/1998/namespacelang")
  *         if d is None:             # <<<<<<<<<<<<<<
@@ -8232,76 +8232,76 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       __pyx_t_8 = (__pyx_t_1 != 0);
       if (__pyx_t_8) {
 
-        /* "owlready2_optimized.pyx":328
+        /* "owlready2_optimized.pyx":318
  *         d = current_attrs.get("http://www.w3.org/XML/1998/namespacelang")
  *         if d is None:
  *           d = current_attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#datatype", 0)             # <<<<<<<<<<<<<<
  *           if   d in INT_DATATYPES:   o = int  (o)
  *           elif d in FLOAT_DATATYPES: o = float(o)
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_current_attrs)) { __Pyx_RaiseClosureNameError("current_attrs"); __PYX_ERR(0, 328, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_current_attrs)) { __Pyx_RaiseClosureNameError("current_attrs"); __PYX_ERR(0, 318, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_current_attrs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-          __PYX_ERR(0, 328, __pyx_L1_error)
+          __PYX_ERR(0, 318, __pyx_L1_error)
         }
-        __pyx_t_10 = __Pyx_PyDict_GetItemDefault(__pyx_cur_scope->__pyx_v_current_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_12, __pyx_int_0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 328, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyDict_GetItemDefault(__pyx_cur_scope->__pyx_v_current_attrs, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_12, __pyx_int_0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 318, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF_SET(__pyx_v_d, __pyx_t_10);
         __pyx_t_10 = 0;
 
-        /* "owlready2_optimized.pyx":329
+        /* "owlready2_optimized.pyx":319
  *         if d is None:
  *           d = current_attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#datatype", 0)
  *           if   d in INT_DATATYPES:   o = int  (o)             # <<<<<<<<<<<<<<
  *           elif d in FLOAT_DATATYPES: o = float(o)
  *           if d != 0: d = _abbreviate(d)
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_INT_DATATYPES); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 329, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_INT_DATATYPES); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 319, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_d, __pyx_t_10, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 329, __pyx_L1_error)
+        __pyx_t_8 = (__Pyx_PySequence_ContainsTF(__pyx_v_d, __pyx_t_10, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 319, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __pyx_t_1 = (__pyx_t_8 != 0);
         if (__pyx_t_1) {
-          __pyx_t_10 = __Pyx_PyNumber_Int(__pyx_v_o); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 329, __pyx_L1_error)
+          __pyx_t_10 = __Pyx_PyNumber_Int(__pyx_v_o); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 319, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF_SET(__pyx_v_o, __pyx_t_10);
           __pyx_t_10 = 0;
           goto __pyx_L19;
         }
 
-        /* "owlready2_optimized.pyx":330
+        /* "owlready2_optimized.pyx":320
  *           d = current_attrs.get("http://www.w3.org/1999/02/22-rdf-syntax-ns#datatype", 0)
  *           if   d in INT_DATATYPES:   o = int  (o)
  *           elif d in FLOAT_DATATYPES: o = float(o)             # <<<<<<<<<<<<<<
  *           if d != 0: d = _abbreviate(d)
  *         else:
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_FLOAT_DATATYPES); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 330, __pyx_L1_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_FLOAT_DATATYPES); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 320, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_1 = (__Pyx_PySequence_ContainsTF(__pyx_v_d, __pyx_t_10, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 330, __pyx_L1_error)
+        __pyx_t_1 = (__Pyx_PySequence_ContainsTF(__pyx_v_d, __pyx_t_10, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 320, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __pyx_t_8 = (__pyx_t_1 != 0);
         if (__pyx_t_8) {
-          __pyx_t_10 = __Pyx_PyNumber_Float(__pyx_v_o); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 330, __pyx_L1_error)
+          __pyx_t_10 = __Pyx_PyNumber_Float(__pyx_v_o); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 320, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF_SET(__pyx_v_o, __pyx_t_10);
           __pyx_t_10 = 0;
         }
         __pyx_L19:;
 
-        /* "owlready2_optimized.pyx":331
+        /* "owlready2_optimized.pyx":321
  *           if   d in INT_DATATYPES:   o = int  (o)
  *           elif d in FLOAT_DATATYPES: o = float(o)
  *           if d != 0: d = _abbreviate(d)             # <<<<<<<<<<<<<<
  *         else:
  *           d = "@%s" % d
  */
-        __pyx_t_10 = __Pyx_PyInt_NeObjC(__pyx_v_d, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 331, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyInt_NeObjC(__pyx_v_d, __pyx_int_0, 0, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 321, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_10); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 331, __pyx_L1_error)
+        __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_t_10); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 321, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         if (__pyx_t_8) {
-          if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 331, __pyx_L1_error) }
+          if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 321, __pyx_L1_error) }
           __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
           __pyx_t_11 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_2 = NULL;
           if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_11))) {
@@ -8315,14 +8315,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
           }
           __pyx_t_10 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_2, __pyx_v_d) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_v_d);
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 331, __pyx_L1_error)
+          if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 321, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           __Pyx_DECREF_SET(__pyx_v_d, __pyx_t_10);
           __pyx_t_10 = 0;
         }
 
-        /* "owlready2_optimized.pyx":327
+        /* "owlready2_optimized.pyx":317
  *         o = current_content
  *         d = current_attrs.get("http://www.w3.org/XML/1998/namespacelang")
  *         if d is None:             # <<<<<<<<<<<<<<
@@ -8332,7 +8332,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         goto __pyx_L18;
       }
 
-      /* "owlready2_optimized.pyx":333
+      /* "owlready2_optimized.pyx":323
  *           if d != 0: d = _abbreviate(d)
  *         else:
  *           d = "@%s" % d             # <<<<<<<<<<<<<<
@@ -8340,47 +8340,47 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  *         if not iri2 in fake_blanks:
  */
       /*else*/ {
-        __pyx_t_10 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_s_4, __pyx_v_d); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 333, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_s_4, __pyx_v_d); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 323, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF_SET(__pyx_v_d, __pyx_t_10);
         __pyx_t_10 = 0;
       }
       __pyx_L18:;
 
-      /* "owlready2_optimized.pyx":335
+      /* "owlready2_optimized.pyx":325
  *           d = "@%s" % d
  * 
  *         if not iri2 in fake_blanks:             # <<<<<<<<<<<<<<
  *           datas.append((iri2, _abbreviate(tag), o, d))
  *         if iri2 < 0:
  */
-      __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 335, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 325, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 335, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 325, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_fake_blanks == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 335, __pyx_L1_error)
+        __PYX_ERR(0, 325, __pyx_L1_error)
       }
-      __pyx_t_8 = (__Pyx_PySet_ContainsTF(__pyx_t_10, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 335, __pyx_L1_error)
+      __pyx_t_8 = (__Pyx_PySet_ContainsTF(__pyx_t_10, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 325, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       __pyx_t_1 = (__pyx_t_8 != 0);
       if (__pyx_t_1) {
 
-        /* "owlready2_optimized.pyx":336
+        /* "owlready2_optimized.pyx":326
  * 
  *         if not iri2 in fake_blanks:
  *           datas.append((iri2, _abbreviate(tag), o, d))             # <<<<<<<<<<<<<<
  *         if iri2 < 0:
  *           add_to_bn(bns, known_nodes,  iri2, "DAT", _abbreviate(tag), o, d)
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 336, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 326, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 336, __pyx_L1_error)
+          __PYX_ERR(0, 326, __pyx_L1_error)
         }
-        __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 336, __pyx_L1_error)
+        __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 326, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 336, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 326, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_2 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_5 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -8394,10 +8394,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_11 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_5, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 336, __pyx_L1_error)
+        if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 326, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-        __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 336, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_New(4); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 326, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_GIVEREF(__pyx_t_10);
         PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_10);
@@ -8411,10 +8411,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         PyTuple_SET_ITEM(__pyx_t_2, 3, __pyx_v_d);
         __pyx_t_10 = 0;
         __pyx_t_11 = 0;
-        __pyx_t_12 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_2); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 336, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_2); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 326, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "owlready2_optimized.pyx":335
+        /* "owlready2_optimized.pyx":325
  *           d = "@%s" % d
  * 
  *         if not iri2 in fake_blanks:             # <<<<<<<<<<<<<<
@@ -8423,7 +8423,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":337
+      /* "owlready2_optimized.pyx":327
  *         if not iri2 in fake_blanks:
  *           datas.append((iri2, _abbreviate(tag), o, d))
  *         if iri2 < 0:             # <<<<<<<<<<<<<<
@@ -8433,20 +8433,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       __pyx_t_1 = ((__pyx_v_iri2 < 0) != 0);
       if (__pyx_t_1) {
 
-        /* "owlready2_optimized.pyx":338
+        /* "owlready2_optimized.pyx":328
  *           datas.append((iri2, _abbreviate(tag), o, d))
  *         if iri2 < 0:
  *           add_to_bn(bns, known_nodes,  iri2, "DAT", _abbreviate(tag), o, d)             # <<<<<<<<<<<<<<
  * 
  *       elif parse_type == "Collection":
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 338, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 328, __pyx_L1_error) }
         __pyx_t_2 = __pyx_cur_scope->__pyx_v_bns;
         __Pyx_INCREF(__pyx_t_2);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 338, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 328, __pyx_L1_error) }
         __pyx_t_11 = __pyx_cur_scope->__pyx_v_known_nodes;
         __Pyx_INCREF(__pyx_t_11);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 338, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 328, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_5 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_5))) {
@@ -8460,10 +8460,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_10 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_3, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 338, __pyx_L1_error)
+        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 328, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-        __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_t_10); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 338, __pyx_L1_error)
+        __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_t_10); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 328, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __pyx_t_14.__pyx_n = 1;
         __pyx_t_14.d = __pyx_v_d;
@@ -8471,7 +8471,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-        /* "owlready2_optimized.pyx":337
+        /* "owlready2_optimized.pyx":327
  *         if not iri2 in fake_blanks:
  *           datas.append((iri2, _abbreviate(tag), o, d))
  *         if iri2 < 0:             # <<<<<<<<<<<<<<
@@ -8480,7 +8480,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":324
+      /* "owlready2_optimized.pyx":314
  * 
  * 
  *       elif parse_type == "Literal":             # <<<<<<<<<<<<<<
@@ -8490,51 +8490,51 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       goto __pyx_L14;
     }
 
-    /* "owlready2_optimized.pyx":340
+    /* "owlready2_optimized.pyx":330
  *           add_to_bn(bns, known_nodes,  iri2, "DAT", _abbreviate(tag), o, d)
  * 
  *       elif parse_type == "Collection":             # <<<<<<<<<<<<<<
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate(tag), new_list(value, objs, _abbreviate, new_blank)))
  */
-    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_parse_type, __pyx_n_u_Collection, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 340, __pyx_L1_error)
+    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_parse_type, __pyx_n_u_Collection, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 330, __pyx_L1_error)
     __pyx_t_8 = (__pyx_t_1 != 0);
     if (__pyx_t_8) {
 
-      /* "owlready2_optimized.pyx":341
+      /* "owlready2_optimized.pyx":331
  * 
  *       elif parse_type == "Collection":
  *         if not iri2 in fake_blanks:             # <<<<<<<<<<<<<<
  *           objs.append((iri2, _abbreviate(tag), new_list(value, objs, _abbreviate, new_blank)))
  *         if iri2 < 0:
  */
-      __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 341, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 331, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 341, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_fake_blanks)) { __Pyx_RaiseClosureNameError("fake_blanks"); __PYX_ERR(0, 331, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_fake_blanks == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 341, __pyx_L1_error)
+        __PYX_ERR(0, 331, __pyx_L1_error)
       }
-      __pyx_t_8 = (__Pyx_PySet_ContainsTF(__pyx_t_11, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 341, __pyx_L1_error)
+      __pyx_t_8 = (__Pyx_PySet_ContainsTF(__pyx_t_11, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 331, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       __pyx_t_1 = (__pyx_t_8 != 0);
       if (__pyx_t_1) {
 
-        /* "owlready2_optimized.pyx":342
+        /* "owlready2_optimized.pyx":332
  *       elif parse_type == "Collection":
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate(tag), new_list(value, objs, _abbreviate, new_blank)))             # <<<<<<<<<<<<<<
  *         if iri2 < 0:
  *           add_to_bn(bns, known_nodes,  iri2, "COL", _abbreviate(tag), value)
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 342, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 332, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 342, __pyx_L1_error)
+          __PYX_ERR(0, 332, __pyx_L1_error)
         }
-        __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 342, __pyx_L1_error)
+        __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_iri2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 332, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 342, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 332, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_10 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_5 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_10))) {
@@ -8548,25 +8548,25 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_5, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 342, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 332, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-        if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_v_value)->tp_name), 0))) __PYX_ERR(0, 342, __pyx_L1_error)
-        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 342, __pyx_L1_error) }
+        if (!(likely(PyList_CheckExact(__pyx_v_value))||((__pyx_v_value) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_v_value)->tp_name), 0))) __PYX_ERR(0, 332, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 332, __pyx_L1_error) }
         __pyx_t_10 = __pyx_cur_scope->__pyx_v_objs;
         __Pyx_INCREF(__pyx_t_10);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 342, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 332, __pyx_L1_error) }
         __pyx_t_5 = __pyx_cur_scope->__pyx_v__abbreviate;
         __Pyx_INCREF(__pyx_t_5);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 342, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 332, __pyx_L1_error) }
         __pyx_t_3 = __pyx_cur_scope->__pyx_v_new_blank;
         __Pyx_INCREF(__pyx_t_3);
-        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_v_value), ((PyObject*)__pyx_t_10), __pyx_t_5, __pyx_t_3)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 342, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_v_value), ((PyObject*)__pyx_t_10), __pyx_t_5, __pyx_t_3)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 332, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 342, __pyx_L1_error)
+        __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 332, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_GIVEREF(__pyx_t_11);
         PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_11);
@@ -8577,10 +8577,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         __pyx_t_11 = 0;
         __pyx_t_2 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_12 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 342, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_12 == ((int)-1))) __PYX_ERR(0, 332, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-        /* "owlready2_optimized.pyx":341
+        /* "owlready2_optimized.pyx":331
  * 
  *       elif parse_type == "Collection":
  *         if not iri2 in fake_blanks:             # <<<<<<<<<<<<<<
@@ -8589,7 +8589,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":343
+      /* "owlready2_optimized.pyx":333
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate(tag), new_list(value, objs, _abbreviate, new_blank)))
  *         if iri2 < 0:             # <<<<<<<<<<<<<<
@@ -8599,20 +8599,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
       __pyx_t_1 = ((__pyx_v_iri2 < 0) != 0);
       if (__pyx_t_1) {
 
-        /* "owlready2_optimized.pyx":344
+        /* "owlready2_optimized.pyx":334
  *           objs.append((iri2, _abbreviate(tag), new_list(value, objs, _abbreviate, new_blank)))
  *         if iri2 < 0:
  *           add_to_bn(bns, known_nodes,  iri2, "COL", _abbreviate(tag), value)             # <<<<<<<<<<<<<<
  * 
  * 
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 344, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_bns)) { __Pyx_RaiseClosureNameError("bns"); __PYX_ERR(0, 334, __pyx_L1_error) }
         __pyx_t_3 = __pyx_cur_scope->__pyx_v_bns;
         __Pyx_INCREF(__pyx_t_3);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 344, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_known_nodes)) { __Pyx_RaiseClosureNameError("known_nodes"); __PYX_ERR(0, 334, __pyx_L1_error) }
         __pyx_t_4 = __pyx_cur_scope->__pyx_v_known_nodes;
         __Pyx_INCREF(__pyx_t_4);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 344, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 334, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_11 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_5 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_11))) {
@@ -8626,16 +8626,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
         }
         __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_5, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 344, __pyx_L1_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 334, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-        __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 344, __pyx_L1_error)
+        __pyx_t_13 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_13 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 334, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __pyx_f_19owlready2_optimized_add_to_bn(__pyx_t_3, ((PyObject*)__pyx_t_4), __pyx_v_iri2, __pyx_n_u_COL, __pyx_t_13, __pyx_v_value, NULL);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-        /* "owlready2_optimized.pyx":343
+        /* "owlready2_optimized.pyx":333
  *         if not iri2 in fake_blanks:
  *           objs.append((iri2, _abbreviate(tag), new_list(value, objs, _abbreviate, new_blank)))
  *         if iri2 < 0:             # <<<<<<<<<<<<<<
@@ -8644,7 +8644,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
       }
 
-      /* "owlready2_optimized.pyx":340
+      /* "owlready2_optimized.pyx":330
  *           add_to_bn(bns, known_nodes,  iri2, "DAT", _abbreviate(tag), o, d)
  * 
  *       elif parse_type == "Collection":             # <<<<<<<<<<<<<<
@@ -8654,7 +8654,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
     }
     __pyx_L14:;
 
-    /* "owlready2_optimized.pyx":287
+    /* "owlready2_optimized.pyx":277
  *     cdef list triples
  * 
  *     if tag_is_predicate:             # <<<<<<<<<<<<<<
@@ -8663,7 +8663,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
   }
 
-  /* "owlready2_optimized.pyx":347
+  /* "owlready2_optimized.pyx":337
  * 
  * 
  *     tag_is_predicate = not tag_is_predicate             # <<<<<<<<<<<<<<
@@ -8672,25 +8672,25 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
  */
   __pyx_cur_scope->__pyx_v_tag_is_predicate = (!(__pyx_cur_scope->__pyx_v_tag_is_predicate != 0));
 
-  /* "owlready2_optimized.pyx":349
+  /* "owlready2_optimized.pyx":339
  *     tag_is_predicate = not tag_is_predicate
  * 
  *     if len(objs ) > 800000: insert_objs()             # <<<<<<<<<<<<<<
  *     if len(datas) > 800000: insert_datas()
  * 
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 349, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 339, __pyx_L1_error) }
   __pyx_t_4 = __pyx_cur_scope->__pyx_v_objs;
   __Pyx_INCREF(__pyx_t_4);
   if (unlikely(__pyx_t_4 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 349, __pyx_L1_error)
+    __PYX_ERR(0, 339, __pyx_L1_error)
   }
-  __pyx_t_15 = PyList_GET_SIZE(__pyx_t_4); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 349, __pyx_L1_error)
+  __pyx_t_15 = PyList_GET_SIZE(__pyx_t_4); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 339, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_1 = ((__pyx_t_15 > 0xC3500) != 0);
   if (__pyx_t_1) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_insert_objs)) { __Pyx_RaiseClosureNameError("insert_objs"); __PYX_ERR(0, 349, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_insert_objs)) { __Pyx_RaiseClosureNameError("insert_objs"); __PYX_ERR(0, 339, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_insert_objs);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_insert_objs; __pyx_t_2 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -8704,31 +8704,31 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 349, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 339, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   }
 
-  /* "owlready2_optimized.pyx":350
+  /* "owlready2_optimized.pyx":340
  * 
  *     if len(objs ) > 800000: insert_objs()
  *     if len(datas) > 800000: insert_datas()             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 350, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 340, __pyx_L1_error) }
   __pyx_t_4 = __pyx_cur_scope->__pyx_v_datas;
   __Pyx_INCREF(__pyx_t_4);
   if (unlikely(__pyx_t_4 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 350, __pyx_L1_error)
+    __PYX_ERR(0, 340, __pyx_L1_error)
   }
-  __pyx_t_15 = PyList_GET_SIZE(__pyx_t_4); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 350, __pyx_L1_error)
+  __pyx_t_15 = PyList_GET_SIZE(__pyx_t_4); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 340, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_t_1 = ((__pyx_t_15 > 0xC3500) != 0);
   if (__pyx_t_1) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_insert_datas)) { __Pyx_RaiseClosureNameError("insert_datas"); __PYX_ERR(0, 350, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_insert_datas)) { __Pyx_RaiseClosureNameError("insert_datas"); __PYX_ERR(0, 340, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_insert_datas);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_insert_datas; __pyx_t_2 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -8742,13 +8742,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_2) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_2) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 350, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 340, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   }
 
-  /* "owlready2_optimized.pyx":279
+  /* "owlready2_optimized.pyx":269
  * 
  * 
  *   def endElement(str tag):             # <<<<<<<<<<<<<<
@@ -8778,7 +8778,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_6endElement(PyObj
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":353
+/* "owlready2_optimized.pyx":343
  * 
  * 
  *   def characters(str content):             # <<<<<<<<<<<<<<
@@ -8796,7 +8796,7 @@ static PyObject *__pyx_pw_19owlready2_optimized_12parse_rdfxml_9characters(PyObj
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("characters (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_content), (&PyUnicode_Type), 1, "content", 1))) __PYX_ERR(0, 353, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_content), (&PyUnicode_Type), 1, "content", 1))) __PYX_ERR(0, 343, __pyx_L1_error)
   __pyx_r = __pyx_pf_19owlready2_optimized_12parse_rdfxml_8characters(__pyx_self, ((PyObject*)__pyx_v_content));
 
   /* function exit code */
@@ -8823,28 +8823,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_8characters(PyObj
   __pyx_outer_scope = (struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_2_parse_rdfxml *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "owlready2_optimized.pyx":355
+  /* "owlready2_optimized.pyx":345
  *   def characters(str content):
  *     nonlocal current_content,  stack
  *     if stack[-1][0] == "Literal": current_content += content             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 355, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 345, __pyx_L1_error) }
   if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 355, __pyx_L1_error)
+    __PYX_ERR(0, 345, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 345, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_GetItemInt(__pyx_t_1, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 345, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_Literal, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 355, __pyx_L1_error)
+  __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_Literal, Py_EQ)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 345, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   if (__pyx_t_3) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 355, __pyx_L1_error) }
-    __pyx_t_2 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_current_content, __pyx_v_content); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 355, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 345, __pyx_L1_error) }
+    __pyx_t_2 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_current_content, __pyx_v_content); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 345, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_current_content);
     __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_current_content, ((PyObject*)__pyx_t_2));
@@ -8852,7 +8852,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_8characters(PyObj
     __pyx_t_2 = 0;
   }
 
-  /* "owlready2_optimized.pyx":353
+  /* "owlready2_optimized.pyx":343
  * 
  * 
  *   def characters(str content):             # <<<<<<<<<<<<<<
@@ -8874,7 +8874,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_8characters(PyObj
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":385
+/* "owlready2_optimized.pyx":375
  *         content_2_bns[frozenset(content)].append(bn)
  * 
  *     def rebuild_bn(object content):             # <<<<<<<<<<<<<<
@@ -8931,14 +8931,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
   __pyx_outer_scope = (struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_2_parse_rdfxml *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "owlready2_optimized.pyx":387
+  /* "owlready2_optimized.pyx":377
  *     def rebuild_bn(object content):
  *       nonlocal content_2_bns
  *       cdef int bn = new_blank()             # <<<<<<<<<<<<<<
  *       content_2_bns[frozenset(content)].append(bn)
  *       cdef tuple i
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 387, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 377, __pyx_L1_error) }
   __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
   __pyx_t_2 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -8952,33 +8952,33 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 387, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 377, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 387, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 377, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_v_bn = __pyx_t_4;
 
-  /* "owlready2_optimized.pyx":388
+  /* "owlready2_optimized.pyx":378
  *       nonlocal content_2_bns
  *       cdef int bn = new_blank()
  *       content_2_bns[frozenset(content)].append(bn)             # <<<<<<<<<<<<<<
  *       cdef tuple i
  *       cdef object drop
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_content_2_bns)) { __Pyx_RaiseClosureNameError("content_2_bns"); __PYX_ERR(0, 388, __pyx_L1_error) }
-  __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_v_content); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 388, __pyx_L1_error)
+  if (unlikely(!__pyx_cur_scope->__pyx_v_content_2_bns)) { __Pyx_RaiseClosureNameError("content_2_bns"); __PYX_ERR(0, 378, __pyx_L1_error) }
+  __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_v_content); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 378, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 378, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 388, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 378, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_5 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 388, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_1); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 378, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "owlready2_optimized.pyx":395
+  /* "owlready2_optimized.pyx":385
  *       cdef object o
  *       cdef list l
  *       for i in content:             # <<<<<<<<<<<<<<
@@ -8989,26 +8989,26 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
     __pyx_t_1 = __pyx_v_content; __Pyx_INCREF(__pyx_t_1); __pyx_t_6 = 0;
     __pyx_t_7 = NULL;
   } else {
-    __pyx_t_6 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_content); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 395, __pyx_L1_error)
+    __pyx_t_6 = -1; __pyx_t_1 = PyObject_GetIter(__pyx_v_content); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 385, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    __pyx_t_7 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 395, __pyx_L1_error)
+    __pyx_t_7 = Py_TYPE(__pyx_t_1)->tp_iternext; if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 385, __pyx_L1_error)
   }
   for (;;) {
     if (likely(!__pyx_t_7)) {
       if (likely(PyList_CheckExact(__pyx_t_1))) {
         if (__pyx_t_6 >= PyList_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 395, __pyx_L1_error)
+        __pyx_t_2 = PyList_GET_ITEM(__pyx_t_1, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 385, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 395, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       } else {
         if (__pyx_t_6 >= PyTuple_GET_SIZE(__pyx_t_1)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 395, __pyx_L1_error)
+        __pyx_t_2 = PyTuple_GET_ITEM(__pyx_t_1, __pyx_t_6); __Pyx_INCREF(__pyx_t_2); __pyx_t_6++; if (unlikely(0 < 0)) __PYX_ERR(0, 385, __pyx_L1_error)
         #else
-        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 395, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(__pyx_t_1, __pyx_t_6); __pyx_t_6++; if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 385, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         #endif
       }
@@ -9018,17 +9018,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 395, __pyx_L1_error)
+          else __PYX_ERR(0, 385, __pyx_L1_error)
         }
         break;
       }
       __Pyx_GOTREF(__pyx_t_2);
     }
-    if (!(likely(PyTuple_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 395, __pyx_L1_error)
+    if (!(likely(PyTuple_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "tuple", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 385, __pyx_L1_error)
     __Pyx_XDECREF_SET(__pyx_v_i, ((PyObject*)__pyx_t_2));
     __pyx_t_2 = 0;
 
-    /* "owlready2_optimized.pyx":396
+    /* "owlready2_optimized.pyx":386
  *       cdef list l
  *       for i in content:
  *         if   i[0] == "REL":             # <<<<<<<<<<<<<<
@@ -9037,15 +9037,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
  */
     if (unlikely(__pyx_v_i == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 396, __pyx_L1_error)
+      __PYX_ERR(0, 386, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_GetItemInt_Tuple(__pyx_v_i, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 396, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt_Tuple(__pyx_v_i, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 386, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_REL, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 396, __pyx_L1_error)
+    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_REL, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 386, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (__pyx_t_8) {
 
-      /* "owlready2_optimized.pyx":397
+      /* "owlready2_optimized.pyx":387
  *       for i in content:
  *         if   i[0] == "REL":
  *           drop, p, o = i             # <<<<<<<<<<<<<<
@@ -9058,7 +9058,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
         if (unlikely(size != 3)) {
           if (size > 3) __Pyx_RaiseTooManyValuesError(3);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 397, __pyx_L1_error)
+          __PYX_ERR(0, 387, __pyx_L1_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         __pyx_t_2 = PyTuple_GET_ITEM(sequence, 0); 
@@ -9068,17 +9068,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
         __Pyx_INCREF(__pyx_t_3);
         __Pyx_INCREF(__pyx_t_9);
         #else
-        __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 397, __pyx_L1_error)
+        __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 387, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 397, __pyx_L1_error)
+        __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 387, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_9 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 397, __pyx_L1_error)
+        __pyx_t_9 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 387, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         #endif
       } else {
-        __Pyx_RaiseNoneNotIterableError(); __PYX_ERR(0, 397, __pyx_L1_error)
+        __Pyx_RaiseNoneNotIterableError(); __PYX_ERR(0, 387, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 397, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 387, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_XDECREF_SET(__pyx_v_drop, __pyx_t_2);
       __pyx_t_2 = 0;
@@ -9086,7 +9086,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __Pyx_XDECREF_SET(__pyx_v_o, __pyx_t_9);
       __pyx_t_9 = 0;
 
-      /* "owlready2_optimized.pyx":398
+      /* "owlready2_optimized.pyx":388
  *         if   i[0] == "REL":
  *           drop, p, o = i
  *           if not isinstance(o, int): o = rebuild_bn(o)             # <<<<<<<<<<<<<<
@@ -9096,30 +9096,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __pyx_t_8 = PyInt_Check(__pyx_v_o); 
       __pyx_t_10 = ((!(__pyx_t_8 != 0)) != 0);
       if (__pyx_t_10) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_rebuild_bn)) { __Pyx_RaiseClosureNameError("rebuild_bn"); __PYX_ERR(0, 398, __pyx_L1_error) }
-        __pyx_t_9 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_v_o); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 398, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_rebuild_bn)) { __Pyx_RaiseClosureNameError("rebuild_bn"); __PYX_ERR(0, 388, __pyx_L1_error) }
+        __pyx_t_9 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_v_o); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 388, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
         __Pyx_DECREF_SET(__pyx_v_o, __pyx_t_9);
         __pyx_t_9 = 0;
       }
 
-      /* "owlready2_optimized.pyx":399
+      /* "owlready2_optimized.pyx":389
  *           drop, p, o = i
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           objs.append((bn, p, o))             # <<<<<<<<<<<<<<
  *         elif i[0] == "DAT":
  *           drop, p, o, d = i
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 399, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 389, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 399, __pyx_L1_error)
+        __PYX_ERR(0, 389, __pyx_L1_error)
       }
-      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 399, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 389, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 399, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 389, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 399, __pyx_L1_error)
+      __pyx_t_2 = PyTuple_New(3); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 389, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GIVEREF(__pyx_t_9);
       PyTuple_SET_ITEM(__pyx_t_2, 0, __pyx_t_9);
@@ -9130,10 +9130,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       PyTuple_SET_ITEM(__pyx_t_2, 2, __pyx_v_o);
       __pyx_t_9 = 0;
       __pyx_t_3 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_2); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 399, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_2); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 389, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":396
+      /* "owlready2_optimized.pyx":386
  *       cdef list l
  *       for i in content:
  *         if   i[0] == "REL":             # <<<<<<<<<<<<<<
@@ -9143,7 +9143,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       goto __pyx_L5;
     }
 
-    /* "owlready2_optimized.pyx":400
+    /* "owlready2_optimized.pyx":390
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           objs.append((bn, p, o))
  *         elif i[0] == "DAT":             # <<<<<<<<<<<<<<
@@ -9152,15 +9152,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
  */
     if (unlikely(__pyx_v_i == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 400, __pyx_L1_error)
+      __PYX_ERR(0, 390, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_GetItemInt_Tuple(__pyx_v_i, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 400, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_GetItemInt_Tuple(__pyx_v_i, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 390, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_10 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_DAT, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 400, __pyx_L1_error)
+    __pyx_t_10 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_n_u_DAT, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 390, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (__pyx_t_10) {
 
-      /* "owlready2_optimized.pyx":401
+      /* "owlready2_optimized.pyx":391
  *           objs.append((bn, p, o))
  *         elif i[0] == "DAT":
  *           drop, p, o, d = i             # <<<<<<<<<<<<<<
@@ -9173,7 +9173,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
         if (unlikely(size != 4)) {
           if (size > 4) __Pyx_RaiseTooManyValuesError(4);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 401, __pyx_L1_error)
+          __PYX_ERR(0, 391, __pyx_L1_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         __pyx_t_2 = PyTuple_GET_ITEM(sequence, 0); 
@@ -9189,16 +9189,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
           Py_ssize_t i;
           PyObject** temps[4] = {&__pyx_t_2,&__pyx_t_3,&__pyx_t_9,&__pyx_t_11};
           for (i=0; i < 4; i++) {
-            PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 401, __pyx_L1_error)
+            PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 391, __pyx_L1_error)
             __Pyx_GOTREF(item);
             *(temps[i]) = item;
           }
         }
         #endif
       } else {
-        __Pyx_RaiseNoneNotIterableError(); __PYX_ERR(0, 401, __pyx_L1_error)
+        __Pyx_RaiseNoneNotIterableError(); __PYX_ERR(0, 391, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 401, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 391, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_XDECREF_SET(__pyx_v_drop, __pyx_t_2);
       __pyx_t_2 = 0;
@@ -9208,7 +9208,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __Pyx_XDECREF_SET(__pyx_v_d, __pyx_t_11);
       __pyx_t_11 = 0;
 
-      /* "owlready2_optimized.pyx":402
+      /* "owlready2_optimized.pyx":392
  *         elif i[0] == "DAT":
  *           drop, p, o, d = i
  *           if not isinstance(o, int): o = rebuild_bn(o)             # <<<<<<<<<<<<<<
@@ -9218,30 +9218,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __pyx_t_10 = PyInt_Check(__pyx_v_o); 
       __pyx_t_8 = ((!(__pyx_t_10 != 0)) != 0);
       if (__pyx_t_8) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_rebuild_bn)) { __Pyx_RaiseClosureNameError("rebuild_bn"); __PYX_ERR(0, 402, __pyx_L1_error) }
-        __pyx_t_11 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_v_o); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 402, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_rebuild_bn)) { __Pyx_RaiseClosureNameError("rebuild_bn"); __PYX_ERR(0, 392, __pyx_L1_error) }
+        __pyx_t_11 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_v_o); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 392, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF_SET(__pyx_v_o, __pyx_t_11);
         __pyx_t_11 = 0;
       }
 
-      /* "owlready2_optimized.pyx":403
+      /* "owlready2_optimized.pyx":393
  *           drop, p, o, d = i
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           datas.append((bn, p, o, d))             # <<<<<<<<<<<<<<
  *         elif i[0] == "INV":
  *           drop, p, o = i
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 403, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 393, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 403, __pyx_L1_error)
+        __PYX_ERR(0, 393, __pyx_L1_error)
       }
-      __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 403, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 393, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 403, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 393, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 403, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 393, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_11);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_11);
@@ -9255,10 +9255,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       PyTuple_SET_ITEM(__pyx_t_3, 3, __pyx_v_d);
       __pyx_t_11 = 0;
       __pyx_t_9 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 403, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 393, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "owlready2_optimized.pyx":400
+      /* "owlready2_optimized.pyx":390
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           objs.append((bn, p, o))
  *         elif i[0] == "DAT":             # <<<<<<<<<<<<<<
@@ -9268,7 +9268,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       goto __pyx_L5;
     }
 
-    /* "owlready2_optimized.pyx":404
+    /* "owlready2_optimized.pyx":394
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           datas.append((bn, p, o, d))
  *         elif i[0] == "INV":             # <<<<<<<<<<<<<<
@@ -9277,15 +9277,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
  */
     if (unlikely(__pyx_v_i == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 404, __pyx_L1_error)
+      __PYX_ERR(0, 394, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_GetItemInt_Tuple(__pyx_v_i, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 404, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_Tuple(__pyx_v_i, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 394, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_t_3, __pyx_n_u_INV, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 404, __pyx_L1_error)
+    __pyx_t_8 = (__Pyx_PyUnicode_Equals(__pyx_t_3, __pyx_n_u_INV, Py_EQ)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 394, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_8) {
 
-      /* "owlready2_optimized.pyx":405
+      /* "owlready2_optimized.pyx":395
  *           datas.append((bn, p, o, d))
  *         elif i[0] == "INV":
  *           drop, p, o = i             # <<<<<<<<<<<<<<
@@ -9298,7 +9298,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
         if (unlikely(size != 3)) {
           if (size > 3) __Pyx_RaiseTooManyValuesError(3);
           else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-          __PYX_ERR(0, 405, __pyx_L1_error)
+          __PYX_ERR(0, 395, __pyx_L1_error)
         }
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
         __pyx_t_3 = PyTuple_GET_ITEM(sequence, 0); 
@@ -9308,17 +9308,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
         __Pyx_INCREF(__pyx_t_9);
         __Pyx_INCREF(__pyx_t_11);
         #else
-        __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 405, __pyx_L1_error)
+        __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 395, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_9 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 405, __pyx_L1_error)
+        __pyx_t_9 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 395, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_9);
-        __pyx_t_11 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 405, __pyx_L1_error)
+        __pyx_t_11 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 395, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         #endif
       } else {
-        __Pyx_RaiseNoneNotIterableError(); __PYX_ERR(0, 405, __pyx_L1_error)
+        __Pyx_RaiseNoneNotIterableError(); __PYX_ERR(0, 395, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_9); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 405, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_9); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 395, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_XDECREF_SET(__pyx_v_drop, __pyx_t_3);
       __pyx_t_3 = 0;
@@ -9326,7 +9326,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __Pyx_XDECREF_SET(__pyx_v_o, __pyx_t_11);
       __pyx_t_11 = 0;
 
-      /* "owlready2_optimized.pyx":406
+      /* "owlready2_optimized.pyx":396
  *         elif i[0] == "INV":
  *           drop, p, o = i
  *           if not isinstance(o, int): o = rebuild_bn(o)             # <<<<<<<<<<<<<<
@@ -9336,30 +9336,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __pyx_t_8 = PyInt_Check(__pyx_v_o); 
       __pyx_t_10 = ((!(__pyx_t_8 != 0)) != 0);
       if (__pyx_t_10) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_rebuild_bn)) { __Pyx_RaiseClosureNameError("rebuild_bn"); __PYX_ERR(0, 406, __pyx_L1_error) }
-        __pyx_t_11 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_v_o); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 406, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_rebuild_bn)) { __Pyx_RaiseClosureNameError("rebuild_bn"); __PYX_ERR(0, 396, __pyx_L1_error) }
+        __pyx_t_11 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_v_o); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 396, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __Pyx_DECREF_SET(__pyx_v_o, __pyx_t_11);
         __pyx_t_11 = 0;
       }
 
-      /* "owlready2_optimized.pyx":407
+      /* "owlready2_optimized.pyx":397
  *           drop, p, o = i
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           objs.append((o, p, bn))             # <<<<<<<<<<<<<<
  *         elif i[0] == "COL":
  *           drop, p, *l = i
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 407, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 397, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 407, __pyx_L1_error)
+        __PYX_ERR(0, 397, __pyx_L1_error)
       }
-      __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 407, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 397, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 407, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 397, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 407, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 397, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_INCREF(__pyx_v_o);
       __Pyx_GIVEREF(__pyx_v_o);
@@ -9370,10 +9370,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_t_9);
       __pyx_t_11 = 0;
       __pyx_t_9 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 407, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 397, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "owlready2_optimized.pyx":404
+      /* "owlready2_optimized.pyx":394
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           datas.append((bn, p, o, d))
  *         elif i[0] == "INV":             # <<<<<<<<<<<<<<
@@ -9383,7 +9383,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       goto __pyx_L5;
     }
 
-    /* "owlready2_optimized.pyx":408
+    /* "owlready2_optimized.pyx":398
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           objs.append((o, p, bn))
  *         elif i[0] == "COL":             # <<<<<<<<<<<<<<
@@ -9392,15 +9392,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
  */
     if (unlikely(__pyx_v_i == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 408, __pyx_L1_error)
+      __PYX_ERR(0, 398, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_GetItemInt_Tuple(__pyx_v_i, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 408, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_Tuple(__pyx_v_i, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 398, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_10 = (__Pyx_PyUnicode_Equals(__pyx_t_3, __pyx_n_u_COL, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 408, __pyx_L1_error)
+    __pyx_t_10 = (__Pyx_PyUnicode_Equals(__pyx_t_3, __pyx_n_u_COL, Py_EQ)); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 398, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (likely(__pyx_t_10)) {
 
-      /* "owlready2_optimized.pyx":409
+      /* "owlready2_optimized.pyx":399
  *           objs.append((o, p, bn))
  *         elif i[0] == "COL":
  *           drop, p, *l = i             # <<<<<<<<<<<<<<
@@ -9410,7 +9410,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       {
         Py_ssize_t index = -1;
         PyObject** temps[3] = {&__pyx_t_3,&__pyx_t_9};
-        __pyx_t_11 = PyObject_GetIter(__pyx_v_i); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 409, __pyx_L1_error)
+        __pyx_t_11 = PyObject_GetIter(__pyx_v_i); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 399, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_11);
         __pyx_t_12 = Py_TYPE(__pyx_t_11)->tp_iternext;
         for (index=0; index < 2; index++) {
@@ -9423,12 +9423,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __pyx_t_12 = NULL;
         if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-        __PYX_ERR(0, 409, __pyx_L1_error)
+        __PYX_ERR(0, 399, __pyx_L1_error)
         __pyx_L10_unpacking_done:;
-        __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_9); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 409, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_t_9); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 399, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
       }
-      __pyx_t_2 = PySequence_List(__pyx_t_11); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 409, __pyx_L1_error)
+      __pyx_t_2 = PySequence_List(__pyx_t_11); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 399, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       __Pyx_XDECREF_SET(__pyx_v_drop, __pyx_t_3);
@@ -9437,7 +9437,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __Pyx_XDECREF_SET(__pyx_v_l, ((PyObject*)__pyx_t_2));
       __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":410
+      /* "owlready2_optimized.pyx":400
  *         elif i[0] == "COL":
  *           drop, p, *l = i
  *           l = [(isinstance(x, int) and x) or rebuild_bn(x) for x in l]             # <<<<<<<<<<<<<<
@@ -9445,19 +9445,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
  *         else:
  */
       { /* enter inner scope */
-        __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 410, __pyx_L13_error)
+        __pyx_t_2 = PyList_New(0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 400, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_2);
         if (unlikely(__pyx_v_l == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-          __PYX_ERR(0, 410, __pyx_L13_error)
+          __PYX_ERR(0, 400, __pyx_L13_error)
         }
         __pyx_t_9 = __pyx_v_l; __Pyx_INCREF(__pyx_t_9); __pyx_t_13 = 0;
         for (;;) {
           if (__pyx_t_13 >= PyList_GET_SIZE(__pyx_t_9)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_3 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_13); __Pyx_INCREF(__pyx_t_3); __pyx_t_13++; if (unlikely(0 < 0)) __PYX_ERR(0, 410, __pyx_L13_error)
+          __pyx_t_3 = PyList_GET_ITEM(__pyx_t_9, __pyx_t_13); __Pyx_INCREF(__pyx_t_3); __pyx_t_13++; if (unlikely(0 < 0)) __PYX_ERR(0, 400, __pyx_L13_error)
           #else
-          __pyx_t_3 = PySequence_ITEM(__pyx_t_9, __pyx_t_13); __pyx_t_13++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 410, __pyx_L13_error)
+          __pyx_t_3 = PySequence_ITEM(__pyx_t_9, __pyx_t_13); __pyx_t_13++; if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 400, __pyx_L13_error)
           __Pyx_GOTREF(__pyx_t_3);
           #endif
           __Pyx_XDECREF_SET(__pyx_8genexpr1__pyx_v_x, __pyx_t_3);
@@ -9467,7 +9467,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
             goto __pyx_L17_next_or;
           } else {
           }
-          __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_8genexpr1__pyx_v_x); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 410, __pyx_L13_error)
+          __pyx_t_10 = __Pyx_PyObject_IsTrue(__pyx_8genexpr1__pyx_v_x); if (unlikely(__pyx_t_10 < 0)) __PYX_ERR(0, 400, __pyx_L13_error)
           if (!__pyx_t_10) {
           } else {
             __Pyx_INCREF(__pyx_8genexpr1__pyx_v_x);
@@ -9475,14 +9475,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
             goto __pyx_L16_bool_binop_done;
           }
           __pyx_L17_next_or:;
-          if (unlikely(!__pyx_cur_scope->__pyx_v_rebuild_bn)) { __Pyx_RaiseClosureNameError("rebuild_bn"); __PYX_ERR(0, 410, __pyx_L13_error) }
-          __pyx_t_11 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_8genexpr1__pyx_v_x); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 410, __pyx_L13_error)
+          if (unlikely(!__pyx_cur_scope->__pyx_v_rebuild_bn)) { __Pyx_RaiseClosureNameError("rebuild_bn"); __PYX_ERR(0, 400, __pyx_L13_error) }
+          __pyx_t_11 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_8genexpr1__pyx_v_x); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 400, __pyx_L13_error)
           __Pyx_GOTREF(__pyx_t_11);
           __Pyx_INCREF(__pyx_t_11);
           __pyx_t_3 = __pyx_t_11;
           __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
           __pyx_L16_bool_binop_done:;
-          if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_t_3))) __PYX_ERR(0, 410, __pyx_L13_error)
+          if (unlikely(__Pyx_ListComp_Append(__pyx_t_2, (PyObject*)__pyx_t_3))) __PYX_ERR(0, 400, __pyx_L13_error)
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         }
         __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
@@ -9496,37 +9496,37 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __Pyx_DECREF_SET(__pyx_v_l, ((PyObject*)__pyx_t_2));
       __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":411
+      /* "owlready2_optimized.pyx":401
  *           drop, p, *l = i
  *           l = [(isinstance(x, int) and x) or rebuild_bn(x) for x in l]
  *           objs.append((bn, p, new_list(l, objs, _abbreviate, new_blank)))             # <<<<<<<<<<<<<<
  *         else:
  *           print(i)
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 411, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 401, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 411, __pyx_L1_error)
+        __PYX_ERR(0, 401, __pyx_L1_error)
       }
-      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 411, __pyx_L1_error)
+      __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 401, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 411, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 401, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_9);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 411, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 401, __pyx_L1_error) }
       __pyx_t_3 = __pyx_cur_scope->__pyx_v_objs;
       __Pyx_INCREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 411, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 401, __pyx_L1_error) }
       __pyx_t_11 = __pyx_cur_scope->__pyx_v__abbreviate;
       __Pyx_INCREF(__pyx_t_11);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 411, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 401, __pyx_L1_error) }
       __pyx_t_14 = __pyx_cur_scope->__pyx_v_new_blank;
       __Pyx_INCREF(__pyx_t_14);
-      __pyx_t_15 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized_new_list(__pyx_v_l, ((PyObject*)__pyx_t_3), __pyx_t_11, __pyx_t_14)); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 411, __pyx_L1_error)
+      __pyx_t_15 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized_new_list(__pyx_v_l, ((PyObject*)__pyx_t_3), __pyx_t_11, __pyx_t_14)); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 401, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_15);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
       __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
-      __pyx_t_14 = PyTuple_New(3); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 411, __pyx_L1_error)
+      __pyx_t_14 = PyTuple_New(3); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 401, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_14);
       __Pyx_GIVEREF(__pyx_t_2);
       PyTuple_SET_ITEM(__pyx_t_14, 0, __pyx_t_2);
@@ -9537,10 +9537,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       __pyx_t_2 = 0;
       __pyx_t_9 = 0;
       __pyx_t_15 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_14); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 411, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_14); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 401, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-      /* "owlready2_optimized.pyx":408
+      /* "owlready2_optimized.pyx":398
  *           if not isinstance(o, int): o = rebuild_bn(o)
  *           objs.append((o, p, bn))
  *         elif i[0] == "COL":             # <<<<<<<<<<<<<<
@@ -9550,7 +9550,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
       goto __pyx_L5;
     }
 
-    /* "owlready2_optimized.pyx":413
+    /* "owlready2_optimized.pyx":403
  *           objs.append((bn, p, new_list(l, objs, _abbreviate, new_blank)))
  *         else:
  *           print(i)             # <<<<<<<<<<<<<<
@@ -9558,11 +9558,11 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
  *       return bn
  */
     /*else*/ {
-      __pyx_t_14 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_v_i); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 413, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyObject_CallOneArg(__pyx_builtin_print, __pyx_v_i); if (unlikely(!__pyx_t_14)) __PYX_ERR(0, 403, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_14);
       __Pyx_DECREF(__pyx_t_14); __pyx_t_14 = 0;
 
-      /* "owlready2_optimized.pyx":414
+      /* "owlready2_optimized.pyx":404
  *         else:
  *           print(i)
  *           raise ValueError             # <<<<<<<<<<<<<<
@@ -9570,11 +9570,11 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
  * 
  */
       __Pyx_Raise(__pyx_builtin_ValueError, 0, 0, 0);
-      __PYX_ERR(0, 414, __pyx_L1_error)
+      __PYX_ERR(0, 404, __pyx_L1_error)
     }
     __pyx_L5:;
 
-    /* "owlready2_optimized.pyx":395
+    /* "owlready2_optimized.pyx":385
  *       cdef object o
  *       cdef list l
  *       for i in content:             # <<<<<<<<<<<<<<
@@ -9584,7 +9584,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "owlready2_optimized.pyx":415
+  /* "owlready2_optimized.pyx":405
  *           print(i)
  *           raise ValueError
  *       return bn             # <<<<<<<<<<<<<<
@@ -9592,13 +9592,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(PyOb
  *     for axiom_iri, triples in triples_with_unnamed_bn.items():
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 415, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 405, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "owlready2_optimized.pyx":385
+  /* "owlready2_optimized.pyx":375
  *         content_2_bns[frozenset(content)].append(bn)
  * 
  *     def rebuild_bn(object content):             # <<<<<<<<<<<<<<
@@ -10219,76 +10219,76 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
   __pyx_v_startElement = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":279
+  /* "owlready2_optimized.pyx":269
  * 
  * 
  *   def endElement(str tag):             # <<<<<<<<<<<<<<
  *     nonlocal tag_is_predicate, dont_create_unnamed_bn,  stack, axiom_annotation_sources, axiom_annotation_props, axiom_annotation_targets, triples_with_unnamed_bn
  *     cdef int iri2
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_rdfxml_7endElement, 0, __pyx_n_s_parse_rdfxml_locals_endElement, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 279, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_rdfxml_7endElement, 0, __pyx_n_s_parse_rdfxml_locals_endElement, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__20)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 269, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_endElement = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":353
+  /* "owlready2_optimized.pyx":343
  * 
  * 
  *   def characters(str content):             # <<<<<<<<<<<<<<
  *     nonlocal current_content,  stack
  *     if stack[-1][0] == "Literal": current_content += content
  */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_rdfxml_9characters, 0, __pyx_n_s_parse_rdfxml_locals_characters, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 353, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_rdfxml_9characters, 0, __pyx_n_s_parse_rdfxml_locals_characters, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__22)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 343, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_characters = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":358
+  /* "owlready2_optimized.pyx":348
  * 
  * 
  *   parser.StartNamespaceDeclHandler = startNamespace             # <<<<<<<<<<<<<<
  *   parser.EndNamespaceDeclHandler   = endNamespace
  *   parser.StartElementHandler       = startElement
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_StartNamespaceDeclHandler, __pyx_v_startNamespace) < 0) __PYX_ERR(0, 358, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_StartNamespaceDeclHandler, __pyx_v_startNamespace) < 0) __PYX_ERR(0, 348, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":359
+  /* "owlready2_optimized.pyx":349
  * 
  *   parser.StartNamespaceDeclHandler = startNamespace
  *   parser.EndNamespaceDeclHandler   = endNamespace             # <<<<<<<<<<<<<<
  *   parser.StartElementHandler       = startElement
  *   parser.EndElementHandler         = endElement
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_EndNamespaceDeclHandler, __pyx_v_endNamespace) < 0) __PYX_ERR(0, 359, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_EndNamespaceDeclHandler, __pyx_v_endNamespace) < 0) __PYX_ERR(0, 349, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":360
+  /* "owlready2_optimized.pyx":350
  *   parser.StartNamespaceDeclHandler = startNamespace
  *   parser.EndNamespaceDeclHandler   = endNamespace
  *   parser.StartElementHandler       = startElement             # <<<<<<<<<<<<<<
  *   parser.EndElementHandler         = endElement
  *   parser.CharacterDataHandler      = characters
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_StartElementHandler, __pyx_v_startElement) < 0) __PYX_ERR(0, 360, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_StartElementHandler, __pyx_v_startElement) < 0) __PYX_ERR(0, 350, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":361
+  /* "owlready2_optimized.pyx":351
  *   parser.EndNamespaceDeclHandler   = endNamespace
  *   parser.StartElementHandler       = startElement
  *   parser.EndElementHandler         = endElement             # <<<<<<<<<<<<<<
  *   parser.CharacterDataHandler      = characters
  * 
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_EndElementHandler, __pyx_v_endElement) < 0) __PYX_ERR(0, 361, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_EndElementHandler, __pyx_v_endElement) < 0) __PYX_ERR(0, 351, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":362
+  /* "owlready2_optimized.pyx":352
  *   parser.StartElementHandler       = startElement
  *   parser.EndElementHandler         = endElement
  *   parser.CharacterDataHandler      = characters             # <<<<<<<<<<<<<<
  * 
  *   try:
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CharacterDataHandler, __pyx_v_characters) < 0) __PYX_ERR(0, 362, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CharacterDataHandler, __pyx_v_characters) < 0) __PYX_ERR(0, 352, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":364
+  /* "owlready2_optimized.pyx":354
  *   parser.CharacterDataHandler      = characters
  * 
  *   try:             # <<<<<<<<<<<<<<
@@ -10304,7 +10304,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "owlready2_optimized.pyx":365
+      /* "owlready2_optimized.pyx":355
  * 
  *   try:
  *     if isinstance(f, str):             # <<<<<<<<<<<<<<
@@ -10315,14 +10315,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
       __pyx_t_8 = (__pyx_t_7 != 0);
       if (__pyx_t_8) {
 
-        /* "owlready2_optimized.pyx":366
+        /* "owlready2_optimized.pyx":356
  *   try:
  *     if isinstance(f, str):
  *       f = open(f, "rb")             # <<<<<<<<<<<<<<
  *       parser.ParseFile(f)
  *       f.close()
  */
-        __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 366, __pyx_L13_error)
+        __pyx_t_2 = PyTuple_New(2); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 356, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_INCREF(__pyx_v_f);
         __Pyx_GIVEREF(__pyx_v_f);
@@ -10330,20 +10330,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         __Pyx_INCREF(__pyx_n_u_rb);
         __Pyx_GIVEREF(__pyx_n_u_rb);
         PyTuple_SET_ITEM(__pyx_t_2, 1, __pyx_n_u_rb);
-        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 366, __pyx_L13_error)
+        __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_t_2, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 356, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF_SET(__pyx_v_f, __pyx_t_1);
         __pyx_t_1 = 0;
 
-        /* "owlready2_optimized.pyx":367
+        /* "owlready2_optimized.pyx":357
  *     if isinstance(f, str):
  *       f = open(f, "rb")
  *       parser.ParseFile(f)             # <<<<<<<<<<<<<<
  *       f.close()
  *     else:
  */
-        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_ParseFile); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 367, __pyx_L13_error)
+        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_ParseFile); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 357, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_2);
         __pyx_t_6 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -10357,19 +10357,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         }
         __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_v_f) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_f);
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 367, __pyx_L13_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 357, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "owlready2_optimized.pyx":368
+        /* "owlready2_optimized.pyx":358
  *       f = open(f, "rb")
  *       parser.ParseFile(f)
  *       f.close()             # <<<<<<<<<<<<<<
  *     else:
  *       parser.ParseFile(f)
  */
-        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_f, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 368, __pyx_L13_error)
+        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_f, __pyx_n_s_close); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 358, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_2);
         __pyx_t_6 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -10383,12 +10383,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         }
         __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 368, __pyx_L13_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 358, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "owlready2_optimized.pyx":365
+        /* "owlready2_optimized.pyx":355
  * 
  *   try:
  *     if isinstance(f, str):             # <<<<<<<<<<<<<<
@@ -10398,7 +10398,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         goto __pyx_L19;
       }
 
-      /* "owlready2_optimized.pyx":370
+      /* "owlready2_optimized.pyx":360
  *       f.close()
  *     else:
  *       parser.ParseFile(f)             # <<<<<<<<<<<<<<
@@ -10406,7 +10406,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
  *     raise OwlReadyOntologyParsingError("RDF/XML parsing error in file %s, line %s, column %s." % (getattr(f, "name", getattr(f, "url", "???")), parser.CurrentLineNumber, parser.CurrentColumnNumber)) from e
  */
       /*else*/ {
-        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_ParseFile); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 370, __pyx_L13_error)
+        __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_ParseFile); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 360, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_2);
         __pyx_t_6 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -10420,14 +10420,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         }
         __pyx_t_1 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_6, __pyx_v_f) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_v_f);
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 370, __pyx_L13_error)
+        if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 360, __pyx_L13_error)
         __Pyx_GOTREF(__pyx_t_1);
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       }
       __pyx_L19:;
 
-      /* "owlready2_optimized.pyx":364
+      /* "owlready2_optimized.pyx":354
  *   parser.CharacterDataHandler      = characters
  * 
  *   try:             # <<<<<<<<<<<<<<
@@ -10444,7 +10444,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":371
+    /* "owlready2_optimized.pyx":361
  *     else:
  *       parser.ParseFile(f)
  *   except Exception as e:             # <<<<<<<<<<<<<<
@@ -10454,7 +10454,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     __pyx_t_9 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_9) {
       __Pyx_AddTraceback("owlready2_optimized.parse_rdfxml", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_6) < 0) __PYX_ERR(0, 371, __pyx_L15_except_error)
+      if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_2, &__pyx_t_6) < 0) __PYX_ERR(0, 361, __pyx_L15_except_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_6);
@@ -10462,16 +10462,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
       __pyx_v_e = __pyx_t_2;
       /*try:*/ {
 
-        /* "owlready2_optimized.pyx":372
+        /* "owlready2_optimized.pyx":362
  *       parser.ParseFile(f)
  *   except Exception as e:
  *     raise OwlReadyOntologyParsingError("RDF/XML parsing error in file %s, line %s, column %s." % (getattr(f, "name", getattr(f, "url", "???")), parser.CurrentLineNumber, parser.CurrentColumnNumber)) from e             # <<<<<<<<<<<<<<
  * 
  *   cdef object content_2_bns
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_OwlReadyOntologyParsingError); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_OwlReadyOntologyParsingError); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_12 = PyTuple_New(7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_12 = PyTuple_New(7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_12);
         __pyx_t_13 = 0;
         __pyx_t_14 = 127;
@@ -10479,12 +10479,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         __pyx_t_13 += 30;
         __Pyx_GIVEREF(__pyx_kp_u_RDF_XML_parsing_error_in_file);
         PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_kp_u_RDF_XML_parsing_error_in_file);
-        __pyx_t_15 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_url, __pyx_kp_u__23); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_15 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_url, __pyx_kp_u__23); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_15);
-        __pyx_t_16 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_name, __pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_16 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_name, __pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-        __pyx_t_15 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_16), __pyx_empty_unicode); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_15 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_16), __pyx_empty_unicode); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_15) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_15) : __pyx_t_14;
@@ -10496,9 +10496,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         __pyx_t_13 += 7;
         __Pyx_GIVEREF(__pyx_kp_u_line);
         PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_kp_u_line);
-        __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentLineNumber); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentLineNumber); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_15);
-        __pyx_t_16 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_15), __pyx_empty_unicode); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_16 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_15), __pyx_empty_unicode); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
         __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_16) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_16) : __pyx_t_14;
@@ -10510,9 +10510,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         __pyx_t_13 += 9;
         __Pyx_GIVEREF(__pyx_kp_u_column);
         PyTuple_SET_ITEM(__pyx_t_12, 4, __pyx_kp_u_column);
-        __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentColumnNumber); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_cur_scope->__pyx_v_parser, __pyx_n_s_CurrentColumnNumber); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_15 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_16), __pyx_empty_unicode); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_15 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_16), __pyx_empty_unicode); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_15) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_15) : __pyx_t_14;
@@ -10524,7 +10524,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         __pyx_t_13 += 1;
         __Pyx_GIVEREF(__pyx_kp_u__24);
         PyTuple_SET_ITEM(__pyx_t_12, 6, __pyx_kp_u__24);
-        __pyx_t_15 = __Pyx_PyUnicode_Join(__pyx_t_12, 7, __pyx_t_13, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 372, __pyx_L25_error)
+        __pyx_t_15 = __Pyx_PyUnicode_Join(__pyx_t_12, 7, __pyx_t_13, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __pyx_t_12 = NULL;
@@ -10540,15 +10540,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         __pyx_t_10 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_12, __pyx_t_15) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_t_15);
         __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 372, __pyx_L25_error)
+        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 362, __pyx_L25_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_Raise(__pyx_t_10, 0, 0, __pyx_v_e);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-        __PYX_ERR(0, 372, __pyx_L25_error)
+        __PYX_ERR(0, 362, __pyx_L25_error)
       }
 
-      /* "owlready2_optimized.pyx":371
+      /* "owlready2_optimized.pyx":361
  *     else:
  *       parser.ParseFile(f)
  *   except Exception as e:             # <<<<<<<<<<<<<<
@@ -10598,7 +10598,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     goto __pyx_L15_except_error;
     __pyx_L15_except_error:;
 
-    /* "owlready2_optimized.pyx":364
+    /* "owlready2_optimized.pyx":354
  *   parser.CharacterDataHandler      = characters
  * 
  *   try:             # <<<<<<<<<<<<<<
@@ -10613,24 +10613,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     __pyx_L18_try_end:;
   }
 
-  /* "owlready2_optimized.pyx":379
+  /* "owlready2_optimized.pyx":369
  *   cdef int axiom_iri
  * 
  *   if triples_with_unnamed_bn:             # <<<<<<<<<<<<<<
  *     content_2_bns = defaultdict(list)
  *     for bn, content in bns.items():
  */
-  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 379, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyObject_IsTrue(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 369, __pyx_L1_error)
   if (__pyx_t_8) {
 
-    /* "owlready2_optimized.pyx":380
+    /* "owlready2_optimized.pyx":370
  * 
  *   if triples_with_unnamed_bn:
  *     content_2_bns = defaultdict(list)             # <<<<<<<<<<<<<<
  *     for bn, content in bns.items():
  *       if not bn in fake_blanks:
  */
-    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_defaultdict); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 380, __pyx_L1_error)
+    __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_defaultdict); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 370, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_t_1 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_2))) {
@@ -10644,14 +10644,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     }
     __pyx_t_6 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_1, ((PyObject *)(&PyList_Type))) : __Pyx_PyObject_CallOneArg(__pyx_t_2, ((PyObject *)(&PyList_Type)));
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 380, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 370, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_GIVEREF(__pyx_t_6);
     __pyx_cur_scope->__pyx_v_content_2_bns = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":381
+    /* "owlready2_optimized.pyx":371
  *   if triples_with_unnamed_bn:
  *     content_2_bns = defaultdict(list)
  *     for bn, content in bns.items():             # <<<<<<<<<<<<<<
@@ -10661,9 +10661,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     __pyx_t_13 = 0;
     if (unlikely(__pyx_cur_scope->__pyx_v_bns == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "items");
-      __PYX_ERR(0, 381, __pyx_L1_error)
+      __PYX_ERR(0, 371, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_dict_iterator(__pyx_cur_scope->__pyx_v_bns, 0, __pyx_n_s_items, (&__pyx_t_25), (&__pyx_t_17)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 381, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_dict_iterator(__pyx_cur_scope->__pyx_v_bns, 0, __pyx_n_s_items, (&__pyx_t_25), (&__pyx_t_17)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 371, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_XDECREF(__pyx_t_6);
     __pyx_t_6 = __pyx_t_2;
@@ -10671,49 +10671,49 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     while (1) {
       __pyx_t_9 = __Pyx_dict_iter_next(__pyx_t_6, __pyx_t_25, &__pyx_t_13, &__pyx_t_2, &__pyx_t_1, NULL, __pyx_t_17);
       if (unlikely(__pyx_t_9 == 0)) break;
-      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 381, __pyx_L1_error)
+      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 371, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 381, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_2); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 371, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-      if (!(likely(PySet_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "set", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 381, __pyx_L1_error)
+      if (!(likely(PySet_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "set", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 371, __pyx_L1_error)
       __pyx_v_bn = __pyx_t_9;
       __Pyx_XDECREF_SET(__pyx_v_content, ((PyObject*)__pyx_t_1));
       __pyx_t_1 = 0;
 
-      /* "owlready2_optimized.pyx":382
+      /* "owlready2_optimized.pyx":372
  *     content_2_bns = defaultdict(list)
  *     for bn, content in bns.items():
  *       if not bn in fake_blanks:             # <<<<<<<<<<<<<<
  *         content_2_bns[frozenset(content)].append(bn)
  * 
  */
-      __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 382, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 372, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
-      __pyx_t_8 = (__Pyx_PySet_ContainsTF(__pyx_t_1, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 382, __pyx_L1_error)
+      __pyx_t_8 = (__Pyx_PySet_ContainsTF(__pyx_t_1, __pyx_cur_scope->__pyx_v_fake_blanks, Py_NE)); if (unlikely(__pyx_t_8 < 0)) __PYX_ERR(0, 372, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_t_7 = (__pyx_t_8 != 0);
       if (__pyx_t_7) {
 
-        /* "owlready2_optimized.pyx":383
+        /* "owlready2_optimized.pyx":373
  *     for bn, content in bns.items():
  *       if not bn in fake_blanks:
  *         content_2_bns[frozenset(content)].append(bn)             # <<<<<<<<<<<<<<
  * 
  *     def rebuild_bn(object content):
  */
-        __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_v_content); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 383, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_v_content); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 383, __pyx_L1_error)
+        __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_1); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 373, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 383, __pyx_L1_error)
+        __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 373, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_1);
-        __pyx_t_26 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_1); if (unlikely(__pyx_t_26 == ((int)-1))) __PYX_ERR(0, 383, __pyx_L1_error)
+        __pyx_t_26 = __Pyx_PyObject_Append(__pyx_t_2, __pyx_t_1); if (unlikely(__pyx_t_26 == ((int)-1))) __PYX_ERR(0, 373, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-        /* "owlready2_optimized.pyx":382
+        /* "owlready2_optimized.pyx":372
  *     content_2_bns = defaultdict(list)
  *     for bn, content in bns.items():
  *       if not bn in fake_blanks:             # <<<<<<<<<<<<<<
@@ -10724,20 +10724,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":385
+    /* "owlready2_optimized.pyx":375
  *         content_2_bns[frozenset(content)].append(bn)
  * 
  *     def rebuild_bn(object content):             # <<<<<<<<<<<<<<
  *       nonlocal content_2_bns
  *       cdef int bn = new_blank()
  */
-    __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_rdfxml_11rebuild_bn, 0, __pyx_n_s_parse_rdfxml_locals_rebuild_bn, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 385, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_rdfxml_11rebuild_bn, 0, __pyx_n_s_parse_rdfxml_locals_rebuild_bn, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__26)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 375, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_GIVEREF(__pyx_t_6);
     __pyx_cur_scope->__pyx_v_rebuild_bn = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":417
+    /* "owlready2_optimized.pyx":407
  *       return bn
  * 
  *     for axiom_iri, triples in triples_with_unnamed_bn.items():             # <<<<<<<<<<<<<<
@@ -10747,9 +10747,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     __pyx_t_25 = 0;
     if (unlikely(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "items");
-      __PYX_ERR(0, 417, __pyx_L1_error)
+      __PYX_ERR(0, 407, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_dict_iterator(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn, 0, __pyx_n_s_items, (&__pyx_t_13), (&__pyx_t_17)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 417, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_dict_iterator(__pyx_cur_scope->__pyx_v_triples_with_unnamed_bn, 0, __pyx_n_s_items, (&__pyx_t_13), (&__pyx_t_17)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 407, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
     __Pyx_XDECREF(__pyx_t_6);
     __pyx_t_6 = __pyx_t_1;
@@ -10757,16 +10757,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     while (1) {
       __pyx_t_9 = __Pyx_dict_iter_next(__pyx_t_6, __pyx_t_13, &__pyx_t_25, &__pyx_t_1, &__pyx_t_2, NULL, __pyx_t_17);
       if (unlikely(__pyx_t_9 == 0)) break;
-      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 417, __pyx_L1_error)
+      if (unlikely(__pyx_t_9 == -1)) __PYX_ERR(0, 407, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       __Pyx_GOTREF(__pyx_t_2);
-      __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 417, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_1); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 407, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
       __pyx_v_axiom_iri = __pyx_t_9;
       __Pyx_XDECREF_SET(__pyx_v_triples, __pyx_t_2);
       __pyx_t_2 = 0;
 
-      /* "owlready2_optimized.pyx":418
+      /* "owlready2_optimized.pyx":408
  * 
  *     for axiom_iri, triples in triples_with_unnamed_bn.items():
  *       for p, o, line, column in triples:             # <<<<<<<<<<<<<<
@@ -10777,26 +10777,26 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         __pyx_t_2 = __pyx_v_triples; __Pyx_INCREF(__pyx_t_2); __pyx_t_27 = 0;
         __pyx_t_28 = NULL;
       } else {
-        __pyx_t_27 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_triples); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 418, __pyx_L1_error)
+        __pyx_t_27 = -1; __pyx_t_2 = PyObject_GetIter(__pyx_v_triples); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 408, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_2);
-        __pyx_t_28 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 418, __pyx_L1_error)
+        __pyx_t_28 = Py_TYPE(__pyx_t_2)->tp_iternext; if (unlikely(!__pyx_t_28)) __PYX_ERR(0, 408, __pyx_L1_error)
       }
       for (;;) {
         if (likely(!__pyx_t_28)) {
           if (likely(PyList_CheckExact(__pyx_t_2))) {
             if (__pyx_t_27 >= PyList_GET_SIZE(__pyx_t_2)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_27); __Pyx_INCREF(__pyx_t_1); __pyx_t_27++; if (unlikely(0 < 0)) __PYX_ERR(0, 418, __pyx_L1_error)
+            __pyx_t_1 = PyList_GET_ITEM(__pyx_t_2, __pyx_t_27); __Pyx_INCREF(__pyx_t_1); __pyx_t_27++; if (unlikely(0 < 0)) __PYX_ERR(0, 408, __pyx_L1_error)
             #else
-            __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_27); __pyx_t_27++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 418, __pyx_L1_error)
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_27); __pyx_t_27++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_1);
             #endif
           } else {
             if (__pyx_t_27 >= PyTuple_GET_SIZE(__pyx_t_2)) break;
             #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_27); __Pyx_INCREF(__pyx_t_1); __pyx_t_27++; if (unlikely(0 < 0)) __PYX_ERR(0, 418, __pyx_L1_error)
+            __pyx_t_1 = PyTuple_GET_ITEM(__pyx_t_2, __pyx_t_27); __Pyx_INCREF(__pyx_t_1); __pyx_t_27++; if (unlikely(0 < 0)) __PYX_ERR(0, 408, __pyx_L1_error)
             #else
-            __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_27); __pyx_t_27++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 418, __pyx_L1_error)
+            __pyx_t_1 = PySequence_ITEM(__pyx_t_2, __pyx_t_27); __pyx_t_27++; if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 408, __pyx_L1_error)
             __Pyx_GOTREF(__pyx_t_1);
             #endif
           }
@@ -10806,7 +10806,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
             PyObject* exc_type = PyErr_Occurred();
             if (exc_type) {
               if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-              else __PYX_ERR(0, 418, __pyx_L1_error)
+              else __PYX_ERR(0, 408, __pyx_L1_error)
             }
             break;
           }
@@ -10818,7 +10818,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
           if (unlikely(size != 4)) {
             if (size > 4) __Pyx_RaiseTooManyValuesError(4);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            __PYX_ERR(0, 418, __pyx_L1_error)
+            __PYX_ERR(0, 408, __pyx_L1_error)
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
           if (likely(PyTuple_CheckExact(sequence))) {
@@ -10841,7 +10841,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
             Py_ssize_t i;
             PyObject** temps[4] = {&__pyx_t_10,&__pyx_t_11,&__pyx_t_15,&__pyx_t_12};
             for (i=0; i < 4; i++) {
-              PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 418, __pyx_L1_error)
+              PyObject* item = PySequence_ITEM(sequence, i); if (unlikely(!item)) __PYX_ERR(0, 408, __pyx_L1_error)
               __Pyx_GOTREF(item);
               *(temps[i]) = item;
             }
@@ -10851,7 +10851,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         } else {
           Py_ssize_t index = -1;
           PyObject** temps[4] = {&__pyx_t_10,&__pyx_t_11,&__pyx_t_15,&__pyx_t_12};
-          __pyx_t_16 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 418, __pyx_L1_error)
+          __pyx_t_16 = PyObject_GetIter(__pyx_t_1); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 408, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_16);
           __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
           __pyx_t_29 = Py_TYPE(__pyx_t_16)->tp_iternext;
@@ -10860,7 +10860,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
             __Pyx_GOTREF(item);
             *(temps[index]) = item;
           }
-          if (__Pyx_IternextUnpackEndCheck(__pyx_t_29(__pyx_t_16), 4) < 0) __PYX_ERR(0, 418, __pyx_L1_error)
+          if (__Pyx_IternextUnpackEndCheck(__pyx_t_29(__pyx_t_16), 4) < 0) __PYX_ERR(0, 408, __pyx_L1_error)
           __pyx_t_29 = NULL;
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
           goto __pyx_L40_unpacking_done;
@@ -10868,7 +10868,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
           __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
           __pyx_t_29 = NULL;
           if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-          __PYX_ERR(0, 418, __pyx_L1_error)
+          __PYX_ERR(0, 408, __pyx_L1_error)
           __pyx_L40_unpacking_done:;
         }
         __Pyx_XDECREF_SET(__pyx_v_p, __pyx_t_10);
@@ -10880,7 +10880,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
         __Pyx_XDECREF_SET(__pyx_v_column, __pyx_t_12);
         __pyx_t_12 = 0;
 
-        /* "owlready2_optimized.pyx":419
+        /* "owlready2_optimized.pyx":409
  *     for axiom_iri, triples in triples_with_unnamed_bn.items():
  *       for p, o, line, column in triples:
  *         try:             # <<<<<<<<<<<<<<
@@ -10896,20 +10896,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
           __Pyx_XGOTREF(__pyx_t_5);
           /*try:*/ {
 
-            /* "owlready2_optimized.pyx":420
+            /* "owlready2_optimized.pyx":410
  *       for p, o, line, column in triples:
  *         try:
  *           content = bns[o]             # <<<<<<<<<<<<<<
  *           if p == _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"):
  *             target = axiom_annotation_targets[axiom_iri]
  */
-            __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_bns, __pyx_v_o); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 420, __pyx_L41_error)
+            __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_bns, __pyx_v_o); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 410, __pyx_L41_error)
             __Pyx_GOTREF(__pyx_t_1);
-            if (!(likely(PySet_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "set", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 420, __pyx_L41_error)
+            if (!(likely(PySet_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "set", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 410, __pyx_L41_error)
             __Pyx_XDECREF_SET(__pyx_v_content, ((PyObject*)__pyx_t_1));
             __pyx_t_1 = 0;
 
-            /* "owlready2_optimized.pyx":421
+            /* "owlready2_optimized.pyx":411
  *         try:
  *           content = bns[o]
  *           if p == _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"):             # <<<<<<<<<<<<<<
@@ -10929,63 +10929,63 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
             }
             __pyx_t_1 = (__pyx_t_15) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_15, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno);
             __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
-            if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 421, __pyx_L41_error)
+            if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 411, __pyx_L41_error)
             __Pyx_GOTREF(__pyx_t_1);
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-            __pyx_t_12 = PyObject_RichCompare(__pyx_v_p, __pyx_t_1, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 421, __pyx_L41_error)
+            __pyx_t_12 = PyObject_RichCompare(__pyx_v_p, __pyx_t_1, Py_EQ); __Pyx_XGOTREF(__pyx_t_12); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 411, __pyx_L41_error)
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-            __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 421, __pyx_L41_error)
+            __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 411, __pyx_L41_error)
             __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
             if (__pyx_t_7) {
 
-              /* "owlready2_optimized.pyx":422
+              /* "owlready2_optimized.pyx":412
  *           content = bns[o]
  *           if p == _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"):
  *             target = axiom_annotation_targets[axiom_iri]             # <<<<<<<<<<<<<<
  *             if target < 0: target = frozenset(bns[target])
  *             candidates_bn = content_2_bns[frozenset(content | { ("REL", axiom_annotation_props[axiom_iri], target) })]
  */
-              __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 422, __pyx_L41_error)
+              __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 412, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
-              __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_targets, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 422, __pyx_L41_error)
+              __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_targets, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 412, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
               __Pyx_XDECREF_SET(__pyx_v_target, __pyx_t_1);
               __pyx_t_1 = 0;
 
-              /* "owlready2_optimized.pyx":423
+              /* "owlready2_optimized.pyx":413
  *           if p == _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"):
  *             target = axiom_annotation_targets[axiom_iri]
  *             if target < 0: target = frozenset(bns[target])             # <<<<<<<<<<<<<<
  *             candidates_bn = content_2_bns[frozenset(content | { ("REL", axiom_annotation_props[axiom_iri], target) })]
  * 
  */
-              __pyx_t_1 = PyObject_RichCompare(__pyx_v_target, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 423, __pyx_L41_error)
-              __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 423, __pyx_L41_error)
+              __pyx_t_1 = PyObject_RichCompare(__pyx_v_target, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L41_error)
+              __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 413, __pyx_L41_error)
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
               if (__pyx_t_7) {
-                __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_bns, __pyx_v_target); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 423, __pyx_L41_error)
+                __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_bns, __pyx_v_target); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 413, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_1);
-                __pyx_t_12 = __Pyx_PyFrozenSet_New(__pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 423, __pyx_L41_error)
+                __pyx_t_12 = __Pyx_PyFrozenSet_New(__pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 413, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_12);
                 __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
                 __Pyx_DECREF_SET(__pyx_v_target, __pyx_t_12);
                 __pyx_t_12 = 0;
               }
 
-              /* "owlready2_optimized.pyx":424
+              /* "owlready2_optimized.pyx":414
  *             target = axiom_annotation_targets[axiom_iri]
  *             if target < 0: target = frozenset(bns[target])
  *             candidates_bn = content_2_bns[frozenset(content | { ("REL", axiom_annotation_props[axiom_iri], target) })]             # <<<<<<<<<<<<<<
  * 
  *           else:
  */
-              __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 424, __pyx_L41_error)
+              __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 414, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
-              __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_props, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 424, __pyx_L41_error)
+              __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_props, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 414, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-              __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 424, __pyx_L41_error)
+              __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 414, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
               __Pyx_INCREF(__pyx_n_u_REL);
               __Pyx_GIVEREF(__pyx_n_u_REL);
@@ -10996,23 +10996,23 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
               __Pyx_GIVEREF(__pyx_v_target);
               PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_v_target);
               __pyx_t_1 = 0;
-              __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 424, __pyx_L41_error)
+              __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 414, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
-              if (PySet_Add(__pyx_t_1, __pyx_t_12) < 0) __PYX_ERR(0, 424, __pyx_L41_error)
+              if (PySet_Add(__pyx_t_1, __pyx_t_12) < 0) __PYX_ERR(0, 414, __pyx_L41_error)
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-              __pyx_t_12 = PyNumber_Or(__pyx_v_content, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 424, __pyx_L41_error)
+              __pyx_t_12 = PyNumber_Or(__pyx_v_content, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 414, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-              __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 424, __pyx_L41_error)
+              __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 414, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-              __pyx_t_12 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 424, __pyx_L41_error)
+              __pyx_t_12 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 414, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
               __Pyx_XDECREF_SET(__pyx_v_candidates_bn, __pyx_t_12);
               __pyx_t_12 = 0;
 
-              /* "owlready2_optimized.pyx":421
+              /* "owlready2_optimized.pyx":411
  *         try:
  *           content = bns[o]
  *           if p == _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"):             # <<<<<<<<<<<<<<
@@ -11022,7 +11022,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
               goto __pyx_L49;
             }
 
-            /* "owlready2_optimized.pyx":427
+            /* "owlready2_optimized.pyx":417
  * 
  *           else:
  *             source = axiom_annotation_sources[axiom_iri]             # <<<<<<<<<<<<<<
@@ -11030,42 +11030,42 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
  *               source = frozenset(bns[source] | { ("REL", axiom_annotation_props[axiom_iri], target) })
  */
             /*else*/ {
-              __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 427, __pyx_L41_error)
+              __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 417, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
-              __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_sources, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 427, __pyx_L41_error)
+              __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_sources, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 417, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
               __Pyx_XDECREF_SET(__pyx_v_source, __pyx_t_1);
               __pyx_t_1 = 0;
 
-              /* "owlready2_optimized.pyx":428
+              /* "owlready2_optimized.pyx":418
  *           else:
  *             source = axiom_annotation_sources[axiom_iri]
  *             if source < 0:             # <<<<<<<<<<<<<<
  *               source = frozenset(bns[source] | { ("REL", axiom_annotation_props[axiom_iri], target) })
  *             candidates_bn = (content_2_bns[frozenset(content | { ("INV", axiom_annotation_props[axiom_iri], source) })] or
  */
-              __pyx_t_1 = PyObject_RichCompare(__pyx_v_source, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 428, __pyx_L41_error)
-              __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 428, __pyx_L41_error)
+              __pyx_t_1 = PyObject_RichCompare(__pyx_v_source, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 418, __pyx_L41_error)
+              __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_1); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 418, __pyx_L41_error)
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
               if (__pyx_t_7) {
 
-                /* "owlready2_optimized.pyx":429
+                /* "owlready2_optimized.pyx":419
  *             source = axiom_annotation_sources[axiom_iri]
  *             if source < 0:
  *               source = frozenset(bns[source] | { ("REL", axiom_annotation_props[axiom_iri], target) })             # <<<<<<<<<<<<<<
  *             candidates_bn = (content_2_bns[frozenset(content | { ("INV", axiom_annotation_props[axiom_iri], source) })] or
  *                              content_2_bns[frozenset(content)])
  */
-                __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_bns, __pyx_v_source); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 429, __pyx_L41_error)
+                __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_bns, __pyx_v_source); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 419, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_1);
-                __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 429, __pyx_L41_error)
+                __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 419, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_12);
-                __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_props, __pyx_t_12); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 429, __pyx_L41_error)
+                __pyx_t_15 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_props, __pyx_t_12); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 419, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_15);
                 __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                if (unlikely(!__pyx_v_target)) { __Pyx_RaiseUnboundLocalError("target"); __PYX_ERR(0, 429, __pyx_L41_error) }
-                __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 429, __pyx_L41_error)
+                if (unlikely(!__pyx_v_target)) { __Pyx_RaiseUnboundLocalError("target"); __PYX_ERR(0, 419, __pyx_L41_error) }
+                __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 419, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_12);
                 __Pyx_INCREF(__pyx_n_u_REL);
                 __Pyx_GIVEREF(__pyx_n_u_REL);
@@ -11076,21 +11076,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
                 __Pyx_GIVEREF(__pyx_v_target);
                 PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_v_target);
                 __pyx_t_15 = 0;
-                __pyx_t_15 = PySet_New(0); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 429, __pyx_L41_error)
+                __pyx_t_15 = PySet_New(0); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 419, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_15);
-                if (PySet_Add(__pyx_t_15, __pyx_t_12) < 0) __PYX_ERR(0, 429, __pyx_L41_error)
+                if (PySet_Add(__pyx_t_15, __pyx_t_12) < 0) __PYX_ERR(0, 419, __pyx_L41_error)
                 __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-                __pyx_t_12 = PyNumber_Or(__pyx_t_1, __pyx_t_15); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 429, __pyx_L41_error)
+                __pyx_t_12 = PyNumber_Or(__pyx_t_1, __pyx_t_15); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 419, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_12);
                 __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
                 __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-                __pyx_t_15 = __Pyx_PyFrozenSet_New(__pyx_t_12); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 429, __pyx_L41_error)
+                __pyx_t_15 = __Pyx_PyFrozenSet_New(__pyx_t_12); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 419, __pyx_L41_error)
                 __Pyx_GOTREF(__pyx_t_15);
                 __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
                 __Pyx_DECREF_SET(__pyx_v_source, __pyx_t_15);
                 __pyx_t_15 = 0;
 
-                /* "owlready2_optimized.pyx":428
+                /* "owlready2_optimized.pyx":418
  *           else:
  *             source = axiom_annotation_sources[axiom_iri]
  *             if source < 0:             # <<<<<<<<<<<<<<
@@ -11099,19 +11099,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
  */
               }
 
-              /* "owlready2_optimized.pyx":430
+              /* "owlready2_optimized.pyx":420
  *             if source < 0:
  *               source = frozenset(bns[source] | { ("REL", axiom_annotation_props[axiom_iri], target) })
  *             candidates_bn = (content_2_bns[frozenset(content | { ("INV", axiom_annotation_props[axiom_iri], source) })] or             # <<<<<<<<<<<<<<
  *                              content_2_bns[frozenset(content)])
  * 
  */
-              __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 430, __pyx_L41_error)
+              __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 420, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
-              __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_props, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 430, __pyx_L41_error)
+              __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_axiom_annotation_props, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 420, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-              __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 430, __pyx_L41_error)
+              __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 420, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
               __Pyx_INCREF(__pyx_n_u_INV);
               __Pyx_GIVEREF(__pyx_n_u_INV);
@@ -11122,20 +11122,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
               __Pyx_GIVEREF(__pyx_v_source);
               PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_v_source);
               __pyx_t_1 = 0;
-              __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 430, __pyx_L41_error)
+              __pyx_t_1 = PySet_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 420, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
-              if (PySet_Add(__pyx_t_1, __pyx_t_12) < 0) __PYX_ERR(0, 430, __pyx_L41_error)
+              if (PySet_Add(__pyx_t_1, __pyx_t_12) < 0) __PYX_ERR(0, 420, __pyx_L41_error)
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-              __pyx_t_12 = PyNumber_Or(__pyx_v_content, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 430, __pyx_L41_error)
+              __pyx_t_12 = PyNumber_Or(__pyx_v_content, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 420, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-              __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 430, __pyx_L41_error)
+              __pyx_t_1 = __Pyx_PyFrozenSet_New(__pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 420, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-              __pyx_t_12 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 430, __pyx_L41_error)
+              __pyx_t_12 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 420, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-              __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 430, __pyx_L41_error)
+              __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_t_12); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 420, __pyx_L41_error)
               if (!__pyx_t_7) {
                 __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
               } else {
@@ -11145,16 +11145,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
                 goto __pyx_L52_bool_binop_done;
               }
 
-              /* "owlready2_optimized.pyx":431
+              /* "owlready2_optimized.pyx":421
  *               source = frozenset(bns[source] | { ("REL", axiom_annotation_props[axiom_iri], target) })
  *             candidates_bn = (content_2_bns[frozenset(content | { ("INV", axiom_annotation_props[axiom_iri], source) })] or
  *                              content_2_bns[frozenset(content)])             # <<<<<<<<<<<<<<
  * 
  *           if candidates_bn: o = candidates_bn[-1]
  */
-              __pyx_t_12 = __Pyx_PyFrozenSet_New(__pyx_v_content); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 431, __pyx_L41_error)
+              __pyx_t_12 = __Pyx_PyFrozenSet_New(__pyx_v_content); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 421, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_12);
-              __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 431, __pyx_L41_error)
+              __pyx_t_1 = __Pyx_PyObject_GetItem(__pyx_cur_scope->__pyx_v_content_2_bns, __pyx_t_12); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 421, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_1);
               __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
               __Pyx_INCREF(__pyx_t_1);
@@ -11166,23 +11166,23 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
             }
             __pyx_L49:;
 
-            /* "owlready2_optimized.pyx":433
+            /* "owlready2_optimized.pyx":423
  *                              content_2_bns[frozenset(content)])
  * 
  *           if candidates_bn: o = candidates_bn[-1]             # <<<<<<<<<<<<<<
  *           else:             o = rebuild_bn(content)
  *           objs.append((axiom_iri, p, o))
  */
-            __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_candidates_bn); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 433, __pyx_L41_error)
+            __pyx_t_7 = __Pyx_PyObject_IsTrue(__pyx_v_candidates_bn); if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 423, __pyx_L41_error)
             if (__pyx_t_7) {
-              __pyx_t_15 = __Pyx_GetItemInt(__pyx_v_candidates_bn, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 433, __pyx_L41_error)
+              __pyx_t_15 = __Pyx_GetItemInt(__pyx_v_candidates_bn, -1L, long, 1, __Pyx_PyInt_From_long, 0, 1, 1); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 423, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_15);
               __Pyx_DECREF_SET(__pyx_v_o, __pyx_t_15);
               __pyx_t_15 = 0;
               goto __pyx_L54;
             }
 
-            /* "owlready2_optimized.pyx":434
+            /* "owlready2_optimized.pyx":424
  * 
  *           if candidates_bn: o = candidates_bn[-1]
  *           else:             o = rebuild_bn(content)             # <<<<<<<<<<<<<<
@@ -11190,14 +11190,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
  * 
  */
             /*else*/ {
-              __pyx_t_15 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_v_content); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 434, __pyx_L41_error)
+              __pyx_t_15 = __pyx_pf_19owlready2_optimized_12parse_rdfxml_10rebuild_bn(__pyx_cur_scope->__pyx_v_rebuild_bn, __pyx_v_content); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 424, __pyx_L41_error)
               __Pyx_GOTREF(__pyx_t_15);
               __Pyx_DECREF_SET(__pyx_v_o, __pyx_t_15);
               __pyx_t_15 = 0;
             }
             __pyx_L54:;
 
-            /* "owlready2_optimized.pyx":435
+            /* "owlready2_optimized.pyx":425
  *           if candidates_bn: o = candidates_bn[-1]
  *           else:             o = rebuild_bn(content)
  *           objs.append((axiom_iri, p, o))             # <<<<<<<<<<<<<<
@@ -11206,11 +11206,11 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
  */
             if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
               PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-              __PYX_ERR(0, 435, __pyx_L41_error)
+              __PYX_ERR(0, 425, __pyx_L41_error)
             }
-            __pyx_t_15 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 435, __pyx_L41_error)
+            __pyx_t_15 = __Pyx_PyInt_From_int(__pyx_v_axiom_iri); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 425, __pyx_L41_error)
             __Pyx_GOTREF(__pyx_t_15);
-            __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 435, __pyx_L41_error)
+            __pyx_t_1 = PyTuple_New(3); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 425, __pyx_L41_error)
             __Pyx_GOTREF(__pyx_t_1);
             __Pyx_GIVEREF(__pyx_t_15);
             PyTuple_SET_ITEM(__pyx_t_1, 0, __pyx_t_15);
@@ -11221,10 +11221,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
             __Pyx_GIVEREF(__pyx_v_o);
             PyTuple_SET_ITEM(__pyx_t_1, 2, __pyx_v_o);
             __pyx_t_15 = 0;
-            __pyx_t_26 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_1); if (unlikely(__pyx_t_26 == ((int)-1))) __PYX_ERR(0, 435, __pyx_L41_error)
+            __pyx_t_26 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_1); if (unlikely(__pyx_t_26 == ((int)-1))) __PYX_ERR(0, 425, __pyx_L41_error)
             __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-            /* "owlready2_optimized.pyx":419
+            /* "owlready2_optimized.pyx":409
  *     for axiom_iri, triples in triples_with_unnamed_bn.items():
  *       for p, o, line, column in triples:
  *         try:             # <<<<<<<<<<<<<<
@@ -11244,7 +11244,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
           __Pyx_XDECREF(__pyx_t_15); __pyx_t_15 = 0;
           __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
 
-          /* "owlready2_optimized.pyx":437
+          /* "owlready2_optimized.pyx":427
  *           objs.append((axiom_iri, p, o))
  * 
  *         except Exception as e:             # <<<<<<<<<<<<<<
@@ -11254,7 +11254,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
           __pyx_t_9 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
           if (__pyx_t_9) {
             __Pyx_AddTraceback("owlready2_optimized.parse_rdfxml", __pyx_clineno, __pyx_lineno, __pyx_filename);
-            if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_15, &__pyx_t_12) < 0) __PYX_ERR(0, 437, __pyx_L43_except_error)
+            if (__Pyx_GetException(&__pyx_t_1, &__pyx_t_15, &__pyx_t_12) < 0) __PYX_ERR(0, 427, __pyx_L43_except_error)
             __Pyx_GOTREF(__pyx_t_1);
             __Pyx_GOTREF(__pyx_t_15);
             __Pyx_GOTREF(__pyx_t_12);
@@ -11262,16 +11262,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
             __pyx_v_e = __pyx_t_15;
             /*try:*/ {
 
-              /* "owlready2_optimized.pyx":438
+              /* "owlready2_optimized.pyx":428
  * 
  *         except Exception as e:
  *           raise OwlReadyOntologyParsingError("RDF/XML parsing error in file %s, line %s, column %s." % (getattr(f, "name", getattr(f, "url", "???")), line, column)) from e             # <<<<<<<<<<<<<<
  * 
  * 
  */
-              __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_OwlReadyOntologyParsingError); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 438, __pyx_L60_error)
+              __Pyx_GetModuleGlobalName(__pyx_t_10, __pyx_n_s_OwlReadyOntologyParsingError); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_10);
-              __pyx_t_16 = PyTuple_New(7); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 438, __pyx_L60_error)
+              __pyx_t_16 = PyTuple_New(7); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_16);
               __pyx_t_30 = 0;
               __pyx_t_14 = 127;
@@ -11279,12 +11279,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
               __pyx_t_30 += 30;
               __Pyx_GIVEREF(__pyx_kp_u_RDF_XML_parsing_error_in_file);
               PyTuple_SET_ITEM(__pyx_t_16, 0, __pyx_kp_u_RDF_XML_parsing_error_in_file);
-              __pyx_t_31 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_url, __pyx_kp_u__23); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 438, __pyx_L60_error)
+              __pyx_t_31 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_url, __pyx_kp_u__23); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_31);
-              __pyx_t_32 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_name, __pyx_t_31); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 438, __pyx_L60_error)
+              __pyx_t_32 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_name, __pyx_t_31); if (unlikely(!__pyx_t_32)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_32);
               __Pyx_DECREF(__pyx_t_31); __pyx_t_31 = 0;
-              __pyx_t_31 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_32), __pyx_empty_unicode); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 438, __pyx_L60_error)
+              __pyx_t_31 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_32), __pyx_empty_unicode); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_31);
               __Pyx_DECREF(__pyx_t_32); __pyx_t_32 = 0;
               __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_31) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_31) : __pyx_t_14;
@@ -11296,7 +11296,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
               __pyx_t_30 += 7;
               __Pyx_GIVEREF(__pyx_kp_u_line);
               PyTuple_SET_ITEM(__pyx_t_16, 2, __pyx_kp_u_line);
-              __pyx_t_31 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_v_line), __pyx_empty_unicode); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 438, __pyx_L60_error)
+              __pyx_t_31 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_v_line), __pyx_empty_unicode); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_31);
               __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_31) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_31) : __pyx_t_14;
               __pyx_t_30 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_31);
@@ -11307,7 +11307,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
               __pyx_t_30 += 9;
               __Pyx_GIVEREF(__pyx_kp_u_column);
               PyTuple_SET_ITEM(__pyx_t_16, 4, __pyx_kp_u_column);
-              __pyx_t_31 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_v_column), __pyx_empty_unicode); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 438, __pyx_L60_error)
+              __pyx_t_31 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_v_column), __pyx_empty_unicode); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_31);
               __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_31) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_31) : __pyx_t_14;
               __pyx_t_30 += __Pyx_PyUnicode_GET_LENGTH(__pyx_t_31);
@@ -11318,7 +11318,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
               __pyx_t_30 += 1;
               __Pyx_GIVEREF(__pyx_kp_u__24);
               PyTuple_SET_ITEM(__pyx_t_16, 6, __pyx_kp_u__24);
-              __pyx_t_31 = __Pyx_PyUnicode_Join(__pyx_t_16, 7, __pyx_t_30, __pyx_t_14); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 438, __pyx_L60_error)
+              __pyx_t_31 = __Pyx_PyUnicode_Join(__pyx_t_16, 7, __pyx_t_30, __pyx_t_14); if (unlikely(!__pyx_t_31)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_31);
               __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
               __pyx_t_16 = NULL;
@@ -11334,15 +11334,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
               __pyx_t_11 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_10, __pyx_t_16, __pyx_t_31) : __Pyx_PyObject_CallOneArg(__pyx_t_10, __pyx_t_31);
               __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
               __Pyx_DECREF(__pyx_t_31); __pyx_t_31 = 0;
-              if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 438, __pyx_L60_error)
+              if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 428, __pyx_L60_error)
               __Pyx_GOTREF(__pyx_t_11);
               __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
               __Pyx_Raise(__pyx_t_11, 0, 0, __pyx_v_e);
               __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-              __PYX_ERR(0, 438, __pyx_L60_error)
+              __PYX_ERR(0, 428, __pyx_L60_error)
             }
 
-            /* "owlready2_optimized.pyx":437
+            /* "owlready2_optimized.pyx":427
  *           objs.append((axiom_iri, p, o))
  * 
  *         except Exception as e:             # <<<<<<<<<<<<<<
@@ -11392,7 +11392,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
           goto __pyx_L43_except_error;
           __pyx_L43_except_error:;
 
-          /* "owlready2_optimized.pyx":419
+          /* "owlready2_optimized.pyx":409
  *     for axiom_iri, triples in triples_with_unnamed_bn.items():
  *       for p, o, line, column in triples:
  *         try:             # <<<<<<<<<<<<<<
@@ -11407,7 +11407,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
           __pyx_L48_try_end:;
         }
 
-        /* "owlready2_optimized.pyx":418
+        /* "owlready2_optimized.pyx":408
  * 
  *     for axiom_iri, triples in triples_with_unnamed_bn.items():
  *       for p, o, line, column in triples:             # <<<<<<<<<<<<<<
@@ -11419,7 +11419,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":379
+    /* "owlready2_optimized.pyx":369
  *   cdef int axiom_iri
  * 
  *   if triples_with_unnamed_bn:             # <<<<<<<<<<<<<<
@@ -11428,7 +11428,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
  */
   }
 
-  /* "owlready2_optimized.pyx":441
+  /* "owlready2_optimized.pyx":431
  * 
  * 
  *   return nb_triple             # <<<<<<<<<<<<<<
@@ -11436,7 +11436,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_nb_triple); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 441, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_nb_triple); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 431, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_r = __pyx_t_6;
   __pyx_t_6 = 0;
@@ -11487,7 +11487,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_2parse_rdfxml(CYTHON_UNUSED PyOb
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":530
+/* "owlready2_optimized.pyx":520
  * 
  * 
  * cdef int _rindex(list l):             # <<<<<<<<<<<<<<
@@ -11508,7 +11508,7 @@ static int __pyx_f_19owlready2_optimized__rindex(PyObject *__pyx_v_l) {
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_rindex", 0);
 
-  /* "owlready2_optimized.pyx":531
+  /* "owlready2_optimized.pyx":521
  * 
  * cdef int _rindex(list l):
  *   i = len(l) - 1             # <<<<<<<<<<<<<<
@@ -11517,15 +11517,15 @@ static int __pyx_f_19owlready2_optimized__rindex(PyObject *__pyx_v_l) {
  */
   if (unlikely(__pyx_v_l == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 531, __pyx_L1_error)
+    __PYX_ERR(0, 521, __pyx_L1_error)
   }
-  __pyx_t_1 = PyList_GET_SIZE(__pyx_v_l); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 531, __pyx_L1_error)
-  __pyx_t_2 = PyInt_FromSsize_t((__pyx_t_1 - 1)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 531, __pyx_L1_error)
+  __pyx_t_1 = PyList_GET_SIZE(__pyx_v_l); if (unlikely(__pyx_t_1 == ((Py_ssize_t)-1))) __PYX_ERR(0, 521, __pyx_L1_error)
+  __pyx_t_2 = PyInt_FromSsize_t((__pyx_t_1 - 1)); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 521, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_v_i = __pyx_t_2;
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":532
+  /* "owlready2_optimized.pyx":522
  * cdef int _rindex(list l):
  *   i = len(l) - 1
  *   while l[i] != "(": i -= 1             # <<<<<<<<<<<<<<
@@ -11535,31 +11535,31 @@ static int __pyx_f_19owlready2_optimized__rindex(PyObject *__pyx_v_l) {
   while (1) {
     if (unlikely(__pyx_v_l == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 532, __pyx_L1_error)
+      __PYX_ERR(0, 522, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_l, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 532, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_GetItem(__pyx_v_l, __pyx_v_i); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 522, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_kp_u__27, Py_NE)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 532, __pyx_L1_error)
+    __pyx_t_3 = (__Pyx_PyUnicode_Equals(__pyx_t_2, __pyx_kp_u__27, Py_NE)); if (unlikely(__pyx_t_3 < 0)) __PYX_ERR(0, 522, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     if (!__pyx_t_3) break;
-    __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_v_i, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 532, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyInt_SubtractObjC(__pyx_v_i, __pyx_int_1, 1, 1, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 522, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_DECREF_SET(__pyx_v_i, __pyx_t_2);
     __pyx_t_2 = 0;
   }
 
-  /* "owlready2_optimized.pyx":533
+  /* "owlready2_optimized.pyx":523
  *   i = len(l) - 1
  *   while l[i] != "(": i -= 1
  *   return i             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_i); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 533, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyInt_As_int(__pyx_v_i); if (unlikely((__pyx_t_4 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 523, __pyx_L1_error)
   __pyx_r = __pyx_t_4;
   goto __pyx_L0;
 
-  /* "owlready2_optimized.pyx":530
+  /* "owlready2_optimized.pyx":520
  * 
  * 
  * cdef int _rindex(list l):             # <<<<<<<<<<<<<<
@@ -11578,7 +11578,7 @@ static int __pyx_f_19owlready2_optimized__rindex(PyObject *__pyx_v_l) {
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":536
+/* "owlready2_optimized.pyx":526
  * 
  * 
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):             # <<<<<<<<<<<<<<
@@ -11640,37 +11640,37 @@ static PyObject *__pyx_pw_19owlready2_optimized_5parse_owlxml(PyObject *__pyx_se
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_objs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 1); __PYX_ERR(0, 536, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 1); __PYX_ERR(0, 526, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (likely((values[2] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_datas)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 2); __PYX_ERR(0, 536, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 2); __PYX_ERR(0, 526, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  3:
         if (likely((values[3] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_insert_objs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 3); __PYX_ERR(0, 536, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 3); __PYX_ERR(0, 526, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  4:
         if (likely((values[4] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_insert_datas)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 4); __PYX_ERR(0, 536, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 4); __PYX_ERR(0, 526, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  5:
         if (likely((values[5] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_abbreviate)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 5); __PYX_ERR(0, 536, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 5); __PYX_ERR(0, 526, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  6:
         if (likely((values[6] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_new_blank)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 6); __PYX_ERR(0, 536, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, 6); __PYX_ERR(0, 526, __pyx_L3_error)
         }
         CYTHON_FALLTHROUGH;
         case  7:
@@ -11680,7 +11680,7 @@ static PyObject *__pyx_pw_19owlready2_optimized_5parse_owlxml(PyObject *__pyx_se
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "parse_owlxml") < 0)) __PYX_ERR(0, 536, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "parse_owlxml") < 0)) __PYX_ERR(0, 526, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -11708,15 +11708,15 @@ static PyObject *__pyx_pw_19owlready2_optimized_5parse_owlxml(PyObject *__pyx_se
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 536, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("parse_owlxml", 0, 7, 8, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 526, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("owlready2_optimized.parse_owlxml", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_objs), (&PyList_Type), 1, "objs", 1))) __PYX_ERR(0, 536, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_datas), (&PyList_Type), 1, "datas", 1))) __PYX_ERR(0, 536, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_default_base), (&PyUnicode_Type), 1, "default_base", 1))) __PYX_ERR(0, 536, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_objs), (&PyList_Type), 1, "objs", 1))) __PYX_ERR(0, 526, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_datas), (&PyList_Type), 1, "datas", 1))) __PYX_ERR(0, 526, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_default_base), (&PyUnicode_Type), 1, "default_base", 1))) __PYX_ERR(0, 526, __pyx_L1_error)
   __pyx_r = __pyx_pf_19owlready2_optimized_4parse_owlxml(__pyx_self, __pyx_v_f, __pyx_v_objs, __pyx_v_datas, __pyx_v_insert_objs, __pyx_v_insert_datas, __pyx_v__abbreviate, __pyx_v_new_blank, __pyx_v_default_base);
 
   /* function exit code */
@@ -11728,7 +11728,7 @@ static PyObject *__pyx_pw_19owlready2_optimized_5parse_owlxml(PyObject *__pyx_se
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":558
+/* "owlready2_optimized.pyx":548
  *   cdef str lang
  * 
  *   def _unabbreviate_IRI(str _abbreviated_iri):             # <<<<<<<<<<<<<<
@@ -11746,7 +11746,7 @@ static PyObject *__pyx_pw_19owlready2_optimized_12parse_owlxml_1_unabbreviate_IR
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("_unabbreviate_IRI (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v__abbreviated_iri), (&PyUnicode_Type), 1, "_abbreviated_iri", 1))) __PYX_ERR(0, 558, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v__abbreviated_iri), (&PyUnicode_Type), 1, "_abbreviated_iri", 1))) __PYX_ERR(0, 548, __pyx_L1_error)
   __pyx_r = __pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI(__pyx_self, ((PyObject*)__pyx_v__abbreviated_iri));
 
   /* function exit code */
@@ -11775,7 +11775,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI
   __pyx_outer_scope = (struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "owlready2_optimized.pyx":560
+  /* "owlready2_optimized.pyx":550
  *   def _unabbreviate_IRI(str _abbreviated_iri):
  *     cdef str prefix, name
  *     prefix, name = _abbreviated_iri.split(":", 1)             # <<<<<<<<<<<<<<
@@ -11784,9 +11784,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI
  */
   if (unlikely(__pyx_v__abbreviated_iri == Py_None)) {
     PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "split");
-    __PYX_ERR(0, 560, __pyx_L1_error)
+    __PYX_ERR(0, 550, __pyx_L1_error)
   }
-  __pyx_t_1 = PyUnicode_Split(__pyx_v__abbreviated_iri, __pyx_kp_u__11, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 560, __pyx_L1_error)
+  __pyx_t_1 = PyUnicode_Split(__pyx_v__abbreviated_iri, __pyx_kp_u__11, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 550, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   if (1) {
     PyObject* sequence = __pyx_t_1;
@@ -11794,7 +11794,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI
     if (unlikely(size != 2)) {
       if (size > 2) __Pyx_RaiseTooManyValuesError(2);
       else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-      __PYX_ERR(0, 560, __pyx_L1_error)
+      __PYX_ERR(0, 550, __pyx_L1_error)
     }
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
     __pyx_t_2 = PyList_GET_ITEM(sequence, 0); 
@@ -11802,21 +11802,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI
     __Pyx_INCREF(__pyx_t_2);
     __Pyx_INCREF(__pyx_t_3);
     #else
-    __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 560, __pyx_L1_error)
+    __pyx_t_2 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 550, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 560, __pyx_L1_error)
+    __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 550, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     #endif
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
-  if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 560, __pyx_L1_error)
-  if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 560, __pyx_L1_error)
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_2))||((__pyx_t_2) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_2)->tp_name), 0))) __PYX_ERR(0, 550, __pyx_L1_error)
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 550, __pyx_L1_error)
   __pyx_v_prefix = ((PyObject*)__pyx_t_2);
   __pyx_t_2 = 0;
   __pyx_v_name = ((PyObject*)__pyx_t_3);
   __pyx_t_3 = 0;
 
-  /* "owlready2_optimized.pyx":561
+  /* "owlready2_optimized.pyx":551
  *     cdef str prefix, name
  *     prefix, name = _abbreviated_iri.split(":", 1)
  *     return prefixes[prefix] + name             # <<<<<<<<<<<<<<
@@ -11824,21 +11824,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI
  *   def get_IRI(dict attrs):
  */
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_cur_scope->__pyx_v_prefixes)) { __Pyx_RaiseClosureNameError("prefixes"); __PYX_ERR(0, 561, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v_prefixes)) { __Pyx_RaiseClosureNameError("prefixes"); __PYX_ERR(0, 551, __pyx_L1_error) }
   if (unlikely(__pyx_cur_scope->__pyx_v_prefixes == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 561, __pyx_L1_error)
+    __PYX_ERR(0, 551, __pyx_L1_error)
   }
-  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_prefixes, __pyx_v_prefix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 561, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_prefixes, __pyx_v_prefix); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 551, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 561, __pyx_L1_error)
+  __pyx_t_3 = PyNumber_Add(__pyx_t_1, __pyx_v_name); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 551, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "owlready2_optimized.pyx":558
+  /* "owlready2_optimized.pyx":548
  *   cdef str lang
  * 
  *   def _unabbreviate_IRI(str _abbreviated_iri):             # <<<<<<<<<<<<<<
@@ -11861,7 +11861,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":563
+/* "owlready2_optimized.pyx":553
  *     return prefixes[prefix] + name
  * 
  *   def get_IRI(dict attrs):             # <<<<<<<<<<<<<<
@@ -11879,7 +11879,7 @@ static PyObject *__pyx_pw_19owlready2_optimized_12parse_owlxml_3get_IRI(PyObject
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("get_IRI (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_attrs), (&PyDict_Type), 1, "attrs", 1))) __PYX_ERR(0, 563, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_attrs), (&PyDict_Type), 1, "attrs", 1))) __PYX_ERR(0, 553, __pyx_L1_error)
   __pyx_r = __pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(__pyx_self, ((PyObject*)__pyx_v_attrs));
 
   /* function exit code */
@@ -11912,7 +11912,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
   __pyx_outer_scope = (struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "owlready2_optimized.pyx":566
+  /* "owlready2_optimized.pyx":556
  *     nonlocal ontology_iri, ontology_iri_str
  *     cdef str iri
  *     if "IRI" in attrs:             # <<<<<<<<<<<<<<
@@ -11921,13 +11921,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
  */
   if (unlikely(__pyx_v_attrs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 566, __pyx_L1_error)
+    __PYX_ERR(0, 556, __pyx_L1_error)
   }
-  __pyx_t_1 = (__Pyx_PyDict_ContainsTF(__pyx_n_u_IRI, __pyx_v_attrs, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 566, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyDict_ContainsTF(__pyx_n_u_IRI, __pyx_v_attrs, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 556, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":567
+    /* "owlready2_optimized.pyx":557
  *     cdef str iri
  *     if "IRI" in attrs:
  *       iri = attrs["IRI"]             # <<<<<<<<<<<<<<
@@ -11936,15 +11936,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
  */
     if (unlikely(__pyx_v_attrs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 567, __pyx_L1_error)
+      __PYX_ERR(0, 557, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_IRI); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 567, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_IRI); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 557, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 567, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 557, __pyx_L1_error)
     __pyx_v_iri = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":568
+    /* "owlready2_optimized.pyx":558
  *     if "IRI" in attrs:
  *       iri = attrs["IRI"]
  *       if not iri: return ontology_iri             # <<<<<<<<<<<<<<
@@ -11955,14 +11955,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
     __pyx_t_1 = ((!__pyx_t_2) != 0);
     if (__pyx_t_1) {
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 568, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 558, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __pyx_r = __pyx_t_3;
       __pyx_t_3 = 0;
       goto __pyx_L0;
     }
 
-    /* "owlready2_optimized.pyx":569
+    /* "owlready2_optimized.pyx":559
  *       iri = attrs["IRI"]
  *       if not iri: return ontology_iri
  *       if   iri.startswith("#") or iri.startswith("/"): iri = ontology_iri_str + iri             # <<<<<<<<<<<<<<
@@ -11971,9 +11971,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
  */
     if (unlikely(__pyx_v_iri == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "startswith");
-      __PYX_ERR(0, 569, __pyx_L1_error)
+      __PYX_ERR(0, 559, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__2, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_2 == ((int)-1))) __PYX_ERR(0, 569, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__2, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_2 == ((int)-1))) __PYX_ERR(0, 559, __pyx_L1_error)
     if (!(__pyx_t_2 != 0)) {
     } else {
       __pyx_t_1 = (__pyx_t_2 != 0);
@@ -11981,20 +11981,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
     }
     if (unlikely(__pyx_v_iri == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "startswith");
-      __PYX_ERR(0, 569, __pyx_L1_error)
+      __PYX_ERR(0, 559, __pyx_L1_error)
     }
-    __pyx_t_2 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_2 == ((int)-1))) __PYX_ERR(0, 569, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_2 == ((int)-1))) __PYX_ERR(0, 559, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_2 != 0);
     __pyx_L6_bool_binop_done:;
     if (__pyx_t_1) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_ontology_iri_str)) { __Pyx_RaiseClosureNameError("ontology_iri_str"); __PYX_ERR(0, 569, __pyx_L1_error) }
-      __pyx_t_3 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_ontology_iri_str, __pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 569, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_ontology_iri_str)) { __Pyx_RaiseClosureNameError("ontology_iri_str"); __PYX_ERR(0, 559, __pyx_L1_error) }
+      __pyx_t_3 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_ontology_iri_str, __pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 559, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_3));
       __pyx_t_3 = 0;
     }
 
-    /* "owlready2_optimized.pyx":570
+    /* "owlready2_optimized.pyx":560
  *       if not iri: return ontology_iri
  *       if   iri.startswith("#") or iri.startswith("/"): iri = ontology_iri_str + iri
  *       if iri.endswith("/"): iri = iri[:-1]             # <<<<<<<<<<<<<<
@@ -12003,21 +12003,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
  */
     if (unlikely(__pyx_v_iri == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "endswith");
-      __PYX_ERR(0, 570, __pyx_L1_error)
+      __PYX_ERR(0, 560, __pyx_L1_error)
     }
-    __pyx_t_1 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, 1); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 570, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyUnicode_Tailmatch(__pyx_v_iri, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, 1); if (unlikely(__pyx_t_1 == ((int)-1))) __PYX_ERR(0, 560, __pyx_L1_error)
     if ((__pyx_t_1 != 0)) {
       if (unlikely(__pyx_v_iri == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 570, __pyx_L1_error)
+        __PYX_ERR(0, 560, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_PyUnicode_Substring(__pyx_v_iri, 0, -1L); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 570, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyUnicode_Substring(__pyx_v_iri, 0, -1L); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 560, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_3));
       __pyx_t_3 = 0;
     }
 
-    /* "owlready2_optimized.pyx":571
+    /* "owlready2_optimized.pyx":561
  *       if   iri.startswith("#") or iri.startswith("/"): iri = ontology_iri_str + iri
  *       if iri.endswith("/"): iri = iri[:-1]
  *       if not "//" in iri: iri = urljoin(prefixes[""], iri)             # <<<<<<<<<<<<<<
@@ -12026,19 +12026,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
  */
     if (unlikely(__pyx_v_iri == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 571, __pyx_L1_error)
+      __PYX_ERR(0, 561, __pyx_L1_error)
     }
-    __pyx_t_1 = (__Pyx_PyUnicode_ContainsTF(__pyx_kp_u__28, __pyx_v_iri, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 571, __pyx_L1_error)
+    __pyx_t_1 = (__Pyx_PyUnicode_ContainsTF(__pyx_kp_u__28, __pyx_v_iri, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 561, __pyx_L1_error)
     __pyx_t_2 = (__pyx_t_1 != 0);
     if (__pyx_t_2) {
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_urljoin); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 571, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_urljoin); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 561, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_prefixes)) { __Pyx_RaiseClosureNameError("prefixes"); __PYX_ERR(0, 571, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_prefixes)) { __Pyx_RaiseClosureNameError("prefixes"); __PYX_ERR(0, 561, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_prefixes == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 571, __pyx_L1_error)
+        __PYX_ERR(0, 561, __pyx_L1_error)
       }
-      __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_prefixes, __pyx_kp_u_); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 571, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyDict_GetItem(__pyx_cur_scope->__pyx_v_prefixes, __pyx_kp_u_); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 561, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 = NULL;
       __pyx_t_7 = 0;
@@ -12055,7 +12055,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
       #if CYTHON_FAST_PYCALL
       if (PyFunction_Check(__pyx_t_4)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_t_5, __pyx_v_iri};
-        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 571, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 561, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -12064,14 +12064,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
       #if CYTHON_FAST_PYCCALL
       if (__Pyx_PyFastCFunction_Check(__pyx_t_4)) {
         PyObject *__pyx_temp[3] = {__pyx_t_6, __pyx_t_5, __pyx_v_iri};
-        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 571, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyCFunction_FastCall(__pyx_t_4, __pyx_temp+1-__pyx_t_7, 2+__pyx_t_7); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 561, __pyx_L1_error)
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       } else
       #endif
       {
-        __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 571, __pyx_L1_error)
+        __pyx_t_8 = PyTuple_New(2+__pyx_t_7); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 561, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_8);
         if (__pyx_t_6) {
           __Pyx_GIVEREF(__pyx_t_6); PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_6); __pyx_t_6 = NULL;
@@ -12082,17 +12082,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
         __Pyx_GIVEREF(__pyx_v_iri);
         PyTuple_SET_ITEM(__pyx_t_8, 1+__pyx_t_7, __pyx_v_iri);
         __pyx_t_5 = 0;
-        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 571, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyObject_Call(__pyx_t_4, __pyx_t_8, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 561, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
       }
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 571, __pyx_L1_error)
+      if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 561, __pyx_L1_error)
       __Pyx_DECREF_SET(__pyx_v_iri, ((PyObject*)__pyx_t_3));
       __pyx_t_3 = 0;
     }
 
-    /* "owlready2_optimized.pyx":572
+    /* "owlready2_optimized.pyx":562
  *       if iri.endswith("/"): iri = iri[:-1]
  *       if not "//" in iri: iri = urljoin(prefixes[""], iri)
  *       return _abbreviate(iri)             # <<<<<<<<<<<<<<
@@ -12100,7 +12100,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
  * 
  */
     __Pyx_XDECREF(__pyx_r);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 572, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 562, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_8 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -12114,14 +12114,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
     }
     __pyx_t_3 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_8, __pyx_v_iri) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_iri);
     __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 572, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 562, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_r = __pyx_t_3;
     __pyx_t_3 = 0;
     goto __pyx_L0;
 
-    /* "owlready2_optimized.pyx":566
+    /* "owlready2_optimized.pyx":556
  *     nonlocal ontology_iri, ontology_iri_str
  *     cdef str iri
  *     if "IRI" in attrs:             # <<<<<<<<<<<<<<
@@ -12130,7 +12130,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
  */
   }
 
-  /* "owlready2_optimized.pyx":573
+  /* "owlready2_optimized.pyx":563
  *       if not "//" in iri: iri = urljoin(prefixes[""], iri)
  *       return _abbreviate(iri)
  *     return _abbreviate(_unabbreviate_IRI(attrs["abbreviatedIRI"]))             # <<<<<<<<<<<<<<
@@ -12138,16 +12138,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
  *   def startElement(str tag, dict attrs):
  */
   __Pyx_XDECREF(__pyx_r);
-  if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 573, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 563, __pyx_L1_error) }
   if (unlikely(__pyx_v_attrs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-    __PYX_ERR(0, 573, __pyx_L1_error)
+    __PYX_ERR(0, 563, __pyx_L1_error)
   }
-  __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_abbreviatedIRI); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 573, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_abbreviatedIRI); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 563, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
-  if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 573, __pyx_L1_error)
-  if (unlikely(!__pyx_cur_scope->__pyx_v__unabbreviate_IRI)) { __Pyx_RaiseClosureNameError("_unabbreviate_IRI"); __PYX_ERR(0, 573, __pyx_L1_error) }
-  __pyx_t_8 = __pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI(__pyx_cur_scope->__pyx_v__unabbreviate_IRI, ((PyObject*)__pyx_t_4)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 573, __pyx_L1_error)
+  if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 563, __pyx_L1_error)
+  if (unlikely(!__pyx_cur_scope->__pyx_v__unabbreviate_IRI)) { __Pyx_RaiseClosureNameError("_unabbreviate_IRI"); __PYX_ERR(0, 563, __pyx_L1_error) }
+  __pyx_t_8 = __pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI(__pyx_cur_scope->__pyx_v__unabbreviate_IRI, ((PyObject*)__pyx_t_4)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 563, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
@@ -12164,14 +12164,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
   __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_8);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 573, __pyx_L1_error)
+  if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 563, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_r = __pyx_t_3;
   __pyx_t_3 = 0;
   goto __pyx_L0;
 
-  /* "owlready2_optimized.pyx":563
+  /* "owlready2_optimized.pyx":553
  *     return prefixes[prefix] + name
  * 
  *   def get_IRI(dict attrs):             # <<<<<<<<<<<<<<
@@ -12195,7 +12195,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(PyObject
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":575
+/* "owlready2_optimized.pyx":565
  *     return _abbreviate(_unabbreviate_IRI(attrs["abbreviatedIRI"]))
  * 
  *   def startElement(str tag, dict attrs):             # <<<<<<<<<<<<<<
@@ -12238,11 +12238,11 @@ static PyObject *__pyx_pw_19owlready2_optimized_12parse_owlxml_5startElement(PyO
         case  1:
         if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_attrs)) != 0)) kw_args--;
         else {
-          __Pyx_RaiseArgtupleInvalid("startElement", 1, 2, 2, 1); __PYX_ERR(0, 575, __pyx_L3_error)
+          __Pyx_RaiseArgtupleInvalid("startElement", 1, 2, 2, 1); __PYX_ERR(0, 565, __pyx_L3_error)
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "startElement") < 0)) __PYX_ERR(0, 575, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "startElement") < 0)) __PYX_ERR(0, 565, __pyx_L3_error)
       }
     } else if (PyTuple_GET_SIZE(__pyx_args) != 2) {
       goto __pyx_L5_argtuple_error;
@@ -12255,14 +12255,14 @@ static PyObject *__pyx_pw_19owlready2_optimized_12parse_owlxml_5startElement(PyO
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("startElement", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 575, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("startElement", 1, 2, 2, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 565, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("owlready2_optimized.parse_owlxml.startElement", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tag), (&PyUnicode_Type), 1, "tag", 1))) __PYX_ERR(0, 575, __pyx_L1_error)
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_attrs), (&PyDict_Type), 1, "attrs", 1))) __PYX_ERR(0, 575, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tag), (&PyUnicode_Type), 1, "tag", 1))) __PYX_ERR(0, 565, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_attrs), (&PyDict_Type), 1, "attrs", 1))) __PYX_ERR(0, 565, __pyx_L1_error)
   __pyx_r = __pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(__pyx_self, __pyx_v_tag, __pyx_v_attrs);
 
   /* function exit code */
@@ -12299,7 +12299,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
   __pyx_outer_scope = (struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "owlready2_optimized.pyx":580
+  /* "owlready2_optimized.pyx":570
  *     cdef str version_iri
  * 
  *     current_content = ""             # <<<<<<<<<<<<<<
@@ -12311,18 +12311,18 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
   __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_current_content, __pyx_kp_u_);
   __Pyx_GIVEREF(__pyx_kp_u_);
 
-  /* "owlready2_optimized.pyx":581
+  /* "owlready2_optimized.pyx":571
  * 
  *     current_content = ""
  *     if   (tag == "http://www.w3.org/2002/07/owl#Prefix"):             # <<<<<<<<<<<<<<
  *       prefixes[attrs["name"]] = attrs["IRI"]
  * 
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Pref, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 581, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Pref, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 571, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":582
+    /* "owlready2_optimized.pyx":572
  *     current_content = ""
  *     if   (tag == "http://www.w3.org/2002/07/owl#Prefix"):
  *       prefixes[attrs["name"]] = attrs["IRI"]             # <<<<<<<<<<<<<<
@@ -12331,26 +12331,26 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     if (unlikely(__pyx_v_attrs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 582, __pyx_L1_error)
+      __PYX_ERR(0, 572, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_IRI); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 582, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_IRI); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 572, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_prefixes)) { __Pyx_RaiseClosureNameError("prefixes"); __PYX_ERR(0, 582, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_prefixes)) { __Pyx_RaiseClosureNameError("prefixes"); __PYX_ERR(0, 572, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_prefixes == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 582, __pyx_L1_error)
+      __PYX_ERR(0, 572, __pyx_L1_error)
     }
     if (unlikely(__pyx_v_attrs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 582, __pyx_L1_error)
+      __PYX_ERR(0, 572, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_name); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 582, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_name); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 572, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(PyDict_SetItem(__pyx_cur_scope->__pyx_v_prefixes, __pyx_t_4, __pyx_t_3) < 0)) __PYX_ERR(0, 582, __pyx_L1_error)
+    if (unlikely(PyDict_SetItem(__pyx_cur_scope->__pyx_v_prefixes, __pyx_t_4, __pyx_t_3) < 0)) __PYX_ERR(0, 572, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":581
+    /* "owlready2_optimized.pyx":571
  * 
  *     current_content = ""
  *     if   (tag == "http://www.w3.org/2002/07/owl#Prefix"):             # <<<<<<<<<<<<<<
@@ -12360,18 +12360,18 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":584
+  /* "owlready2_optimized.pyx":574
  *       prefixes[attrs["name"]] = attrs["IRI"]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Declaration"):             # <<<<<<<<<<<<<<
  *       in_declaration     = True
  *       before_declaration = False
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Decl, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 584, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Decl, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 574, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (__pyx_t_1) {
 
-    /* "owlready2_optimized.pyx":585
+    /* "owlready2_optimized.pyx":575
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Declaration"):
  *       in_declaration     = True             # <<<<<<<<<<<<<<
@@ -12380,7 +12380,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     __pyx_cur_scope->__pyx_v_in_declaration = 1;
 
-    /* "owlready2_optimized.pyx":586
+    /* "owlready2_optimized.pyx":576
  *     elif (tag == "http://www.w3.org/2002/07/owl#Declaration"):
  *       in_declaration     = True
  *       before_declaration = False             # <<<<<<<<<<<<<<
@@ -12389,7 +12389,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     __pyx_cur_scope->__pyx_v_before_declaration = 0;
 
-    /* "owlready2_optimized.pyx":584
+    /* "owlready2_optimized.pyx":574
  *       prefixes[attrs["name"]] = attrs["IRI"]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Declaration"):             # <<<<<<<<<<<<<<
@@ -12399,7 +12399,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":588
+  /* "owlready2_optimized.pyx":578
  *       before_declaration = False
  * 
  *     elif (tag in types):             # <<<<<<<<<<<<<<
@@ -12408,27 +12408,27 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
   if (unlikely(__pyx_v_19owlready2_optimized_types == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 588, __pyx_L1_error)
+    __PYX_ERR(0, 578, __pyx_L1_error)
   }
-  __pyx_t_1 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_types, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 588, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_types, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 578, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":589
+    /* "owlready2_optimized.pyx":579
  * 
  *     elif (tag in types):
  *       iri = get_IRI(attrs)             # <<<<<<<<<<<<<<
  *       if in_declaration: objs.append((iri, _abbreviate(rdf_type), _abbreviate(types[tag])))
  *       stack.append(iri)
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_get_IRI)) { __Pyx_RaiseClosureNameError("get_IRI"); __PYX_ERR(0, 589, __pyx_L1_error) }
-    __pyx_t_3 = __pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(__pyx_cur_scope->__pyx_v_get_IRI, __pyx_v_attrs); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 589, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_get_IRI)) { __Pyx_RaiseClosureNameError("get_IRI"); __PYX_ERR(0, 579, __pyx_L1_error) }
+    __pyx_t_3 = __pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(__pyx_cur_scope->__pyx_v_get_IRI, __pyx_v_attrs); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 579, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 589, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 579, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_iri = __pyx_t_5;
 
-    /* "owlready2_optimized.pyx":590
+    /* "owlready2_optimized.pyx":580
  *     elif (tag in types):
  *       iri = get_IRI(attrs)
  *       if in_declaration: objs.append((iri, _abbreviate(rdf_type), _abbreviate(types[tag])))             # <<<<<<<<<<<<<<
@@ -12437,14 +12437,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     __pyx_t_2 = (__pyx_cur_scope->__pyx_v_in_declaration != 0);
     if (__pyx_t_2) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 590, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 580, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 590, __pyx_L1_error)
+        __PYX_ERR(0, 580, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 590, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 580, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 590, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 580, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -12458,15 +12458,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
       }
       __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_19owlready2_optimized_rdf_type);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 590, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 580, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 590, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 580, __pyx_L1_error) }
       if (unlikely(__pyx_v_19owlready2_optimized_types == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 590, __pyx_L1_error)
+        __PYX_ERR(0, 580, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_types, __pyx_v_tag); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 590, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_types, __pyx_v_tag); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 580, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_8 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_9 = NULL;
@@ -12482,10 +12482,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
       __pyx_t_6 = (__pyx_t_9) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_9, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_7);
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 590, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 580, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 590, __pyx_L1_error)
+      __pyx_t_8 = PyTuple_New(3); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 580, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_8, 0, __pyx_t_3);
@@ -12496,28 +12496,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
       __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_6 = 0;
-      __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_8); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 590, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_8); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 580, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     }
 
-    /* "owlready2_optimized.pyx":591
+    /* "owlready2_optimized.pyx":581
  *       iri = get_IRI(attrs)
  *       if in_declaration: objs.append((iri, _abbreviate(rdf_type), _abbreviate(types[tag])))
  *       stack.append(iri)             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Datatype"): stack.append(get_IRI(attrs))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 591, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 581, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 591, __pyx_L1_error)
+      __PYX_ERR(0, 581, __pyx_L1_error)
     }
-    __pyx_t_8 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 591, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 581, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_8); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 591, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_8); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 581, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
 
-    /* "owlready2_optimized.pyx":588
+    /* "owlready2_optimized.pyx":578
  *       before_declaration = False
  * 
  *     elif (tag in types):             # <<<<<<<<<<<<<<
@@ -12527,37 +12527,37 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":593
+  /* "owlready2_optimized.pyx":583
  *       stack.append(iri)
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Datatype"): stack.append(get_IRI(attrs))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):  current_attrs = attrs
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 593, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 583, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (__pyx_t_1) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 593, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 583, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 593, __pyx_L1_error)
+      __PYX_ERR(0, 583, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v_get_IRI)) { __Pyx_RaiseClosureNameError("get_IRI"); __PYX_ERR(0, 593, __pyx_L1_error) }
-    __pyx_t_8 = __pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(__pyx_cur_scope->__pyx_v_get_IRI, __pyx_v_attrs); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 593, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_get_IRI)) { __Pyx_RaiseClosureNameError("get_IRI"); __PYX_ERR(0, 583, __pyx_L1_error) }
+    __pyx_t_8 = __pyx_pf_19owlready2_optimized_12parse_owlxml_2get_IRI(__pyx_cur_scope->__pyx_v_get_IRI, __pyx_v_attrs); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 583, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_8); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 593, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_8); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 583, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":595
+  /* "owlready2_optimized.pyx":585
  *     elif (tag == "http://www.w3.org/2002/07/owl#Datatype"): stack.append(get_IRI(attrs))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):  current_attrs = attrs             # <<<<<<<<<<<<<<
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Lite, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 595, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Lite, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 585, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
     __Pyx_INCREF(__pyx_v_attrs);
@@ -12567,21 +12567,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":597
+  /* "owlready2_optimized.pyx":587
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):  current_attrs = attrs
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or             # <<<<<<<<<<<<<<
  *          (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf") or (tag == "http://www.w3.org/2002/07/owl#DataOneOf") or
  *          (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf") or
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 597, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 587, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
     __pyx_t_2 = __pyx_t_11;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_2, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 597, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_2, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 587, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   if (!__pyx_t_1) {
   } else {
@@ -12589,21 +12589,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L5_bool_binop_done;
   }
 
-  /* "owlready2_optimized.pyx":598
+  /* "owlready2_optimized.pyx":588
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or
  *          (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf") or (tag == "http://www.w3.org/2002/07/owl#DataOneOf") or             # <<<<<<<<<<<<<<
  *          (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf") or
  *          (tag == "http://www.w3.org/2002/07/owl#DisjointClasses") or (tag == "http://www.w3.org/2002/07/owl#DisjointObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#DisjointDataProperties") or (tag == "http://www.w3.org/2002/07/owl#DifferentIndividuals")):
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 598, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 588, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
     __pyx_t_2 = __pyx_t_11;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_2, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 598, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_2, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 588, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   if (!__pyx_t_1) {
   } else {
@@ -12611,21 +12611,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L5_bool_binop_done;
   }
 
-  /* "owlready2_optimized.pyx":599
+  /* "owlready2_optimized.pyx":589
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or
  *          (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf") or (tag == "http://www.w3.org/2002/07/owl#DataOneOf") or
  *          (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf") or             # <<<<<<<<<<<<<<
  *          (tag == "http://www.w3.org/2002/07/owl#DisjointClasses") or (tag == "http://www.w3.org/2002/07/owl#DisjointObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#DisjointDataProperties") or (tag == "http://www.w3.org/2002/07/owl#DifferentIndividuals")):
  *       stack.append("(")
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 599, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 589, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
     __pyx_t_2 = __pyx_t_11;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_4, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 599, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_4, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 589, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   if (!__pyx_t_1) {
   } else {
@@ -12633,40 +12633,40 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L5_bool_binop_done;
   }
 
-  /* "owlready2_optimized.pyx":600
+  /* "owlready2_optimized.pyx":590
  *          (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf") or (tag == "http://www.w3.org/2002/07/owl#DataOneOf") or
  *          (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf") or
  *          (tag == "http://www.w3.org/2002/07/owl#DisjointClasses") or (tag == "http://www.w3.org/2002/07/owl#DisjointObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#DisjointDataProperties") or (tag == "http://www.w3.org/2002/07/owl#DifferentIndividuals")):             # <<<<<<<<<<<<<<
  *       stack.append("(")
  * 
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 600, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 590, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
     __pyx_t_2 = __pyx_t_11;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_2, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 600, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_2, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 590, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 600, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 590, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
     __pyx_t_2 = __pyx_t_11;
     goto __pyx_L5_bool_binop_done;
   }
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Diff, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 600, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Diff, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 590, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   __pyx_t_2 = __pyx_t_1;
   __pyx_L5_bool_binop_done:;
 
-  /* "owlready2_optimized.pyx":597
+  /* "owlready2_optimized.pyx":587
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):  current_attrs = attrs
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or             # <<<<<<<<<<<<<<
@@ -12675,21 +12675,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":601
+    /* "owlready2_optimized.pyx":591
  *          (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf") or
  *          (tag == "http://www.w3.org/2002/07/owl#DisjointClasses") or (tag == "http://www.w3.org/2002/07/owl#DisjointObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#DisjointDataProperties") or (tag == "http://www.w3.org/2002/07/owl#DifferentIndividuals")):
  *       stack.append("(")             # <<<<<<<<<<<<<<
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectExactCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMinCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMaxCardinality") or
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 601, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 591, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 601, __pyx_L1_error)
+      __PYX_ERR(0, 591, __pyx_L1_error)
     }
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 601, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 591, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":597
+    /* "owlready2_optimized.pyx":587
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):  current_attrs = attrs
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or             # <<<<<<<<<<<<<<
@@ -12699,28 +12699,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":603
+  /* "owlready2_optimized.pyx":593
  *       stack.append("(")
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectExactCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMinCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMaxCardinality") or             # <<<<<<<<<<<<<<
  *          (tag == "http://www.w3.org/2002/07/owl#DataExactCardinality"  ) or (tag == "http://www.w3.org/2002/07/owl#DataMinCardinality"  ) or (tag == "http://www.w3.org/2002/07/owl#DataMaxCardinality"  )):
  *       stack.append("(")
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_4, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 603, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_4, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 593, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
     __pyx_t_2 = __pyx_t_11;
     goto __pyx_L15_bool_binop_done;
   }
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_5, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 603, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_5, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 593, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L15_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_6, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 603, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_6, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 593, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
@@ -12728,33 +12728,33 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L15_bool_binop_done;
   }
 
-  /* "owlready2_optimized.pyx":604
+  /* "owlready2_optimized.pyx":594
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectExactCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMinCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMaxCardinality") or
  *          (tag == "http://www.w3.org/2002/07/owl#DataExactCardinality"  ) or (tag == "http://www.w3.org/2002/07/owl#DataMinCardinality"  ) or (tag == "http://www.w3.org/2002/07/owl#DataMaxCardinality"  )):             # <<<<<<<<<<<<<<
  *       stack.append("(")
  *       last_cardinality = int(attrs["cardinality"])
  */
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_5, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 604, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_5, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 594, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L15_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_6, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 604, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_6, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 594, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
     __pyx_t_2 = __pyx_t_11;
     goto __pyx_L15_bool_binop_done;
   }
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_7, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 604, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_7, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 594, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   __pyx_t_2 = __pyx_t_1;
   __pyx_L15_bool_binop_done:;
 
-  /* "owlready2_optimized.pyx":603
+  /* "owlready2_optimized.pyx":593
  *       stack.append("(")
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectExactCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMinCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMaxCardinality") or             # <<<<<<<<<<<<<<
@@ -12763,21 +12763,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":605
+    /* "owlready2_optimized.pyx":595
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectExactCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMinCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMaxCardinality") or
  *          (tag == "http://www.w3.org/2002/07/owl#DataExactCardinality"  ) or (tag == "http://www.w3.org/2002/07/owl#DataMinCardinality"  ) or (tag == "http://www.w3.org/2002/07/owl#DataMaxCardinality"  )):
  *       stack.append("(")             # <<<<<<<<<<<<<<
  *       last_cardinality = int(attrs["cardinality"])
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 605, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 595, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 605, __pyx_L1_error)
+      __PYX_ERR(0, 595, __pyx_L1_error)
     }
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 605, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 595, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":606
+    /* "owlready2_optimized.pyx":596
  *          (tag == "http://www.w3.org/2002/07/owl#DataExactCardinality"  ) or (tag == "http://www.w3.org/2002/07/owl#DataMinCardinality"  ) or (tag == "http://www.w3.org/2002/07/owl#DataMaxCardinality"  )):
  *       stack.append("(")
  *       last_cardinality = int(attrs["cardinality"])             # <<<<<<<<<<<<<<
@@ -12786,18 +12786,18 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     if (unlikely(__pyx_v_attrs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 606, __pyx_L1_error)
+      __PYX_ERR(0, 596, __pyx_L1_error)
     }
-    __pyx_t_8 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_cardinality); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 606, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_cardinality); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 596, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
-    __pyx_t_6 = __Pyx_PyNumber_Int(__pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 606, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyNumber_Int(__pyx_t_8); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 596, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 606, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 596, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_cur_scope->__pyx_v_last_cardinality = __pyx_t_5;
 
-    /* "owlready2_optimized.pyx":603
+    /* "owlready2_optimized.pyx":593
  *       stack.append("(")
  * 
  *     elif((tag == "http://www.w3.org/2002/07/owl#ObjectExactCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMinCardinality") or (tag == "http://www.w3.org/2002/07/owl#ObjectMaxCardinality") or             # <<<<<<<<<<<<<<
@@ -12807,22 +12807,22 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":608
+  /* "owlready2_optimized.pyx":598
  *       last_cardinality = int(attrs["cardinality"])
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AnonymousIndividual"): stack.append(new_blank())             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf"): in_prop_chain = False
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anon, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 608, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anon, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 598, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (__pyx_t_1) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 608, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 598, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 608, __pyx_L1_error)
+      __PYX_ERR(0, 598, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 608, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 598, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_8 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
@@ -12836,60 +12836,60 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     }
     __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 608, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 598, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 608, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 598, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":610
+  /* "owlready2_optimized.pyx":600
  *     elif (tag == "http://www.w3.org/2002/07/owl#AnonymousIndividual"): stack.append(new_blank())
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf"): in_prop_chain = False             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectInverseOf") or (tag == "http://www.w3.org/2002/07/owl#DataInverseOf") or (tag == "http://www.w3.org/2002/07/owl#inverseOf"): stack.append(new_blank())
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubO, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 610, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubO, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 600, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
     __pyx_cur_scope->__pyx_v_in_prop_chain = 0;
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":612
+  /* "owlready2_optimized.pyx":602
  *     elif (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf"): in_prop_chain = False
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectInverseOf") or (tag == "http://www.w3.org/2002/07/owl#DataInverseOf") or (tag == "http://www.w3.org/2002/07/owl#inverseOf"): stack.append(new_blank())             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyChain"): stack.append("(")
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_7, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 612, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_7, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 602, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   if (!__pyx_t_11) {
   } else {
     __pyx_t_2 = __pyx_t_11;
     goto __pyx_L21_bool_binop_done;
   }
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_8, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 612, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_8, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 602, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_11 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L21_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_inve, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 612, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_inve, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 602, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_1 != 0);
   __pyx_t_2 = __pyx_t_11;
   __pyx_L21_bool_binop_done:;
   if (__pyx_t_2) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 612, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 602, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 612, __pyx_L1_error)
+      __PYX_ERR(0, 602, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 612, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 602, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_8 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
@@ -12903,73 +12903,73 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     }
     __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_8);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 612, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 602, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 612, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 602, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":614
+  /* "owlready2_optimized.pyx":604
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectInverseOf") or (tag == "http://www.w3.org/2002/07/owl#DataInverseOf") or (tag == "http://www.w3.org/2002/07/owl#inverseOf"): stack.append(new_blank())
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyChain"): stack.append("(")             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DatatypeRestriction"): stack.append("(")
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_8, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 614, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_8, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 604, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_2 != 0);
   if (__pyx_t_11) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 614, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 604, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 614, __pyx_L1_error)
+      __PYX_ERR(0, 604, __pyx_L1_error)
     }
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 614, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 604, __pyx_L1_error)
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":616
+  /* "owlready2_optimized.pyx":606
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyChain"): stack.append("(")
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DatatypeRestriction"): stack.append("(")             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#FacetRestriction"): stack.append(_abbreviate(attrs["facet"]))
  */
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_9, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 616, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_9, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 606, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_11 != 0);
   if (__pyx_t_2) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 616, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 606, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 616, __pyx_L1_error)
+      __PYX_ERR(0, 606, __pyx_L1_error)
     }
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 616, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 606, __pyx_L1_error)
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":618
+  /* "owlready2_optimized.pyx":608
  *     elif (tag == "http://www.w3.org/2002/07/owl#DatatypeRestriction"): stack.append("(")
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#FacetRestriction"): stack.append(_abbreviate(attrs["facet"]))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"): stack.append("(")
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Face, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 618, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Face, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 608, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_2 != 0);
   if (__pyx_t_11) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 618, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 608, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 618, __pyx_L1_error)
+      __PYX_ERR(0, 608, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 618, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 608, __pyx_L1_error) }
     if (unlikely(__pyx_v_attrs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 618, __pyx_L1_error)
+      __PYX_ERR(0, 608, __pyx_L1_error)
     }
-    __pyx_t_8 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_facet); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 618, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_facet); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 608, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
@@ -12985,45 +12985,45 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_t_8) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_8);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 618, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 608, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 618, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 608, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":620
+  /* "owlready2_optimized.pyx":610
  *     elif (tag == "http://www.w3.org/2002/07/owl#FacetRestriction"): stack.append(_abbreviate(attrs["facet"]))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"): stack.append("(")             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Ontology"):
  */
-  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_4, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 620, __pyx_L1_error)
+  __pyx_t_11 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_4, Py_EQ)); if (unlikely(__pyx_t_11 < 0)) __PYX_ERR(0, 610, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_11 != 0);
   if (__pyx_t_2) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 620, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 610, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 620, __pyx_L1_error)
+      __PYX_ERR(0, 610, __pyx_L1_error)
     }
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 620, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_kp_u__27); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 610, __pyx_L1_error)
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":622
+  /* "owlready2_optimized.pyx":612
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"): stack.append("(")
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Ontology"):             # <<<<<<<<<<<<<<
  *       ontology_iri_str = attrs["ontologyIRI"]
  *       if ontology_iri_str.endswith("/"): ontology_iri = _abbreviate(ontology_iri_str[:-1])
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Onto, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 622, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Onto, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 612, __pyx_L1_error)
   __pyx_t_11 = (__pyx_t_2 != 0);
   if (__pyx_t_11) {
 
-    /* "owlready2_optimized.pyx":623
+    /* "owlready2_optimized.pyx":613
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Ontology"):
  *       ontology_iri_str = attrs["ontologyIRI"]             # <<<<<<<<<<<<<<
@@ -13032,17 +13032,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     if (unlikely(__pyx_v_attrs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 623, __pyx_L1_error)
+      __PYX_ERR(0, 613, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_ontologyIRI); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 623, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyDict_GetItem(__pyx_v_attrs, __pyx_n_u_ontologyIRI); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 613, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_6)->tp_name), 0))) __PYX_ERR(0, 623, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_6)->tp_name), 0))) __PYX_ERR(0, 613, __pyx_L1_error)
     __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_ontology_iri_str);
     __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_ontology_iri_str, ((PyObject*)__pyx_t_6));
     __Pyx_GIVEREF(__pyx_t_6);
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":624
+    /* "owlready2_optimized.pyx":614
  *     elif (tag == "http://www.w3.org/2002/07/owl#Ontology"):
  *       ontology_iri_str = attrs["ontologyIRI"]
  *       if ontology_iri_str.endswith("/"): ontology_iri = _abbreviate(ontology_iri_str[:-1])             # <<<<<<<<<<<<<<
@@ -13051,16 +13051,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     if (unlikely(__pyx_cur_scope->__pyx_v_ontology_iri_str == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "endswith");
-      __PYX_ERR(0, 624, __pyx_L1_error)
+      __PYX_ERR(0, 614, __pyx_L1_error)
     }
-    __pyx_t_11 = __Pyx_PyUnicode_Tailmatch(__pyx_cur_scope->__pyx_v_ontology_iri_str, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, 1); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 624, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyUnicode_Tailmatch(__pyx_cur_scope->__pyx_v_ontology_iri_str, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, 1); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 614, __pyx_L1_error)
     if ((__pyx_t_11 != 0)) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 624, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 614, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_ontology_iri_str == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 624, __pyx_L1_error)
+        __PYX_ERR(0, 614, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyUnicode_Substring(__pyx_cur_scope->__pyx_v_ontology_iri_str, 0, -1L); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 624, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyUnicode_Substring(__pyx_cur_scope->__pyx_v_ontology_iri_str, 0, -1L); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 614, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_8 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
@@ -13076,16 +13076,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
       __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_t_4);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 624, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 614, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 624, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 614, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_cur_scope->__pyx_v_ontology_iri = __pyx_t_5;
       goto __pyx_L24;
     }
 
-    /* "owlready2_optimized.pyx":625
+    /* "owlready2_optimized.pyx":615
  *       ontology_iri_str = attrs["ontologyIRI"]
  *       if ontology_iri_str.endswith("/"): ontology_iri = _abbreviate(ontology_iri_str[:-1])
  *       else:                              ontology_iri = _abbreviate(ontology_iri_str)             # <<<<<<<<<<<<<<
@@ -13093,7 +13093,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  *       version_iri = attrs.get("versionIRI")
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 625, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 615, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_8 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
@@ -13107,30 +13107,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
       }
       __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_4, __pyx_cur_scope->__pyx_v_ontology_iri_str) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_cur_scope->__pyx_v_ontology_iri_str);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 625, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 615, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 625, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_5 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 615, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_cur_scope->__pyx_v_ontology_iri = __pyx_t_5;
     }
     __pyx_L24:;
 
-    /* "owlready2_optimized.pyx":626
+    /* "owlready2_optimized.pyx":616
  *       if ontology_iri_str.endswith("/"): ontology_iri = _abbreviate(ontology_iri_str[:-1])
  *       else:                              ontology_iri = _abbreviate(ontology_iri_str)
  *       objs.append((ontology_iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Ontology")))             # <<<<<<<<<<<<<<
  *       version_iri = attrs.get("versionIRI")
  *       if version_iri:
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 626, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 616, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 626, __pyx_L1_error)
+      __PYX_ERR(0, 616, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 626, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 616, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 626, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 616, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -13144,10 +13144,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     }
     __pyx_t_8 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 626, __pyx_L1_error)
+    if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 616, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_8);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 626, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 616, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -13161,10 +13161,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     }
     __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_Onto) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Onto);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 626, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 616, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 626, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 616, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_6);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_6);
@@ -13175,10 +13175,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     __pyx_t_6 = 0;
     __pyx_t_8 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 626, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 616, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":627
+    /* "owlready2_optimized.pyx":617
  *       else:                              ontology_iri = _abbreviate(ontology_iri_str)
  *       objs.append((ontology_iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Ontology")))
  *       version_iri = attrs.get("versionIRI")             # <<<<<<<<<<<<<<
@@ -13187,15 +13187,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     if (unlikely(__pyx_v_attrs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-      __PYX_ERR(0, 627, __pyx_L1_error)
+      __PYX_ERR(0, 617, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_n_u_versionIRI, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 627, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_v_attrs, __pyx_n_u_versionIRI, Py_None); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 617, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 627, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 617, __pyx_L1_error)
     __pyx_v_version_iri = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":628
+    /* "owlready2_optimized.pyx":618
  *       objs.append((ontology_iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Ontology")))
  *       version_iri = attrs.get("versionIRI")
  *       if version_iri:             # <<<<<<<<<<<<<<
@@ -13205,21 +13205,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     __pyx_t_11 = (__pyx_v_version_iri != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_v_version_iri) != 0);
     if (__pyx_t_11) {
 
-      /* "owlready2_optimized.pyx":629
+      /* "owlready2_optimized.pyx":619
  *       version_iri = attrs.get("versionIRI")
  *       if version_iri:
  *         objs.append((ontology_iri, _abbreviate("http://www.w3.org/2002/07/owl#versionIRI"), _abbreviate(version_iri)))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "RDF") or (tag == "rdf:RDF"): raise ValueError("Not an OWL/XML file! (It seems to be an OWL/RDF file)")
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 629, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 619, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 629, __pyx_L1_error)
+        __PYX_ERR(0, 619, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 629, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 619, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 629, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 619, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_8 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_8))) {
@@ -13233,10 +13233,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
       }
       __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_8, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_vers) : __Pyx_PyObject_CallOneArg(__pyx_t_8, __pyx_kp_u_http_www_w3_org_2002_07_owl_vers);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 629, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 619, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 629, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 619, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -13250,10 +13250,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
       }
       __pyx_t_8 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_v_version_iri) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_version_iri);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 629, __pyx_L1_error)
+      if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 619, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 629, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 619, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3);
@@ -13264,10 +13264,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
       __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_8 = 0;
-      __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 629, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_10 == ((int)-1))) __PYX_ERR(0, 619, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "owlready2_optimized.pyx":628
+      /* "owlready2_optimized.pyx":618
  *       objs.append((ontology_iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Ontology")))
  *       version_iri = attrs.get("versionIRI")
  *       if version_iri:             # <<<<<<<<<<<<<<
@@ -13276,7 +13276,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
  */
     }
 
-    /* "owlready2_optimized.pyx":622
+    /* "owlready2_optimized.pyx":612
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"): stack.append("(")
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Ontology"):             # <<<<<<<<<<<<<<
@@ -13286,34 +13286,34 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":631
+  /* "owlready2_optimized.pyx":621
  *         objs.append((ontology_iri, _abbreviate("http://www.w3.org/2002/07/owl#versionIRI"), _abbreviate(version_iri)))
  * 
  *     elif (tag == "RDF") or (tag == "rdf:RDF"): raise ValueError("Not an OWL/XML file! (It seems to be an OWL/RDF file)")             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_n_u_RDF, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 631, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_n_u_RDF, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 621, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_11 = __pyx_t_1;
     goto __pyx_L26_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_rdf_RDF, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 631, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_rdf_RDF, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 621, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   __pyx_t_11 = __pyx_t_2;
   __pyx_L26_bool_binop_done:;
   if (unlikely(__pyx_t_11)) {
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 631, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 621, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_Raise(__pyx_t_6, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __PYX_ERR(0, 631, __pyx_L1_error)
+    __PYX_ERR(0, 621, __pyx_L1_error)
   }
   __pyx_L3:;
 
-  /* "owlready2_optimized.pyx":575
+  /* "owlready2_optimized.pyx":565
  *     return _abbreviate(_unabbreviate_IRI(attrs["abbreviatedIRI"]))
  * 
  *   def startElement(str tag, dict attrs):             # <<<<<<<<<<<<<<
@@ -13340,7 +13340,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_4startElement(PyO
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":634
+/* "owlready2_optimized.pyx":624
  * 
  * 
  *   def endElement(str tag):             # <<<<<<<<<<<<<<
@@ -13358,7 +13358,7 @@ static PyObject *__pyx_pw_19owlready2_optimized_12parse_owlxml_7endElement(PyObj
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("endElement (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tag), (&PyUnicode_Type), 1, "tag", 1))) __PYX_ERR(0, 634, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_tag), (&PyUnicode_Type), 1, "tag", 1))) __PYX_ERR(0, 624, __pyx_L1_error)
   __pyx_r = __pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(__pyx_self, ((PyObject*)__pyx_v_tag));
 
   /* function exit code */
@@ -13426,18 +13426,18 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
   __pyx_cur_scope = __pyx_outer_scope;
   __Pyx_INCREF(__pyx_v_tag);
 
-  /* "owlready2_optimized.pyx":638
+  /* "owlready2_optimized.pyx":628
  *     cdef int iri
  * 
  *     if   (tag == "http://www.w3.org/2002/07/owl#Declaration"):             # <<<<<<<<<<<<<<
  *       in_declaration = False
  *       stack = [] # Purge stack
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Decl, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 638, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Decl, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 628, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":639
+    /* "owlready2_optimized.pyx":629
  * 
  *     if   (tag == "http://www.w3.org/2002/07/owl#Declaration"):
  *       in_declaration = False             # <<<<<<<<<<<<<<
@@ -13446,21 +13446,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  */
     __pyx_cur_scope->__pyx_v_in_declaration = 0;
 
-    /* "owlready2_optimized.pyx":640
+    /* "owlready2_optimized.pyx":630
  *     if   (tag == "http://www.w3.org/2002/07/owl#Declaration"):
  *       in_declaration = False
  *       stack = [] # Purge stack             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):
  */
-    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 640, __pyx_L1_error)
+    __pyx_t_3 = PyList_New(0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 630, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_stack);
     __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_stack, ((PyObject*)__pyx_t_3));
     __Pyx_GIVEREF(__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":638
+    /* "owlready2_optimized.pyx":628
  *     cdef int iri
  * 
  *     if   (tag == "http://www.w3.org/2002/07/owl#Declaration"):             # <<<<<<<<<<<<<<
@@ -13470,52 +13470,52 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":642
+  /* "owlready2_optimized.pyx":632
  *       stack = [] # Purge stack
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):             # <<<<<<<<<<<<<<
  *       lang = current_attrs.get("http://www.w3.org/XML/1998/namespacelang", "")
  *       if lang != "": stack.append((current_content, "@%s" % lang))
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Lite, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 642, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Lite, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 632, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (__pyx_t_1) {
 
-    /* "owlready2_optimized.pyx":643
+    /* "owlready2_optimized.pyx":633
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):
  *       lang = current_attrs.get("http://www.w3.org/XML/1998/namespacelang", "")             # <<<<<<<<<<<<<<
  *       if lang != "": stack.append((current_content, "@%s" % lang))
  *       else:
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_current_attrs)) { __Pyx_RaiseClosureNameError("current_attrs"); __PYX_ERR(0, 643, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_current_attrs)) { __Pyx_RaiseClosureNameError("current_attrs"); __PYX_ERR(0, 633, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_current_attrs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-      __PYX_ERR(0, 643, __pyx_L1_error)
+      __PYX_ERR(0, 633, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_cur_scope->__pyx_v_current_attrs, __pyx_kp_u_http_www_w3_org_XML_1998_namespa_2, __pyx_kp_u_); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 643, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_GetItemDefault(__pyx_cur_scope->__pyx_v_current_attrs, __pyx_kp_u_http_www_w3_org_XML_1998_namespa_2, __pyx_kp_u_); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 633, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_lang = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":644
+    /* "owlready2_optimized.pyx":634
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):
  *       lang = current_attrs.get("http://www.w3.org/XML/1998/namespacelang", "")
  *       if lang != "": stack.append((current_content, "@%s" % lang))             # <<<<<<<<<<<<<<
  *       else:
  *         d = current_attrs.get("datatypeIRI", "")
  */
-    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_lang, __pyx_kp_u_, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 644, __pyx_L1_error)
+    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_lang, __pyx_kp_u_, Py_NE)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 634, __pyx_L1_error)
     if (__pyx_t_1) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 644, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 634, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 644, __pyx_L1_error)
+        __PYX_ERR(0, 634, __pyx_L1_error)
       }
-      if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 644, __pyx_L1_error) }
-      __pyx_t_3 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_s_4, __pyx_v_lang); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 644, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 634, __pyx_L1_error) }
+      __pyx_t_3 = __Pyx_PyUnicode_FormatSafe(__pyx_kp_u_s_4, __pyx_v_lang); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 634, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 644, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 634, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v_current_content);
       __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_current_content);
@@ -13523,12 +13523,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_3);
       __pyx_t_3 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 644, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 634, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       goto __pyx_L4;
     }
 
-    /* "owlready2_optimized.pyx":646
+    /* "owlready2_optimized.pyx":636
  *       if lang != "": stack.append((current_content, "@%s" % lang))
  *       else:
  *         d = current_attrs.get("datatypeIRI", "")             # <<<<<<<<<<<<<<
@@ -13536,38 +13536,38 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  *         elif d in FLOAT_DATATYPES: stack.append((float(current_content), _abbreviate(d)))
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_current_attrs)) { __Pyx_RaiseClosureNameError("current_attrs"); __PYX_ERR(0, 646, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_current_attrs)) { __Pyx_RaiseClosureNameError("current_attrs"); __PYX_ERR(0, 636, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_current_attrs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "get");
-        __PYX_ERR(0, 646, __pyx_L1_error)
+        __PYX_ERR(0, 636, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyDict_GetItemDefault(__pyx_cur_scope->__pyx_v_current_attrs, __pyx_n_u_datatypeIRI, __pyx_kp_u_); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 646, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItemDefault(__pyx_cur_scope->__pyx_v_current_attrs, __pyx_n_u_datatypeIRI, __pyx_kp_u_); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 636, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __pyx_v_d = __pyx_t_4;
       __pyx_t_4 = 0;
 
-      /* "owlready2_optimized.pyx":647
+      /* "owlready2_optimized.pyx":637
  *       else:
  *         d = current_attrs.get("datatypeIRI", "")
  *         if   d in INT_DATATYPES:   stack.append((int  (current_content), _abbreviate(d)))             # <<<<<<<<<<<<<<
  *         elif d in FLOAT_DATATYPES: stack.append((float(current_content), _abbreviate(d)))
  *         elif d:
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_INT_DATATYPES); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 647, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_4, __pyx_n_s_INT_DATATYPES); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 637, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_1 = (__Pyx_PySequence_ContainsTF(__pyx_v_d, __pyx_t_4, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 647, __pyx_L1_error)
+      __pyx_t_1 = (__Pyx_PySequence_ContainsTF(__pyx_v_d, __pyx_t_4, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 637, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_2 = (__pyx_t_1 != 0);
       if (__pyx_t_2) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 647, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 637, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 647, __pyx_L1_error)
+          __PYX_ERR(0, 637, __pyx_L1_error)
         }
-        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 647, __pyx_L1_error) }
-        __pyx_t_4 = __Pyx_PyNumber_Int(__pyx_cur_scope->__pyx_v_current_content); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 647, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 637, __pyx_L1_error) }
+        __pyx_t_4 = __Pyx_PyNumber_Int(__pyx_cur_scope->__pyx_v_current_content); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 637, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 647, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 637, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -13581,10 +13581,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         }
         __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_v_d) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_d);
         __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 647, __pyx_L1_error)
+        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 637, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-        __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 647, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 637, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4);
@@ -13592,33 +13592,33 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_3);
         __pyx_t_4 = 0;
         __pyx_t_3 = 0;
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 647, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 637, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         goto __pyx_L5;
       }
 
-      /* "owlready2_optimized.pyx":648
+      /* "owlready2_optimized.pyx":638
  *         d = current_attrs.get("datatypeIRI", "")
  *         if   d in INT_DATATYPES:   stack.append((int  (current_content), _abbreviate(d)))
  *         elif d in FLOAT_DATATYPES: stack.append((float(current_content), _abbreviate(d)))             # <<<<<<<<<<<<<<
  *         elif d:
  *           iri = _abbreviate(d)
  */
-      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_FLOAT_DATATYPES); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 648, __pyx_L1_error)
+      __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_FLOAT_DATATYPES); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 638, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_v_d, __pyx_t_6, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 648, __pyx_L1_error)
+      __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_v_d, __pyx_t_6, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 638, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_1 = (__pyx_t_2 != 0);
       if (__pyx_t_1) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 648, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 638, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 648, __pyx_L1_error)
+          __PYX_ERR(0, 638, __pyx_L1_error)
         }
-        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 648, __pyx_L1_error) }
-        __pyx_t_6 = __Pyx_PyNumber_Float(__pyx_cur_scope->__pyx_v_current_content); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 648, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 638, __pyx_L1_error) }
+        __pyx_t_6 = __Pyx_PyNumber_Float(__pyx_cur_scope->__pyx_v_current_content); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 638, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 648, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 638, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -13632,10 +13632,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         }
         __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_7, __pyx_v_d) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_d);
         __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 648, __pyx_L1_error)
+        if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 638, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-        __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 648, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 638, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_6);
         PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6);
@@ -13643,29 +13643,29 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_3);
         __pyx_t_6 = 0;
         __pyx_t_3 = 0;
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 648, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 638, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         goto __pyx_L5;
       }
 
-      /* "owlready2_optimized.pyx":649
+      /* "owlready2_optimized.pyx":639
  *         if   d in INT_DATATYPES:   stack.append((int  (current_content), _abbreviate(d)))
  *         elif d in FLOAT_DATATYPES: stack.append((float(current_content), _abbreviate(d)))
  *         elif d:             # <<<<<<<<<<<<<<
  *           iri = _abbreviate(d)
  *           stack.append((current_content, iri))
  */
-      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_d); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 649, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_d); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 639, __pyx_L1_error)
       if (__pyx_t_1) {
 
-        /* "owlready2_optimized.pyx":650
+        /* "owlready2_optimized.pyx":640
  *         elif d in FLOAT_DATATYPES: stack.append((float(current_content), _abbreviate(d)))
  *         elif d:
  *           iri = _abbreviate(d)             # <<<<<<<<<<<<<<
  *           stack.append((current_content, iri))
  *           datatypes.add(iri)
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 650, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 640, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -13679,29 +13679,29 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         }
         __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_v_d) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_d);
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 650, __pyx_L1_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 640, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 650, __pyx_L1_error)
+        __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 640, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
         __pyx_v_iri = __pyx_t_8;
 
-        /* "owlready2_optimized.pyx":651
+        /* "owlready2_optimized.pyx":641
  *         elif d:
  *           iri = _abbreviate(d)
  *           stack.append((current_content, iri))             # <<<<<<<<<<<<<<
  *           datatypes.add(iri)
  *         else:
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 651, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 641, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 651, __pyx_L1_error)
+          __PYX_ERR(0, 641, __pyx_L1_error)
         }
-        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 651, __pyx_L1_error) }
-        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 651, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 641, __pyx_L1_error) }
+        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 641, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 651, __pyx_L1_error)
+        __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 641, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v_current_content);
         __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_current_content);
@@ -13709,27 +13709,27 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_t_4);
         __pyx_t_4 = 0;
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 651, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 641, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-        /* "owlready2_optimized.pyx":652
+        /* "owlready2_optimized.pyx":642
  *           iri = _abbreviate(d)
  *           stack.append((current_content, iri))
  *           datatypes.add(iri)             # <<<<<<<<<<<<<<
  *         else:
  *           stack.append((current_content, 0))
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_datatypes)) { __Pyx_RaiseClosureNameError("datatypes"); __PYX_ERR(0, 652, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_datatypes)) { __Pyx_RaiseClosureNameError("datatypes"); __PYX_ERR(0, 642, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_datatypes == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "add");
-          __PYX_ERR(0, 652, __pyx_L1_error)
+          __PYX_ERR(0, 642, __pyx_L1_error)
         }
-        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 652, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 642, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        __pyx_t_5 = PySet_Add(__pyx_cur_scope->__pyx_v_datatypes, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 652, __pyx_L1_error)
+        __pyx_t_5 = PySet_Add(__pyx_cur_scope->__pyx_v_datatypes, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 642, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-        /* "owlready2_optimized.pyx":649
+        /* "owlready2_optimized.pyx":639
  *         if   d in INT_DATATYPES:   stack.append((int  (current_content), _abbreviate(d)))
  *         elif d in FLOAT_DATATYPES: stack.append((float(current_content), _abbreviate(d)))
  *         elif d:             # <<<<<<<<<<<<<<
@@ -13739,7 +13739,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         goto __pyx_L5;
       }
 
-      /* "owlready2_optimized.pyx":654
+      /* "owlready2_optimized.pyx":644
  *           datatypes.add(iri)
  *         else:
  *           stack.append((current_content, 0))             # <<<<<<<<<<<<<<
@@ -13747,13 +13747,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  *     elif (tag == "http://www.w3.org/2002/07/owl#SubClassOf") or (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubDataPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubAnnotationPropertyOf"):
  */
       /*else*/ {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 654, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 644, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 654, __pyx_L1_error)
+          __PYX_ERR(0, 644, __pyx_L1_error)
         }
-        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 654, __pyx_L1_error) }
-        __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 654, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 644, __pyx_L1_error) }
+        __pyx_t_3 = PyTuple_New(2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 644, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v_current_content);
         __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_current_content);
@@ -13761,14 +13761,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __Pyx_INCREF(__pyx_int_0);
         __Pyx_GIVEREF(__pyx_int_0);
         PyTuple_SET_ITEM(__pyx_t_3, 1, __pyx_int_0);
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 654, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 644, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       }
       __pyx_L5:;
     }
     __pyx_L4:;
 
-    /* "owlready2_optimized.pyx":642
+    /* "owlready2_optimized.pyx":632
  *       stack = [] # Purge stack
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Literal"):             # <<<<<<<<<<<<<<
@@ -13778,82 +13778,82 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":656
+  /* "owlready2_optimized.pyx":646
  *           stack.append((current_content, 0))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SubClassOf") or (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubDataPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubAnnotationPropertyOf"):             # <<<<<<<<<<<<<<
  *       parent = stack.pop()
  *       child  = stack.pop()
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubC, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubC, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 646, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (!__pyx_t_9) {
   } else {
     __pyx_t_1 = __pyx_t_9;
     goto __pyx_L6_bool_binop_done;
   }
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubO, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubO, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 646, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   if (!__pyx_t_2) {
   } else {
     __pyx_t_1 = __pyx_t_2;
     goto __pyx_L6_bool_binop_done;
   }
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubD, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubD, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 646, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (!__pyx_t_9) {
   } else {
     __pyx_t_1 = __pyx_t_9;
     goto __pyx_L6_bool_binop_done;
   }
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubA, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 656, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubA, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 646, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   __pyx_t_1 = __pyx_t_2;
   __pyx_L6_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "owlready2_optimized.pyx":657
+    /* "owlready2_optimized.pyx":647
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SubClassOf") or (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubDataPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubAnnotationPropertyOf"):
  *       parent = stack.pop()             # <<<<<<<<<<<<<<
  *       child  = stack.pop()
  *       if (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") and in_prop_chain:
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 657, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 647, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 657, __pyx_L1_error)
+      __PYX_ERR(0, 647, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 657, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 647, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_parent = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":658
+    /* "owlready2_optimized.pyx":648
  *     elif (tag == "http://www.w3.org/2002/07/owl#SubClassOf") or (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubDataPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubAnnotationPropertyOf"):
  *       parent = stack.pop()
  *       child  = stack.pop()             # <<<<<<<<<<<<<<
  *       if (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") and in_prop_chain:
  *         relation = _abbreviate("http://www.w3.org/2002/07/owl#propertyChainAxiom")
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 658, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 648, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 658, __pyx_L1_error)
+      __PYX_ERR(0, 648, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 658, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 648, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_child = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":659
+    /* "owlready2_optimized.pyx":649
  *       parent = stack.pop()
  *       child  = stack.pop()
  *       if (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") and in_prop_chain:             # <<<<<<<<<<<<<<
  *         relation = _abbreviate("http://www.w3.org/2002/07/owl#propertyChainAxiom")
  *         parent, child = child, parent
  */
-    __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubO, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 659, __pyx_L1_error)
+    __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubO, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 649, __pyx_L1_error)
     __pyx_t_9 = (__pyx_t_2 != 0);
     if (__pyx_t_9) {
     } else {
@@ -13865,14 +13865,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_L11_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "owlready2_optimized.pyx":660
+      /* "owlready2_optimized.pyx":650
  *       child  = stack.pop()
  *       if (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") and in_prop_chain:
  *         relation = _abbreviate("http://www.w3.org/2002/07/owl#propertyChainAxiom")             # <<<<<<<<<<<<<<
  *         parent, child = child, parent
  *       else:
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 660, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 650, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -13886,13 +13886,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_prop) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_prop);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 650, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_v_relation = __pyx_t_3;
       __pyx_t_3 = 0;
 
-      /* "owlready2_optimized.pyx":661
+      /* "owlready2_optimized.pyx":651
  *       if (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") and in_prop_chain:
  *         relation = _abbreviate("http://www.w3.org/2002/07/owl#propertyChainAxiom")
  *         parent, child = child, parent             # <<<<<<<<<<<<<<
@@ -13906,7 +13906,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_v_child = __pyx_t_11;
       __pyx_t_11 = 0;
 
-      /* "owlready2_optimized.pyx":659
+      /* "owlready2_optimized.pyx":649
  *       parent = stack.pop()
  *       child  = stack.pop()
  *       if (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") and in_prop_chain:             # <<<<<<<<<<<<<<
@@ -13916,7 +13916,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       goto __pyx_L10;
     }
 
-    /* "owlready2_optimized.pyx":663
+    /* "owlready2_optimized.pyx":653
  *         parent, child = child, parent
  *       else:
  *         relation = _abbreviate(sub_ofs[tag])             # <<<<<<<<<<<<<<
@@ -13924,12 +13924,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  *       if annots: purge_annotations((child, relation, parent))
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 663, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 653, __pyx_L1_error) }
       if (unlikely(__pyx_v_19owlready2_optimized_sub_ofs == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 663, __pyx_L1_error)
+        __PYX_ERR(0, 653, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_sub_ofs, __pyx_v_tag); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 663, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_sub_ofs, __pyx_v_tag); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 653, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
@@ -13945,7 +13945,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_4);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 663, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 653, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_v_relation = __pyx_t_3;
@@ -13953,19 +13953,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_L10:;
 
-    /* "owlready2_optimized.pyx":664
+    /* "owlready2_optimized.pyx":654
  *       else:
  *         relation = _abbreviate(sub_ofs[tag])
  *       objs.append((child, relation, parent))             # <<<<<<<<<<<<<<
  *       if annots: purge_annotations((child, relation, parent))
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 664, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 654, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 664, __pyx_L1_error)
+      __PYX_ERR(0, 654, __pyx_L1_error)
     }
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 664, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 654, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_v_child);
     __Pyx_GIVEREF(__pyx_v_child);
@@ -13976,20 +13976,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_INCREF(__pyx_v_parent);
     __Pyx_GIVEREF(__pyx_v_parent);
     PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_v_parent);
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 664, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 654, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":665
+    /* "owlready2_optimized.pyx":655
  *         relation = _abbreviate(sub_ofs[tag])
  *       objs.append((child, relation, parent))
  *       if annots: purge_annotations((child, relation, parent))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ClassAssertion"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 665, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 655, __pyx_L1_error) }
     __pyx_t_1 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
     if (__pyx_t_1) {
-      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 665, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 655, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_INCREF(__pyx_v_child);
       __Pyx_GIVEREF(__pyx_v_child);
@@ -14000,14 +14000,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_v_parent);
       __Pyx_GIVEREF(__pyx_v_parent);
       PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_v_parent);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 665, __pyx_L1_error) }
-      __pyx_t_6 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 665, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 655, __pyx_L1_error) }
+      __pyx_t_6 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 655, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
 
-    /* "owlready2_optimized.pyx":656
+    /* "owlready2_optimized.pyx":646
  *           stack.append((current_content, 0))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SubClassOf") or (tag == "http://www.w3.org/2002/07/owl#SubObjectPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubDataPropertyOf") or (tag == "http://www.w3.org/2002/07/owl#SubAnnotationPropertyOf"):             # <<<<<<<<<<<<<<
@@ -14017,64 +14017,64 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":667
+  /* "owlready2_optimized.pyx":657
  *       if annots: purge_annotations((child, relation, parent))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ClassAssertion"):             # <<<<<<<<<<<<<<
  *       child  = stack.pop() # Order is reversed compared to SubClassOf!
  *       parent = stack.pop()
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 667, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 657, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_1 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":668
+    /* "owlready2_optimized.pyx":658
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ClassAssertion"):
  *       child  = stack.pop() # Order is reversed compared to SubClassOf!             # <<<<<<<<<<<<<<
  *       parent = stack.pop()
  *       objs.append((child, _abbreviate(rdf_type), parent))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 668, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 658, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 668, __pyx_L1_error)
+      __PYX_ERR(0, 658, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 668, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 658, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_v_child = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":669
+    /* "owlready2_optimized.pyx":659
  *     elif (tag == "http://www.w3.org/2002/07/owl#ClassAssertion"):
  *       child  = stack.pop() # Order is reversed compared to SubClassOf!
  *       parent = stack.pop()             # <<<<<<<<<<<<<<
  *       objs.append((child, _abbreviate(rdf_type), parent))
  *       if annots: purge_annotations((child, _abbreviate(rdf_type), parent))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 669, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 659, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 669, __pyx_L1_error)
+      __PYX_ERR(0, 659, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 669, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 659, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_v_parent = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":670
+    /* "owlready2_optimized.pyx":660
  *       child  = stack.pop() # Order is reversed compared to SubClassOf!
  *       parent = stack.pop()
  *       objs.append((child, _abbreviate(rdf_type), parent))             # <<<<<<<<<<<<<<
  *       if annots: purge_annotations((child, _abbreviate(rdf_type), parent))
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 670, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 660, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 670, __pyx_L1_error)
+      __PYX_ERR(0, 660, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 670, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 660, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -14088,10 +14088,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 670, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 670, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_v_child);
     __Pyx_GIVEREF(__pyx_v_child);
@@ -14102,20 +14102,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_GIVEREF(__pyx_v_parent);
     PyTuple_SET_ITEM(__pyx_t_3, 2, __pyx_v_parent);
     __pyx_t_6 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 670, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 660, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":671
+    /* "owlready2_optimized.pyx":661
  *       parent = stack.pop()
  *       objs.append((child, _abbreviate(rdf_type), parent))
  *       if annots: purge_annotations((child, _abbreviate(rdf_type), parent))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#EquivalentClasses") or (tag == "http://www.w3.org/2002/07/owl#EquivalentObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#EquivalentDataProperties"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 671, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 661, __pyx_L1_error) }
     __pyx_t_9 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
     if (__pyx_t_9) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 671, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 661, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -14129,10 +14129,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_4, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_19owlready2_optimized_rdf_type);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 671, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 661, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 671, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 661, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_v_child);
       __Pyx_GIVEREF(__pyx_v_child);
@@ -14143,14 +14143,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_GIVEREF(__pyx_v_parent);
       PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_parent);
       __pyx_t_3 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 671, __pyx_L1_error) }
-      __pyx_t_3 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 671, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 661, __pyx_L1_error) }
+      __pyx_t_3 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_6); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 661, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
 
-    /* "owlready2_optimized.pyx":667
+    /* "owlready2_optimized.pyx":657
  *       if annots: purge_annotations((child, relation, parent))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ClassAssertion"):             # <<<<<<<<<<<<<<
@@ -14160,76 +14160,76 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":673
+  /* "owlready2_optimized.pyx":663
  *       if annots: purge_annotations((child, _abbreviate(rdf_type), parent))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#EquivalentClasses") or (tag == "http://www.w3.org/2002/07/owl#EquivalentObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#EquivalentDataProperties"):             # <<<<<<<<<<<<<<
  *       o1 = stack.pop()
  *       o2 = stack.pop()
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 673, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 663, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (!__pyx_t_2) {
   } else {
     __pyx_t_9 = __pyx_t_2;
     goto __pyx_L15_bool_binop_done;
   }
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_2, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 673, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_2, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 663, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_9 = __pyx_t_1;
     goto __pyx_L15_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 673, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 663, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   __pyx_t_9 = __pyx_t_2;
   __pyx_L15_bool_binop_done:;
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":674
+    /* "owlready2_optimized.pyx":664
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#EquivalentClasses") or (tag == "http://www.w3.org/2002/07/owl#EquivalentObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#EquivalentDataProperties"):
  *       o1 = stack.pop()             # <<<<<<<<<<<<<<
  *       o2 = stack.pop()
  *       if o1 < 0: o1, o2 = o2, o1 # Swap in order to have blank node at third position -- rapper seems to do that
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 674, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 664, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 674, __pyx_L1_error)
+      __PYX_ERR(0, 664, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 674, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 664, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_o1 = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":675
+    /* "owlready2_optimized.pyx":665
  *     elif (tag == "http://www.w3.org/2002/07/owl#EquivalentClasses") or (tag == "http://www.w3.org/2002/07/owl#EquivalentObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#EquivalentDataProperties"):
  *       o1 = stack.pop()
  *       o2 = stack.pop()             # <<<<<<<<<<<<<<
  *       if o1 < 0: o1, o2 = o2, o1 # Swap in order to have blank node at third position -- rapper seems to do that
  *       objs.append((o1, _abbreviate(equivs[tag]), o2))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 675, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 665, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 675, __pyx_L1_error)
+      __PYX_ERR(0, 665, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 675, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 665, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_o2 = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":676
+    /* "owlready2_optimized.pyx":666
  *       o1 = stack.pop()
  *       o2 = stack.pop()
  *       if o1 < 0: o1, o2 = o2, o1 # Swap in order to have blank node at third position -- rapper seems to do that             # <<<<<<<<<<<<<<
  *       objs.append((o1, _abbreviate(equivs[tag]), o2))
  *       if annots: purge_annotations((o1, _abbreviate(equivs[tag]), o2))
  */
-    __pyx_t_3 = PyObject_RichCompare(__pyx_v_o1, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 676, __pyx_L1_error)
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 676, __pyx_L1_error)
+    __pyx_t_3 = PyObject_RichCompare(__pyx_v_o1, __pyx_int_0, Py_LT); __Pyx_XGOTREF(__pyx_t_3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 666, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_t_3); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 666, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (__pyx_t_9) {
       __pyx_t_11 = __pyx_v_o2;
@@ -14240,24 +14240,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_10 = 0;
     }
 
-    /* "owlready2_optimized.pyx":677
+    /* "owlready2_optimized.pyx":667
  *       o2 = stack.pop()
  *       if o1 < 0: o1, o2 = o2, o1 # Swap in order to have blank node at third position -- rapper seems to do that
  *       objs.append((o1, _abbreviate(equivs[tag]), o2))             # <<<<<<<<<<<<<<
  *       if annots: purge_annotations((o1, _abbreviate(equivs[tag]), o2))
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 677, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 667, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 677, __pyx_L1_error)
+      __PYX_ERR(0, 667, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 677, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 667, __pyx_L1_error) }
     if (unlikely(__pyx_v_19owlready2_optimized_equivs == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 677, __pyx_L1_error)
+      __PYX_ERR(0, 667, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_equivs, __pyx_v_tag); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_equivs, __pyx_v_tag); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 667, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
@@ -14273,10 +14273,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_7, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 677, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 667, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 667, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_INCREF(__pyx_v_o1);
     __Pyx_GIVEREF(__pyx_v_o1);
@@ -14287,25 +14287,25 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_GIVEREF(__pyx_v_o2);
     PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_o2);
     __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 677, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 667, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":678
+    /* "owlready2_optimized.pyx":668
  *       if o1 < 0: o1, o2 = o2, o1 # Swap in order to have blank node at third position -- rapper seems to do that
  *       objs.append((o1, _abbreviate(equivs[tag]), o2))
  *       if annots: purge_annotations((o1, _abbreviate(equivs[tag]), o2))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyDomain"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 678, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 668, __pyx_L1_error) }
     __pyx_t_9 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
     if (__pyx_t_9) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 678, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 668, __pyx_L1_error) }
       if (unlikely(__pyx_v_19owlready2_optimized_equivs == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 678, __pyx_L1_error)
+        __PYX_ERR(0, 668, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_equivs, __pyx_v_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 678, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_equivs, __pyx_v_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 668, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
@@ -14321,10 +14321,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_3);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 678, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 668, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 678, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 668, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_v_o1);
       __Pyx_GIVEREF(__pyx_v_o1);
@@ -14335,14 +14335,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_GIVEREF(__pyx_v_o2);
       PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_o2);
       __pyx_t_4 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 678, __pyx_L1_error) }
-      __pyx_t_4 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 678, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 668, __pyx_L1_error) }
+      __pyx_t_4 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 668, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
 
-    /* "owlready2_optimized.pyx":673
+    /* "owlready2_optimized.pyx":663
  *       if annots: purge_annotations((child, _abbreviate(rdf_type), parent))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#EquivalentClasses") or (tag == "http://www.w3.org/2002/07/owl#EquivalentObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#EquivalentDataProperties"):             # <<<<<<<<<<<<<<
@@ -14352,49 +14352,330 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":680
+  /* "owlready2_optimized.pyx":670
  *       if annots: purge_annotations((o1, _abbreviate(equivs[tag]), o2))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyDomain"):             # <<<<<<<<<<<<<<
  *       val = stack.pop(); obj = stack.pop();
  *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_9, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 680, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_9, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 670, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_9 = __pyx_t_1;
     goto __pyx_L20_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_10, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 680, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_10, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 670, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (!__pyx_t_2) {
   } else {
     __pyx_t_9 = __pyx_t_2;
     goto __pyx_L20_bool_binop_done;
   }
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 680, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 670, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   __pyx_t_9 = __pyx_t_1;
   __pyx_L20_bool_binop_done:;
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":681
+    /* "owlready2_optimized.pyx":671
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyDomain"):
  *       val = stack.pop(); obj = stack.pop();             # <<<<<<<<<<<<<<
  *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
  *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 681, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 671, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 681, __pyx_L1_error)
+      __PYX_ERR(0, 671, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 681, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 671, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_v_val = __pyx_t_4;
     __pyx_t_4 = 0;
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 671, __pyx_L1_error) }
+    if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
+      __PYX_ERR(0, 671, __pyx_L1_error)
+    }
+    __pyx_t_4 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 671, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __pyx_v_obj = __pyx_t_4;
+    __pyx_t_4 = 0;
+
+    /* "owlready2_optimized.pyx":672
+ *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyDomain"):
+ *       val = stack.pop(); obj = stack.pop();
+ *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))             # <<<<<<<<<<<<<<
+ *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
+ * 
+ */
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 672, __pyx_L1_error) }
+    if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
+      __PYX_ERR(0, 672, __pyx_L1_error)
+    }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 672, __pyx_L1_error) }
+    __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
+    __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
+      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_6);
+      if (likely(__pyx_t_3)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
+        __Pyx_INCREF(__pyx_t_3);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_6, function);
+      }
+    }
+    __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche);
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 672, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 672, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_INCREF(__pyx_v_obj);
+    __Pyx_GIVEREF(__pyx_v_obj);
+    PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_v_obj);
+    __Pyx_GIVEREF(__pyx_t_4);
+    PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_4);
+    __Pyx_INCREF(__pyx_v_val);
+    __Pyx_GIVEREF(__pyx_v_val);
+    PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_val);
+    __pyx_t_4 = 0;
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 672, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+
+    /* "owlready2_optimized.pyx":673
+ *       val = stack.pop(); obj = stack.pop();
+ *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
+ *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))             # <<<<<<<<<<<<<<
+ * 
+ *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):
+ */
+    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 673, __pyx_L1_error) }
+    __pyx_t_9 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
+    if (__pyx_t_9) {
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 673, __pyx_L1_error) }
+      __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
+      __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
+      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+        __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
+        if (likely(__pyx_t_3)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+          __Pyx_INCREF(__pyx_t_3);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_4, function);
+        }
+      }
+      __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche);
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 673, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 673, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_INCREF(__pyx_v_obj);
+      __Pyx_GIVEREF(__pyx_v_obj);
+      PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_obj);
+      __Pyx_GIVEREF(__pyx_t_6);
+      PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6);
+      __Pyx_INCREF(__pyx_v_val);
+      __Pyx_GIVEREF(__pyx_v_val);
+      PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_val);
+      __pyx_t_6 = 0;
+      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 673, __pyx_L1_error) }
+      __pyx_t_6 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 673, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+    }
+
+    /* "owlready2_optimized.pyx":670
+ *       if annots: purge_annotations((o1, _abbreviate(equivs[tag]), o2))
+ * 
+ *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyDomain"):             # <<<<<<<<<<<<<<
+ *       val = stack.pop(); obj = stack.pop();
+ *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
+ */
+    goto __pyx_L3;
+  }
+
+  /* "owlready2_optimized.pyx":675
+ *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
+ * 
+ *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):             # <<<<<<<<<<<<<<
+ *       val = stack.pop(); obj = stack.pop();
+ *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
+ */
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_10, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 675, __pyx_L1_error)
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  if (!__pyx_t_2) {
+  } else {
+    __pyx_t_9 = __pyx_t_2;
+    goto __pyx_L24_bool_binop_done;
+  }
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_11, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 675, __pyx_L1_error)
+  __pyx_t_1 = (__pyx_t_2 != 0);
+  if (!__pyx_t_1) {
+  } else {
+    __pyx_t_9 = __pyx_t_1;
+    goto __pyx_L24_bool_binop_done;
+  }
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_2, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 675, __pyx_L1_error)
+  __pyx_t_2 = (__pyx_t_1 != 0);
+  __pyx_t_9 = __pyx_t_2;
+  __pyx_L24_bool_binop_done:;
+  if (__pyx_t_9) {
+
+    /* "owlready2_optimized.pyx":676
+ * 
+ *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):
+ *       val = stack.pop(); obj = stack.pop();             # <<<<<<<<<<<<<<
+ *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
+ *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
+ */
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 676, __pyx_L1_error) }
+    if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
+      __PYX_ERR(0, 676, __pyx_L1_error)
+    }
+    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 676, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_v_val = __pyx_t_6;
+    __pyx_t_6 = 0;
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 676, __pyx_L1_error) }
+    if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
+      __PYX_ERR(0, 676, __pyx_L1_error)
+    }
+    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 676, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __pyx_v_obj = __pyx_t_6;
+    __pyx_t_6 = 0;
+
+    /* "owlready2_optimized.pyx":677
+ *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):
+ *       val = stack.pop(); obj = stack.pop();
+ *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))             # <<<<<<<<<<<<<<
+ *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
+ * 
+ */
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 677, __pyx_L1_error) }
+    if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
+      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
+      __PYX_ERR(0, 677, __pyx_L1_error)
+    }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 677, __pyx_L1_error) }
+    __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
+    __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
+    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
+      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
+      if (likely(__pyx_t_3)) {
+        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
+        __Pyx_INCREF(__pyx_t_3);
+        __Pyx_INCREF(function);
+        __Pyx_DECREF_SET(__pyx_t_4, function);
+      }
+    }
+    __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_2) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_2);
+    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_6);
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 677, __pyx_L1_error)
+    __Pyx_GOTREF(__pyx_t_4);
+    __Pyx_INCREF(__pyx_v_obj);
+    __Pyx_GIVEREF(__pyx_v_obj);
+    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_obj);
+    __Pyx_GIVEREF(__pyx_t_6);
+    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6);
+    __Pyx_INCREF(__pyx_v_val);
+    __Pyx_GIVEREF(__pyx_v_val);
+    PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_val);
+    __pyx_t_6 = 0;
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 677, __pyx_L1_error)
+    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+    /* "owlready2_optimized.pyx":678
+ *       val = stack.pop(); obj = stack.pop();
+ *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
+ *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))             # <<<<<<<<<<<<<<
+ * 
+ *     elif (tag in prop_types):
+ */
+    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 678, __pyx_L1_error) }
+    __pyx_t_9 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
+    if (__pyx_t_9) {
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 678, __pyx_L1_error) }
+      __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
+      __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
+      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
+        __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_6);
+        if (likely(__pyx_t_3)) {
+          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
+          __Pyx_INCREF(__pyx_t_3);
+          __Pyx_INCREF(function);
+          __Pyx_DECREF_SET(__pyx_t_6, function);
+        }
+      }
+      __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_2) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_2);
+      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 678, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 678, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_6);
+      __Pyx_INCREF(__pyx_v_obj);
+      __Pyx_GIVEREF(__pyx_v_obj);
+      PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_v_obj);
+      __Pyx_GIVEREF(__pyx_t_4);
+      PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_4);
+      __Pyx_INCREF(__pyx_v_val);
+      __Pyx_GIVEREF(__pyx_v_val);
+      PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_val);
+      __pyx_t_4 = 0;
+      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 678, __pyx_L1_error) }
+      __pyx_t_4 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 678, __pyx_L1_error)
+      __Pyx_GOTREF(__pyx_t_4);
+      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+    }
+
+    /* "owlready2_optimized.pyx":675
+ *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
+ * 
+ *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):             # <<<<<<<<<<<<<<
+ *       val = stack.pop(); obj = stack.pop();
+ *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
+ */
+    goto __pyx_L3;
+  }
+
+  /* "owlready2_optimized.pyx":680
+ *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
+ * 
+ *     elif (tag in prop_types):             # <<<<<<<<<<<<<<
+ *       obj = stack.pop()
+ *       objs.append((obj, _abbreviate(rdf_type), _abbreviate(prop_types[tag])))
+ */
+  if (unlikely(__pyx_v_19owlready2_optimized_prop_types == Py_None)) {
+    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
+    __PYX_ERR(0, 680, __pyx_L1_error)
+  }
+  __pyx_t_9 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_prop_types, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 680, __pyx_L1_error)
+  __pyx_t_2 = (__pyx_t_9 != 0);
+  if (__pyx_t_2) {
+
+    /* "owlready2_optimized.pyx":681
+ * 
+ *     elif (tag in prop_types):
+ *       obj = stack.pop()             # <<<<<<<<<<<<<<
+ *       objs.append((obj, _abbreviate(rdf_type), _abbreviate(prop_types[tag])))
+ * 
+ */
     if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 681, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
@@ -14406,11 +14687,11 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_4 = 0;
 
     /* "owlready2_optimized.pyx":682
- *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyDomain"):
- *       val = stack.pop(); obj = stack.pop();
- *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))             # <<<<<<<<<<<<<<
- *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
+ *     elif (tag in prop_types):
+ *       obj = stack.pop()
+ *       objs.append((obj, _abbreviate(rdf_type), _abbreviate(prop_types[tag])))             # <<<<<<<<<<<<<<
  * 
+ *     elif (tag == "http://www.w3.org/2002/07/owl#InverseObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#InverseDataProperties"):
  */
     if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 682, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
@@ -14429,298 +14710,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __Pyx_DECREF_SET(__pyx_t_6, function);
       }
     }
-    __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche);
+    __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
     if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 682, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 682, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_INCREF(__pyx_v_obj);
-    __Pyx_GIVEREF(__pyx_v_obj);
-    PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_v_obj);
-    __Pyx_GIVEREF(__pyx_t_4);
-    PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_4);
-    __Pyx_INCREF(__pyx_v_val);
-    __Pyx_GIVEREF(__pyx_v_val);
-    PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_val);
-    __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 682, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-
-    /* "owlready2_optimized.pyx":683
- *       val = stack.pop(); obj = stack.pop();
- *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
- *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))             # <<<<<<<<<<<<<<
- * 
- *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):
- */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 683, __pyx_L1_error) }
-    __pyx_t_9 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
-    if (__pyx_t_9) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 683, __pyx_L1_error) }
-      __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
-      __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-        __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-        if (likely(__pyx_t_3)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_4, function);
-        }
-      }
-      __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche);
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 683, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 683, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_INCREF(__pyx_v_obj);
-      __Pyx_GIVEREF(__pyx_v_obj);
-      PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_obj);
-      __Pyx_GIVEREF(__pyx_t_6);
-      PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6);
-      __Pyx_INCREF(__pyx_v_val);
-      __Pyx_GIVEREF(__pyx_v_val);
-      PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_val);
-      __pyx_t_6 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 683, __pyx_L1_error) }
-      __pyx_t_6 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 683, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    }
-
-    /* "owlready2_optimized.pyx":680
- *       if annots: purge_annotations((o1, _abbreviate(equivs[tag]), o2))
- * 
- *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyDomain") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyDomain"):             # <<<<<<<<<<<<<<
- *       val = stack.pop(); obj = stack.pop();
- *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
- */
-    goto __pyx_L3;
-  }
-
-  /* "owlready2_optimized.pyx":685
- *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
- * 
- *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):             # <<<<<<<<<<<<<<
- *       val = stack.pop(); obj = stack.pop();
- *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
- */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_10, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 685, __pyx_L1_error)
-  __pyx_t_2 = (__pyx_t_1 != 0);
-  if (!__pyx_t_2) {
-  } else {
-    __pyx_t_9 = __pyx_t_2;
-    goto __pyx_L24_bool_binop_done;
-  }
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_11, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 685, __pyx_L1_error)
-  __pyx_t_1 = (__pyx_t_2 != 0);
-  if (!__pyx_t_1) {
-  } else {
-    __pyx_t_9 = __pyx_t_1;
-    goto __pyx_L24_bool_binop_done;
-  }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_2, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 685, __pyx_L1_error)
-  __pyx_t_2 = (__pyx_t_1 != 0);
-  __pyx_t_9 = __pyx_t_2;
-  __pyx_L24_bool_binop_done:;
-  if (__pyx_t_9) {
-
-    /* "owlready2_optimized.pyx":686
- * 
- *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):
- *       val = stack.pop(); obj = stack.pop();             # <<<<<<<<<<<<<<
- *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
- *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
- */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 686, __pyx_L1_error) }
-    if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
-      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 686, __pyx_L1_error)
-    }
-    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 686, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_v_val = __pyx_t_6;
-    __pyx_t_6 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 686, __pyx_L1_error) }
-    if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
-      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 686, __pyx_L1_error)
-    }
-    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 686, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __pyx_v_obj = __pyx_t_6;
-    __pyx_t_6 = 0;
-
-    /* "owlready2_optimized.pyx":687
- *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):
- *       val = stack.pop(); obj = stack.pop();
- *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))             # <<<<<<<<<<<<<<
- *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
- * 
- */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 687, __pyx_L1_error) }
-    if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
-      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 687, __pyx_L1_error)
-    }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 687, __pyx_L1_error) }
-    __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
-    __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_4);
-      if (likely(__pyx_t_3)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_4);
-        __Pyx_INCREF(__pyx_t_3);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_4, function);
-      }
-    }
-    __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_2) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_2);
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 687, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_6);
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 687, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_INCREF(__pyx_v_obj);
-    __Pyx_GIVEREF(__pyx_v_obj);
-    PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_obj);
-    __Pyx_GIVEREF(__pyx_t_6);
-    PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_6);
-    __Pyx_INCREF(__pyx_v_val);
-    __Pyx_GIVEREF(__pyx_v_val);
-    PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_val);
-    __pyx_t_6 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 687, __pyx_L1_error)
-    __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-
-    /* "owlready2_optimized.pyx":688
- *       val = stack.pop(); obj = stack.pop();
- *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
- *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))             # <<<<<<<<<<<<<<
- * 
- *     elif (tag in prop_types):
- */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 688, __pyx_L1_error) }
-    __pyx_t_9 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
-    if (__pyx_t_9) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 688, __pyx_L1_error) }
-      __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
-      __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
-      if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
-        __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_6);
-        if (likely(__pyx_t_3)) {
-          PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
-          __Pyx_INCREF(__pyx_t_3);
-          __Pyx_INCREF(function);
-          __Pyx_DECREF_SET(__pyx_t_6, function);
-        }
-      }
-      __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_2) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_2);
-      __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 688, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 688, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_6);
-      __Pyx_INCREF(__pyx_v_obj);
-      __Pyx_GIVEREF(__pyx_v_obj);
-      PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_v_obj);
-      __Pyx_GIVEREF(__pyx_t_4);
-      PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_4);
-      __Pyx_INCREF(__pyx_v_val);
-      __Pyx_GIVEREF(__pyx_v_val);
-      PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_val);
-      __pyx_t_4 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 688, __pyx_L1_error) }
-      __pyx_t_4 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_6); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 688, __pyx_L1_error)
-      __Pyx_GOTREF(__pyx_t_4);
-      __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    }
-
-    /* "owlready2_optimized.pyx":685
- *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#domain"), val))
- * 
- *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#DataPropertyRange") or (tag == "http://www.w3.org/2002/07/owl#AnnotationPropertyRange"):             # <<<<<<<<<<<<<<
- *       val = stack.pop(); obj = stack.pop();
- *       objs.append((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
- */
-    goto __pyx_L3;
-  }
-
-  /* "owlready2_optimized.pyx":690
- *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
- * 
- *     elif (tag in prop_types):             # <<<<<<<<<<<<<<
- *       obj = stack.pop()
- *       objs.append((obj, _abbreviate(rdf_type), _abbreviate(prop_types[tag])))
- */
-  if (unlikely(__pyx_v_19owlready2_optimized_prop_types == Py_None)) {
-    PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 690, __pyx_L1_error)
-  }
-  __pyx_t_9 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_prop_types, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 690, __pyx_L1_error)
-  __pyx_t_2 = (__pyx_t_9 != 0);
-  if (__pyx_t_2) {
-
-    /* "owlready2_optimized.pyx":691
- * 
- *     elif (tag in prop_types):
- *       obj = stack.pop()             # <<<<<<<<<<<<<<
- *       objs.append((obj, _abbreviate(rdf_type), _abbreviate(prop_types[tag])))
- * 
- */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 691, __pyx_L1_error) }
-    if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
-      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 691, __pyx_L1_error)
-    }
-    __pyx_t_4 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 691, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __pyx_v_obj = __pyx_t_4;
-    __pyx_t_4 = 0;
-
-    /* "owlready2_optimized.pyx":692
- *     elif (tag in prop_types):
- *       obj = stack.pop()
- *       objs.append((obj, _abbreviate(rdf_type), _abbreviate(prop_types[tag])))             # <<<<<<<<<<<<<<
- * 
- *     elif (tag == "http://www.w3.org/2002/07/owl#InverseObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#InverseDataProperties"):
- */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 692, __pyx_L1_error) }
-    if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
-      PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 692, __pyx_L1_error)
-    }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 692, __pyx_L1_error) }
-    __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
-    __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
-    if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
-      __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_6);
-      if (likely(__pyx_t_3)) {
-        PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_6);
-        __Pyx_INCREF(__pyx_t_3);
-        __Pyx_INCREF(function);
-        __Pyx_DECREF_SET(__pyx_t_6, function);
-      }
-    }
-    __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_19owlready2_optimized_rdf_type);
-    __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 692, __pyx_L1_error)
-    __Pyx_GOTREF(__pyx_t_4);
-    __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 692, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 682, __pyx_L1_error) }
     if (unlikely(__pyx_v_19owlready2_optimized_prop_types == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 692, __pyx_L1_error)
+      __PYX_ERR(0, 682, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_prop_types, __pyx_v_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 692, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_prop_types, __pyx_v_tag); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 682, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_12 = NULL;
@@ -14736,10 +14736,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_6 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_12, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 692, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 682, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 692, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 682, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_INCREF(__pyx_v_obj);
     __Pyx_GIVEREF(__pyx_v_obj);
@@ -14750,10 +14750,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     PyTuple_SET_ITEM(__pyx_t_7, 2, __pyx_t_6);
     __pyx_t_4 = 0;
     __pyx_t_6 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 692, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 682, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":690
+    /* "owlready2_optimized.pyx":680
  *       if annots: purge_annotations((obj, _abbreviate("http://www.w3.org/2000/01/rdf-schema#range"), val))
  * 
  *     elif (tag in prop_types):             # <<<<<<<<<<<<<<
@@ -14763,65 +14763,65 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":694
+  /* "owlready2_optimized.pyx":684
  *       objs.append((obj, _abbreviate(rdf_type), _abbreviate(prop_types[tag])))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#InverseObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#InverseDataProperties"):             # <<<<<<<<<<<<<<
  *       a, b = stack.pop(), stack.pop()
  *       objs.append((b, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), a))
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 694, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 684, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_9 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L28_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_2, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 694, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_2, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 684, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_1 != 0);
   __pyx_t_2 = __pyx_t_9;
   __pyx_L28_bool_binop_done:;
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":695
+    /* "owlready2_optimized.pyx":685
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#InverseObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#InverseDataProperties"):
  *       a, b = stack.pop(), stack.pop()             # <<<<<<<<<<<<<<
  *       objs.append((b, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), a))
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 695, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 685, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 695, __pyx_L1_error)
+      __PYX_ERR(0, 685, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 695, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 685, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 695, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 685, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 695, __pyx_L1_error)
+      __PYX_ERR(0, 685, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 695, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_Pop(__pyx_cur_scope->__pyx_v_stack); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 685, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_v_a = __pyx_t_7;
     __pyx_t_7 = 0;
     __pyx_v_b = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":696
+    /* "owlready2_optimized.pyx":686
  *     elif (tag == "http://www.w3.org/2002/07/owl#InverseObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#InverseDataProperties"):
  *       a, b = stack.pop(), stack.pop()
  *       objs.append((b, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), a))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyChain"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 696, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 686, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 696, __pyx_L1_error)
+      __PYX_ERR(0, 686, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 696, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 686, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -14835,10 +14835,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_inve) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_inve);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 696, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 686, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 696, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 686, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_INCREF(__pyx_v_b);
     __Pyx_GIVEREF(__pyx_v_b);
@@ -14849,10 +14849,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_GIVEREF(__pyx_v_a);
     PyTuple_SET_ITEM(__pyx_t_7, 2, __pyx_v_a);
     __pyx_t_6 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 696, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 686, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":694
+    /* "owlready2_optimized.pyx":684
  *       objs.append((obj, _abbreviate(rdf_type), _abbreviate(prop_types[tag])))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#InverseObjectProperties") or (tag == "http://www.w3.org/2002/07/owl#InverseDataProperties"):             # <<<<<<<<<<<<<<
@@ -14862,34 +14862,34 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":698
+  /* "owlready2_optimized.pyx":688
  *       objs.append((b, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), a))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyChain"):             # <<<<<<<<<<<<<<
  *       start          = _rindex(stack)
  *       in_prop_chain  = True
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_8, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 698, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_8, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 688, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":699
+    /* "owlready2_optimized.pyx":689
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyChain"):
  *       start          = _rindex(stack)             # <<<<<<<<<<<<<<
  *       in_prop_chain  = True
  *       stack[start :] = [new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 699, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 689, __pyx_L1_error) }
     __pyx_t_7 = __pyx_cur_scope->__pyx_v_stack;
     __Pyx_INCREF(__pyx_t_7);
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_7))); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 699, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_7))); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 689, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_v_start = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":700
+    /* "owlready2_optimized.pyx":690
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyChain"):
  *       start          = _rindex(stack)
  *       in_prop_chain  = True             # <<<<<<<<<<<<<<
@@ -14898,54 +14898,54 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  */
     __pyx_cur_scope->__pyx_v_in_prop_chain = 1;
 
-    /* "owlready2_optimized.pyx":701
+    /* "owlready2_optimized.pyx":691
  *       start          = _rindex(stack)
  *       in_prop_chain  = True
  *       stack[start :] = [new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag in disjoints):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 701, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 691, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 701, __pyx_L1_error)
+      __PYX_ERR(0, 691, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_9 = (__pyx_t_6 == Py_None);
     if (__pyx_t_9) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 701, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 691, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 691, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 701, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 691, __pyx_L1_error) }
     __pyx_t_7 = __pyx_cur_scope->__pyx_v_objs;
     __Pyx_INCREF(__pyx_t_7);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 701, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 691, __pyx_L1_error) }
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate;
     __Pyx_INCREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 701, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 691, __pyx_L1_error) }
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_new_blank;
     __Pyx_INCREF(__pyx_t_3);
-    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_t_6), ((PyObject*)__pyx_t_7), __pyx_t_4, __pyx_t_3)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_t_6), ((PyObject*)__pyx_t_7), __pyx_t_4, __pyx_t_3)); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 691, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 701, __pyx_L1_error)
+    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 691, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_12);
     PyList_SET_ITEM(__pyx_t_3, 0, __pyx_t_12);
     __pyx_t_12 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 701, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 691, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 701, __pyx_L1_error)
+      __PYX_ERR(0, 691, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_start);
     __pyx_t_12 = __pyx_v_start;
@@ -14953,14 +14953,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     if (__pyx_t_9) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_12); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 701, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_12); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 691, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 701, __pyx_L1_error)
+    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 691, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":698
+    /* "owlready2_optimized.pyx":688
  *       objs.append((b, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), a))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyChain"):             # <<<<<<<<<<<<<<
@@ -14970,7 +14970,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":703
+  /* "owlready2_optimized.pyx":693
  *       stack[start :] = [new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)]
  * 
  *     elif (tag in disjoints):             # <<<<<<<<<<<<<<
@@ -14979,56 +14979,56 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  */
   if (unlikely(__pyx_v_19owlready2_optimized_disjoints == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 703, __pyx_L1_error)
+    __PYX_ERR(0, 693, __pyx_L1_error)
   }
-  __pyx_t_9 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_disjoints, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 703, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_disjoints, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 693, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":704
+    /* "owlready2_optimized.pyx":694
  * 
  *     elif (tag in disjoints):
  *       start    = _rindex(stack)             # <<<<<<<<<<<<<<
  *       list_obj = stack[start + 1 : ]
  *       tag, rel, member = disjoints[tag]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 704, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 694, __pyx_L1_error) }
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_stack;
     __Pyx_INCREF(__pyx_t_3);
-    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_3))); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 704, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_3))); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 694, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_start = __pyx_t_12;
     __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":705
+    /* "owlready2_optimized.pyx":695
  *     elif (tag in disjoints):
  *       start    = _rindex(stack)
  *       list_obj = stack[start + 1 : ]             # <<<<<<<<<<<<<<
  *       tag, rel, member = disjoints[tag]
  *       if rel and (len(list_obj) == 2):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 705, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 695, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 705, __pyx_L1_error)
+      __PYX_ERR(0, 695, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 705, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 695, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __pyx_t_2 = (__pyx_t_12 == Py_None);
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_12); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 705, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_12); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 695, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 705, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 695, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __pyx_v_list_obj = ((PyObject*)__pyx_t_12);
     __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":706
+    /* "owlready2_optimized.pyx":696
  *       start    = _rindex(stack)
  *       list_obj = stack[start + 1 : ]
  *       tag, rel, member = disjoints[tag]             # <<<<<<<<<<<<<<
@@ -15037,9 +15037,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  */
     if (unlikely(__pyx_v_19owlready2_optimized_disjoints == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 706, __pyx_L1_error)
+      __PYX_ERR(0, 696, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_disjoints, __pyx_v_tag); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 706, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_disjoints, __pyx_v_tag); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 696, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     if ((likely(PyTuple_CheckExact(__pyx_t_12))) || (PyList_CheckExact(__pyx_t_12))) {
       PyObject* sequence = __pyx_t_12;
@@ -15047,7 +15047,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 706, __pyx_L1_error)
+        __PYX_ERR(0, 696, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -15063,17 +15063,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_t_7);
       #else
-      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 706, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 696, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 706, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 696, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_7 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 706, __pyx_L1_error)
+      __pyx_t_7 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 696, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       #endif
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_6 = PyObject_GetIter(__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 706, __pyx_L1_error)
+      __pyx_t_6 = PyObject_GetIter(__pyx_t_12); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 696, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       __pyx_t_15 = Py_TYPE(__pyx_t_6)->tp_iternext;
@@ -15083,7 +15083,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_GOTREF(__pyx_t_4);
       index = 2; __pyx_t_7 = __pyx_t_15(__pyx_t_6); if (unlikely(!__pyx_t_7)) goto __pyx_L30_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_7);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_6), 3) < 0) __PYX_ERR(0, 706, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_15(__pyx_t_6), 3) < 0) __PYX_ERR(0, 696, __pyx_L1_error)
       __pyx_t_15 = NULL;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       goto __pyx_L31_unpacking_done;
@@ -15091,10 +15091,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_15 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 706, __pyx_L1_error)
+      __PYX_ERR(0, 696, __pyx_L1_error)
       __pyx_L31_unpacking_done:;
     }
-    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 706, __pyx_L1_error)
+    if (!(likely(PyUnicode_CheckExact(__pyx_t_3))||((__pyx_t_3) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_3)->tp_name), 0))) __PYX_ERR(0, 696, __pyx_L1_error)
     __Pyx_DECREF_SET(__pyx_v_tag, ((PyObject*)__pyx_t_3));
     __pyx_t_3 = 0;
     __pyx_v_rel = __pyx_t_4;
@@ -15102,40 +15102,40 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_v_member = __pyx_t_7;
     __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":707
+    /* "owlready2_optimized.pyx":697
  *       list_obj = stack[start + 1 : ]
  *       tag, rel, member = disjoints[tag]
  *       if rel and (len(list_obj) == 2):             # <<<<<<<<<<<<<<
  *         objs.append((list_obj[0], _abbreviate(rel), list_obj[1]))
  *         if annots: purge_annotations((list_obj[0], _abbreviate(rel), list_obj[1]))
  */
-    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_rel); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 707, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyObject_IsTrue(__pyx_v_rel); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 697, __pyx_L1_error)
     if (__pyx_t_9) {
     } else {
       __pyx_t_2 = __pyx_t_9;
       goto __pyx_L33_bool_binop_done;
     }
-    __pyx_t_13 = PyList_GET_SIZE(__pyx_v_list_obj); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 707, __pyx_L1_error)
+    __pyx_t_13 = PyList_GET_SIZE(__pyx_v_list_obj); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 697, __pyx_L1_error)
     __pyx_t_9 = ((__pyx_t_13 == 2) != 0);
     __pyx_t_2 = __pyx_t_9;
     __pyx_L33_bool_binop_done:;
     if (__pyx_t_2) {
 
-      /* "owlready2_optimized.pyx":708
+      /* "owlready2_optimized.pyx":698
  *       tag, rel, member = disjoints[tag]
  *       if rel and (len(list_obj) == 2):
  *         objs.append((list_obj[0], _abbreviate(rel), list_obj[1]))             # <<<<<<<<<<<<<<
  *         if annots: purge_annotations((list_obj[0], _abbreviate(rel), list_obj[1]))
  * 
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 708, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 698, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 708, __pyx_L1_error)
+        __PYX_ERR(0, 698, __pyx_L1_error)
       }
-      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 698, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 708, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 698, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -15149,12 +15149,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_7 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_v_rel) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_rel);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 708, __pyx_L1_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 698, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 698, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 698, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_12);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_12);
@@ -15165,22 +15165,22 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_12 = 0;
       __pyx_t_7 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 708, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 698, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "owlready2_optimized.pyx":709
+      /* "owlready2_optimized.pyx":699
  *       if rel and (len(list_obj) == 2):
  *         objs.append((list_obj[0], _abbreviate(rel), list_obj[1]))
  *         if annots: purge_annotations((list_obj[0], _abbreviate(rel), list_obj[1]))             # <<<<<<<<<<<<<<
  * 
  *       else:
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 709, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 699, __pyx_L1_error) }
       __pyx_t_2 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
       if (__pyx_t_2) {
-        __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 709, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 699, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 709, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 699, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_12 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -15194,12 +15194,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         }
         __pyx_t_4 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_12, __pyx_v_rel) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_rel);
         __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 709, __pyx_L1_error)
+        if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 699, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 709, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 1, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 699, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 709, __pyx_L1_error)
+        __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 699, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_GIVEREF(__pyx_t_3);
         PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_3);
@@ -15210,14 +15210,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_7 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 709, __pyx_L1_error) }
-        __pyx_t_7 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_12); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 709, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 699, __pyx_L1_error) }
+        __pyx_t_7 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_12); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 699, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       }
 
-      /* "owlready2_optimized.pyx":707
+      /* "owlready2_optimized.pyx":697
  *       list_obj = stack[start + 1 : ]
  *       tag, rel, member = disjoints[tag]
  *       if rel and (len(list_obj) == 2):             # <<<<<<<<<<<<<<
@@ -15227,7 +15227,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       goto __pyx_L32;
     }
 
-    /* "owlready2_optimized.pyx":712
+    /* "owlready2_optimized.pyx":702
  * 
  *       else:
  *         list_iri = new_list(list_obj, objs, _abbreviate, new_blank)             # <<<<<<<<<<<<<<
@@ -15235,13 +15235,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate(tag)))
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 712, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 702, __pyx_L1_error) }
       __pyx_t_7 = __pyx_cur_scope->__pyx_v_objs;
       __Pyx_INCREF(__pyx_t_7);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 712, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 702, __pyx_L1_error) }
       __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate;
       __Pyx_INCREF(__pyx_t_12);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 712, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 702, __pyx_L1_error) }
       __pyx_t_4 = __pyx_cur_scope->__pyx_v_new_blank;
       __Pyx_INCREF(__pyx_t_4);
       __pyx_v_list_iri = __pyx_f_19owlready2_optimized_new_list(__pyx_v_list_obj, ((PyObject*)__pyx_t_7), __pyx_t_12, __pyx_t_4);
@@ -15249,14 +15249,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "owlready2_optimized.pyx":713
+      /* "owlready2_optimized.pyx":703
  *       else:
  *         list_iri = new_list(list_obj, objs, _abbreviate, new_blank)
  *         iri = new_blank()             # <<<<<<<<<<<<<<
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate(tag)))
  *         objs.append((iri, _abbreviate(member), list_iri))
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 713, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 703, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
       __pyx_t_12 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -15270,28 +15270,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_7) : __Pyx_PyObject_CallNoArg(__pyx_t_12);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 713, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 703, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 713, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 703, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_v_iri = __pyx_t_8;
 
-      /* "owlready2_optimized.pyx":714
+      /* "owlready2_optimized.pyx":704
  *         list_iri = new_list(list_obj, objs, _abbreviate, new_blank)
  *         iri = new_blank()
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate(tag)))             # <<<<<<<<<<<<<<
  *         objs.append((iri, _abbreviate(member), list_iri))
  *         if annots: purge_annotations((iri, _abbreviate(rdf_type), _abbreviate(tag)))
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 714, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 704, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 714, __pyx_L1_error)
+        __PYX_ERR(0, 704, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 714, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 704, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 714, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 704, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -15305,10 +15305,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_12 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_19owlready2_optimized_rdf_type);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 714, __pyx_L1_error)
+      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 704, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 714, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 704, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -15322,10 +15322,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_7 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_tag);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 714, __pyx_L1_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 704, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 714, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 704, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
@@ -15336,24 +15336,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_4 = 0;
       __pyx_t_12 = 0;
       __pyx_t_7 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 714, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 704, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-      /* "owlready2_optimized.pyx":715
+      /* "owlready2_optimized.pyx":705
  *         iri = new_blank()
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate(tag)))
  *         objs.append((iri, _abbreviate(member), list_iri))             # <<<<<<<<<<<<<<
  *         if annots: purge_annotations((iri, _abbreviate(rdf_type), _abbreviate(tag)))
  * 
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 715, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 705, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 715, __pyx_L1_error)
+        __PYX_ERR(0, 705, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 715, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 705, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 715, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 705, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -15367,12 +15367,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_7 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_4, __pyx_v_member) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_v_member);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 715, __pyx_L1_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 705, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 715, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 705, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 715, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 705, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
@@ -15383,22 +15383,22 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_3 = 0;
       __pyx_t_7 = 0;
       __pyx_t_12 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 715, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 705, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "owlready2_optimized.pyx":716
+      /* "owlready2_optimized.pyx":706
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate(tag)))
  *         objs.append((iri, _abbreviate(member), list_iri))
  *         if annots: purge_annotations((iri, _abbreviate(rdf_type), _abbreviate(tag)))             # <<<<<<<<<<<<<<
  * 
  *       del stack[start :]
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 716, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 706, __pyx_L1_error) }
       __pyx_t_2 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
       if (__pyx_t_2) {
-        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 716, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 706, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 716, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 706, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -15412,10 +15412,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         }
         __pyx_t_12 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_v_19owlready2_optimized_rdf_type);
         __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-        if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 716, __pyx_L1_error)
+        if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 706, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 716, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 706, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -15429,10 +15429,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         }
         __pyx_t_7 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_tag);
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 716, __pyx_L1_error)
+        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 706, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-        __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 716, __pyx_L1_error)
+        __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 706, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
@@ -15443,8 +15443,8 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __pyx_t_4 = 0;
         __pyx_t_12 = 0;
         __pyx_t_7 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 716, __pyx_L1_error) }
-        __pyx_t_7 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 716, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 706, __pyx_L1_error) }
+        __pyx_t_7 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 706, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
@@ -15452,17 +15452,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_L32:;
 
-    /* "owlready2_optimized.pyx":718
+    /* "owlready2_optimized.pyx":708
  *         if annots: purge_annotations((iri, _abbreviate(rdf_type), _abbreviate(tag)))
  * 
  *       del stack[start :]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyAssertion"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 718, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 708, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 718, __pyx_L1_error)
+      __PYX_ERR(0, 708, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_start);
     __pyx_t_7 = __pyx_v_start;
@@ -15470,13 +15470,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 718, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 708, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 718, __pyx_L1_error)
+    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 708, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":703
+    /* "owlready2_optimized.pyx":693
  *       stack[start :] = [new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)]
  * 
  *     elif (tag in disjoints):             # <<<<<<<<<<<<<<
@@ -15486,30 +15486,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":720
+  /* "owlready2_optimized.pyx":710
  *       del stack[start :]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyAssertion"):             # <<<<<<<<<<<<<<
  *       p,s,o = stack[-3 :]
  *       objs.append((s, p, o))
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_11, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 720, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_11, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 710, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":721
+    /* "owlready2_optimized.pyx":711
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyAssertion"):
  *       p,s,o = stack[-3 :]             # <<<<<<<<<<<<<<
  *       objs.append((s, p, o))
  *       if annots: purge_annotations((s,p,o))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 721, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 711, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 721, __pyx_L1_error)
+      __PYX_ERR(0, 711, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, -3L, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 721, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, -3L, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 711, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     if (1) {
       PyObject* sequence = __pyx_t_7;
@@ -15517,7 +15517,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 721, __pyx_L1_error)
+        __PYX_ERR(0, 711, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       __pyx_t_3 = PyList_GET_ITEM(sequence, 0); 
@@ -15527,11 +15527,11 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_t_12);
       __Pyx_INCREF(__pyx_t_4);
       #else
-      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 721, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 711, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 721, __pyx_L1_error)
+      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 711, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 721, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 711, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       #endif
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
@@ -15543,19 +15543,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_v_o = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":722
+    /* "owlready2_optimized.pyx":712
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyAssertion"):
  *       p,s,o = stack[-3 :]
  *       objs.append((s, p, o))             # <<<<<<<<<<<<<<
  *       if annots: purge_annotations((s,p,o))
  *       del stack[-3 :]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 722, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 712, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 722, __pyx_L1_error)
+      __PYX_ERR(0, 712, __pyx_L1_error)
     }
-    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 722, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 712, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_INCREF(__pyx_v_s);
     __Pyx_GIVEREF(__pyx_v_s);
@@ -15566,20 +15566,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_INCREF(__pyx_v_o);
     __Pyx_GIVEREF(__pyx_v_o);
     PyTuple_SET_ITEM(__pyx_t_7, 2, __pyx_v_o);
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 722, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 712, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":723
+    /* "owlready2_optimized.pyx":713
  *       p,s,o = stack[-3 :]
  *       objs.append((s, p, o))
  *       if annots: purge_annotations((s,p,o))             # <<<<<<<<<<<<<<
  *       del stack[-3 :]
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 723, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 713, __pyx_L1_error) }
     __pyx_t_9 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
     if (__pyx_t_9) {
-      __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 723, __pyx_L1_error)
+      __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 713, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_INCREF(__pyx_v_s);
       __Pyx_GIVEREF(__pyx_v_s);
@@ -15590,28 +15590,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_v_o);
       __Pyx_GIVEREF(__pyx_v_o);
       PyTuple_SET_ITEM(__pyx_t_7, 2, __pyx_v_o);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 723, __pyx_L1_error) }
-      __pyx_t_4 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 723, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 713, __pyx_L1_error) }
+      __pyx_t_4 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_7); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 713, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
 
-    /* "owlready2_optimized.pyx":724
+    /* "owlready2_optimized.pyx":714
  *       objs.append((s, p, o))
  *       if annots: purge_annotations((s,p,o))
  *       del stack[-3 :]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataPropertyAssertion"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 724, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 714, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 724, __pyx_L1_error)
+      __PYX_ERR(0, 714, __pyx_L1_error)
     }
-    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, -3L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 724, __pyx_L1_error)
+    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, -3L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 714, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":720
+    /* "owlready2_optimized.pyx":710
  *       del stack[start :]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectPropertyAssertion"):             # <<<<<<<<<<<<<<
@@ -15621,30 +15621,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":726
+  /* "owlready2_optimized.pyx":716
  *       del stack[-3 :]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataPropertyAssertion"):             # <<<<<<<<<<<<<<
  *       p,s,o = stack[-3 :]
  *       datas.append((s, p, o[0], o[1]))
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_12, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 726, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_12, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 716, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":727
+    /* "owlready2_optimized.pyx":717
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataPropertyAssertion"):
  *       p,s,o = stack[-3 :]             # <<<<<<<<<<<<<<
  *       datas.append((s, p, o[0], o[1]))
  *       if annots: purge_annotations((s,p,o))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 727, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 717, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 727, __pyx_L1_error)
+      __PYX_ERR(0, 717, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, -3L, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 727, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, -3L, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 717, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     if (1) {
       PyObject* sequence = __pyx_t_4;
@@ -15652,7 +15652,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 727, __pyx_L1_error)
+        __PYX_ERR(0, 717, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       __pyx_t_7 = PyList_GET_ITEM(sequence, 0); 
@@ -15662,11 +15662,11 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_t_12);
       __Pyx_INCREF(__pyx_t_3);
       #else
-      __pyx_t_7 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 727, __pyx_L1_error)
+      __pyx_t_7 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 717, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 727, __pyx_L1_error)
+      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 717, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_3 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 727, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 717, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       #endif
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
@@ -15678,23 +15678,23 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_v_o = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":728
+    /* "owlready2_optimized.pyx":718
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataPropertyAssertion"):
  *       p,s,o = stack[-3 :]
  *       datas.append((s, p, o[0], o[1]))             # <<<<<<<<<<<<<<
  *       if annots: purge_annotations((s,p,o))
  *       del stack[-3 :]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 728, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 718, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 728, __pyx_L1_error)
+      __PYX_ERR(0, 718, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_o, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 728, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_o, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 718, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_o, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 728, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_o, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 718, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_12 = PyTuple_New(4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 728, __pyx_L1_error)
+    __pyx_t_12 = PyTuple_New(4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 718, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_INCREF(__pyx_v_s);
     __Pyx_GIVEREF(__pyx_v_s);
@@ -15708,20 +15708,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     PyTuple_SET_ITEM(__pyx_t_12, 3, __pyx_t_3);
     __pyx_t_4 = 0;
     __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 728, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 718, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":729
+    /* "owlready2_optimized.pyx":719
  *       p,s,o = stack[-3 :]
  *       datas.append((s, p, o[0], o[1]))
  *       if annots: purge_annotations((s,p,o))             # <<<<<<<<<<<<<<
  *       del stack[-3 :]
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 729, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 719, __pyx_L1_error) }
     __pyx_t_2 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
     if (__pyx_t_2) {
-      __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 729, __pyx_L1_error)
+      __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 719, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_INCREF(__pyx_v_s);
       __Pyx_GIVEREF(__pyx_v_s);
@@ -15732,28 +15732,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_v_o);
       __Pyx_GIVEREF(__pyx_v_o);
       PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_v_o);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 729, __pyx_L1_error) }
-      __pyx_t_3 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_12); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 729, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 719, __pyx_L1_error) }
+      __pyx_t_3 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_12); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 719, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
 
-    /* "owlready2_optimized.pyx":730
+    /* "owlready2_optimized.pyx":720
  *       datas.append((s, p, o[0], o[1]))
  *       if annots: purge_annotations((s,p,o))
  *       del stack[-3 :]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectComplementOf") or (tag == "http://www.w3.org/2002/07/owl#DataComplementOf"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 730, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 720, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 730, __pyx_L1_error)
+      __PYX_ERR(0, 720, __pyx_L1_error)
     }
-    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, -3L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 730, __pyx_L1_error)
+    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, -3L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 720, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":726
+    /* "owlready2_optimized.pyx":716
  *       del stack[-3 :]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataPropertyAssertion"):             # <<<<<<<<<<<<<<
@@ -15763,34 +15763,34 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":732
+  /* "owlready2_optimized.pyx":722
  *       del stack[-3 :]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectComplementOf") or (tag == "http://www.w3.org/2002/07/owl#DataComplementOf"):             # <<<<<<<<<<<<<<
  *       iri = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_12, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 732, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_12, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 722, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_9 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L39_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_13, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 732, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_13, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 722, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_1 != 0);
   __pyx_t_2 = __pyx_t_9;
   __pyx_L39_bool_binop_done:;
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":733
+    /* "owlready2_optimized.pyx":723
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectComplementOf") or (tag == "http://www.w3.org/2002/07/owl#DataComplementOf"):
  *       iri = new_blank()             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#complementOf"), stack[-1]))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 733, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 723, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -15804,28 +15804,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_12);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 733, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 723, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 733, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 723, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_iri = __pyx_t_8;
 
-    /* "owlready2_optimized.pyx":734
+    /* "owlready2_optimized.pyx":724
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectComplementOf") or (tag == "http://www.w3.org/2002/07/owl#DataComplementOf"):
  *       iri = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#complementOf"), stack[-1]))
  *       stack[-1] = iri
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 734, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 724, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 734, __pyx_L1_error)
+      __PYX_ERR(0, 724, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 734, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 724, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 734, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 724, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -15839,10 +15839,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_12 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_7, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 734, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 724, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 734, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 724, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -15856,10 +15856,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 734, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 724, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 734, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 724, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_GIVEREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_3);
@@ -15870,24 +15870,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_3 = 0;
     __pyx_t_12 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 734, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 724, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":735
+    /* "owlready2_optimized.pyx":725
  *       iri = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#complementOf"), stack[-1]))             # <<<<<<<<<<<<<<
  *       stack[-1] = iri
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 735, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 725, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 735, __pyx_L1_error)
+      __PYX_ERR(0, 725, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 735, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 735, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 725, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -15901,17 +15901,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_comp) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_comp);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 735, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 735, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 725, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 735, __pyx_L1_error)
+      __PYX_ERR(0, 725, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 735, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 735, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_7);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_7);
@@ -15922,27 +15922,27 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_7 = 0;
     __pyx_t_4 = 0;
     __pyx_t_12 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 735, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 725, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":736
+    /* "owlready2_optimized.pyx":726
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#complementOf"), stack[-1]))
  *       stack[-1] = iri             # <<<<<<<<<<<<<<
  * 
  *     elif (tag in restrs):
  */
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 736, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 726, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 736, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 726, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 736, __pyx_L1_error)
+      __PYX_ERR(0, 726, __pyx_L1_error)
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_cur_scope->__pyx_v_stack, -1L, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 1, 1) < 0)) __PYX_ERR(0, 736, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_cur_scope->__pyx_v_stack, -1L, __pyx_t_3, long, 1, __Pyx_PyInt_From_long, 1, 1, 1) < 0)) __PYX_ERR(0, 726, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":732
+    /* "owlready2_optimized.pyx":722
  *       del stack[-3 :]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectComplementOf") or (tag == "http://www.w3.org/2002/07/owl#DataComplementOf"):             # <<<<<<<<<<<<<<
@@ -15952,7 +15952,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":738
+  /* "owlready2_optimized.pyx":728
  *       stack[-1] = iri
  * 
  *     elif (tag in restrs):             # <<<<<<<<<<<<<<
@@ -15961,20 +15961,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  */
   if (unlikely(__pyx_v_19owlready2_optimized_restrs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 738, __pyx_L1_error)
+    __PYX_ERR(0, 728, __pyx_L1_error)
   }
-  __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_restrs, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 738, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_restrs, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 728, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":739
+    /* "owlready2_optimized.pyx":729
  * 
  *     elif (tag in restrs):
  *       iri = new_blank()             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), stack.pop(-2)))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 739, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 729, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -15988,28 +15988,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_12);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 739, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 729, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 739, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 729, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_iri = __pyx_t_8;
 
-    /* "owlready2_optimized.pyx":740
+    /* "owlready2_optimized.pyx":730
  *     elif (tag in restrs):
  *       iri = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), stack.pop(-2)))
  *       if isinstance(stack[-1], tuple): datas.append((iri, _abbreviate(restrs[tag]), stack[-1][0], stack[-1][1]))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 740, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 730, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 740, __pyx_L1_error)
+      __PYX_ERR(0, 730, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 740, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 730, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 740, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 730, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -16023,10 +16023,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_12 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_7, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 740, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 730, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 740, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 730, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -16040,10 +16040,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_Rest) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_Rest);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 740, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 730, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 740, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 730, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_GIVEREF(__pyx_t_3);
     PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_3);
@@ -16054,24 +16054,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_3 = 0;
     __pyx_t_12 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 740, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 730, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":741
+    /* "owlready2_optimized.pyx":731
  *       iri = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), stack.pop(-2)))             # <<<<<<<<<<<<<<
  *       if isinstance(stack[-1], tuple): datas.append((iri, _abbreviate(restrs[tag]), stack[-1][0], stack[-1][1]))
  *       else:                            objs.append ((iri, _abbreviate(restrs[tag]), stack[-1]))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 741, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 731, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 741, __pyx_L1_error)
+      __PYX_ERR(0, 731, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 731, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 741, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 731, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -16085,17 +16085,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_onPr) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_onPr);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 741, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 731, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 741, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 731, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "pop");
-      __PYX_ERR(0, 741, __pyx_L1_error)
+      __PYX_ERR(0, 731, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_PyList_PopIndex(__pyx_cur_scope->__pyx_v_stack, __pyx_int_neg_2, -2L, 1, Py_ssize_t, PyInt_FromSsize_t); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyList_PopIndex(__pyx_cur_scope->__pyx_v_stack, __pyx_int_neg_2, -2L, 1, Py_ssize_t, PyInt_FromSsize_t); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 731, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 731, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_7);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_7);
@@ -16106,40 +16106,40 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_7 = 0;
     __pyx_t_4 = 0;
     __pyx_t_12 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 741, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 731, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":742
+    /* "owlready2_optimized.pyx":732
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), stack.pop(-2)))
  *       if isinstance(stack[-1], tuple): datas.append((iri, _abbreviate(restrs[tag]), stack[-1][0], stack[-1][1]))             # <<<<<<<<<<<<<<
  *       else:                            objs.append ((iri, _abbreviate(restrs[tag]), stack[-1]))
  *       stack[-1] = iri
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 742, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 732, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 742, __pyx_L1_error)
+      __PYX_ERR(0, 732, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 742, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 732, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_9 = PyTuple_Check(__pyx_t_3); 
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_2 = (__pyx_t_9 != 0);
     if (__pyx_t_2) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 742, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 732, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 742, __pyx_L1_error)
+        __PYX_ERR(0, 732, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 742, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 742, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 732, __pyx_L1_error) }
       if (unlikely(__pyx_v_19owlready2_optimized_restrs == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 742, __pyx_L1_error)
+        __PYX_ERR(0, 732, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_restrs, __pyx_v_tag); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 742, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_restrs, __pyx_v_tag); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
@@ -16155,30 +16155,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_12 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_6, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_4);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 742, __pyx_L1_error)
+      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 742, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 732, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 742, __pyx_L1_error)
+        __PYX_ERR(0, 732, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 742, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_7, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 742, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_7, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 742, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 732, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 742, __pyx_L1_error)
+        __PYX_ERR(0, 732, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 742, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_7, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 742, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_7, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = PyTuple_New(4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 742, __pyx_L1_error)
+      __pyx_t_7 = PyTuple_New(4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_3);
@@ -16192,12 +16192,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_12 = 0;
       __pyx_t_4 = 0;
       __pyx_t_6 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 742, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 732, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       goto __pyx_L41;
     }
 
-    /* "owlready2_optimized.pyx":743
+    /* "owlready2_optimized.pyx":733
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), stack.pop(-2)))
  *       if isinstance(stack[-1], tuple): datas.append((iri, _abbreviate(restrs[tag]), stack[-1][0], stack[-1][1]))
  *       else:                            objs.append ((iri, _abbreviate(restrs[tag]), stack[-1]))             # <<<<<<<<<<<<<<
@@ -16205,19 +16205,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  * 
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 743, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 733, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 743, __pyx_L1_error)
+        __PYX_ERR(0, 733, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 743, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 733, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 743, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 733, __pyx_L1_error) }
       if (unlikely(__pyx_v_19owlready2_optimized_restrs == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 743, __pyx_L1_error)
+        __PYX_ERR(0, 733, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_restrs, __pyx_v_tag); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 743, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_restrs, __pyx_v_tag); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 733, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
@@ -16233,17 +16233,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_4);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 743, __pyx_L1_error)
+      if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 733, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 743, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 733, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 743, __pyx_L1_error)
+        __PYX_ERR(0, 733, __pyx_L1_error)
       }
-      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 743, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 733, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 743, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 733, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_7);
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_7);
@@ -16254,29 +16254,29 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_7 = 0;
       __pyx_t_6 = 0;
       __pyx_t_12 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 743, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 733, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
     __pyx_L41:;
 
-    /* "owlready2_optimized.pyx":744
+    /* "owlready2_optimized.pyx":734
  *       if isinstance(stack[-1], tuple): datas.append((iri, _abbreviate(restrs[tag]), stack[-1][0], stack[-1][1]))
  *       else:                            objs.append ((iri, _abbreviate(restrs[tag]), stack[-1]))
  *       stack[-1] = iri             # <<<<<<<<<<<<<<
  * 
  *     elif (tag in card_restrs):
  */
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 744, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 734, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 744, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 734, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 744, __pyx_L1_error)
+      __PYX_ERR(0, 734, __pyx_L1_error)
     }
-    if (unlikely(__Pyx_SetItemInt(__pyx_cur_scope->__pyx_v_stack, -1L, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 1, 1) < 0)) __PYX_ERR(0, 744, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_cur_scope->__pyx_v_stack, -1L, __pyx_t_4, long, 1, __Pyx_PyInt_From_long, 1, 1, 1) < 0)) __PYX_ERR(0, 734, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":738
+    /* "owlready2_optimized.pyx":728
  *       stack[-1] = iri
  * 
  *     elif (tag in restrs):             # <<<<<<<<<<<<<<
@@ -16286,7 +16286,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":746
+  /* "owlready2_optimized.pyx":736
  *       stack[-1] = iri
  * 
  *     elif (tag in card_restrs):             # <<<<<<<<<<<<<<
@@ -16295,20 +16295,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  */
   if (unlikely(__pyx_v_19owlready2_optimized_card_restrs == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 746, __pyx_L1_error)
+    __PYX_ERR(0, 736, __pyx_L1_error)
   }
-  __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_card_restrs, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 746, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyDict_ContainsTF(__pyx_v_tag, __pyx_v_19owlready2_optimized_card_restrs, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 736, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":747
+    /* "owlready2_optimized.pyx":737
  * 
  *     elif (tag in card_restrs):
  *       iri = new_blank()             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))
  *       start = _rindex(stack)
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 747, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 737, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -16322,28 +16322,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_12);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 747, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 737, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 747, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 737, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_iri = __pyx_t_8;
 
-    /* "owlready2_optimized.pyx":748
+    /* "owlready2_optimized.pyx":738
  *     elif (tag in card_restrs):
  *       iri = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))             # <<<<<<<<<<<<<<
  *       start = _rindex(stack)
  *       values = stack[start + 1 : ]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 748, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 738, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 748, __pyx_L1_error)
+      __PYX_ERR(0, 738, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 738, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 748, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 738, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -16357,10 +16357,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_12 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 748, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 738, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 748, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 738, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -16374,10 +16374,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Rest) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_Rest);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 748, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 738, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 738, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_GIVEREF(__pyx_t_4);
     PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_4);
@@ -16388,63 +16388,63 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_4 = 0;
     __pyx_t_12 = 0;
     __pyx_t_6 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 748, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 738, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":749
+    /* "owlready2_optimized.pyx":739
  *       iri = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))
  *       start = _rindex(stack)             # <<<<<<<<<<<<<<
  *       values = stack[start + 1 : ]
  *       del stack[start :]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 749, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 739, __pyx_L1_error) }
     __pyx_t_7 = __pyx_cur_scope->__pyx_v_stack;
     __Pyx_INCREF(__pyx_t_7);
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_7))); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 749, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_7))); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 739, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_v_start = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":750
+    /* "owlready2_optimized.pyx":740
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))
  *       start = _rindex(stack)
  *       values = stack[start + 1 : ]             # <<<<<<<<<<<<<<
  *       del stack[start :]
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 750, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 740, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 750, __pyx_L1_error)
+      __PYX_ERR(0, 740, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 750, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 740, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_9 = (__pyx_t_6 == Py_None);
     if (__pyx_t_9) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 750, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 740, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 750, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 740, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_v_values = ((PyObject*)__pyx_t_6);
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":751
+    /* "owlready2_optimized.pyx":741
  *       start = _rindex(stack)
  *       values = stack[start + 1 : ]
  *       del stack[start :]             # <<<<<<<<<<<<<<
  * 
  *       if len(values) == 2: # Qualified
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 751, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 741, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 751, __pyx_L1_error)
+      __PYX_ERR(0, 741, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_start);
     __pyx_t_6 = __pyx_v_start;
@@ -16452,24 +16452,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     if (__pyx_t_9) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 751, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 741, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 751, __pyx_L1_error)
+    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 741, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":753
+    /* "owlready2_optimized.pyx":743
  *       del stack[start :]
  * 
  *       if len(values) == 2: # Qualified             # <<<<<<<<<<<<<<
  *         tag = qual_card_restrs[tag]
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), values[-2]))
  */
-    __pyx_t_13 = PyList_GET_SIZE(__pyx_v_values); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 753, __pyx_L1_error)
+    __pyx_t_13 = PyList_GET_SIZE(__pyx_v_values); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 743, __pyx_L1_error)
     __pyx_t_9 = ((__pyx_t_13 == 2) != 0);
     if (__pyx_t_9) {
 
-      /* "owlready2_optimized.pyx":754
+      /* "owlready2_optimized.pyx":744
  * 
  *       if len(values) == 2: # Qualified
  *         tag = qual_card_restrs[tag]             # <<<<<<<<<<<<<<
@@ -16478,29 +16478,29 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  */
       if (unlikely(__pyx_v_19owlready2_optimized_qual_card_restrs == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 754, __pyx_L1_error)
+        __PYX_ERR(0, 744, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_qual_card_restrs, __pyx_v_tag); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 754, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_qual_card_restrs, __pyx_v_tag); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 744, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (!(likely(PyUnicode_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_6)->tp_name), 0))) __PYX_ERR(0, 754, __pyx_L1_error)
+      if (!(likely(PyUnicode_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_6)->tp_name), 0))) __PYX_ERR(0, 744, __pyx_L1_error)
       __Pyx_DECREF_SET(__pyx_v_tag, ((PyObject*)__pyx_t_6));
       __pyx_t_6 = 0;
 
-      /* "owlready2_optimized.pyx":755
+      /* "owlready2_optimized.pyx":745
  *       if len(values) == 2: # Qualified
  *         tag = qual_card_restrs[tag]
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), values[-2]))             # <<<<<<<<<<<<<<
  *         if stack[-1] in datatypes:
  *           objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onDataRange"), values[-1]))
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 755, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 745, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 755, __pyx_L1_error)
+        __PYX_ERR(0, 745, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 755, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 745, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 755, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 745, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -16514,12 +16514,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_7 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_onPr) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_onPr);
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 755, __pyx_L1_error)
+      if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 745, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_v_values, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 755, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_v_values, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 745, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 755, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 745, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6);
@@ -16530,48 +16530,48 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_6 = 0;
       __pyx_t_7 = 0;
       __pyx_t_12 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 755, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 745, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-      /* "owlready2_optimized.pyx":756
+      /* "owlready2_optimized.pyx":746
  *         tag = qual_card_restrs[tag]
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), values[-2]))
  *         if stack[-1] in datatypes:             # <<<<<<<<<<<<<<
  *           objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onDataRange"), values[-1]))
  *         else:
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 756, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 746, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 756, __pyx_L1_error)
+        __PYX_ERR(0, 746, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 756, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 746, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_datatypes)) { __Pyx_RaiseClosureNameError("datatypes"); __PYX_ERR(0, 756, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_datatypes)) { __Pyx_RaiseClosureNameError("datatypes"); __PYX_ERR(0, 746, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_datatypes == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-        __PYX_ERR(0, 756, __pyx_L1_error)
+        __PYX_ERR(0, 746, __pyx_L1_error)
       }
-      __pyx_t_9 = (__Pyx_PySet_ContainsTF(__pyx_t_4, __pyx_cur_scope->__pyx_v_datatypes, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 756, __pyx_L1_error)
+      __pyx_t_9 = (__Pyx_PySet_ContainsTF(__pyx_t_4, __pyx_cur_scope->__pyx_v_datatypes, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 746, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_2 = (__pyx_t_9 != 0);
       if (__pyx_t_2) {
 
-        /* "owlready2_optimized.pyx":757
+        /* "owlready2_optimized.pyx":747
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), values[-2]))
  *         if stack[-1] in datatypes:
  *           objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onDataRange"), values[-1]))             # <<<<<<<<<<<<<<
  *         else:
  *           objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onClass"), values[-1]))
  */
-        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 757, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 747, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 757, __pyx_L1_error)
+          __PYX_ERR(0, 747, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 757, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 747, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 757, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 747, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -16585,12 +16585,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         }
         __pyx_t_12 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_onDa) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_onDa);
         __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-        if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 757, __pyx_L1_error)
+        if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 747, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-        __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_values, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 757, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_values, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 747, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
-        __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 757, __pyx_L1_error)
+        __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 747, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_GIVEREF(__pyx_t_4);
         PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4);
@@ -16601,10 +16601,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __pyx_t_4 = 0;
         __pyx_t_12 = 0;
         __pyx_t_7 = 0;
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 757, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 747, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-        /* "owlready2_optimized.pyx":756
+        /* "owlready2_optimized.pyx":746
  *         tag = qual_card_restrs[tag]
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), values[-2]))
  *         if stack[-1] in datatypes:             # <<<<<<<<<<<<<<
@@ -16614,7 +16614,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         goto __pyx_L43;
       }
 
-      /* "owlready2_optimized.pyx":759
+      /* "owlready2_optimized.pyx":749
  *           objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onDataRange"), values[-1]))
  *         else:
  *           objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onClass"), values[-1]))             # <<<<<<<<<<<<<<
@@ -16622,14 +16622,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  *         tag = card_restrs[tag]
  */
       /*else*/ {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 759, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 749, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 759, __pyx_L1_error)
+          __PYX_ERR(0, 749, __pyx_L1_error)
         }
-        __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 759, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 749, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 759, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 749, __pyx_L1_error) }
         __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
         __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
         if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -16643,12 +16643,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         }
         __pyx_t_7 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_onCl) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_onCl);
         __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 759, __pyx_L1_error)
+        if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 749, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-        __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_v_values, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 759, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_v_values, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 749, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
-        __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 759, __pyx_L1_error)
+        __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 749, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_GIVEREF(__pyx_t_6);
         PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_6);
@@ -16659,12 +16659,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __pyx_t_6 = 0;
         __pyx_t_7 = 0;
         __pyx_t_12 = 0;
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 759, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 749, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       }
       __pyx_L43:;
 
-      /* "owlready2_optimized.pyx":753
+      /* "owlready2_optimized.pyx":743
  *       del stack[start :]
  * 
  *       if len(values) == 2: # Qualified             # <<<<<<<<<<<<<<
@@ -16674,7 +16674,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       goto __pyx_L42;
     }
 
-    /* "owlready2_optimized.pyx":761
+    /* "owlready2_optimized.pyx":751
  *           objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onClass"), values[-1]))
  *       else: # Non qualified
  *         tag = card_restrs[tag]             # <<<<<<<<<<<<<<
@@ -16684,29 +16684,29 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     /*else*/ {
       if (unlikely(__pyx_v_19owlready2_optimized_card_restrs == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 761, __pyx_L1_error)
+        __PYX_ERR(0, 751, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_card_restrs, __pyx_v_tag); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 761, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyDict_GetItem(__pyx_v_19owlready2_optimized_card_restrs, __pyx_v_tag); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 751, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 761, __pyx_L1_error)
+      if (!(likely(PyUnicode_CheckExact(__pyx_t_4))||((__pyx_t_4) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "unicode", Py_TYPE(__pyx_t_4)->tp_name), 0))) __PYX_ERR(0, 751, __pyx_L1_error)
       __Pyx_DECREF_SET(__pyx_v_tag, ((PyObject*)__pyx_t_4));
       __pyx_t_4 = 0;
 
-      /* "owlready2_optimized.pyx":762
+      /* "owlready2_optimized.pyx":752
  *       else: # Non qualified
  *         tag = card_restrs[tag]
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), values[-1]))             # <<<<<<<<<<<<<<
  *       datas.append((iri, _abbreviate(tag), last_cardinality, _abbreviate("http://www.w3.org/2001/XMLSchema#nonNegativeInteger")))
  *       stack.append(iri)
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 762, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 752, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 762, __pyx_L1_error)
+        __PYX_ERR(0, 752, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 762, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 752, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 762, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 752, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_7 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_7))) {
@@ -16720,12 +16720,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_12 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_onPr) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_onPr);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 762, __pyx_L1_error)
+      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 752, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_values, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 762, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_v_values, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 752, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 762, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 752, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_4);
@@ -16736,26 +16736,26 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_4 = 0;
       __pyx_t_12 = 0;
       __pyx_t_7 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 762, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 752, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
     __pyx_L42:;
 
-    /* "owlready2_optimized.pyx":763
+    /* "owlready2_optimized.pyx":753
  *         tag = card_restrs[tag]
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), values[-1]))
  *       datas.append((iri, _abbreviate(tag), last_cardinality, _abbreviate("http://www.w3.org/2001/XMLSchema#nonNegativeInteger")))             # <<<<<<<<<<<<<<
  *       stack.append(iri)
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 763, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 753, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 763, __pyx_L1_error)
+      __PYX_ERR(0, 753, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 763, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 763, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 753, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -16769,12 +16769,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_7 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_4, __pyx_v_tag) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_v_tag);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 763, __pyx_L1_error)
+    if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_last_cardinality); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 763, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_last_cardinality); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 763, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 753, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_16 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -16788,10 +16788,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_16) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_16, __pyx_kp_u_http_www_w3_org_2001_XMLSchema_n) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_kp_u_http_www_w3_org_2001_XMLSchema_n);
     __Pyx_XDECREF(__pyx_t_16); __pyx_t_16 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 763, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 763, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_6);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_6);
@@ -16805,27 +16805,27 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_7 = 0;
     __pyx_t_12 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 763, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 753, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":764
+    /* "owlready2_optimized.pyx":754
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), values[-1]))
  *       datas.append((iri, _abbreviate(tag), last_cardinality, _abbreviate("http://www.w3.org/2001/XMLSchema#nonNegativeInteger")))
  *       stack.append(iri)             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 764, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 754, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 764, __pyx_L1_error)
+      __PYX_ERR(0, 754, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 764, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 754, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 764, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 754, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":746
+    /* "owlready2_optimized.pyx":736
  *       stack[-1] = iri
  * 
  *     elif (tag in card_restrs):             # <<<<<<<<<<<<<<
@@ -16835,64 +16835,64 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":766
+  /* "owlready2_optimized.pyx":756
  *       stack.append(iri)
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf"):             # <<<<<<<<<<<<<<
  *       start    = _rindex(stack)
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_3, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 766, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_3, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 756, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":767
+    /* "owlready2_optimized.pyx":757
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf"):
  *       start    = _rindex(stack)             # <<<<<<<<<<<<<<
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)
  *       iri      = new_blank()
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 767, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 757, __pyx_L1_error) }
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_stack;
     __Pyx_INCREF(__pyx_t_3);
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_3))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 767, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_3))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 757, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_start = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":768
+    /* "owlready2_optimized.pyx":758
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf"):
  *       start    = _rindex(stack)
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)             # <<<<<<<<<<<<<<
  *       iri      = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 768, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 758, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 768, __pyx_L1_error)
+      __PYX_ERR(0, 758, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 768, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 758, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_9 = (__pyx_t_4 == Py_None);
     if (__pyx_t_9) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_4); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 768, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_4); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 758, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 768, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 758, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 768, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 758, __pyx_L1_error) }
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_objs;
     __Pyx_INCREF(__pyx_t_3);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 768, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 758, __pyx_L1_error) }
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate;
     __Pyx_INCREF(__pyx_t_12);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 768, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 758, __pyx_L1_error) }
     __pyx_t_7 = __pyx_cur_scope->__pyx_v_new_blank;
     __Pyx_INCREF(__pyx_t_7);
     __pyx_v_list_iri = __pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_t_4), ((PyObject*)__pyx_t_3), __pyx_t_12, __pyx_t_7);
@@ -16901,14 +16901,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":769
+    /* "owlready2_optimized.pyx":759
  *       start    = _rindex(stack)
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)
  *       iri      = new_blank()             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#oneOf"), list_iri))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 769, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 759, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -16922,28 +16922,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_7 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_12);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 769, __pyx_L1_error)
+    if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 759, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 769, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_7); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 759, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     __pyx_v_iri = __pyx_t_8;
 
-    /* "owlready2_optimized.pyx":770
+    /* "owlready2_optimized.pyx":760
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)
  *       iri      = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#oneOf"), list_iri))
  *       stack[start :] = [iri]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 770, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 760, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 770, __pyx_L1_error)
+      __PYX_ERR(0, 760, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 770, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 760, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 770, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 760, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -16957,10 +16957,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_12 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 770, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 760, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 770, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 760, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -16974,10 +16974,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 770, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 760, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 770, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 760, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_7);
     PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_7);
@@ -16988,24 +16988,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_7 = 0;
     __pyx_t_12 = 0;
     __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 770, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 760, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":771
+    /* "owlready2_optimized.pyx":761
  *       iri      = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#oneOf"), list_iri))             # <<<<<<<<<<<<<<
  *       stack[start :] = [iri]
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 771, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 761, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 771, __pyx_L1_error)
+      __PYX_ERR(0, 761, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 771, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 761, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 771, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 761, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -17019,12 +17019,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_oneO) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_oneO);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 771, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 761, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 771, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 761, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 771, __pyx_L1_error)
+    __pyx_t_7 = PyTuple_New(3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 761, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_GIVEREF(__pyx_t_4);
     PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_t_4);
@@ -17035,27 +17035,27 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_4 = 0;
     __pyx_t_3 = 0;
     __pyx_t_12 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 771, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_7); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 761, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":772
+    /* "owlready2_optimized.pyx":762
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#oneOf"), list_iri))
  *       stack[start :] = [iri]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataOneOf"):
  */
-    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 772, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 762, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    __pyx_t_12 = PyList_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 772, __pyx_L1_error)
+    __pyx_t_12 = PyList_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 762, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_GIVEREF(__pyx_t_7);
     PyList_SET_ITEM(__pyx_t_12, 0, __pyx_t_7);
     __pyx_t_7 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 772, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 762, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 772, __pyx_L1_error)
+      __PYX_ERR(0, 762, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_start);
     __pyx_t_7 = __pyx_v_start;
@@ -17063,14 +17063,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     if (__pyx_t_9) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 772, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 762, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_12, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 772, __pyx_L1_error)
+    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_12, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 762, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":766
+    /* "owlready2_optimized.pyx":756
  *       stack.append(iri)
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectOneOf"):             # <<<<<<<<<<<<<<
@@ -17080,67 +17080,67 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":774
+  /* "owlready2_optimized.pyx":764
  *       stack[start :] = [iri]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataOneOf"):             # <<<<<<<<<<<<<<
  *       start    = _rindex(stack)
  *       list_iri = new_data_list(stack[start + 1 : ], objs, datas, _abbreviate, new_blank)
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_2, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 774, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_2, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 764, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":775
+    /* "owlready2_optimized.pyx":765
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataOneOf"):
  *       start    = _rindex(stack)             # <<<<<<<<<<<<<<
  *       list_iri = new_data_list(stack[start + 1 : ], objs, datas, _abbreviate, new_blank)
  *       iri      = new_blank()
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 775, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 765, __pyx_L1_error) }
     __pyx_t_12 = __pyx_cur_scope->__pyx_v_stack;
     __Pyx_INCREF(__pyx_t_12);
-    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_12))); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 775, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_12))); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 765, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_v_start = __pyx_t_7;
     __pyx_t_7 = 0;
 
-    /* "owlready2_optimized.pyx":776
+    /* "owlready2_optimized.pyx":766
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataOneOf"):
  *       start    = _rindex(stack)
  *       list_iri = new_data_list(stack[start + 1 : ], objs, datas, _abbreviate, new_blank)             # <<<<<<<<<<<<<<
  *       iri      = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 776, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 766, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 776, __pyx_L1_error)
+      __PYX_ERR(0, 766, __pyx_L1_error)
     }
-    __pyx_t_7 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 776, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 766, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
     __pyx_t_2 = (__pyx_t_7 == Py_None);
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 776, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_7); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 766, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-    __pyx_t_7 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 776, __pyx_L1_error)
+    __pyx_t_7 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 766, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_7);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 776, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 766, __pyx_L1_error) }
     __pyx_t_12 = __pyx_cur_scope->__pyx_v_objs;
     __Pyx_INCREF(__pyx_t_12);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 776, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 766, __pyx_L1_error) }
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_datas;
     __Pyx_INCREF(__pyx_t_3);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 776, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 766, __pyx_L1_error) }
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate;
     __Pyx_INCREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 776, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 766, __pyx_L1_error) }
     __pyx_t_6 = __pyx_cur_scope->__pyx_v_new_blank;
     __Pyx_INCREF(__pyx_t_6);
     __pyx_v_list_iri = __pyx_f_19owlready2_optimized_new_data_list(((PyObject*)__pyx_t_7), ((PyObject*)__pyx_t_12), ((PyObject*)__pyx_t_3), __pyx_t_4, __pyx_t_6);
@@ -17150,14 +17150,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":777
+    /* "owlready2_optimized.pyx":767
  *       start    = _rindex(stack)
  *       list_iri = new_data_list(stack[start + 1 : ], objs, datas, _abbreviate, new_blank)
  *       iri      = new_blank()             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#oneOf"), list_iri))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 777, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 767, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -17171,28 +17171,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 777, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 767, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 777, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_6); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 767, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_v_iri = __pyx_t_8;
 
-    /* "owlready2_optimized.pyx":778
+    /* "owlready2_optimized.pyx":768
  *       list_iri = new_data_list(stack[start + 1 : ], objs, datas, _abbreviate, new_blank)
  *       iri      = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))             # <<<<<<<<<<<<<<
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#oneOf"), list_iri))
  *       stack[start :] = [iri]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 778, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 768, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 778, __pyx_L1_error)
+      __PYX_ERR(0, 768, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 778, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 768, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 778, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 768, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_12 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -17206,10 +17206,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_12, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 778, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 768, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 778, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 768, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -17223,10 +17223,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_7, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_3) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_3);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 778, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 768, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 778, __pyx_L1_error)
+    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 768, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_GIVEREF(__pyx_t_6);
     PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_6);
@@ -17237,24 +17237,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_6 = 0;
     __pyx_t_4 = 0;
     __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 778, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 768, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":779
+    /* "owlready2_optimized.pyx":769
  *       iri      = new_blank()
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#oneOf"), list_iri))             # <<<<<<<<<<<<<<
  *       stack[start :] = [iri]
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 779, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 769, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 779, __pyx_L1_error)
+      __PYX_ERR(0, 769, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 779, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 769, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 779, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 769, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -17268,12 +17268,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_oneO) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_oneO);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 779, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 769, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 779, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 769, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 779, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 769, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_GIVEREF(__pyx_t_12);
     PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_12);
@@ -17284,27 +17284,27 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_12 = 0;
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 779, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 769, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":780
+    /* "owlready2_optimized.pyx":770
  *       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  *       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#oneOf"), list_iri))
  *       stack[start :] = [iri]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf"):
  */
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 780, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 770, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_4 = PyList_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 780, __pyx_L1_error)
+    __pyx_t_4 = PyList_New(1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 770, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_6);
     PyList_SET_ITEM(__pyx_t_4, 0, __pyx_t_6);
     __pyx_t_6 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 780, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 770, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 780, __pyx_L1_error)
+      __PYX_ERR(0, 770, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_start);
     __pyx_t_6 = __pyx_v_start;
@@ -17312,14 +17312,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 780, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 770, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_4, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 780, __pyx_L1_error)
+    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_4, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 770, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":774
+    /* "owlready2_optimized.pyx":764
  *       stack[start :] = [iri]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DataOneOf"):             # <<<<<<<<<<<<<<
@@ -17329,87 +17329,87 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":782
+  /* "owlready2_optimized.pyx":772
  *       stack[start :] = [iri]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf"):             # <<<<<<<<<<<<<<
  *       start    = _rindex(stack)
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 772, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_9 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L44_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_2, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_2, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 772, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_1 != 0);
   if (!__pyx_t_9) {
   } else {
     __pyx_t_2 = __pyx_t_9;
     goto __pyx_L44_bool_binop_done;
   }
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_3, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_3, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 772, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_9 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L44_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_4, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 782, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_4, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 772, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_1 != 0);
   __pyx_t_2 = __pyx_t_9;
   __pyx_L44_bool_binop_done:;
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":783
+    /* "owlready2_optimized.pyx":773
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf"):
  *       start    = _rindex(stack)             # <<<<<<<<<<<<<<
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)
  *       iri      = new_blank()
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 783, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 773, __pyx_L1_error) }
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_stack;
     __Pyx_INCREF(__pyx_t_4);
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_4))); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 783, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_4))); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 773, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_start = __pyx_t_6;
     __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":784
+    /* "owlready2_optimized.pyx":774
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf"):
  *       start    = _rindex(stack)
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)             # <<<<<<<<<<<<<<
  *       iri      = new_blank()
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 784, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 774, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 784, __pyx_L1_error)
+      __PYX_ERR(0, 774, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 784, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 774, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_2 = (__pyx_t_6 == Py_None);
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 784, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 774, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 784, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 774, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 784, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 774, __pyx_L1_error) }
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_objs;
     __Pyx_INCREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 784, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 774, __pyx_L1_error) }
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate;
     __Pyx_INCREF(__pyx_t_3);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 784, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 774, __pyx_L1_error) }
     __pyx_t_12 = __pyx_cur_scope->__pyx_v_new_blank;
     __Pyx_INCREF(__pyx_t_12);
     __pyx_v_list_iri = __pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_t_6), ((PyObject*)__pyx_t_4), __pyx_t_3, __pyx_t_12);
@@ -17418,14 +17418,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":785
+    /* "owlready2_optimized.pyx":775
  *       start    = _rindex(stack)
  *       list_iri = new_list(stack[start + 1 : ], objs, _abbreviate, new_blank)
  *       iri      = new_blank()             # <<<<<<<<<<<<<<
  * 
  *       if stack[start + 1 : ][0] in datatypes:
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 785, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 775, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -17439,65 +17439,65 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_12 = (__pyx_t_4) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_4) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 785, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 775, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_12); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 785, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_12); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 775, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
     __pyx_v_iri = __pyx_t_8;
 
-    /* "owlready2_optimized.pyx":787
+    /* "owlready2_optimized.pyx":777
  *       iri      = new_blank()
  * 
  *       if stack[start + 1 : ][0] in datatypes:             # <<<<<<<<<<<<<<
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  *       else:
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 787, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 777, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 787, __pyx_L1_error)
+      __PYX_ERR(0, 777, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 787, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 777, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __pyx_t_2 = (__pyx_t_12 == Py_None);
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_12); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 787, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_12); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 777, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 787, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 777, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_t_12, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 787, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_t_12, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 777, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_datatypes)) { __Pyx_RaiseClosureNameError("datatypes"); __PYX_ERR(0, 787, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_datatypes)) { __Pyx_RaiseClosureNameError("datatypes"); __PYX_ERR(0, 777, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_datatypes == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-      __PYX_ERR(0, 787, __pyx_L1_error)
+      __PYX_ERR(0, 777, __pyx_L1_error)
     }
-    __pyx_t_2 = (__Pyx_PySet_ContainsTF(__pyx_t_3, __pyx_cur_scope->__pyx_v_datatypes, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 787, __pyx_L1_error)
+    __pyx_t_2 = (__Pyx_PySet_ContainsTF(__pyx_t_3, __pyx_cur_scope->__pyx_v_datatypes, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 777, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_t_9 = (__pyx_t_2 != 0);
     if (__pyx_t_9) {
 
-      /* "owlready2_optimized.pyx":788
+      /* "owlready2_optimized.pyx":778
  * 
  *       if stack[start + 1 : ][0] in datatypes:
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))             # <<<<<<<<<<<<<<
  *       else:
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 788, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 778, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 788, __pyx_L1_error)
+        __PYX_ERR(0, 778, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 788, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 778, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 788, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 778, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -17511,10 +17511,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_12 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_v_19owlready2_optimized_rdf_type);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 788, __pyx_L1_error)
+      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 778, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 788, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 778, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -17528,10 +17528,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_3) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_3);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 788, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 778, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 788, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 778, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3);
@@ -17542,10 +17542,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_3 = 0;
       __pyx_t_12 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 788, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 778, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "owlready2_optimized.pyx":787
+      /* "owlready2_optimized.pyx":777
  *       iri      = new_blank()
  * 
  *       if stack[start + 1 : ][0] in datatypes:             # <<<<<<<<<<<<<<
@@ -17555,7 +17555,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       goto __pyx_L48;
     }
 
-    /* "owlready2_optimized.pyx":790
+    /* "owlready2_optimized.pyx":780
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  *       else:
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))             # <<<<<<<<<<<<<<
@@ -17563,14 +17563,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#intersectionOf"), list_iri))
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 790, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 780, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 790, __pyx_L1_error)
+        __PYX_ERR(0, 780, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 790, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 780, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 790, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 780, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -17584,10 +17584,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_v_19owlready2_optimized_rdf_type);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 790, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 780, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 790, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 780, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -17601,10 +17601,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_12 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2);
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 790, __pyx_L1_error)
+      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 780, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 790, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 780, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_6);
@@ -17615,46 +17615,46 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_6 = 0;
       __pyx_t_4 = 0;
       __pyx_t_12 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 790, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 780, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
     __pyx_L48:;
 
-    /* "owlready2_optimized.pyx":791
+    /* "owlready2_optimized.pyx":781
  *       else:
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       if (tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf"):             # <<<<<<<<<<<<<<
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#intersectionOf"), list_iri))
  *       else:
  */
-    __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 791, __pyx_L1_error)
+    __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 781, __pyx_L1_error)
     __pyx_t_1 = (__pyx_t_2 != 0);
     if (!__pyx_t_1) {
     } else {
       __pyx_t_9 = __pyx_t_1;
       goto __pyx_L50_bool_binop_done;
     }
-    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 791, __pyx_L1_error)
+    __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_3, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 781, __pyx_L1_error)
     __pyx_t_2 = (__pyx_t_1 != 0);
     __pyx_t_9 = __pyx_t_2;
     __pyx_L50_bool_binop_done:;
     if (__pyx_t_9) {
 
-      /* "owlready2_optimized.pyx":792
+      /* "owlready2_optimized.pyx":782
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       if (tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf"):
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#intersectionOf"), list_iri))             # <<<<<<<<<<<<<<
  *       else:
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#unionOf"), list_iri))
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 792, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 782, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 792, __pyx_L1_error)
+        __PYX_ERR(0, 782, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 792, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 782, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 792, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 782, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -17668,12 +17668,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_12 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_inte) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_inte);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 792, __pyx_L1_error)
+      if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 782, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 792, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 782, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 792, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 782, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3);
@@ -17684,10 +17684,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_3 = 0;
       __pyx_t_12 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 792, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 782, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-      /* "owlready2_optimized.pyx":791
+      /* "owlready2_optimized.pyx":781
  *       else:
  *         objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Class")))
  *       if (tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf"):             # <<<<<<<<<<<<<<
@@ -17697,7 +17697,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       goto __pyx_L49;
     }
 
-    /* "owlready2_optimized.pyx":794
+    /* "owlready2_optimized.pyx":784
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#intersectionOf"), list_iri))
  *       else:
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#unionOf"), list_iri))             # <<<<<<<<<<<<<<
@@ -17705,14 +17705,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  * 
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 794, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 784, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 794, __pyx_L1_error)
+        __PYX_ERR(0, 784, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 794, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 784, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 794, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 784, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -17726,12 +17726,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       }
       __pyx_t_4 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_unio) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_unio);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 794, __pyx_L1_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 784, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-      __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 794, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 784, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 794, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 784, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_6);
@@ -17742,29 +17742,29 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_6 = 0;
       __pyx_t_4 = 0;
       __pyx_t_12 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 794, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 784, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     }
     __pyx_L49:;
 
-    /* "owlready2_optimized.pyx":795
+    /* "owlready2_optimized.pyx":785
  *       else:
  *         objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#unionOf"), list_iri))
  *       stack[start :] = [iri]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Import"):
  */
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 795, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 785, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_12 = PyList_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 795, __pyx_L1_error)
+    __pyx_t_12 = PyList_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 785, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_GIVEREF(__pyx_t_3);
     PyList_SET_ITEM(__pyx_t_12, 0, __pyx_t_3);
     __pyx_t_3 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 795, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 785, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 795, __pyx_L1_error)
+      __PYX_ERR(0, 785, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_start);
     __pyx_t_3 = __pyx_v_start;
@@ -17772,14 +17772,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     if (__pyx_t_9) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 795, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 785, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_12, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 795, __pyx_L1_error)
+    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_12, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 785, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":782
+    /* "owlready2_optimized.pyx":772
  *       stack[start :] = [iri]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#ObjectUnionOf") or (tag == "http://www.w3.org/2002/07/owl#DataIntersectionOf") or (tag == "http://www.w3.org/2002/07/owl#DataUnionOf"):             # <<<<<<<<<<<<<<
@@ -17789,32 +17789,32 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":797
+  /* "owlready2_optimized.pyx":787
  *       stack[start :] = [iri]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Import"):             # <<<<<<<<<<<<<<
  *       objs.append((ontology_iri, _abbreviate("http://www.w3.org/2002/07/owl#imports"), _abbreviate(current_content)))
  * 
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Impo, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 797, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Impo, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 787, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":798
+    /* "owlready2_optimized.pyx":788
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Import"):
  *       objs.append((ontology_iri, _abbreviate("http://www.w3.org/2002/07/owl#imports"), _abbreviate(current_content)))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#IRI"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 798, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 788, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 798, __pyx_L1_error)
+      __PYX_ERR(0, 788, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 798, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 788, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 798, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 788, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -17828,11 +17828,11 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_impo) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_impo);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 798, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 788, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 798, __pyx_L1_error) }
-    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 798, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 788, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 788, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_7 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -17846,10 +17846,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_7, __pyx_cur_scope->__pyx_v_current_content) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_cur_scope->__pyx_v_current_content);
     __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 798, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 788, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 798, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 788, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_GIVEREF(__pyx_t_12);
     PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_12);
@@ -17860,10 +17860,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_12 = 0;
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 798, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 788, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":797
+    /* "owlready2_optimized.pyx":787
  *       stack[start :] = [iri]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Import"):             # <<<<<<<<<<<<<<
@@ -17873,29 +17873,29 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":800
+  /* "owlready2_optimized.pyx":790
  *       objs.append((ontology_iri, _abbreviate("http://www.w3.org/2002/07/owl#imports"), _abbreviate(current_content)))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#IRI"):             # <<<<<<<<<<<<<<
  *       #current_content is IRI !
  *       if not current_content: current_content = ontology_iri_str
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_IRI, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 800, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_IRI, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 790, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":802
+    /* "owlready2_optimized.pyx":792
  *     elif (tag == "http://www.w3.org/2002/07/owl#IRI"):
  *       #current_content is IRI !
  *       if not current_content: current_content = ontology_iri_str             # <<<<<<<<<<<<<<
  *       else:
  *         if current_content.startswith("#") or current_content.startswith("/"): current_content = ontology_iri_str + current_content
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 802, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 792, __pyx_L1_error) }
     __pyx_t_9 = (__pyx_cur_scope->__pyx_v_current_content != Py_None)&&(__Pyx_PyUnicode_IS_TRUE(__pyx_cur_scope->__pyx_v_current_content) != 0);
     __pyx_t_2 = ((!__pyx_t_9) != 0);
     if (__pyx_t_2) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_ontology_iri_str)) { __Pyx_RaiseClosureNameError("ontology_iri_str"); __PYX_ERR(0, 802, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_ontology_iri_str)) { __Pyx_RaiseClosureNameError("ontology_iri_str"); __PYX_ERR(0, 792, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v_ontology_iri_str);
       __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_current_content);
       __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_current_content, __pyx_cur_scope->__pyx_v_ontology_iri_str);
@@ -17903,7 +17903,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       goto __pyx_L52;
     }
 
-    /* "owlready2_optimized.pyx":804
+    /* "owlready2_optimized.pyx":794
  *       if not current_content: current_content = ontology_iri_str
  *       else:
  *         if current_content.startswith("#") or current_content.startswith("/"): current_content = ontology_iri_str + current_content             # <<<<<<<<<<<<<<
@@ -17911,29 +17911,29 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  * 
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 804, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 794, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_current_content == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "startswith");
-        __PYX_ERR(0, 804, __pyx_L1_error)
+        __PYX_ERR(0, 794, __pyx_L1_error)
       }
-      __pyx_t_9 = __Pyx_PyUnicode_Tailmatch(__pyx_cur_scope->__pyx_v_current_content, __pyx_kp_u__2, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 804, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyUnicode_Tailmatch(__pyx_cur_scope->__pyx_v_current_content, __pyx_kp_u__2, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 794, __pyx_L1_error)
       if (!(__pyx_t_9 != 0)) {
       } else {
         __pyx_t_2 = (__pyx_t_9 != 0);
         goto __pyx_L54_bool_binop_done;
       }
-      if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 804, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 794, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_current_content == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "startswith");
-        __PYX_ERR(0, 804, __pyx_L1_error)
+        __PYX_ERR(0, 794, __pyx_L1_error)
       }
-      __pyx_t_9 = __Pyx_PyUnicode_Tailmatch(__pyx_cur_scope->__pyx_v_current_content, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 804, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyUnicode_Tailmatch(__pyx_cur_scope->__pyx_v_current_content, __pyx_kp_u__10, 0, PY_SSIZE_T_MAX, -1); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(0, 794, __pyx_L1_error)
       __pyx_t_2 = (__pyx_t_9 != 0);
       __pyx_L54_bool_binop_done:;
       if (__pyx_t_2) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_ontology_iri_str)) { __Pyx_RaiseClosureNameError("ontology_iri_str"); __PYX_ERR(0, 804, __pyx_L1_error) }
-        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 804, __pyx_L1_error) }
-        __pyx_t_6 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_ontology_iri_str, __pyx_cur_scope->__pyx_v_current_content); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 804, __pyx_L1_error)
+        if (unlikely(!__pyx_cur_scope->__pyx_v_ontology_iri_str)) { __Pyx_RaiseClosureNameError("ontology_iri_str"); __PYX_ERR(0, 794, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 794, __pyx_L1_error) }
+        __pyx_t_6 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_ontology_iri_str, __pyx_cur_scope->__pyx_v_current_content); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 794, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_current_content);
         __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_current_content, ((PyObject*)__pyx_t_6));
@@ -17943,20 +17943,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_L52:;
 
-    /* "owlready2_optimized.pyx":805
+    /* "owlready2_optimized.pyx":795
  *       else:
  *         if current_content.startswith("#") or current_content.startswith("/"): current_content = ontology_iri_str + current_content
  *       stack.append(_abbreviate(current_content))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AbbreviatedIRI"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 805, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 795, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 805, __pyx_L1_error)
+      __PYX_ERR(0, 795, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 805, __pyx_L1_error) }
-    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 805, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 795, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 795, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -17970,13 +17970,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_cur_scope->__pyx_v_current_content) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_cur_scope->__pyx_v_current_content);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 805, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 795, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 805, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 795, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":800
+    /* "owlready2_optimized.pyx":790
  *       objs.append((ontology_iri, _abbreviate("http://www.w3.org/2002/07/owl#imports"), _abbreviate(current_content)))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#IRI"):             # <<<<<<<<<<<<<<
@@ -17986,35 +17986,35 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":807
+  /* "owlready2_optimized.pyx":797
  *       stack.append(_abbreviate(current_content))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AbbreviatedIRI"):             # <<<<<<<<<<<<<<
  *       stack.append(_abbreviate(_unabbreviate_IRI(current_content)))
  * 
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Abbr, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 807, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Abbr, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 797, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":808
+    /* "owlready2_optimized.pyx":798
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AbbreviatedIRI"):
  *       stack.append(_abbreviate(_unabbreviate_IRI(current_content)))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AnnotationAssertion"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 808, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 798, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 808, __pyx_L1_error)
+      __PYX_ERR(0, 798, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 808, __pyx_L1_error) }
-    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 808, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 798, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 798, __pyx_L1_error) }
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_current_content;
     __Pyx_INCREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__unabbreviate_IRI)) { __Pyx_RaiseClosureNameError("_unabbreviate_IRI"); __PYX_ERR(0, 808, __pyx_L1_error) }
-    __pyx_t_3 = __pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI(__pyx_cur_scope->__pyx_v__unabbreviate_IRI, ((PyObject*)__pyx_t_4)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 808, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v__unabbreviate_IRI)) { __Pyx_RaiseClosureNameError("_unabbreviate_IRI"); __PYX_ERR(0, 798, __pyx_L1_error) }
+    __pyx_t_3 = __pyx_pf_19owlready2_optimized_12parse_owlxml__unabbreviate_IRI(__pyx_cur_scope->__pyx_v__unabbreviate_IRI, ((PyObject*)__pyx_t_4)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 798, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
@@ -18031,13 +18031,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_6 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_12, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 808, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 798, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 808, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 798, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":807
+    /* "owlready2_optimized.pyx":797
  *       stack.append(_abbreviate(current_content))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AbbreviatedIRI"):             # <<<<<<<<<<<<<<
@@ -18047,75 +18047,75 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":810
+  /* "owlready2_optimized.pyx":800
  *       stack.append(_abbreviate(_unabbreviate_IRI(current_content)))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AnnotationAssertion"):             # <<<<<<<<<<<<<<
  *       if isinstance(stack[-1], tuple): datas.append((stack[-2], stack[-3], stack[-1][0], stack[-1][1]))
  *       else:                            objs .append((stack[-2], stack[-3], stack[-1]))
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_3, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 810, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_3, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 800, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":811
+    /* "owlready2_optimized.pyx":801
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AnnotationAssertion"):
  *       if isinstance(stack[-1], tuple): datas.append((stack[-2], stack[-3], stack[-1][0], stack[-1][1]))             # <<<<<<<<<<<<<<
  *       else:                            objs .append((stack[-2], stack[-3], stack[-1]))
  *       if annots: purge_annotations((stack[-2], stack[-3], stack[-1]))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 811, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 801, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 811, __pyx_L1_error)
+      __PYX_ERR(0, 801, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 811, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 801, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_2 = PyTuple_Check(__pyx_t_6); 
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_t_9 = (__pyx_t_2 != 0);
     if (__pyx_t_9) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 811, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 801, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 811, __pyx_L1_error)
+        __PYX_ERR(0, 801, __pyx_L1_error)
       }
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 811, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 801, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 811, __pyx_L1_error)
+        __PYX_ERR(0, 801, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 811, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 801, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 811, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 801, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 811, __pyx_L1_error)
+        __PYX_ERR(0, 801, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -3L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 811, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -3L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 801, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 811, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 801, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 811, __pyx_L1_error)
+        __PYX_ERR(0, 801, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 811, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 801, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_12 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 811, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_GetItemInt(__pyx_t_3, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 801, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 811, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 801, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 811, __pyx_L1_error)
+        __PYX_ERR(0, 801, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 811, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 801, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_7 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 811, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt(__pyx_t_3, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 801, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-      __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 811, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 801, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_6);
@@ -18129,12 +18129,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_4 = 0;
       __pyx_t_12 = 0;
       __pyx_t_7 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 811, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 801, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       goto __pyx_L56;
     }
 
-    /* "owlready2_optimized.pyx":812
+    /* "owlready2_optimized.pyx":802
  *     elif (tag == "http://www.w3.org/2002/07/owl#AnnotationAssertion"):
  *       if isinstance(stack[-1], tuple): datas.append((stack[-2], stack[-3], stack[-1][0], stack[-1][1]))
  *       else:                            objs .append((stack[-2], stack[-3], stack[-1]))             # <<<<<<<<<<<<<<
@@ -18142,33 +18142,33 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  * 
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 812, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 802, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 812, __pyx_L1_error)
+        __PYX_ERR(0, 802, __pyx_L1_error)
       }
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 812, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 802, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 812, __pyx_L1_error)
+        __PYX_ERR(0, 802, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 812, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 802, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 812, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 802, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 812, __pyx_L1_error)
+        __PYX_ERR(0, 802, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -3L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 812, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -3L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 802, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 812, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 802, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 812, __pyx_L1_error)
+        __PYX_ERR(0, 802, __pyx_L1_error)
       }
-      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 812, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 802, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 812, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 802, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_3);
@@ -18179,43 +18179,43 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_3 = 0;
       __pyx_t_7 = 0;
       __pyx_t_12 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 812, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 802, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
     __pyx_L56:;
 
-    /* "owlready2_optimized.pyx":813
+    /* "owlready2_optimized.pyx":803
  *       if isinstance(stack[-1], tuple): datas.append((stack[-2], stack[-3], stack[-1][0], stack[-1][1]))
  *       else:                            objs .append((stack[-2], stack[-3], stack[-1]))
  *       if annots: purge_annotations((stack[-2], stack[-3], stack[-1]))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Annotation"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 813, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 803, __pyx_L1_error) }
     __pyx_t_9 = (__pyx_cur_scope->__pyx_v_annots != Py_None)&&(PyList_GET_SIZE(__pyx_cur_scope->__pyx_v_annots) != 0);
     if (__pyx_t_9) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 813, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 803, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 813, __pyx_L1_error)
+        __PYX_ERR(0, 803, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 813, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 803, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 813, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 803, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 813, __pyx_L1_error)
+        __PYX_ERR(0, 803, __pyx_L1_error)
       }
-      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -3L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 813, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -3L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 803, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 813, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 803, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 813, __pyx_L1_error)
+        __PYX_ERR(0, 803, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 813, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 803, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
-      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 813, __pyx_L1_error)
+      __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 803, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_GIVEREF(__pyx_t_4);
       PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_4);
@@ -18226,14 +18226,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __pyx_t_4 = 0;
       __pyx_t_12 = 0;
       __pyx_t_7 = 0;
-      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 813, __pyx_L1_error) }
-      __pyx_t_7 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 813, __pyx_L1_error)
+      if (unlikely(!__pyx_cur_scope->__pyx_v_purge_annotations)) { __Pyx_RaiseClosureNameError("purge_annotations"); __PYX_ERR(0, 803, __pyx_L1_error) }
+      __pyx_t_7 = __pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotations(__pyx_cur_scope->__pyx_v_purge_annotations, __pyx_t_3); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 803, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
     }
 
-    /* "owlready2_optimized.pyx":810
+    /* "owlready2_optimized.pyx":800
  *       stack.append(_abbreviate(_unabbreviate_IRI(current_content)))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#AnnotationAssertion"):             # <<<<<<<<<<<<<<
@@ -18243,18 +18243,18 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":815
+  /* "owlready2_optimized.pyx":805
  *       if annots: purge_annotations((stack[-2], stack[-3], stack[-1]))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Annotation"):             # <<<<<<<<<<<<<<
  *       if before_declaration: # On ontology
  *         if isinstance(stack[-1], tuple): datas.append((ontology_iri, stack[-2], stack[-1][0], stack[-1][1]))
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_4, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 815, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_4, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 805, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":816
+    /* "owlready2_optimized.pyx":806
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Annotation"):
  *       if before_declaration: # On ontology             # <<<<<<<<<<<<<<
@@ -18264,59 +18264,59 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_2 = (__pyx_cur_scope->__pyx_v_before_declaration != 0);
     if (__pyx_t_2) {
 
-      /* "owlready2_optimized.pyx":817
+      /* "owlready2_optimized.pyx":807
  *     elif (tag == "http://www.w3.org/2002/07/owl#Annotation"):
  *       if before_declaration: # On ontology
  *         if isinstance(stack[-1], tuple): datas.append((ontology_iri, stack[-2], stack[-1][0], stack[-1][1]))             # <<<<<<<<<<<<<<
  *         else:                            objs .append((ontology_iri, stack[-2], stack[-1]))
  *       else:
  */
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 817, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 807, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 817, __pyx_L1_error)
+        __PYX_ERR(0, 807, __pyx_L1_error)
       }
-      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 817, __pyx_L1_error)
+      __pyx_t_7 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 807, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_7);
       __pyx_t_2 = PyTuple_Check(__pyx_t_7); 
       __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
       __pyx_t_9 = (__pyx_t_2 != 0);
       if (__pyx_t_9) {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 817, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 807, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 817, __pyx_L1_error)
+          __PYX_ERR(0, 807, __pyx_L1_error)
         }
-        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 817, __pyx_L1_error)
+        __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 807, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_7);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 817, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 807, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 817, __pyx_L1_error)
+          __PYX_ERR(0, 807, __pyx_L1_error)
         }
-        __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 817, __pyx_L1_error)
+        __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 807, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 817, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 807, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 817, __pyx_L1_error)
+          __PYX_ERR(0, 807, __pyx_L1_error)
         }
-        __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 817, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 807, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
-        __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_12, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 817, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt(__pyx_t_12, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 807, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 817, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 807, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 817, __pyx_L1_error)
+          __PYX_ERR(0, 807, __pyx_L1_error)
         }
-        __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 817, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 807, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
-        __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_12, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 817, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_GetItemInt(__pyx_t_12, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 807, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-        __pyx_t_12 = PyTuple_New(4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 817, __pyx_L1_error)
+        __pyx_t_12 = PyTuple_New(4); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 807, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
         __Pyx_GIVEREF(__pyx_t_7);
         PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_t_7);
@@ -18330,12 +18330,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __pyx_t_3 = 0;
         __pyx_t_4 = 0;
         __pyx_t_6 = 0;
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 817, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 807, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         goto __pyx_L59;
       }
 
-      /* "owlready2_optimized.pyx":818
+      /* "owlready2_optimized.pyx":808
  *       if before_declaration: # On ontology
  *         if isinstance(stack[-1], tuple): datas.append((ontology_iri, stack[-2], stack[-1][0], stack[-1][1]))
  *         else:                            objs .append((ontology_iri, stack[-2], stack[-1]))             # <<<<<<<<<<<<<<
@@ -18343,28 +18343,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  *         annots.append((stack[-2], stack[-1]))
  */
       /*else*/ {
-        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 818, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 808, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
           PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-          __PYX_ERR(0, 818, __pyx_L1_error)
+          __PYX_ERR(0, 808, __pyx_L1_error)
         }
-        __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 818, __pyx_L1_error)
+        __pyx_t_12 = __Pyx_PyInt_From_int(__pyx_cur_scope->__pyx_v_ontology_iri); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 808, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_12);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 818, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 808, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 818, __pyx_L1_error)
+          __PYX_ERR(0, 808, __pyx_L1_error)
         }
-        __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 818, __pyx_L1_error)
+        __pyx_t_6 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 808, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_6);
-        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 818, __pyx_L1_error) }
+        if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 808, __pyx_L1_error) }
         if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
           PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-          __PYX_ERR(0, 818, __pyx_L1_error)
+          __PYX_ERR(0, 808, __pyx_L1_error)
         }
-        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 818, __pyx_L1_error)
+        __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 808, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_4);
-        __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 818, __pyx_L1_error)
+        __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 808, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_3);
         __Pyx_GIVEREF(__pyx_t_12);
         PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_12);
@@ -18375,12 +18375,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
         __pyx_t_12 = 0;
         __pyx_t_6 = 0;
         __pyx_t_4 = 0;
-        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 818, __pyx_L1_error)
+        __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 808, __pyx_L1_error)
         __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       }
       __pyx_L59:;
 
-      /* "owlready2_optimized.pyx":816
+      /* "owlready2_optimized.pyx":806
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Annotation"):
  *       if before_declaration: # On ontology             # <<<<<<<<<<<<<<
@@ -18390,7 +18390,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       goto __pyx_L58;
     }
 
-    /* "owlready2_optimized.pyx":820
+    /* "owlready2_optimized.pyx":810
  *         else:                            objs .append((ontology_iri, stack[-2], stack[-1]))
  *       else:
  *         annots.append((stack[-2], stack[-1]))             # <<<<<<<<<<<<<<
@@ -18398,26 +18398,26 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  * 
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 820, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 810, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_annots == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 820, __pyx_L1_error)
+        __PYX_ERR(0, 810, __pyx_L1_error)
       }
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 820, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 810, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 820, __pyx_L1_error)
+        __PYX_ERR(0, 810, __pyx_L1_error)
       }
-      __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 820, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 810, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 820, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 810, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
         PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-        __PYX_ERR(0, 820, __pyx_L1_error)
+        __PYX_ERR(0, 810, __pyx_L1_error)
       }
-      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 820, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 810, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 820, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 810, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GIVEREF(__pyx_t_3);
       PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_3);
@@ -18425,26 +18425,26 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_4);
       __pyx_t_3 = 0;
       __pyx_t_4 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_annots, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 820, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_annots, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 810, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
     __pyx_L58:;
 
-    /* "owlready2_optimized.pyx":821
+    /* "owlready2_optimized.pyx":811
  *       else:
  *         annots.append((stack[-2], stack[-1]))
  *       del stack[-2:]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DatatypeRestriction"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 821, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 811, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 821, __pyx_L1_error)
+      __PYX_ERR(0, 811, __pyx_L1_error)
     }
-    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, -2L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 821, __pyx_L1_error)
+    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, -2L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 811, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":815
+    /* "owlready2_optimized.pyx":805
  *       if annots: purge_annotations((stack[-2], stack[-3], stack[-1]))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#Annotation"):             # <<<<<<<<<<<<<<
@@ -18454,61 +18454,61 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":823
+  /* "owlready2_optimized.pyx":813
  *       del stack[-2:]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DatatypeRestriction"):             # <<<<<<<<<<<<<<
  *       start               = _rindex(stack)
  *       datatype, *list_bns = stack[start + 1 : ]
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_9, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 823, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_9, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 813, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_9 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":824
+    /* "owlready2_optimized.pyx":814
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DatatypeRestriction"):
  *       start               = _rindex(stack)             # <<<<<<<<<<<<<<
  *       datatype, *list_bns = stack[start + 1 : ]
  *       list_bns            = new_list(list_bns, objs, _abbreviate, new_blank)
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 824, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 814, __pyx_L1_error) }
     __pyx_t_6 = __pyx_cur_scope->__pyx_v_stack;
     __Pyx_INCREF(__pyx_t_6);
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_6))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 824, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_6))); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 814, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_v_start = __pyx_t_4;
     __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":825
+    /* "owlready2_optimized.pyx":815
  *     elif (tag == "http://www.w3.org/2002/07/owl#DatatypeRestriction"):
  *       start               = _rindex(stack)
  *       datatype, *list_bns = stack[start + 1 : ]             # <<<<<<<<<<<<<<
  *       list_bns            = new_list(list_bns, objs, _abbreviate, new_blank)
  *       bn                  = new_blank()
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 825, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 815, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 825, __pyx_L1_error)
+      __PYX_ERR(0, 815, __pyx_L1_error)
     }
-    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 825, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 815, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_2 = (__pyx_t_4 == Py_None);
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_4); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 825, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_4); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 815, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 825, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 815, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     {
       Py_ssize_t index = -1;
       PyObject** temps[2] = {&__pyx_t_6};
-      __pyx_t_3 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 825, __pyx_L1_error)
+      __pyx_t_3 = PyObject_GetIter(__pyx_t_4); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 815, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __pyx_t_15 = Py_TYPE(__pyx_t_3)->tp_iternext;
@@ -18522,10 +18522,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
       __pyx_t_15 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 825, __pyx_L1_error)
+      __PYX_ERR(0, 815, __pyx_L1_error)
       __pyx_L61_unpacking_done:;
     }
-    __pyx_t_12 = PySequence_List(__pyx_t_3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 825, __pyx_L1_error)
+    __pyx_t_12 = PySequence_List(__pyx_t_3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 815, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_datatype = __pyx_t_6;
@@ -18533,24 +18533,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_v_list_bns = ((PyObject*)__pyx_t_12);
     __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":826
+    /* "owlready2_optimized.pyx":816
  *       start               = _rindex(stack)
  *       datatype, *list_bns = stack[start + 1 : ]
  *       list_bns            = new_list(list_bns, objs, _abbreviate, new_blank)             # <<<<<<<<<<<<<<
  *       bn                  = new_blank()
  *       stack[start :]  = [bn]
  */
-    if (!(likely(PyList_CheckExact(__pyx_v_list_bns))||((__pyx_v_list_bns) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_v_list_bns)->tp_name), 0))) __PYX_ERR(0, 826, __pyx_L1_error)
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 826, __pyx_L1_error) }
+    if (!(likely(PyList_CheckExact(__pyx_v_list_bns))||((__pyx_v_list_bns) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "list", Py_TYPE(__pyx_v_list_bns)->tp_name), 0))) __PYX_ERR(0, 816, __pyx_L1_error)
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 816, __pyx_L1_error) }
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_objs;
     __Pyx_INCREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 826, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 816, __pyx_L1_error) }
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate;
     __Pyx_INCREF(__pyx_t_12);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 826, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 816, __pyx_L1_error) }
     __pyx_t_6 = __pyx_cur_scope->__pyx_v_new_blank;
     __Pyx_INCREF(__pyx_t_6);
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_v_list_bns), ((PyObject*)__pyx_t_4), __pyx_t_12, __pyx_t_6)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 826, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_v_list_bns), ((PyObject*)__pyx_t_4), __pyx_t_12, __pyx_t_6)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 816, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
@@ -18558,14 +18558,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_DECREF_SET(__pyx_v_list_bns, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":827
+    /* "owlready2_optimized.pyx":817
  *       datatype, *list_bns = stack[start + 1 : ]
  *       list_bns            = new_list(list_bns, objs, _abbreviate, new_blank)
  *       bn                  = new_blank()             # <<<<<<<<<<<<<<
  *       stack[start :]  = [bn]
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 827, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 817, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_6 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_12 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -18579,28 +18579,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_12) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_12) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 827, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 817, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __pyx_v_bn = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":828
+    /* "owlready2_optimized.pyx":818
  *       list_bns            = new_list(list_bns, objs, _abbreviate, new_blank)
  *       bn                  = new_blank()
  *       stack[start :]  = [bn]             # <<<<<<<<<<<<<<
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#onDatatype"), datatype))
  */
-    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 828, __pyx_L1_error)
+    __pyx_t_3 = PyList_New(1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 818, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_INCREF(__pyx_v_bn);
     __Pyx_GIVEREF(__pyx_v_bn);
     PyList_SET_ITEM(__pyx_t_3, 0, __pyx_v_bn);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 828, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 818, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 828, __pyx_L1_error)
+      __PYX_ERR(0, 818, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_start);
     __pyx_t_6 = __pyx_v_start;
@@ -18608,26 +18608,26 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 828, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 818, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 828, __pyx_L1_error)
+    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_3, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 818, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":829
+    /* "owlready2_optimized.pyx":819
  *       bn                  = new_blank()
  *       stack[start :]  = [bn]
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))             # <<<<<<<<<<<<<<
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#onDatatype"), datatype))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#withRestrictions"), list_bns))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 829, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 819, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 829, __pyx_L1_error)
+      __PYX_ERR(0, 819, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 829, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 819, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_12 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -18641,10 +18641,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_12, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 829, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 819, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 829, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 819, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -18658,10 +18658,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_4, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_3) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_3);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 829, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 819, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 829, __pyx_L1_error)
+    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 819, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_INCREF(__pyx_v_bn);
     __Pyx_GIVEREF(__pyx_v_bn);
@@ -18672,22 +18672,22 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_t_6);
     __pyx_t_3 = 0;
     __pyx_t_6 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 829, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 819, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":830
+    /* "owlready2_optimized.pyx":820
  *       stack[start :]  = [bn]
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#onDatatype"), datatype))             # <<<<<<<<<<<<<<
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#withRestrictions"), list_bns))
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 830, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 820, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 830, __pyx_L1_error)
+      __PYX_ERR(0, 820, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 830, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 820, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -18701,10 +18701,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_12 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_onDa_2) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_onDa_2);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 830, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 820, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 830, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 820, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(__pyx_v_bn);
     __Pyx_GIVEREF(__pyx_v_bn);
@@ -18715,22 +18715,22 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_GIVEREF(__pyx_v_datatype);
     PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_datatype);
     __pyx_t_12 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 830, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 820, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":831
+    /* "owlready2_optimized.pyx":821
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2000/01/rdf-schema#Datatype")))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#onDatatype"), datatype))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#withRestrictions"), list_bns))             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#FacetRestriction"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 831, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 821, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 831, __pyx_L1_error)
+      __PYX_ERR(0, 821, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 831, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 821, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -18744,10 +18744,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_with) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_with);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 831, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 821, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 831, __pyx_L1_error)
+    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 821, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_INCREF(__pyx_v_bn);
     __Pyx_GIVEREF(__pyx_v_bn);
@@ -18758,10 +18758,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_GIVEREF(__pyx_v_list_bns);
     PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_v_list_bns);
     __pyx_t_6 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 831, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 821, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":823
+    /* "owlready2_optimized.pyx":813
  *       del stack[-2:]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DatatypeRestriction"):             # <<<<<<<<<<<<<<
@@ -18771,30 +18771,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":833
+  /* "owlready2_optimized.pyx":823
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#withRestrictions"), list_bns))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#FacetRestriction"):             # <<<<<<<<<<<<<<
  *       facet, literal = stack[-2:]
  *       bn = new_blank()
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Face, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 833, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Face, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 823, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_2 != 0);
   if (__pyx_t_9) {
 
-    /* "owlready2_optimized.pyx":834
+    /* "owlready2_optimized.pyx":824
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#FacetRestriction"):
  *       facet, literal = stack[-2:]             # <<<<<<<<<<<<<<
  *       bn = new_blank()
  *       if isinstance(literal, tuple): datas.append((bn, facet, literal[0], literal[1]))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 834, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 824, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 834, __pyx_L1_error)
+      __PYX_ERR(0, 824, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, -2L, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 834, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, -2L, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 824, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     if (1) {
       PyObject* sequence = __pyx_t_12;
@@ -18802,7 +18802,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 834, __pyx_L1_error)
+        __PYX_ERR(0, 824, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       __pyx_t_6 = PyList_GET_ITEM(sequence, 0); 
@@ -18810,9 +18810,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_t_3);
       #else
-      __pyx_t_6 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 834, __pyx_L1_error)
+      __pyx_t_6 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 824, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 834, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 824, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       #endif
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
@@ -18822,14 +18822,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_v_literal = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":835
+    /* "owlready2_optimized.pyx":825
  *     elif (tag == "http://www.w3.org/2002/07/owl#FacetRestriction"):
  *       facet, literal = stack[-2:]
  *       bn = new_blank()             # <<<<<<<<<<<<<<
  *       if isinstance(literal, tuple): datas.append((bn, facet, literal[0], literal[1]))
  *       else:                          objs .append((bn, facet, literal))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 835, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 825, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -18843,13 +18843,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_12 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 835, __pyx_L1_error)
+    if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 825, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
     __pyx_v_bn = __pyx_t_12;
     __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":836
+    /* "owlready2_optimized.pyx":826
  *       facet, literal = stack[-2:]
  *       bn = new_blank()
  *       if isinstance(literal, tuple): datas.append((bn, facet, literal[0], literal[1]))             # <<<<<<<<<<<<<<
@@ -18859,16 +18859,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_9 = PyTuple_Check(__pyx_v_literal); 
     __pyx_t_2 = (__pyx_t_9 != 0);
     if (__pyx_t_2) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 836, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 826, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 836, __pyx_L1_error)
+        __PYX_ERR(0, 826, __pyx_L1_error)
       }
-      __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_literal, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 836, __pyx_L1_error)
+      __pyx_t_12 = __Pyx_GetItemInt(__pyx_v_literal, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 826, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_literal, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 836, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_GetItemInt(__pyx_v_literal, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 826, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_6 = PyTuple_New(4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 836, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(4); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 826, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_v_bn);
       __Pyx_GIVEREF(__pyx_v_bn);
@@ -18882,12 +18882,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       PyTuple_SET_ITEM(__pyx_t_6, 3, __pyx_t_3);
       __pyx_t_12 = 0;
       __pyx_t_3 = 0;
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 836, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 826, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       goto __pyx_L62;
     }
 
-    /* "owlready2_optimized.pyx":837
+    /* "owlready2_optimized.pyx":827
  *       bn = new_blank()
  *       if isinstance(literal, tuple): datas.append((bn, facet, literal[0], literal[1]))
  *       else:                          objs .append((bn, facet, literal))             # <<<<<<<<<<<<<<
@@ -18895,12 +18895,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
  * 
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 837, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 827, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 837, __pyx_L1_error)
+        __PYX_ERR(0, 827, __pyx_L1_error)
       }
-      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 837, __pyx_L1_error)
+      __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 827, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_INCREF(__pyx_v_bn);
       __Pyx_GIVEREF(__pyx_v_bn);
@@ -18911,32 +18911,32 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_v_literal);
       __Pyx_GIVEREF(__pyx_v_literal);
       PyTuple_SET_ITEM(__pyx_t_6, 2, __pyx_v_literal);
-      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 837, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 827, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     }
     __pyx_L62:;
 
-    /* "owlready2_optimized.pyx":838
+    /* "owlready2_optimized.pyx":828
  *       if isinstance(literal, tuple): datas.append((bn, facet, literal[0], literal[1]))
  *       else:                          objs .append((bn, facet, literal))
  *       stack[-2:] = [bn]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectInverseOf") or (tag == "http://www.w3.org/2002/07/owl#DataInverseOf") or (tag == "http://www.w3.org/2002/07/owl#inverseOf"):
  */
-    __pyx_t_6 = PyList_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 838, __pyx_L1_error)
+    __pyx_t_6 = PyList_New(1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 828, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_INCREF(__pyx_v_bn);
     __Pyx_GIVEREF(__pyx_v_bn);
     PyList_SET_ITEM(__pyx_t_6, 0, __pyx_v_bn);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 838, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 828, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 838, __pyx_L1_error)
+      __PYX_ERR(0, 828, __pyx_L1_error)
     }
-    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6, -2L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 838, __pyx_L1_error)
+    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_6, -2L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 828, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":833
+    /* "owlready2_optimized.pyx":823
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#withRestrictions"), list_bns))
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#FacetRestriction"):             # <<<<<<<<<<<<<<
@@ -18946,46 +18946,46 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":840
+  /* "owlready2_optimized.pyx":830
  *       stack[-2:] = [bn]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectInverseOf") or (tag == "http://www.w3.org/2002/07/owl#DataInverseOf") or (tag == "http://www.w3.org/2002/07/owl#inverseOf"):             # <<<<<<<<<<<<<<
  *       bn, prop = stack[-2:]
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), prop))
  */
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_7, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 840, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_7, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 830, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_9 != 0);
   if (!__pyx_t_1) {
   } else {
     __pyx_t_2 = __pyx_t_1;
     goto __pyx_L63_bool_binop_done;
   }
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_8, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 840, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_8, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 830, __pyx_L1_error)
   __pyx_t_9 = (__pyx_t_1 != 0);
   if (!__pyx_t_9) {
   } else {
     __pyx_t_2 = __pyx_t_9;
     goto __pyx_L63_bool_binop_done;
   }
-  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_inve, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 840, __pyx_L1_error)
+  __pyx_t_9 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_inve, Py_EQ)); if (unlikely(__pyx_t_9 < 0)) __PYX_ERR(0, 830, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_9 != 0);
   __pyx_t_2 = __pyx_t_1;
   __pyx_L63_bool_binop_done:;
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":841
+    /* "owlready2_optimized.pyx":831
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectInverseOf") or (tag == "http://www.w3.org/2002/07/owl#DataInverseOf") or (tag == "http://www.w3.org/2002/07/owl#inverseOf"):
  *       bn, prop = stack[-2:]             # <<<<<<<<<<<<<<
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), prop))
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 841, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 831, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 841, __pyx_L1_error)
+      __PYX_ERR(0, 831, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, -2L, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 841, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, -2L, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 831, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     if (1) {
       PyObject* sequence = __pyx_t_6;
@@ -18993,7 +18993,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 841, __pyx_L1_error)
+        __PYX_ERR(0, 831, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       __pyx_t_3 = PyList_GET_ITEM(sequence, 0); 
@@ -19001,9 +19001,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
       __Pyx_INCREF(__pyx_t_3);
       __Pyx_INCREF(__pyx_t_12);
       #else
-      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 841, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 831, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 841, __pyx_L1_error)
+      __pyx_t_12 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 831, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
       #endif
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -19013,19 +19013,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_v_prop = __pyx_t_12;
     __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":842
+    /* "owlready2_optimized.pyx":832
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectInverseOf") or (tag == "http://www.w3.org/2002/07/owl#DataInverseOf") or (tag == "http://www.w3.org/2002/07/owl#inverseOf"):
  *       bn, prop = stack[-2:]
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), prop))             # <<<<<<<<<<<<<<
  * 
  *       stack[-2:] = [bn]
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 842, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 832, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 842, __pyx_L1_error)
+      __PYX_ERR(0, 832, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 842, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 832, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_12 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_12))) {
@@ -19039,10 +19039,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_12, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_inve) : __Pyx_PyObject_CallOneArg(__pyx_t_12, __pyx_kp_u_http_www_w3_org_2002_07_owl_inve);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 842, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 832, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 842, __pyx_L1_error)
+    __pyx_t_12 = PyTuple_New(3); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 832, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_INCREF(__pyx_v_bn);
     __Pyx_GIVEREF(__pyx_v_bn);
@@ -19053,30 +19053,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_GIVEREF(__pyx_v_prop);
     PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_v_prop);
     __pyx_t_6 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 842, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_12); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 832, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":844
+    /* "owlready2_optimized.pyx":834
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#inverseOf"), prop))
  * 
  *       stack[-2:] = [bn]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SameIndividual"):
  */
-    __pyx_t_12 = PyList_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 844, __pyx_L1_error)
+    __pyx_t_12 = PyList_New(1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 834, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_INCREF(__pyx_v_bn);
     __Pyx_GIVEREF(__pyx_v_bn);
     PyList_SET_ITEM(__pyx_t_12, 0, __pyx_v_bn);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 844, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 834, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 844, __pyx_L1_error)
+      __PYX_ERR(0, 834, __pyx_L1_error)
     }
-    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_12, -2L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 844, __pyx_L1_error)
+    if (__Pyx_PyObject_SetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_12, -2L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 834, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":840
+    /* "owlready2_optimized.pyx":830
  *       stack[-2:] = [bn]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#ObjectInverseOf") or (tag == "http://www.w3.org/2002/07/owl#DataInverseOf") or (tag == "http://www.w3.org/2002/07/owl#inverseOf"):             # <<<<<<<<<<<<<<
@@ -19086,37 +19086,37 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":846
+  /* "owlready2_optimized.pyx":836
  *       stack[-2:] = [bn]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SameIndividual"):             # <<<<<<<<<<<<<<
  *       objs.append((stack[-2], _abbreviate("http://www.w3.org/2002/07/owl#sameAs"), stack[-1]))
  *       del stack[-2:]
  */
-  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Same, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 846, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Same, Py_EQ)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(0, 836, __pyx_L1_error)
   __pyx_t_1 = (__pyx_t_2 != 0);
   if (__pyx_t_1) {
 
-    /* "owlready2_optimized.pyx":847
+    /* "owlready2_optimized.pyx":837
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SameIndividual"):
  *       objs.append((stack[-2], _abbreviate("http://www.w3.org/2002/07/owl#sameAs"), stack[-1]))             # <<<<<<<<<<<<<<
  *       del stack[-2:]
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 847, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 837, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 847, __pyx_L1_error)
+      __PYX_ERR(0, 837, __pyx_L1_error)
     }
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 847, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 837, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 847, __pyx_L1_error)
+      __PYX_ERR(0, 837, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 847, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -2L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 837, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 847, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 837, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_4 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -19130,17 +19130,17 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_4) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_same) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_same);
     __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 847, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 837, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 847, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 837, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 847, __pyx_L1_error)
+      __PYX_ERR(0, 837, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 847, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_GetItemInt_List(__pyx_cur_scope->__pyx_v_stack, -1L, long, 1, __Pyx_PyInt_From_long, 1, 1, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 837, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 847, __pyx_L1_error)
+    __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 837, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_GIVEREF(__pyx_t_12);
     PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_12);
@@ -19151,24 +19151,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_12 = 0;
     __pyx_t_6 = 0;
     __pyx_t_3 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 847, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 837, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-    /* "owlready2_optimized.pyx":848
+    /* "owlready2_optimized.pyx":838
  *     elif (tag == "http://www.w3.org/2002/07/owl#SameIndividual"):
  *       objs.append((stack[-2], _abbreviate("http://www.w3.org/2002/07/owl#sameAs"), stack[-1]))
  *       del stack[-2:]             # <<<<<<<<<<<<<<
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"):
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 848, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 838, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 848, __pyx_L1_error)
+      __PYX_ERR(0, 838, __pyx_L1_error)
     }
-    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, -2L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 848, __pyx_L1_error)
+    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, -2L, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 838, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":846
+    /* "owlready2_optimized.pyx":836
  *       stack[-2:] = [bn]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#SameIndividual"):             # <<<<<<<<<<<<<<
@@ -19178,76 +19178,76 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":850
+  /* "owlready2_optimized.pyx":840
  *       del stack[-2:]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"):             # <<<<<<<<<<<<<<
  *       start    = _rindex(stack)
  *       list_obj = stack[start + 1 : ]
  */
-  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_4, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 850, __pyx_L1_error)
+  __pyx_t_1 = (__Pyx_PyUnicode_Equals(__pyx_v_tag, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_4, Py_EQ)); if (unlikely(__pyx_t_1 < 0)) __PYX_ERR(0, 840, __pyx_L1_error)
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":851
+    /* "owlready2_optimized.pyx":841
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"):
  *       start    = _rindex(stack)             # <<<<<<<<<<<<<<
  *       list_obj = stack[start + 1 : ]
  *       list_iri = new_list(list_obj[1:], objs, _abbreviate, new_blank)
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 851, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 841, __pyx_L1_error) }
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_stack;
     __Pyx_INCREF(__pyx_t_4);
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_4))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 851, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_f_19owlready2_optimized__rindex(((PyObject*)__pyx_t_4))); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 841, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_start = __pyx_t_3;
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":852
+    /* "owlready2_optimized.pyx":842
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"):
  *       start    = _rindex(stack)
  *       list_obj = stack[start + 1 : ]             # <<<<<<<<<<<<<<
  *       list_iri = new_list(list_obj[1:], objs, _abbreviate, new_blank)
  *       objs.append((list_obj[0], _abbreviate("http://www.w3.org/2002/07/owl#disjointUnionOf"), list_iri))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 852, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 842, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 852, __pyx_L1_error)
+      __PYX_ERR(0, 842, __pyx_L1_error)
     }
-    __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 852, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_AddObjC(__pyx_v_start, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 842, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_t_2 = (__pyx_t_3 == Py_None);
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 852, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 842, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 852, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyList_GetSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 842, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __pyx_v_list_obj = ((PyObject*)__pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":853
+    /* "owlready2_optimized.pyx":843
  *       start    = _rindex(stack)
  *       list_obj = stack[start + 1 : ]
  *       list_iri = new_list(list_obj[1:], objs, _abbreviate, new_blank)             # <<<<<<<<<<<<<<
  *       objs.append((list_obj[0], _abbreviate("http://www.w3.org/2002/07/owl#disjointUnionOf"), list_iri))
  *       del stack[start:]
  */
-    __pyx_t_3 = __Pyx_PyList_GetSlice(__pyx_v_list_obj, 1, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 853, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyList_GetSlice(__pyx_v_list_obj, 1, PY_SSIZE_T_MAX); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 843, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 853, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 843, __pyx_L1_error) }
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_objs;
     __Pyx_INCREF(__pyx_t_4);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 853, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 843, __pyx_L1_error) }
     __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate;
     __Pyx_INCREF(__pyx_t_6);
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 853, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 843, __pyx_L1_error) }
     __pyx_t_12 = __pyx_cur_scope->__pyx_v_new_blank;
     __Pyx_INCREF(__pyx_t_12);
     __pyx_v_list_iri = __pyx_f_19owlready2_optimized_new_list(((PyObject*)__pyx_t_3), ((PyObject*)__pyx_t_4), __pyx_t_6, __pyx_t_12);
@@ -19256,21 +19256,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
 
-    /* "owlready2_optimized.pyx":854
+    /* "owlready2_optimized.pyx":844
  *       list_obj = stack[start + 1 : ]
  *       list_iri = new_list(list_obj[1:], objs, _abbreviate, new_blank)
  *       objs.append((list_obj[0], _abbreviate("http://www.w3.org/2002/07/owl#disjointUnionOf"), list_iri))             # <<<<<<<<<<<<<<
  *       del stack[start:]
  * 
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 854, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 844, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 854, __pyx_L1_error)
+      __PYX_ERR(0, 844, __pyx_L1_error)
     }
-    __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 854, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_GetItemInt_List(__pyx_v_list_obj, 0, long, 1, __Pyx_PyInt_From_long, 1, 0, 1); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 844, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 854, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 844, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -19284,12 +19284,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_6 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_disj) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_disj);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 854, __pyx_L1_error)
+    if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 844, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 854, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_list_iri); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 844, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 854, __pyx_L1_error)
+    __pyx_t_3 = PyTuple_New(3); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 844, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_GIVEREF(__pyx_t_12);
     PyTuple_SET_ITEM(__pyx_t_3, 0, __pyx_t_12);
@@ -19300,20 +19300,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     __pyx_t_12 = 0;
     __pyx_t_6 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 854, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_3); if (unlikely(__pyx_t_5 == ((int)-1))) __PYX_ERR(0, 844, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":855
+    /* "owlready2_optimized.pyx":845
  *       list_iri = new_list(list_obj[1:], objs, _abbreviate, new_blank)
  *       objs.append((list_obj[0], _abbreviate("http://www.w3.org/2002/07/owl#disjointUnionOf"), list_iri))
  *       del stack[start:]             # <<<<<<<<<<<<<<
  * 
  *     if len(objs ) > 800000: insert_objs()
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 855, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_stack)) { __Pyx_RaiseClosureNameError("stack"); __PYX_ERR(0, 845, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_stack == Py_None)) {
       PyErr_SetString(PyExc_TypeError, "'NoneType' object is not subscriptable");
-      __PYX_ERR(0, 855, __pyx_L1_error)
+      __PYX_ERR(0, 845, __pyx_L1_error)
     }
     __Pyx_INCREF(__pyx_v_start);
     __pyx_t_3 = __pyx_v_start;
@@ -19321,13 +19321,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     if (__pyx_t_2) {
       __pyx_t_13 = 0;
     } else {
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 855, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_3); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 845, __pyx_L1_error)
       __pyx_t_13 = __pyx_t_14;
     }
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 855, __pyx_L1_error)
+    if (__Pyx_PyObject_DelSlice(__pyx_cur_scope->__pyx_v_stack, __pyx_t_13, 0, NULL, NULL, NULL, 1, 0, 1) < 0) __PYX_ERR(0, 845, __pyx_L1_error)
 
-    /* "owlready2_optimized.pyx":850
+    /* "owlready2_optimized.pyx":840
  *       del stack[-2:]
  * 
  *     elif (tag == "http://www.w3.org/2002/07/owl#DisjointUnion"):             # <<<<<<<<<<<<<<
@@ -19337,25 +19337,25 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
   }
   __pyx_L3:;
 
-  /* "owlready2_optimized.pyx":857
+  /* "owlready2_optimized.pyx":847
  *       del stack[start:]
  * 
  *     if len(objs ) > 800000: insert_objs()             # <<<<<<<<<<<<<<
  *     if len(datas) > 800000: insert_datas()
  * 
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 857, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 847, __pyx_L1_error) }
   __pyx_t_3 = __pyx_cur_scope->__pyx_v_objs;
   __Pyx_INCREF(__pyx_t_3);
   if (unlikely(__pyx_t_3 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 857, __pyx_L1_error)
+    __PYX_ERR(0, 847, __pyx_L1_error)
   }
-  __pyx_t_13 = PyList_GET_SIZE(__pyx_t_3); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 857, __pyx_L1_error)
+  __pyx_t_13 = PyList_GET_SIZE(__pyx_t_3); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 847, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_2 = ((__pyx_t_13 > 0xC3500) != 0);
   if (__pyx_t_2) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_insert_objs)) { __Pyx_RaiseClosureNameError("insert_objs"); __PYX_ERR(0, 857, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_insert_objs)) { __Pyx_RaiseClosureNameError("insert_objs"); __PYX_ERR(0, 847, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_insert_objs);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_insert_objs; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -19369,31 +19369,31 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 857, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 847, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
 
-  /* "owlready2_optimized.pyx":858
+  /* "owlready2_optimized.pyx":848
  * 
  *     if len(objs ) > 800000: insert_objs()
  *     if len(datas) > 800000: insert_datas()             # <<<<<<<<<<<<<<
  * 
  *   def characters(str content):
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 858, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 848, __pyx_L1_error) }
   __pyx_t_3 = __pyx_cur_scope->__pyx_v_datas;
   __Pyx_INCREF(__pyx_t_3);
   if (unlikely(__pyx_t_3 == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "object of type 'NoneType' has no len()");
-    __PYX_ERR(0, 858, __pyx_L1_error)
+    __PYX_ERR(0, 848, __pyx_L1_error)
   }
-  __pyx_t_13 = PyList_GET_SIZE(__pyx_t_3); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 858, __pyx_L1_error)
+  __pyx_t_13 = PyList_GET_SIZE(__pyx_t_3); if (unlikely(__pyx_t_13 == ((Py_ssize_t)-1))) __PYX_ERR(0, 848, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   __pyx_t_2 = ((__pyx_t_13 > 0xC3500) != 0);
   if (__pyx_t_2) {
-    if (unlikely(!__pyx_cur_scope->__pyx_v_insert_datas)) { __Pyx_RaiseClosureNameError("insert_datas"); __PYX_ERR(0, 858, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_insert_datas)) { __Pyx_RaiseClosureNameError("insert_datas"); __PYX_ERR(0, 848, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_insert_datas);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_insert_datas; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -19407,13 +19407,13 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
     }
     __pyx_t_3 = (__pyx_t_6) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_6) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 858, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 848, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
   }
 
-  /* "owlready2_optimized.pyx":634
+  /* "owlready2_optimized.pyx":624
  * 
  * 
  *   def endElement(str tag):             # <<<<<<<<<<<<<<
@@ -19465,7 +19465,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_6endElement(PyObj
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":860
+/* "owlready2_optimized.pyx":850
  *     if len(datas) > 800000: insert_datas()
  * 
  *   def characters(str content):             # <<<<<<<<<<<<<<
@@ -19483,7 +19483,7 @@ static PyObject *__pyx_pw_19owlready2_optimized_12parse_owlxml_9characters(PyObj
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("characters (wrapper)", 0);
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_content), (&PyUnicode_Type), 1, "content", 1))) __PYX_ERR(0, 860, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_content), (&PyUnicode_Type), 1, "content", 1))) __PYX_ERR(0, 850, __pyx_L1_error)
   __pyx_r = __pyx_pf_19owlready2_optimized_12parse_owlxml_8characters(__pyx_self, ((PyObject*)__pyx_v_content));
 
   /* function exit code */
@@ -19508,22 +19508,22 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_8characters(PyObj
   __pyx_outer_scope = (struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "owlready2_optimized.pyx":862
+  /* "owlready2_optimized.pyx":852
  *   def characters(str content):
  *     nonlocal current_content
  *     current_content += content             # <<<<<<<<<<<<<<
  * 
  *   def purge_annotations(on_iri):
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 862, __pyx_L1_error) }
-  __pyx_t_1 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_current_content, __pyx_v_content); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 862, __pyx_L1_error)
+  if (unlikely(!__pyx_cur_scope->__pyx_v_current_content)) { __Pyx_RaiseClosureNameError("current_content"); __PYX_ERR(0, 852, __pyx_L1_error) }
+  __pyx_t_1 = __Pyx_PyUnicode_ConcatSafe(__pyx_cur_scope->__pyx_v_current_content, __pyx_v_content); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 852, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_current_content);
   __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_current_content, ((PyObject*)__pyx_t_1));
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "owlready2_optimized.pyx":860
+  /* "owlready2_optimized.pyx":850
  *     if len(datas) > 800000: insert_datas()
  * 
  *   def characters(str content):             # <<<<<<<<<<<<<<
@@ -19544,7 +19544,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_8characters(PyObj
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":864
+/* "owlready2_optimized.pyx":854
  *     current_content += content
  * 
  *   def purge_annotations(on_iri):             # <<<<<<<<<<<<<<
@@ -19597,7 +19597,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
   __pyx_outer_scope = (struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml *) __Pyx_CyFunction_GetClosure(__pyx_self);
   __pyx_cur_scope = __pyx_outer_scope;
 
-  /* "owlready2_optimized.pyx":869
+  /* "owlready2_optimized.pyx":859
  *     cdef object value, o
  * 
  *     if isinstance(on_iri, tuple):             # <<<<<<<<<<<<<<
@@ -19608,7 +19608,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
   __pyx_t_2 = (__pyx_t_1 != 0);
   if (__pyx_t_2) {
 
-    /* "owlready2_optimized.pyx":870
+    /* "owlready2_optimized.pyx":860
  * 
  *     if isinstance(on_iri, tuple):
  *       s,p,o = on_iri             # <<<<<<<<<<<<<<
@@ -19621,7 +19621,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       if (unlikely(size != 3)) {
         if (size > 3) __Pyx_RaiseTooManyValuesError(3);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 870, __pyx_L1_error)
+        __PYX_ERR(0, 860, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -19637,16 +19637,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       __Pyx_INCREF(__pyx_t_4);
       __Pyx_INCREF(__pyx_t_5);
       #else
-      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 870, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 860, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 870, __pyx_L1_error)
+      __pyx_t_4 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 860, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 870, __pyx_L1_error)
+      __pyx_t_5 = PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 860, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       #endif
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_6 = PyObject_GetIter(__pyx_v_on_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 870, __pyx_L1_error)
+      __pyx_t_6 = PyObject_GetIter(__pyx_v_on_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 860, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __pyx_t_7 = Py_TYPE(__pyx_t_6)->tp_iternext;
       index = 0; __pyx_t_3 = __pyx_t_7(__pyx_t_6); if (unlikely(!__pyx_t_3)) goto __pyx_L4_unpacking_failed;
@@ -19655,7 +19655,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       __Pyx_GOTREF(__pyx_t_4);
       index = 2; __pyx_t_5 = __pyx_t_7(__pyx_t_6); if (unlikely(!__pyx_t_5)) goto __pyx_L4_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_5);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_7(__pyx_t_6), 3) < 0) __PYX_ERR(0, 870, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_7(__pyx_t_6), 3) < 0) __PYX_ERR(0, 860, __pyx_L1_error)
       __pyx_t_7 = NULL;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       goto __pyx_L5_unpacking_done;
@@ -19663,26 +19663,26 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_7 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 870, __pyx_L1_error)
+      __PYX_ERR(0, 860, __pyx_L1_error)
       __pyx_L5_unpacking_done:;
     }
-    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 870, __pyx_L1_error)
+    __pyx_t_8 = __Pyx_PyInt_As_int(__pyx_t_3); if (unlikely((__pyx_t_8 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 860, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 870, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_4); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 860, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     __pyx_v_s = __pyx_t_8;
     __pyx_v_p = __pyx_t_9;
     __pyx_v_o = __pyx_t_5;
     __pyx_t_5 = 0;
 
-    /* "owlready2_optimized.pyx":871
+    /* "owlready2_optimized.pyx":861
  *     if isinstance(on_iri, tuple):
  *       s,p,o = on_iri
  *       bn    = new_blank()             # <<<<<<<<<<<<<<
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Axiom")))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"), s))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 871, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_new_blank)) { __Pyx_RaiseClosureNameError("new_blank"); __PYX_ERR(0, 861, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v_new_blank);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v_new_blank; __pyx_t_3 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -19696,28 +19696,28 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     }
     __pyx_t_5 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_4);
     __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 871, __pyx_L1_error)
+    if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 861, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_5); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 871, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_5); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 861, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __pyx_v_bn = __pyx_t_9;
 
-    /* "owlready2_optimized.pyx":872
+    /* "owlready2_optimized.pyx":862
  *       s,p,o = on_iri
  *       bn    = new_blank()
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Axiom")))             # <<<<<<<<<<<<<<
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"), s))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedProperty"), p))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 872, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 862, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 872, __pyx_L1_error)
+      __PYX_ERR(0, 862, __pyx_L1_error)
     }
-    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 872, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 862, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 872, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 862, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -19731,10 +19731,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     }
     __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_v_19owlready2_optimized_rdf_type) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_v_19owlready2_optimized_rdf_type);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 872, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 862, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 872, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 862, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_6 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_10 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_6))) {
@@ -19748,10 +19748,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     }
     __pyx_t_3 = (__pyx_t_10) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_10, __pyx_kp_u_http_www_w3_org_2002_07_owl_Axio) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_Axio);
     __Pyx_XDECREF(__pyx_t_10); __pyx_t_10 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 872, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 862, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 872, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 862, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_GIVEREF(__pyx_t_5);
     PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5);
@@ -19762,24 +19762,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     __pyx_t_5 = 0;
     __pyx_t_4 = 0;
     __pyx_t_3 = 0;
-    __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 872, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 862, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":873
+    /* "owlready2_optimized.pyx":863
  *       bn    = new_blank()
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Axiom")))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"), s))             # <<<<<<<<<<<<<<
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedProperty"), p))
  *       if isinstance(o, tuple): datas.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedTarget"), o[0], o[1]))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 873, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 863, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 873, __pyx_L1_error)
+      __PYX_ERR(0, 863, __pyx_L1_error)
     }
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 873, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 863, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 873, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 863, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_5 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -19793,12 +19793,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     }
     __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno);
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 873, __pyx_L1_error)
+    if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 863, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_s); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 873, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_s); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 863, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
-    __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 873, __pyx_L1_error)
+    __pyx_t_5 = PyTuple_New(3); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 863, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __Pyx_GIVEREF(__pyx_t_6);
     PyTuple_SET_ITEM(__pyx_t_5, 0, __pyx_t_6);
@@ -19809,24 +19809,24 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     __pyx_t_6 = 0;
     __pyx_t_3 = 0;
     __pyx_t_4 = 0;
-    __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_5); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 873, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_5); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 863, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "owlready2_optimized.pyx":874
+    /* "owlready2_optimized.pyx":864
  *       objs.append((bn, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Axiom")))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"), s))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedProperty"), p))             # <<<<<<<<<<<<<<
  *       if isinstance(o, tuple): datas.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedTarget"), o[0], o[1]))
  *       else:                    objs .append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedTarget"), o))
  */
-    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 874, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 864, __pyx_L1_error) }
     if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
       PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-      __PYX_ERR(0, 874, __pyx_L1_error)
+      __PYX_ERR(0, 864, __pyx_L1_error)
     }
-    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 874, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 864, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 874, __pyx_L1_error) }
+    if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 864, __pyx_L1_error) }
     __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
     __pyx_t_3 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_6 = NULL;
     if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_3))) {
@@ -19840,12 +19840,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     }
     __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_3, __pyx_t_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_3) : __Pyx_PyObject_CallOneArg(__pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_3);
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 874, __pyx_L1_error)
+    if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 864, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 874, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_p); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 864, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
-    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 874, __pyx_L1_error)
+    __pyx_t_6 = PyTuple_New(3); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 864, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_GIVEREF(__pyx_t_5);
     PyTuple_SET_ITEM(__pyx_t_6, 0, __pyx_t_5);
@@ -19856,10 +19856,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     __pyx_t_5 = 0;
     __pyx_t_4 = 0;
     __pyx_t_3 = 0;
-    __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 874, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_6); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 864, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":875
+    /* "owlready2_optimized.pyx":865
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedSource"), s))
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedProperty"), p))
  *       if isinstance(o, tuple): datas.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedTarget"), o[0], o[1]))             # <<<<<<<<<<<<<<
@@ -19869,14 +19869,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     __pyx_t_2 = PyTuple_Check(__pyx_v_o); 
     __pyx_t_1 = (__pyx_t_2 != 0);
     if (__pyx_t_1) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 875, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 865, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 875, __pyx_L1_error)
+        __PYX_ERR(0, 865, __pyx_L1_error)
       }
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 875, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 865, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 875, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 865, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_5 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -19890,14 +19890,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       }
       __pyx_t_3 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_2) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_2);
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 875, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 865, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_o, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 875, __pyx_L1_error)
+      __pyx_t_4 = __Pyx_GetItemInt(__pyx_v_o, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 865, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
-      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_o, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 875, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_GetItemInt(__pyx_v_o, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 865, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 875, __pyx_L1_error)
+      __pyx_t_10 = PyTuple_New(4); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 865, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_GIVEREF(__pyx_t_6);
       PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_6);
@@ -19911,12 +19911,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       __pyx_t_3 = 0;
       __pyx_t_4 = 0;
       __pyx_t_5 = 0;
-      __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_10); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 875, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_10); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 865, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       goto __pyx_L6;
     }
 
-    /* "owlready2_optimized.pyx":876
+    /* "owlready2_optimized.pyx":866
  *       objs.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedProperty"), p))
  *       if isinstance(o, tuple): datas.append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedTarget"), o[0], o[1]))
  *       else:                    objs .append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedTarget"), o))             # <<<<<<<<<<<<<<
@@ -19924,14 +19924,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
  *       bn = on_iri
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 876, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 866, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 876, __pyx_L1_error)
+        __PYX_ERR(0, 866, __pyx_L1_error)
       }
-      __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 876, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 866, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
-      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 876, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v__abbreviate)) { __Pyx_RaiseClosureNameError("_abbreviate"); __PYX_ERR(0, 866, __pyx_L1_error) }
       __Pyx_INCREF(__pyx_cur_scope->__pyx_v__abbreviate);
       __pyx_t_4 = __pyx_cur_scope->__pyx_v__abbreviate; __pyx_t_3 = NULL;
       if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -19945,10 +19945,10 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       }
       __pyx_t_5 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_2) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_anno_2);
       __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 876, __pyx_L1_error)
+      if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 866, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 876, __pyx_L1_error)
+      __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 866, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GIVEREF(__pyx_t_10);
       PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_t_10);
@@ -19959,12 +19959,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_v_o);
       __pyx_t_10 = 0;
       __pyx_t_5 = 0;
-      __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 876, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_4); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 866, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
     }
     __pyx_L6:;
 
-    /* "owlready2_optimized.pyx":869
+    /* "owlready2_optimized.pyx":859
  *     cdef object value, o
  * 
  *     if isinstance(on_iri, tuple):             # <<<<<<<<<<<<<<
@@ -19974,7 +19974,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     goto __pyx_L3;
   }
 
-  /* "owlready2_optimized.pyx":878
+  /* "owlready2_optimized.pyx":868
  *       else:                    objs .append((bn, _abbreviate("http://www.w3.org/2002/07/owl#annotatedTarget"), o))
  *     else:
  *       bn = on_iri             # <<<<<<<<<<<<<<
@@ -19982,30 +19982,30 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
  *     for prop_iri, value in annots:
  */
   /*else*/ {
-    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_v_on_iri); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 878, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_v_on_iri); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 868, __pyx_L1_error)
     __pyx_v_bn = __pyx_t_9;
   }
   __pyx_L3:;
 
-  /* "owlready2_optimized.pyx":880
+  /* "owlready2_optimized.pyx":870
  *       bn = on_iri
  * 
  *     for prop_iri, value in annots:             # <<<<<<<<<<<<<<
  *       if isinstance(value, tuple): datas.append((bn, prop_iri, value[0], value[1]))
  *       else:                        objs .append((bn, prop_iri, value))
  */
-  if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 880, __pyx_L1_error) }
+  if (unlikely(!__pyx_cur_scope->__pyx_v_annots)) { __Pyx_RaiseClosureNameError("annots"); __PYX_ERR(0, 870, __pyx_L1_error) }
   if (unlikely(__pyx_cur_scope->__pyx_v_annots == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "'NoneType' object is not iterable");
-    __PYX_ERR(0, 880, __pyx_L1_error)
+    __PYX_ERR(0, 870, __pyx_L1_error)
   }
   __pyx_t_4 = __pyx_cur_scope->__pyx_v_annots; __Pyx_INCREF(__pyx_t_4); __pyx_t_12 = 0;
   for (;;) {
     if (__pyx_t_12 >= PyList_GET_SIZE(__pyx_t_4)) break;
     #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    __pyx_t_5 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_12); __Pyx_INCREF(__pyx_t_5); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 880, __pyx_L1_error)
+    __pyx_t_5 = PyList_GET_ITEM(__pyx_t_4, __pyx_t_12); __Pyx_INCREF(__pyx_t_5); __pyx_t_12++; if (unlikely(0 < 0)) __PYX_ERR(0, 870, __pyx_L1_error)
     #else
-    __pyx_t_5 = PySequence_ITEM(__pyx_t_4, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 880, __pyx_L1_error)
+    __pyx_t_5 = PySequence_ITEM(__pyx_t_4, __pyx_t_12); __pyx_t_12++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 870, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     #endif
     if ((likely(PyTuple_CheckExact(__pyx_t_5))) || (PyList_CheckExact(__pyx_t_5))) {
@@ -20014,7 +20014,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       if (unlikely(size != 2)) {
         if (size > 2) __Pyx_RaiseTooManyValuesError(2);
         else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-        __PYX_ERR(0, 880, __pyx_L1_error)
+        __PYX_ERR(0, 870, __pyx_L1_error)
       }
       #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
       if (likely(PyTuple_CheckExact(sequence))) {
@@ -20027,15 +20027,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       __Pyx_INCREF(__pyx_t_10);
       __Pyx_INCREF(__pyx_t_3);
       #else
-      __pyx_t_10 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 880, __pyx_L1_error)
+      __pyx_t_10 = PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 870, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
-      __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 880, __pyx_L1_error)
+      __pyx_t_3 = PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 870, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
       #endif
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     } else {
       Py_ssize_t index = -1;
-      __pyx_t_6 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 880, __pyx_L1_error)
+      __pyx_t_6 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 870, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_t_7 = Py_TYPE(__pyx_t_6)->tp_iternext;
@@ -20043,7 +20043,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       __Pyx_GOTREF(__pyx_t_10);
       index = 1; __pyx_t_3 = __pyx_t_7(__pyx_t_6); if (unlikely(!__pyx_t_3)) goto __pyx_L9_unpacking_failed;
       __Pyx_GOTREF(__pyx_t_3);
-      if (__Pyx_IternextUnpackEndCheck(__pyx_t_7(__pyx_t_6), 2) < 0) __PYX_ERR(0, 880, __pyx_L1_error)
+      if (__Pyx_IternextUnpackEndCheck(__pyx_t_7(__pyx_t_6), 2) < 0) __PYX_ERR(0, 870, __pyx_L1_error)
       __pyx_t_7 = NULL;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       goto __pyx_L10_unpacking_done;
@@ -20051,16 +20051,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __pyx_t_7 = NULL;
       if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-      __PYX_ERR(0, 880, __pyx_L1_error)
+      __PYX_ERR(0, 870, __pyx_L1_error)
       __pyx_L10_unpacking_done:;
     }
-    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_10); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 880, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyInt_As_int(__pyx_t_10); if (unlikely((__pyx_t_9 == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 870, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __pyx_v_prop_iri = __pyx_t_9;
     __Pyx_XDECREF_SET(__pyx_v_value, __pyx_t_3);
     __pyx_t_3 = 0;
 
-    /* "owlready2_optimized.pyx":881
+    /* "owlready2_optimized.pyx":871
  * 
  *     for prop_iri, value in annots:
  *       if isinstance(value, tuple): datas.append((bn, prop_iri, value[0], value[1]))             # <<<<<<<<<<<<<<
@@ -20070,20 +20070,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
     __pyx_t_1 = PyTuple_Check(__pyx_v_value); 
     __pyx_t_2 = (__pyx_t_1 != 0);
     if (__pyx_t_2) {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 881, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_datas)) { __Pyx_RaiseClosureNameError("datas"); __PYX_ERR(0, 871, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_datas == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 881, __pyx_L1_error)
+        __PYX_ERR(0, 871, __pyx_L1_error)
       }
-      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 881, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 871, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_prop_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 881, __pyx_L1_error)
+      __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_prop_iri); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 871, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
-      __pyx_t_10 = __Pyx_GetItemInt(__pyx_v_value, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 881, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_GetItemInt(__pyx_v_value, 0, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 871, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
-      __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_value, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 881, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_GetItemInt(__pyx_v_value, 1, long, 1, __Pyx_PyInt_From_long, 0, 0, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 871, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_13 = PyTuple_New(4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 881, __pyx_L1_error)
+      __pyx_t_13 = PyTuple_New(4); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 871, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
       __Pyx_GIVEREF(__pyx_t_5);
       PyTuple_SET_ITEM(__pyx_t_13, 0, __pyx_t_5);
@@ -20097,12 +20097,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       __pyx_t_3 = 0;
       __pyx_t_10 = 0;
       __pyx_t_6 = 0;
-      __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_13); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 881, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_datas, __pyx_t_13); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 871, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_13); __pyx_t_13 = 0;
       goto __pyx_L11;
     }
 
-    /* "owlready2_optimized.pyx":882
+    /* "owlready2_optimized.pyx":872
  *     for prop_iri, value in annots:
  *       if isinstance(value, tuple): datas.append((bn, prop_iri, value[0], value[1]))
  *       else:                        objs .append((bn, prop_iri, value))             # <<<<<<<<<<<<<<
@@ -20110,16 +20110,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
  * 
  */
     /*else*/ {
-      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 882, __pyx_L1_error) }
+      if (unlikely(!__pyx_cur_scope->__pyx_v_objs)) { __Pyx_RaiseClosureNameError("objs"); __PYX_ERR(0, 872, __pyx_L1_error) }
       if (unlikely(__pyx_cur_scope->__pyx_v_objs == Py_None)) {
         PyErr_Format(PyExc_AttributeError, "'NoneType' object has no attribute '%.30s'", "append");
-        __PYX_ERR(0, 882, __pyx_L1_error)
+        __PYX_ERR(0, 872, __pyx_L1_error)
       }
-      __pyx_t_13 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 882, __pyx_L1_error)
+      __pyx_t_13 = __Pyx_PyInt_From_int(__pyx_v_bn); if (unlikely(!__pyx_t_13)) __PYX_ERR(0, 872, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_13);
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_prop_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 882, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_prop_iri); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 872, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_10 = PyTuple_New(3); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 882, __pyx_L1_error)
+      __pyx_t_10 = PyTuple_New(3); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 872, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_GIVEREF(__pyx_t_13);
       PyTuple_SET_ITEM(__pyx_t_10, 0, __pyx_t_13);
@@ -20130,12 +20130,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
       PyTuple_SET_ITEM(__pyx_t_10, 2, __pyx_v_value);
       __pyx_t_13 = 0;
       __pyx_t_6 = 0;
-      __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_10); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 882, __pyx_L1_error)
+      __pyx_t_11 = __Pyx_PyList_Append(__pyx_cur_scope->__pyx_v_objs, __pyx_t_10); if (unlikely(__pyx_t_11 == ((int)-1))) __PYX_ERR(0, 872, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     }
     __pyx_L11:;
 
-    /* "owlready2_optimized.pyx":880
+    /* "owlready2_optimized.pyx":870
  *       bn = on_iri
  * 
  *     for prop_iri, value in annots:             # <<<<<<<<<<<<<<
@@ -20145,21 +20145,21 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
   }
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-  /* "owlready2_optimized.pyx":883
+  /* "owlready2_optimized.pyx":873
  *       if isinstance(value, tuple): datas.append((bn, prop_iri, value[0], value[1]))
  *       else:                        objs .append((bn, prop_iri, value))
  *     annots = []             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 883, __pyx_L1_error)
+  __pyx_t_4 = PyList_New(0); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 873, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_XGOTREF(__pyx_cur_scope->__pyx_v_annots);
   __Pyx_XDECREF_SET(__pyx_cur_scope->__pyx_v_annots, ((PyObject*)__pyx_t_4));
   __Pyx_GIVEREF(__pyx_t_4);
   __pyx_t_4 = 0;
 
-  /* "owlready2_optimized.pyx":864
+  /* "owlready2_optimized.pyx":854
  *     current_content += content
  * 
  *   def purge_annotations(on_iri):             # <<<<<<<<<<<<<<
@@ -20187,7 +20187,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_12parse_owlxml_10purge_annotatio
   return __pyx_r;
 }
 
-/* "owlready2_optimized.pyx":536
+/* "owlready2_optimized.pyx":526
  * 
  * 
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):             # <<<<<<<<<<<<<<
@@ -20237,7 +20237,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
   if (unlikely(!__pyx_cur_scope)) {
     __pyx_cur_scope = ((struct __pyx_obj_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml *)Py_None);
     __Pyx_INCREF(Py_None);
-    __PYX_ERR(0, 536, __pyx_L1_error)
+    __PYX_ERR(0, 526, __pyx_L1_error)
   } else {
     __Pyx_GOTREF(__pyx_cur_scope);
   }
@@ -20261,31 +20261,31 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
   __Pyx_GIVEREF(__pyx_cur_scope->__pyx_v_new_blank);
   __Pyx_INCREF(__pyx_v_f);
 
-  /* "owlready2_optimized.pyx":537
+  /* "owlready2_optimized.pyx":527
  * 
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):
  *   cdef object parser = xml.parsers.expat.ParserCreate(None, "")             # <<<<<<<<<<<<<<
  *   try:
  *     parser.buffer_text          = True
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_xml); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 537, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_xml); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 527, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_parsers); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 537, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_parsers); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 527, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_expat); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 537, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_expat); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 527, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_ParserCreate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 537, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_t_1, __pyx_n_s_ParserCreate); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 527, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 537, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_t_2, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 527, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_v_parser = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "owlready2_optimized.pyx":538
+  /* "owlready2_optimized.pyx":528
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):
  *   cdef object parser = xml.parsers.expat.ParserCreate(None, "")
  *   try:             # <<<<<<<<<<<<<<
@@ -20301,25 +20301,25 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
     __Pyx_XGOTREF(__pyx_t_5);
     /*try:*/ {
 
-      /* "owlready2_optimized.pyx":539
+      /* "owlready2_optimized.pyx":529
  *   cdef object parser = xml.parsers.expat.ParserCreate(None, "")
  *   try:
  *     parser.buffer_text          = True             # <<<<<<<<<<<<<<
  *     parser.specified_attributes = True
  *   except: pass
  */
-      if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_buffer_text, Py_True) < 0) __PYX_ERR(0, 539, __pyx_L3_error)
+      if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_buffer_text, Py_True) < 0) __PYX_ERR(0, 529, __pyx_L3_error)
 
-      /* "owlready2_optimized.pyx":540
+      /* "owlready2_optimized.pyx":530
  *   try:
  *     parser.buffer_text          = True
  *     parser.specified_attributes = True             # <<<<<<<<<<<<<<
  *   except: pass
  * 
  */
-      if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_specified_attributes, Py_True) < 0) __PYX_ERR(0, 540, __pyx_L3_error)
+      if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_specified_attributes, Py_True) < 0) __PYX_ERR(0, 530, __pyx_L3_error)
 
-      /* "owlready2_optimized.pyx":538
+      /* "owlready2_optimized.pyx":528
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):
  *   cdef object parser = xml.parsers.expat.ParserCreate(None, "")
  *   try:             # <<<<<<<<<<<<<<
@@ -20335,7 +20335,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
     __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-    /* "owlready2_optimized.pyx":541
+    /* "owlready2_optimized.pyx":531
  *     parser.buffer_text          = True
  *     parser.specified_attributes = True
  *   except: pass             # <<<<<<<<<<<<<<
@@ -20354,7 +20354,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
     __pyx_L8_try_end:;
   }
 
-  /* "owlready2_optimized.pyx":543
+  /* "owlready2_optimized.pyx":533
  *   except: pass
  * 
  *   cdef str ontology_iri_str       = ""             # <<<<<<<<<<<<<<
@@ -20365,7 +20365,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
   __Pyx_GIVEREF(__pyx_kp_u_);
   __pyx_cur_scope->__pyx_v_ontology_iri_str = __pyx_kp_u_;
 
-  /* "owlready2_optimized.pyx":544
+  /* "owlready2_optimized.pyx":534
  * 
  *   cdef str ontology_iri_str       = ""
  *   cdef int ontology_iri           = 0             # <<<<<<<<<<<<<<
@@ -20374,46 +20374,46 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
  */
   __pyx_cur_scope->__pyx_v_ontology_iri = 0;
 
-  /* "owlready2_optimized.pyx":545
+  /* "owlready2_optimized.pyx":535
  *   cdef str ontology_iri_str       = ""
  *   cdef int ontology_iri           = 0
  *   cdef list stack                 = []             # <<<<<<<<<<<<<<
  *   cdef list annots                = []
  *   cdef dict prefixes              = {}
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 545, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 535, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_cur_scope->__pyx_v_stack = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "owlready2_optimized.pyx":546
+  /* "owlready2_optimized.pyx":536
  *   cdef int ontology_iri           = 0
  *   cdef list stack                 = []
  *   cdef list annots                = []             # <<<<<<<<<<<<<<
  *   cdef dict prefixes              = {}
  *   cdef str current_content        = ""
  */
-  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 546, __pyx_L1_error)
+  __pyx_t_1 = PyList_New(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 536, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_cur_scope->__pyx_v_annots = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "owlready2_optimized.pyx":547
+  /* "owlready2_optimized.pyx":537
  *   cdef list stack                 = []
  *   cdef list annots                = []
  *   cdef dict prefixes              = {}             # <<<<<<<<<<<<<<
  *   cdef str current_content        = ""
  *   cdef dict current_attrs         = None
  */
-  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 547, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyDict_NewPresized(0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 537, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_GIVEREF(__pyx_t_1);
   __pyx_cur_scope->__pyx_v_prefixes = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "owlready2_optimized.pyx":548
+  /* "owlready2_optimized.pyx":538
  *   cdef list annots                = []
  *   cdef dict prefixes              = {}
  *   cdef str current_content        = ""             # <<<<<<<<<<<<<<
@@ -20424,7 +20424,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
   __Pyx_GIVEREF(__pyx_kp_u_);
   __pyx_cur_scope->__pyx_v_current_content = __pyx_kp_u_;
 
-  /* "owlready2_optimized.pyx":549
+  /* "owlready2_optimized.pyx":539
  *   cdef dict prefixes              = {}
  *   cdef str current_content        = ""
  *   cdef dict current_attrs         = None             # <<<<<<<<<<<<<<
@@ -20435,7 +20435,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
   __Pyx_GIVEREF(Py_None);
   __pyx_cur_scope->__pyx_v_current_attrs = ((PyObject*)Py_None);
 
-  /* "owlready2_optimized.pyx":550
+  /* "owlready2_optimized.pyx":540
  *   cdef str current_content        = ""
  *   cdef dict current_attrs         = None
  *   cdef bint in_declaration        = False             # <<<<<<<<<<<<<<
@@ -20444,7 +20444,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
  */
   __pyx_cur_scope->__pyx_v_in_declaration = 0;
 
-  /* "owlready2_optimized.pyx":551
+  /* "owlready2_optimized.pyx":541
  *   cdef dict current_attrs         = None
  *   cdef bint in_declaration        = False
  *   cdef bint in_prop_chain         = False             # <<<<<<<<<<<<<<
@@ -20453,7 +20453,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
  */
   __pyx_cur_scope->__pyx_v_in_prop_chain = 0;
 
-  /* "owlready2_optimized.pyx":552
+  /* "owlready2_optimized.pyx":542
  *   cdef bint in_declaration        = False
  *   cdef bint in_prop_chain         = False
  *   cdef bint before_declaration    = True             # <<<<<<<<<<<<<<
@@ -20462,7 +20462,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
  */
   __pyx_cur_scope->__pyx_v_before_declaration = 1;
 
-  /* "owlready2_optimized.pyx":553
+  /* "owlready2_optimized.pyx":543
  *   cdef bint in_prop_chain         = False
  *   cdef bint before_declaration    = True
  *   cdef int last_cardinality       = 0             # <<<<<<<<<<<<<<
@@ -20471,7 +20471,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
  */
   __pyx_cur_scope->__pyx_v_last_cardinality = 0;
 
-  /* "owlready2_optimized.pyx":554
+  /* "owlready2_optimized.pyx":544
  *   cdef bint before_declaration    = True
  *   cdef int last_cardinality       = 0
  *   cdef int nb_triple              = 0             # <<<<<<<<<<<<<<
@@ -20480,129 +20480,129 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
  */
   __pyx_v_nb_triple = 0;
 
-  /* "owlready2_optimized.pyx":555
+  /* "owlready2_optimized.pyx":545
  *   cdef int last_cardinality       = 0
  *   cdef int nb_triple              = 0
  *   cdef set datatypes              = INT_DATATYPES | FLOAT_DATATYPES             # <<<<<<<<<<<<<<
  *   cdef str lang
  * 
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_INT_DATATYPES); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 555, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_1, __pyx_n_s_INT_DATATYPES); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 545, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_FLOAT_DATATYPES); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 555, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_FLOAT_DATATYPES); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 545, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_6 = PyNumber_Or(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 555, __pyx_L1_error)
+  __pyx_t_6 = PyNumber_Or(__pyx_t_1, __pyx_t_2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 545, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (!(likely(PySet_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "set", Py_TYPE(__pyx_t_6)->tp_name), 0))) __PYX_ERR(0, 555, __pyx_L1_error)
+  if (!(likely(PySet_CheckExact(__pyx_t_6))||((__pyx_t_6) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "set", Py_TYPE(__pyx_t_6)->tp_name), 0))) __PYX_ERR(0, 545, __pyx_L1_error)
   __Pyx_GIVEREF(__pyx_t_6);
   __pyx_cur_scope->__pyx_v_datatypes = ((PyObject*)__pyx_t_6);
   __pyx_t_6 = 0;
 
-  /* "owlready2_optimized.pyx":558
+  /* "owlready2_optimized.pyx":548
  *   cdef str lang
  * 
  *   def _unabbreviate_IRI(str _abbreviated_iri):             # <<<<<<<<<<<<<<
  *     cdef str prefix, name
  *     prefix, name = _abbreviated_iri.split(":", 1)
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_1_unabbreviate_IRI, 0, __pyx_n_s_parse_owlxml_locals__unabbreviat, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__31)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_1_unabbreviate_IRI, 0, __pyx_n_s_parse_owlxml_locals__unabbreviat, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__31)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 548, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_GIVEREF(__pyx_t_6);
   __pyx_cur_scope->__pyx_v__unabbreviate_IRI = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "owlready2_optimized.pyx":563
+  /* "owlready2_optimized.pyx":553
  *     return prefixes[prefix] + name
  * 
  *   def get_IRI(dict attrs):             # <<<<<<<<<<<<<<
  *     nonlocal ontology_iri, ontology_iri_str
  *     cdef str iri
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_3get_IRI, 0, __pyx_n_s_parse_owlxml_locals_get_IRI, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__33)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 563, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_3get_IRI, 0, __pyx_n_s_parse_owlxml_locals_get_IRI, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__33)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 553, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_GIVEREF(__pyx_t_6);
   __pyx_cur_scope->__pyx_v_get_IRI = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "owlready2_optimized.pyx":575
+  /* "owlready2_optimized.pyx":565
  *     return _abbreviate(_unabbreviate_IRI(attrs["abbreviatedIRI"]))
  * 
  *   def startElement(str tag, dict attrs):             # <<<<<<<<<<<<<<
  *     nonlocal current_content, current_attrs, in_declaration, before_declaration, last_cardinality, in_prop_chain, ontology_iri, ontology_iri_str
  *     cdef int iri
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_5startElement, 0, __pyx_n_s_parse_owlxml_locals_startElement, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_5startElement, 0, __pyx_n_s_parse_owlxml_locals_startElement, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__35)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 565, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_v_startElement = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "owlready2_optimized.pyx":634
+  /* "owlready2_optimized.pyx":624
  * 
  * 
  *   def endElement(str tag):             # <<<<<<<<<<<<<<
  *     nonlocal in_declaration, stack, in_prop_chain, current_content
  *     cdef int iri
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_7endElement, 0, __pyx_n_s_parse_owlxml_locals_endElement, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 634, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_7endElement, 0, __pyx_n_s_parse_owlxml_locals_endElement, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__37)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 624, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_v_endElement = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "owlready2_optimized.pyx":860
+  /* "owlready2_optimized.pyx":850
  *     if len(datas) > 800000: insert_datas()
  * 
  *   def characters(str content):             # <<<<<<<<<<<<<<
  *     nonlocal current_content
  *     current_content += content
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_9characters, 0, __pyx_n_s_parse_owlxml_locals_characters, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 860, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_9characters, 0, __pyx_n_s_parse_owlxml_locals_characters, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__39)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 850, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __pyx_v_characters = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "owlready2_optimized.pyx":864
+  /* "owlready2_optimized.pyx":854
  *     current_content += content
  * 
  *   def purge_annotations(on_iri):             # <<<<<<<<<<<<<<
  *     nonlocal annots
  *     cdef int s, p, prop_iri, bn
  */
-  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_11purge_annotations, 0, __pyx_n_s_parse_owlxml_locals_purge_annota, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__41)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 864, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_CyFunction_New(&__pyx_mdef_19owlready2_optimized_12parse_owlxml_11purge_annotations, 0, __pyx_n_s_parse_owlxml_locals_purge_annota, ((PyObject*)__pyx_cur_scope), __pyx_n_s_owlready2_optimized, __pyx_d, ((PyObject *)__pyx_codeobj__41)); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 854, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_GIVEREF(__pyx_t_6);
   __pyx_cur_scope->__pyx_v_purge_annotations = __pyx_t_6;
   __pyx_t_6 = 0;
 
-  /* "owlready2_optimized.pyx":886
+  /* "owlready2_optimized.pyx":876
  * 
  * 
  *   parser.StartElementHandler       = startElement             # <<<<<<<<<<<<<<
  *   parser.EndElementHandler         = endElement
  *   parser.CharacterDataHandler      = characters
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_StartElementHandler, __pyx_v_startElement) < 0) __PYX_ERR(0, 886, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_StartElementHandler, __pyx_v_startElement) < 0) __PYX_ERR(0, 876, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":887
+  /* "owlready2_optimized.pyx":877
  * 
  *   parser.StartElementHandler       = startElement
  *   parser.EndElementHandler         = endElement             # <<<<<<<<<<<<<<
  *   parser.CharacterDataHandler      = characters
  * 
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_EndElementHandler, __pyx_v_endElement) < 0) __PYX_ERR(0, 887, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_EndElementHandler, __pyx_v_endElement) < 0) __PYX_ERR(0, 877, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":888
+  /* "owlready2_optimized.pyx":878
  *   parser.StartElementHandler       = startElement
  *   parser.EndElementHandler         = endElement
  *   parser.CharacterDataHandler      = characters             # <<<<<<<<<<<<<<
  * 
  *   try:
  */
-  if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_CharacterDataHandler, __pyx_v_characters) < 0) __PYX_ERR(0, 888, __pyx_L1_error)
+  if (__Pyx_PyObject_SetAttrStr(__pyx_v_parser, __pyx_n_s_CharacterDataHandler, __pyx_v_characters) < 0) __PYX_ERR(0, 878, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":890
+  /* "owlready2_optimized.pyx":880
  *   parser.CharacterDataHandler      = characters
  * 
  *   try:             # <<<<<<<<<<<<<<
@@ -20618,7 +20618,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "owlready2_optimized.pyx":891
+      /* "owlready2_optimized.pyx":881
  * 
  *   try:
  *     if isinstance(f, str):             # <<<<<<<<<<<<<<
@@ -20629,14 +20629,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
       __pyx_t_8 = (__pyx_t_7 != 0);
       if (__pyx_t_8) {
 
-        /* "owlready2_optimized.pyx":892
+        /* "owlready2_optimized.pyx":882
  *   try:
  *     if isinstance(f, str):
  *       f = open(f, "rb")             # <<<<<<<<<<<<<<
  *       parser.ParseFile(f)
  *       f.close()
  */
-        __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 892, __pyx_L9_error)
+        __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 882, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_6);
         __Pyx_INCREF(__pyx_v_f);
         __Pyx_GIVEREF(__pyx_v_f);
@@ -20644,20 +20644,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         __Pyx_INCREF(__pyx_n_u_rb);
         __Pyx_GIVEREF(__pyx_n_u_rb);
         PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_n_u_rb);
-        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 892, __pyx_L9_error)
+        __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_open, __pyx_t_6, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 882, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF_SET(__pyx_v_f, __pyx_t_2);
         __pyx_t_2 = 0;
 
-        /* "owlready2_optimized.pyx":893
+        /* "owlready2_optimized.pyx":883
  *     if isinstance(f, str):
  *       f = open(f, "rb")
  *       parser.ParseFile(f)             # <<<<<<<<<<<<<<
  *       f.close()
  *     else:
  */
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_parser, __pyx_n_s_ParseFile); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 893, __pyx_L9_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_parser, __pyx_n_s_ParseFile); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 883, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_t_1 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -20671,19 +20671,19 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         }
         __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_1, __pyx_v_f) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_f);
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 893, __pyx_L9_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 883, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "owlready2_optimized.pyx":894
+        /* "owlready2_optimized.pyx":884
  *       f = open(f, "rb")
  *       parser.ParseFile(f)
  *       f.close()             # <<<<<<<<<<<<<<
  *     else:
  *       parser.ParseFile(f)
  */
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_f, __pyx_n_s_close); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 894, __pyx_L9_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_f, __pyx_n_s_close); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 884, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_t_1 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -20697,12 +20697,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         }
         __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_1) : __Pyx_PyObject_CallNoArg(__pyx_t_6);
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 894, __pyx_L9_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 884, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-        /* "owlready2_optimized.pyx":891
+        /* "owlready2_optimized.pyx":881
  * 
  *   try:
  *     if isinstance(f, str):             # <<<<<<<<<<<<<<
@@ -20712,7 +20712,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         goto __pyx_L15;
       }
 
-      /* "owlready2_optimized.pyx":896
+      /* "owlready2_optimized.pyx":886
  *       f.close()
  *     else:
  *       parser.ParseFile(f)             # <<<<<<<<<<<<<<
@@ -20720,7 +20720,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
  *   except Exception as e:
  */
       /*else*/ {
-        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_parser, __pyx_n_s_ParseFile); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 896, __pyx_L9_error)
+        __pyx_t_6 = __Pyx_PyObject_GetAttrStr(__pyx_v_parser, __pyx_n_s_ParseFile); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 886, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_6);
         __pyx_t_1 = NULL;
         if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -20734,14 +20734,14 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         }
         __pyx_t_2 = (__pyx_t_1) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_1, __pyx_v_f) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_v_f);
         __Pyx_XDECREF(__pyx_t_1); __pyx_t_1 = 0;
-        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 896, __pyx_L9_error)
+        if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 886, __pyx_L9_error)
         __Pyx_GOTREF(__pyx_t_2);
         __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
         __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
       }
       __pyx_L15:;
 
-      /* "owlready2_optimized.pyx":890
+      /* "owlready2_optimized.pyx":880
  *   parser.CharacterDataHandler      = characters
  * 
  *   try:             # <<<<<<<<<<<<<<
@@ -20758,7 +20758,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "owlready2_optimized.pyx":898
+    /* "owlready2_optimized.pyx":888
  *       parser.ParseFile(f)
  * 
  *   except Exception as e:             # <<<<<<<<<<<<<<
@@ -20768,7 +20768,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
     __pyx_t_9 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(&((PyTypeObject*)PyExc_Exception)[0])));
     if (__pyx_t_9) {
       __Pyx_AddTraceback("owlready2_optimized.parse_owlxml", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_6, &__pyx_t_1) < 0) __PYX_ERR(0, 898, __pyx_L11_except_error)
+      if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_6, &__pyx_t_1) < 0) __PYX_ERR(0, 888, __pyx_L11_except_error)
       __Pyx_GOTREF(__pyx_t_2);
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_GOTREF(__pyx_t_1);
@@ -20776,16 +20776,16 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
       __pyx_v_e = __pyx_t_6;
       /*try:*/ {
 
-        /* "owlready2_optimized.pyx":899
+        /* "owlready2_optimized.pyx":889
  * 
  *   except Exception as e:
  *     raise OwlReadyOntologyParsingError("OWL/XML parsing error in file %s, line %s, column %s." % (getattr(f, "name", getattr(f, "url", "???")), parser.CurrentLineNumber, parser.CurrentColumnNumber)) from e             # <<<<<<<<<<<<<<
  * 
  *   return nb_triple
  */
-        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_OwlReadyOntologyParsingError); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __Pyx_GetModuleGlobalName(__pyx_t_11, __pyx_n_s_OwlReadyOntologyParsingError); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_11);
-        __pyx_t_12 = PyTuple_New(7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_12 = PyTuple_New(7); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_12);
         __pyx_t_13 = 0;
         __pyx_t_14 = 127;
@@ -20793,12 +20793,12 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         __pyx_t_13 += 30;
         __Pyx_GIVEREF(__pyx_kp_u_OWL_XML_parsing_error_in_file);
         PyTuple_SET_ITEM(__pyx_t_12, 0, __pyx_kp_u_OWL_XML_parsing_error_in_file);
-        __pyx_t_15 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_url, __pyx_kp_u__23); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_15 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_url, __pyx_kp_u__23); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_15);
-        __pyx_t_16 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_name, __pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_16 = __Pyx_GetAttr3(__pyx_v_f, __pyx_n_u_name, __pyx_t_15); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-        __pyx_t_15 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_16), __pyx_empty_unicode); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_15 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_16), __pyx_empty_unicode); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_15) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_15) : __pyx_t_14;
@@ -20810,9 +20810,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         __pyx_t_13 += 7;
         __Pyx_GIVEREF(__pyx_kp_u_line);
         PyTuple_SET_ITEM(__pyx_t_12, 2, __pyx_kp_u_line);
-        __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_parser, __pyx_n_s_CurrentLineNumber); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_15 = __Pyx_PyObject_GetAttrStr(__pyx_v_parser, __pyx_n_s_CurrentLineNumber); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_15);
-        __pyx_t_16 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_15), __pyx_empty_unicode); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_16 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_15), __pyx_empty_unicode); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_16);
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
         __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_16) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_16) : __pyx_t_14;
@@ -20824,9 +20824,9 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         __pyx_t_13 += 9;
         __Pyx_GIVEREF(__pyx_kp_u_column);
         PyTuple_SET_ITEM(__pyx_t_12, 4, __pyx_kp_u_column);
-        __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_v_parser, __pyx_n_s_CurrentColumnNumber); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_16 = __Pyx_PyObject_GetAttrStr(__pyx_v_parser, __pyx_n_s_CurrentColumnNumber); if (unlikely(!__pyx_t_16)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_16);
-        __pyx_t_15 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_16), __pyx_empty_unicode); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_15 = __Pyx_PyObject_FormatSimpleAndDecref(PyObject_Unicode(__pyx_t_16), __pyx_empty_unicode); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_16); __pyx_t_16 = 0;
         __pyx_t_14 = (__Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_15) > __pyx_t_14) ? __Pyx_PyUnicode_MAX_CHAR_VALUE(__pyx_t_15) : __pyx_t_14;
@@ -20838,7 +20838,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         __pyx_t_13 += 1;
         __Pyx_GIVEREF(__pyx_kp_u__24);
         PyTuple_SET_ITEM(__pyx_t_12, 6, __pyx_kp_u__24);
-        __pyx_t_15 = __Pyx_PyUnicode_Join(__pyx_t_12, 7, __pyx_t_13, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 899, __pyx_L21_error)
+        __pyx_t_15 = __Pyx_PyUnicode_Join(__pyx_t_12, 7, __pyx_t_13, __pyx_t_14); if (unlikely(!__pyx_t_15)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_15);
         __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
         __pyx_t_12 = NULL;
@@ -20854,15 +20854,15 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
         __pyx_t_10 = (__pyx_t_12) ? __Pyx_PyObject_Call2Args(__pyx_t_11, __pyx_t_12, __pyx_t_15) : __Pyx_PyObject_CallOneArg(__pyx_t_11, __pyx_t_15);
         __Pyx_XDECREF(__pyx_t_12); __pyx_t_12 = 0;
         __Pyx_DECREF(__pyx_t_15); __pyx_t_15 = 0;
-        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 899, __pyx_L21_error)
+        if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 889, __pyx_L21_error)
         __Pyx_GOTREF(__pyx_t_10);
         __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
         __Pyx_Raise(__pyx_t_10, 0, 0, __pyx_v_e);
         __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-        __PYX_ERR(0, 899, __pyx_L21_error)
+        __PYX_ERR(0, 889, __pyx_L21_error)
       }
 
-      /* "owlready2_optimized.pyx":898
+      /* "owlready2_optimized.pyx":888
  *       parser.ParseFile(f)
  * 
  *   except Exception as e:             # <<<<<<<<<<<<<<
@@ -20912,7 +20912,7 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
     goto __pyx_L11_except_error;
     __pyx_L11_except_error:;
 
-    /* "owlready2_optimized.pyx":890
+    /* "owlready2_optimized.pyx":880
  *   parser.CharacterDataHandler      = characters
  * 
  *   try:             # <<<<<<<<<<<<<<
@@ -20927,20 +20927,20 @@ static PyObject *__pyx_pf_19owlready2_optimized_4parse_owlxml(CYTHON_UNUSED PyOb
     __pyx_L14_try_end:;
   }
 
-  /* "owlready2_optimized.pyx":901
+  /* "owlready2_optimized.pyx":891
  *     raise OwlReadyOntologyParsingError("OWL/XML parsing error in file %s, line %s, column %s." % (getattr(f, "name", getattr(f, "url", "???")), parser.CurrentLineNumber, parser.CurrentColumnNumber)) from e
  * 
  *   return nb_triple             # <<<<<<<<<<<<<<
  * 
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_nb_triple); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 901, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_nb_triple); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 891, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "owlready2_optimized.pyx":536
+  /* "owlready2_optimized.pyx":526
  * 
  * 
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):             # <<<<<<<<<<<<<<
@@ -22110,9 +22110,9 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
   __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 41, __pyx_L1_error)
-  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_n_s_open); if (!__pyx_builtin_open) __PYX_ERR(0, 366, __pyx_L1_error)
-  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 413, __pyx_L1_error)
-  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 414, __pyx_L1_error)
+  __pyx_builtin_open = __Pyx_GetBuiltinName(__pyx_n_s_open); if (!__pyx_builtin_open) __PYX_ERR(0, 356, __pyx_L1_error)
+  __pyx_builtin_print = __Pyx_GetBuiltinName(__pyx_n_s_print); if (!__pyx_builtin_print) __PYX_ERR(0, 403, __pyx_L1_error)
+  __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(0, 404, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
   return -1;
@@ -22180,124 +22180,124 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__17);
   __pyx_codeobj__18 = (PyObject*)__Pyx_PyCode_New(2, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__17, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_startElement, 188, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__18)) __PYX_ERR(0, 188, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":279
+  /* "owlready2_optimized.pyx":269
  * 
  * 
  *   def endElement(str tag):             # <<<<<<<<<<<<<<
  *     nonlocal tag_is_predicate, dont_create_unnamed_bn,  stack, axiom_annotation_sources, axiom_annotation_props, axiom_annotation_targets, triples_with_unnamed_bn
  *     cdef int iri2
  */
-  __pyx_tuple__19 = PyTuple_Pack(7, __pyx_n_s_tag, __pyx_n_s_iri2, __pyx_n_s_parse_type, __pyx_n_s_value, __pyx_n_s_o, __pyx_n_s_d, __pyx_n_s_triples); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 279, __pyx_L1_error)
+  __pyx_tuple__19 = PyTuple_Pack(7, __pyx_n_s_tag, __pyx_n_s_iri2, __pyx_n_s_parse_type, __pyx_n_s_value, __pyx_n_s_o, __pyx_n_s_d, __pyx_n_s_triples); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(0, 269, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__19);
   __Pyx_GIVEREF(__pyx_tuple__19);
-  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(1, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_endElement, 279, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 279, __pyx_L1_error)
+  __pyx_codeobj__20 = (PyObject*)__Pyx_PyCode_New(1, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__19, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_endElement, 269, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__20)) __PYX_ERR(0, 269, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":353
+  /* "owlready2_optimized.pyx":343
  * 
  * 
  *   def characters(str content):             # <<<<<<<<<<<<<<
  *     nonlocal current_content,  stack
  *     if stack[-1][0] == "Literal": current_content += content
  */
-  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_n_s_content); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 353, __pyx_L1_error)
+  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_n_s_content); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(0, 343, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__21);
   __Pyx_GIVEREF(__pyx_tuple__21);
-  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_characters, 353, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 353, __pyx_L1_error)
+  __pyx_codeobj__22 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__21, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_characters, 343, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__22)) __PYX_ERR(0, 343, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":385
+  /* "owlready2_optimized.pyx":375
  *         content_2_bns[frozenset(content)].append(bn)
  * 
  *     def rebuild_bn(object content):             # <<<<<<<<<<<<<<
  *       nonlocal content_2_bns
  *       cdef int bn = new_blank()
  */
-  __pyx_tuple__25 = PyTuple_Pack(9, __pyx_n_s_content, __pyx_n_s_bn, __pyx_n_s_i, __pyx_n_s_drop, __pyx_n_s_p, __pyx_n_s_d, __pyx_n_s_o, __pyx_n_s_l, __pyx_n_s_x); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 385, __pyx_L1_error)
+  __pyx_tuple__25 = PyTuple_Pack(9, __pyx_n_s_content, __pyx_n_s_bn, __pyx_n_s_i, __pyx_n_s_drop, __pyx_n_s_p, __pyx_n_s_d, __pyx_n_s_o, __pyx_n_s_l, __pyx_n_s_x); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(0, 375, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
-  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_rebuild_bn, 385, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 385, __pyx_L1_error)
+  __pyx_codeobj__26 = (PyObject*)__Pyx_PyCode_New(1, 0, 9, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__25, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_rebuild_bn, 375, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__26)) __PYX_ERR(0, 375, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":631
+  /* "owlready2_optimized.pyx":621
  *         objs.append((ontology_iri, _abbreviate("http://www.w3.org/2002/07/owl#versionIRI"), _abbreviate(version_iri)))
  * 
  *     elif (tag == "RDF") or (tag == "rdf:RDF"): raise ValueError("Not an OWL/XML file! (It seems to be an OWL/RDF file)")             # <<<<<<<<<<<<<<
  * 
  * 
  */
-  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_u_Not_an_OWL_XML_file_It_seems_to); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 631, __pyx_L1_error)
+  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_u_Not_an_OWL_XML_file_It_seems_to); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(0, 621, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__29);
   __Pyx_GIVEREF(__pyx_tuple__29);
 
-  /* "owlready2_optimized.pyx":558
+  /* "owlready2_optimized.pyx":548
  *   cdef str lang
  * 
  *   def _unabbreviate_IRI(str _abbreviated_iri):             # <<<<<<<<<<<<<<
  *     cdef str prefix, name
  *     prefix, name = _abbreviated_iri.split(":", 1)
  */
-  __pyx_tuple__30 = PyTuple_Pack(3, __pyx_n_s_abbreviated_iri, __pyx_n_s_prefix, __pyx_n_s_name); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __pyx_tuple__30 = PyTuple_Pack(3, __pyx_n_s_abbreviated_iri, __pyx_n_s_prefix, __pyx_n_s_name); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(0, 548, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__30);
   __Pyx_GIVEREF(__pyx_tuple__30);
-  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_unabbreviate_IRI, 558, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 558, __pyx_L1_error)
+  __pyx_codeobj__31 = (PyObject*)__Pyx_PyCode_New(1, 0, 3, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__30, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_unabbreviate_IRI, 548, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__31)) __PYX_ERR(0, 548, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":563
+  /* "owlready2_optimized.pyx":553
  *     return prefixes[prefix] + name
  * 
  *   def get_IRI(dict attrs):             # <<<<<<<<<<<<<<
  *     nonlocal ontology_iri, ontology_iri_str
  *     cdef str iri
  */
-  __pyx_tuple__32 = PyTuple_Pack(2, __pyx_n_s_attrs, __pyx_n_s_iri); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 563, __pyx_L1_error)
+  __pyx_tuple__32 = PyTuple_Pack(2, __pyx_n_s_attrs, __pyx_n_s_iri); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(0, 553, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__32);
   __Pyx_GIVEREF(__pyx_tuple__32);
-  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_get_IRI, 563, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 563, __pyx_L1_error)
+  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(1, 0, 2, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_get_IRI, 553, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(0, 553, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":575
+  /* "owlready2_optimized.pyx":565
  *     return _abbreviate(_unabbreviate_IRI(attrs["abbreviatedIRI"]))
  * 
  *   def startElement(str tag, dict attrs):             # <<<<<<<<<<<<<<
  *     nonlocal current_content, current_attrs, in_declaration, before_declaration, last_cardinality, in_prop_chain, ontology_iri, ontology_iri_str
  *     cdef int iri
  */
-  __pyx_tuple__34 = PyTuple_Pack(4, __pyx_n_s_tag, __pyx_n_s_attrs, __pyx_n_s_iri, __pyx_n_s_version_iri); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_tuple__34 = PyTuple_Pack(4, __pyx_n_s_tag, __pyx_n_s_attrs, __pyx_n_s_iri, __pyx_n_s_version_iri); if (unlikely(!__pyx_tuple__34)) __PYX_ERR(0, 565, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__34);
   __Pyx_GIVEREF(__pyx_tuple__34);
-  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_startElement, 575, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 575, __pyx_L1_error)
+  __pyx_codeobj__35 = (PyObject*)__Pyx_PyCode_New(2, 0, 4, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__34, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_startElement, 565, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__35)) __PYX_ERR(0, 565, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":634
+  /* "owlready2_optimized.pyx":624
  * 
  * 
  *   def endElement(str tag):             # <<<<<<<<<<<<<<
  *     nonlocal in_declaration, stack, in_prop_chain, current_content
  *     cdef int iri
  */
-  __pyx_tuple__36 = PyTuple_Pack(28, __pyx_n_s_tag, __pyx_n_s_iri, __pyx_n_s_lang, __pyx_n_s_d, __pyx_n_s_parent, __pyx_n_s_child, __pyx_n_s_relation, __pyx_n_s_o1, __pyx_n_s_o2, __pyx_n_s_val, __pyx_n_s_obj, __pyx_n_s_a, __pyx_n_s_b, __pyx_n_s_start, __pyx_n_s_list_obj, __pyx_n_s_rel, __pyx_n_s_member, __pyx_n_s_list_iri, __pyx_n_s_p, __pyx_n_s_s_5, __pyx_n_s_o, __pyx_n_s_values, __pyx_n_s_datatype, __pyx_n_s_list_bns, __pyx_n_s_bn, __pyx_n_s_facet, __pyx_n_s_literal, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(0, 634, __pyx_L1_error)
+  __pyx_tuple__36 = PyTuple_Pack(28, __pyx_n_s_tag, __pyx_n_s_iri, __pyx_n_s_lang, __pyx_n_s_d, __pyx_n_s_parent, __pyx_n_s_child, __pyx_n_s_relation, __pyx_n_s_o1, __pyx_n_s_o2, __pyx_n_s_val, __pyx_n_s_obj, __pyx_n_s_a, __pyx_n_s_b, __pyx_n_s_start, __pyx_n_s_list_obj, __pyx_n_s_rel, __pyx_n_s_member, __pyx_n_s_list_iri, __pyx_n_s_p, __pyx_n_s_s_5, __pyx_n_s_o, __pyx_n_s_values, __pyx_n_s_datatype, __pyx_n_s_list_bns, __pyx_n_s_bn, __pyx_n_s_facet, __pyx_n_s_literal, __pyx_n_s_prop); if (unlikely(!__pyx_tuple__36)) __PYX_ERR(0, 624, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__36);
   __Pyx_GIVEREF(__pyx_tuple__36);
-  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(1, 0, 28, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_endElement, 634, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(0, 634, __pyx_L1_error)
+  __pyx_codeobj__37 = (PyObject*)__Pyx_PyCode_New(1, 0, 28, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__36, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_endElement, 624, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__37)) __PYX_ERR(0, 624, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":860
+  /* "owlready2_optimized.pyx":850
  *     if len(datas) > 800000: insert_datas()
  * 
  *   def characters(str content):             # <<<<<<<<<<<<<<
  *     nonlocal current_content
  *     current_content += content
  */
-  __pyx_tuple__38 = PyTuple_Pack(1, __pyx_n_s_content); if (unlikely(!__pyx_tuple__38)) __PYX_ERR(0, 860, __pyx_L1_error)
+  __pyx_tuple__38 = PyTuple_Pack(1, __pyx_n_s_content); if (unlikely(!__pyx_tuple__38)) __PYX_ERR(0, 850, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__38);
   __Pyx_GIVEREF(__pyx_tuple__38);
-  __pyx_codeobj__39 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__38, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_characters, 860, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__39)) __PYX_ERR(0, 860, __pyx_L1_error)
+  __pyx_codeobj__39 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__38, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_characters, 850, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__39)) __PYX_ERR(0, 850, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":864
+  /* "owlready2_optimized.pyx":854
  *     current_content += content
  * 
  *   def purge_annotations(on_iri):             # <<<<<<<<<<<<<<
  *     nonlocal annots
  *     cdef int s, p, prop_iri, bn
  */
-  __pyx_tuple__40 = PyTuple_Pack(7, __pyx_n_s_on_iri, __pyx_n_s_s_5, __pyx_n_s_p, __pyx_n_s_prop_iri, __pyx_n_s_bn, __pyx_n_s_value, __pyx_n_s_o); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(0, 864, __pyx_L1_error)
+  __pyx_tuple__40 = PyTuple_Pack(7, __pyx_n_s_on_iri, __pyx_n_s_s_5, __pyx_n_s_p, __pyx_n_s_prop_iri, __pyx_n_s_bn, __pyx_n_s_value, __pyx_n_s_o); if (unlikely(!__pyx_tuple__40)) __PYX_ERR(0, 854, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__40);
   __Pyx_GIVEREF(__pyx_tuple__40);
-  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(1, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__40, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_purge_annotations, 864, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 864, __pyx_L1_error)
+  __pyx_codeobj__41 = (PyObject*)__Pyx_PyCode_New(1, 0, 7, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__40, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_purge_annotations, 854, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__41)) __PYX_ERR(0, 854, __pyx_L1_error)
 
   /* "owlready2_optimized.pyx":82
  * 
@@ -22323,50 +22323,50 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GIVEREF(__pyx_tuple__44);
   __pyx_codeobj__45 = (PyObject*)__Pyx_PyCode_New(8, 0, 52, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__44, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_parse_rdfxml, 139, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__45)) __PYX_ERR(0, 139, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":522
+  /* "owlready2_optimized.pyx":512
  * 
  * cdef dict disjoints = {
  *   "http://www.w3.org/2002/07/owl#DisjointClasses"              : ("http://www.w3.org/2002/07/owl#AllDisjointClasses"   , "http://www.w3.org/2002/07/owl#disjointWith", "http://www.w3.org/2002/07/owl#members"),             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#DisjointObjectProperties"     : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointDataProperties"       : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  */
-  __pyx_tuple__46 = PyTuple_Pack(3, __pyx_kp_u_http_www_w3_org_2002_07_owl_AllD, __pyx_kp_u_http_www_w3_org_2002_07_owl_disj_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_memb); if (unlikely(!__pyx_tuple__46)) __PYX_ERR(0, 522, __pyx_L1_error)
+  __pyx_tuple__46 = PyTuple_Pack(3, __pyx_kp_u_http_www_w3_org_2002_07_owl_AllD, __pyx_kp_u_http_www_w3_org_2002_07_owl_disj_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_memb); if (unlikely(!__pyx_tuple__46)) __PYX_ERR(0, 512, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__46);
   __Pyx_GIVEREF(__pyx_tuple__46);
 
-  /* "owlready2_optimized.pyx":523
+  /* "owlready2_optimized.pyx":513
  * cdef dict disjoints = {
  *   "http://www.w3.org/2002/07/owl#DisjointClasses"              : ("http://www.w3.org/2002/07/owl#AllDisjointClasses"   , "http://www.w3.org/2002/07/owl#disjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointObjectProperties"     : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#DisjointDataProperties"       : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointAnnotationProperties" : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  */
-  __pyx_tuple__47 = PyTuple_Pack(3, __pyx_kp_u_http_www_w3_org_2002_07_owl_AllD_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_prop_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_memb); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(0, 523, __pyx_L1_error)
+  __pyx_tuple__47 = PyTuple_Pack(3, __pyx_kp_u_http_www_w3_org_2002_07_owl_AllD_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_prop_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_memb); if (unlikely(!__pyx_tuple__47)) __PYX_ERR(0, 513, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__47);
   __Pyx_GIVEREF(__pyx_tuple__47);
 
-  /* "owlready2_optimized.pyx":526
+  /* "owlready2_optimized.pyx":516
  *   "http://www.w3.org/2002/07/owl#DisjointDataProperties"       : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointAnnotationProperties" : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DifferentIndividuals"         : ("http://www.w3.org/2002/07/owl#AllDifferent"         , None, "http://www.w3.org/2002/07/owl#distinctMembers"),             # <<<<<<<<<<<<<<
  * }
  * 
  */
-  __pyx_tuple__48 = PyTuple_Pack(3, __pyx_kp_u_http_www_w3_org_2002_07_owl_AllD_3, Py_None, __pyx_kp_u_http_www_w3_org_2002_07_owl_dist); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(0, 526, __pyx_L1_error)
+  __pyx_tuple__48 = PyTuple_Pack(3, __pyx_kp_u_http_www_w3_org_2002_07_owl_AllD_3, Py_None, __pyx_kp_u_http_www_w3_org_2002_07_owl_dist); if (unlikely(!__pyx_tuple__48)) __PYX_ERR(0, 516, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__48);
   __Pyx_GIVEREF(__pyx_tuple__48);
 
-  /* "owlready2_optimized.pyx":536
+  /* "owlready2_optimized.pyx":526
  * 
  * 
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):             # <<<<<<<<<<<<<<
  *   cdef object parser = xml.parsers.expat.ParserCreate(None, "")
  *   try:
  */
-  __pyx_tuple__49 = PyTuple_Pack(36, __pyx_n_s_f, __pyx_n_s_objs, __pyx_n_s_datas, __pyx_n_s_insert_objs, __pyx_n_s_insert_datas, __pyx_n_s_abbreviate, __pyx_n_s_new_blank, __pyx_n_s_default_base, __pyx_n_s_parser, __pyx_n_s_ontology_iri_str, __pyx_n_s_ontology_iri, __pyx_n_s_stack, __pyx_n_s_annots, __pyx_n_s_prefixes, __pyx_n_s_current_content, __pyx_n_s_current_attrs, __pyx_n_s_in_declaration, __pyx_n_s_in_prop_chain, __pyx_n_s_before_declaration, __pyx_n_s_last_cardinality, __pyx_n_s_nb_triple, __pyx_n_s_datatypes, __pyx_n_s_lang, __pyx_n_s_unabbreviate_IRI, __pyx_n_s_unabbreviate_IRI, __pyx_n_s_get_IRI, __pyx_n_s_get_IRI, __pyx_n_s_startElement, __pyx_n_s_startElement, __pyx_n_s_endElement, __pyx_n_s_endElement, __pyx_n_s_characters, __pyx_n_s_characters, __pyx_n_s_purge_annotations, __pyx_n_s_purge_annotations, __pyx_n_s_e); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(0, 536, __pyx_L1_error)
+  __pyx_tuple__49 = PyTuple_Pack(36, __pyx_n_s_f, __pyx_n_s_objs, __pyx_n_s_datas, __pyx_n_s_insert_objs, __pyx_n_s_insert_datas, __pyx_n_s_abbreviate, __pyx_n_s_new_blank, __pyx_n_s_default_base, __pyx_n_s_parser, __pyx_n_s_ontology_iri_str, __pyx_n_s_ontology_iri, __pyx_n_s_stack, __pyx_n_s_annots, __pyx_n_s_prefixes, __pyx_n_s_current_content, __pyx_n_s_current_attrs, __pyx_n_s_in_declaration, __pyx_n_s_in_prop_chain, __pyx_n_s_before_declaration, __pyx_n_s_last_cardinality, __pyx_n_s_nb_triple, __pyx_n_s_datatypes, __pyx_n_s_lang, __pyx_n_s_unabbreviate_IRI, __pyx_n_s_unabbreviate_IRI, __pyx_n_s_get_IRI, __pyx_n_s_get_IRI, __pyx_n_s_startElement, __pyx_n_s_startElement, __pyx_n_s_endElement, __pyx_n_s_endElement, __pyx_n_s_characters, __pyx_n_s_characters, __pyx_n_s_purge_annotations, __pyx_n_s_purge_annotations, __pyx_n_s_e); if (unlikely(!__pyx_tuple__49)) __PYX_ERR(0, 526, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__49);
   __Pyx_GIVEREF(__pyx_tuple__49);
-  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(8, 0, 36, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_parse_owlxml, 536, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(0, 536, __pyx_L1_error)
+  __pyx_codeobj__50 = (PyObject*)__Pyx_PyCode_New(8, 0, 36, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__49, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_owlready2_optimized_pyx, __pyx_n_s_parse_owlxml, 526, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__50)) __PYX_ERR(0, 526, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -22462,7 +22462,7 @@ static int __Pyx_modinit_type_init_code(void) {
     __pyx_type_19owlready2_optimized___pyx_scope_struct_2_parse_rdfxml.tp_getattro = __Pyx_PyObject_GenericGetAttrNoDict;
   }
   __pyx_ptype_19owlready2_optimized___pyx_scope_struct_2_parse_rdfxml = &__pyx_type_19owlready2_optimized___pyx_scope_struct_2_parse_rdfxml;
-  if (PyType_Ready(&__pyx_type_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml) < 0) __PYX_ERR(0, 536, __pyx_L1_error)
+  if (PyType_Ready(&__pyx_type_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml) < 0) __PYX_ERR(0, 526, __pyx_L1_error)
   #if PY_VERSION_HEX < 0x030800B1
   __pyx_type_19owlready2_optimized___pyx_scope_struct_3_parse_owlxml.tp_print = 0;
   #endif
@@ -22851,7 +22851,7 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_parse_rdfxml, __pyx_t_2) < 0) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":450
+  /* "owlready2_optimized.pyx":440
  * 
  * 
  * cdef str rdf_type = "http://www.w3.org/1999/02/22-rdf-syntax-ns#type"             # <<<<<<<<<<<<<<
@@ -22863,213 +22863,213 @@ if (!__Pyx_RefNanny) {
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_rdf_type, __pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_11);
   __Pyx_GIVEREF(__pyx_kp_u_http_www_w3_org_1999_02_22_rdf_s_11);
 
-  /* "owlready2_optimized.pyx":453
+  /* "owlready2_optimized.pyx":443
  * 
  * cdef dict types = {
  *   "http://www.w3.org/2002/07/owl#Class"              : "http://www.w3.org/2002/07/owl#Class",             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#NamedIndividual"    : "http://www.w3.org/2002/07/owl#NamedIndividual",
  *   "http://www.w3.org/2002/07/owl#ObjectProperty"     : "http://www.w3.org/2002/07/owl#ObjectProperty",
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 453, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 443, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2) < 0) __PYX_ERR(0, 453, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Name, __pyx_kp_u_http_www_w3_org_2002_07_owl_Name) < 0) __PYX_ERR(0, 453, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_13, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_13) < 0) __PYX_ERR(0, 453, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_14, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_15) < 0) __PYX_ERR(0, 453, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_5) < 0) __PYX_ERR(0, 453, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Clas_2) < 0) __PYX_ERR(0, 443, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Name, __pyx_kp_u_http_www_w3_org_2002_07_owl_Name) < 0) __PYX_ERR(0, 443, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_13, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_13) < 0) __PYX_ERR(0, 443, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_14, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_15) < 0) __PYX_ERR(0, 443, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_Anno_5) < 0) __PYX_ERR(0, 443, __pyx_L1_error)
   __Pyx_XGOTREF(__pyx_v_19owlready2_optimized_types);
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_types, ((PyObject*)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":461
+  /* "owlready2_optimized.pyx":451
  * 
  * cdef dict prop_types = {
  *   "http://www.w3.org/2002/07/owl#FunctionalObjectProperty"        : "http://www.w3.org/2002/07/owl#FunctionalProperty",             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#FunctionalDataProperty"          : "http://www.w3.org/2002/07/owl#FunctionalProperty",
  *   "http://www.w3.org/2002/07/owl#InverseFunctionalObjectProperty" : "http://www.w3.org/2002/07/owl#InverseFunctionalProperty",
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 461, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(14); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 451, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Func, __pyx_kp_u_http_www_w3_org_2002_07_owl_Func_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Func_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Func_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_4) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_4) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Irre, __pyx_kp_u_http_www_w3_org_2002_07_owl_Irre_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Irre_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Irre_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Refl, __pyx_kp_u_http_www_w3_org_2002_07_owl_Refl_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Refl_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Refl_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Symm, __pyx_kp_u_http_www_w3_org_2002_07_owl_Symm_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Symm_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Symm_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Asym, __pyx_kp_u_http_www_w3_org_2002_07_owl_Asym_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Asym_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Asym_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Tran, __pyx_kp_u_http_www_w3_org_2002_07_owl_Tran_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Tran_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Tran_2) < 0) __PYX_ERR(0, 461, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Func, __pyx_kp_u_http_www_w3_org_2002_07_owl_Func_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Func_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Func_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_4) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_Inve_4) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Irre, __pyx_kp_u_http_www_w3_org_2002_07_owl_Irre_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Irre_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Irre_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Refl, __pyx_kp_u_http_www_w3_org_2002_07_owl_Refl_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Refl_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Refl_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Symm, __pyx_kp_u_http_www_w3_org_2002_07_owl_Symm_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Symm_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Symm_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Asym, __pyx_kp_u_http_www_w3_org_2002_07_owl_Asym_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Asym_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Asym_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Tran, __pyx_kp_u_http_www_w3_org_2002_07_owl_Tran_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Tran_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_Tran_2) < 0) __PYX_ERR(0, 451, __pyx_L1_error)
   __Pyx_XGOTREF(__pyx_v_19owlready2_optimized_prop_types);
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_prop_types, ((PyObject*)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":478
+  /* "owlready2_optimized.pyx":468
  * 
  * cdef dict sub_ofs = {
  *   "http://www.w3.org/2002/07/owl#SubClassOf"              : "http://www.w3.org/2000/01/rdf-schema#subClassOf",             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#SubPropertyOf"           : "http://www.w3.org/2000/01/rdf-schema#subPropertyOf",
  *   "http://www.w3.org/2002/07/owl#SubObjectPropertyOf"     : "http://www.w3.org/2000/01/rdf-schema#subPropertyOf",
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 478, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 468, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubC, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_4) < 0) __PYX_ERR(0, 478, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubP, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_5) < 0) __PYX_ERR(0, 478, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubO, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_5) < 0) __PYX_ERR(0, 478, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubD, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_5) < 0) __PYX_ERR(0, 478, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubA, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_5) < 0) __PYX_ERR(0, 478, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubC, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_4) < 0) __PYX_ERR(0, 468, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubP, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_5) < 0) __PYX_ERR(0, 468, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubO, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_5) < 0) __PYX_ERR(0, 468, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubD, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_5) < 0) __PYX_ERR(0, 468, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_SubA, __pyx_kp_u_http_www_w3_org_2000_01_rdf_sche_5) < 0) __PYX_ERR(0, 468, __pyx_L1_error)
   __Pyx_XGOTREF(__pyx_v_19owlready2_optimized_sub_ofs);
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_sub_ofs, ((PyObject*)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":486
+  /* "owlready2_optimized.pyx":476
  * 
  * cdef dict equivs = {
  *   "http://www.w3.org/2002/07/owl#EquivalentClasses" : "http://www.w3.org/2002/07/owl#equivalentClass",             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#EquivalentProperties" : "http://www.w3.org/2002/07/owl#equivalentProperty",
  *   "http://www.w3.org/2002/07/owl#EquivalentObjectProperties" : "http://www.w3.org/2002/07/owl#equivalentProperty",
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 486, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 476, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi) < 0) __PYX_ERR(0, 486, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi_2) < 0) __PYX_ERR(0, 486, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi_2) < 0) __PYX_ERR(0, 486, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi_2) < 0) __PYX_ERR(0, 486, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi_2) < 0) __PYX_ERR(0, 486, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Same, __pyx_kp_u_http_www_w3_org_2002_07_owl_same) < 0) __PYX_ERR(0, 486, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi) < 0) __PYX_ERR(0, 476, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi_2) < 0) __PYX_ERR(0, 476, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi_2) < 0) __PYX_ERR(0, 476, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_3, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi_2) < 0) __PYX_ERR(0, 476, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Equi_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_equi_2) < 0) __PYX_ERR(0, 476, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Same, __pyx_kp_u_http_www_w3_org_2002_07_owl_same) < 0) __PYX_ERR(0, 476, __pyx_L1_error)
   __Pyx_XGOTREF(__pyx_v_19owlready2_optimized_equivs);
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_equivs, ((PyObject*)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":495
+  /* "owlready2_optimized.pyx":485
  * 
  * cdef dict restrs = {
  *   "http://www.w3.org/2002/07/owl#ObjectSomeValuesFrom" : "http://www.w3.org/2002/07/owl#someValuesFrom",             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#ObjectAllValuesFrom"  : "http://www.w3.org/2002/07/owl#allValuesFrom",
  *   "http://www.w3.org/2002/07/owl#DataSomeValuesFrom"   : "http://www.w3.org/2002/07/owl#someValuesFrom",
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 495, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 485, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_14, __pyx_kp_u_http_www_w3_org_2002_07_owl_some) < 0) __PYX_ERR(0, 495, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_15, __pyx_kp_u_http_www_w3_org_2002_07_owl_allV) < 0) __PYX_ERR(0, 495, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_16, __pyx_kp_u_http_www_w3_org_2002_07_owl_some) < 0) __PYX_ERR(0, 495, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_17, __pyx_kp_u_http_www_w3_org_2002_07_owl_allV) < 0) __PYX_ERR(0, 495, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_16, __pyx_kp_u_http_www_w3_org_2002_07_owl_hasV) < 0) __PYX_ERR(0, 495, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_18, __pyx_kp_u_http_www_w3_org_2002_07_owl_hasV) < 0) __PYX_ERR(0, 495, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_14, __pyx_kp_u_http_www_w3_org_2002_07_owl_some) < 0) __PYX_ERR(0, 485, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_15, __pyx_kp_u_http_www_w3_org_2002_07_owl_allV) < 0) __PYX_ERR(0, 485, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_16, __pyx_kp_u_http_www_w3_org_2002_07_owl_some) < 0) __PYX_ERR(0, 485, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_17, __pyx_kp_u_http_www_w3_org_2002_07_owl_allV) < 0) __PYX_ERR(0, 485, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_16, __pyx_kp_u_http_www_w3_org_2002_07_owl_hasV) < 0) __PYX_ERR(0, 485, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_18, __pyx_kp_u_http_www_w3_org_2002_07_owl_hasV) < 0) __PYX_ERR(0, 485, __pyx_L1_error)
   __Pyx_XGOTREF(__pyx_v_19owlready2_optimized_restrs);
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_restrs, ((PyObject*)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":504
+  /* "owlready2_optimized.pyx":494
  * 
  * cdef dict qual_card_restrs = {
  *   "http://www.w3.org/2002/07/owl#ObjectExactCardinality" : "http://www.w3.org/2002/07/owl#qualifiedCardinality",             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#ObjectMinCardinality"   : "http://www.w3.org/2002/07/owl#minQualifiedCardinality",
  *   "http://www.w3.org/2002/07/owl#ObjectMaxCardinality"   : "http://www.w3.org/2002/07/owl#maxQualifiedCardinality",
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 504, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 494, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_qual) < 0) __PYX_ERR(0, 504, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_minQ) < 0) __PYX_ERR(0, 504, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_maxQ) < 0) __PYX_ERR(0, 504, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_qual) < 0) __PYX_ERR(0, 504, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_minQ) < 0) __PYX_ERR(0, 504, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_maxQ) < 0) __PYX_ERR(0, 504, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_qual) < 0) __PYX_ERR(0, 494, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_minQ) < 0) __PYX_ERR(0, 494, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_maxQ) < 0) __PYX_ERR(0, 494, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_qual) < 0) __PYX_ERR(0, 494, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_minQ) < 0) __PYX_ERR(0, 494, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_maxQ) < 0) __PYX_ERR(0, 494, __pyx_L1_error)
   __Pyx_XGOTREF(__pyx_v_19owlready2_optimized_qual_card_restrs);
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_qual_card_restrs, ((PyObject*)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":513
+  /* "owlready2_optimized.pyx":503
  * 
  * cdef dict card_restrs = {
  *   "http://www.w3.org/2002/07/owl#ObjectExactCardinality" : "http://www.w3.org/2002/07/owl#cardinality",             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#ObjectMinCardinality"   : "http://www.w3.org/2002/07/owl#minCardinality",
  *   "http://www.w3.org/2002/07/owl#ObjectMaxCardinality"   : "http://www.w3.org/2002/07/owl#maxCardinality",
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 513, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(6); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_card) < 0) __PYX_ERR(0, 513, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_minC) < 0) __PYX_ERR(0, 513, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_maxC) < 0) __PYX_ERR(0, 513, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_card) < 0) __PYX_ERR(0, 513, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_minC) < 0) __PYX_ERR(0, 513, __pyx_L1_error)
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_maxC) < 0) __PYX_ERR(0, 513, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_4, __pyx_kp_u_http_www_w3_org_2002_07_owl_card) < 0) __PYX_ERR(0, 503, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_minC) < 0) __PYX_ERR(0, 503, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Obje_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_maxC) < 0) __PYX_ERR(0, 503, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_5, __pyx_kp_u_http_www_w3_org_2002_07_owl_card) < 0) __PYX_ERR(0, 503, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_6, __pyx_kp_u_http_www_w3_org_2002_07_owl_minC) < 0) __PYX_ERR(0, 503, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Data_7, __pyx_kp_u_http_www_w3_org_2002_07_owl_maxC) < 0) __PYX_ERR(0, 503, __pyx_L1_error)
   __Pyx_XGOTREF(__pyx_v_19owlready2_optimized_card_restrs);
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_card_restrs, ((PyObject*)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":522
+  /* "owlready2_optimized.pyx":512
  * 
  * cdef dict disjoints = {
  *   "http://www.w3.org/2002/07/owl#DisjointClasses"              : ("http://www.w3.org/2002/07/owl#AllDisjointClasses"   , "http://www.w3.org/2002/07/owl#disjointWith", "http://www.w3.org/2002/07/owl#members"),             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#DisjointObjectProperties"     : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointDataProperties"       : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  */
-  __pyx_t_2 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 522, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyDict_NewPresized(5); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 512, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj, __pyx_tuple__46) < 0) __PYX_ERR(0, 522, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj, __pyx_tuple__46) < 0) __PYX_ERR(0, 512, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":523
+  /* "owlready2_optimized.pyx":513
  * cdef dict disjoints = {
  *   "http://www.w3.org/2002/07/owl#DisjointClasses"              : ("http://www.w3.org/2002/07/owl#AllDisjointClasses"   , "http://www.w3.org/2002/07/owl#disjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointObjectProperties"     : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#DisjointDataProperties"       : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointAnnotationProperties" : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  */
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_2, __pyx_tuple__47) < 0) __PYX_ERR(0, 522, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_2, __pyx_tuple__47) < 0) __PYX_ERR(0, 512, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":524
+  /* "owlready2_optimized.pyx":514
  *   "http://www.w3.org/2002/07/owl#DisjointClasses"              : ("http://www.w3.org/2002/07/owl#AllDisjointClasses"   , "http://www.w3.org/2002/07/owl#disjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointObjectProperties"     : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointDataProperties"       : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#DisjointAnnotationProperties" : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DifferentIndividuals"         : ("http://www.w3.org/2002/07/owl#AllDifferent"         , None, "http://www.w3.org/2002/07/owl#distinctMembers"),
  */
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_3, __pyx_tuple__47) < 0) __PYX_ERR(0, 522, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_3, __pyx_tuple__47) < 0) __PYX_ERR(0, 512, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":525
+  /* "owlready2_optimized.pyx":515
  *   "http://www.w3.org/2002/07/owl#DisjointObjectProperties"     : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointDataProperties"       : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointAnnotationProperties" : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),             # <<<<<<<<<<<<<<
  *   "http://www.w3.org/2002/07/owl#DifferentIndividuals"         : ("http://www.w3.org/2002/07/owl#AllDifferent"         , None, "http://www.w3.org/2002/07/owl#distinctMembers"),
  * }
  */
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_5, __pyx_tuple__47) < 0) __PYX_ERR(0, 522, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Disj_5, __pyx_tuple__47) < 0) __PYX_ERR(0, 512, __pyx_L1_error)
 
-  /* "owlready2_optimized.pyx":526
+  /* "owlready2_optimized.pyx":516
  *   "http://www.w3.org/2002/07/owl#DisjointDataProperties"       : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DisjointAnnotationProperties" : ("http://www.w3.org/2002/07/owl#AllDisjointProperties", "http://www.w3.org/2002/07/owl#propertyDisjointWith", "http://www.w3.org/2002/07/owl#members"),
  *   "http://www.w3.org/2002/07/owl#DifferentIndividuals"         : ("http://www.w3.org/2002/07/owl#AllDifferent"         , None, "http://www.w3.org/2002/07/owl#distinctMembers"),             # <<<<<<<<<<<<<<
  * }
  * 
  */
-  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Diff, __pyx_tuple__48) < 0) __PYX_ERR(0, 522, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_t_2, __pyx_kp_u_http_www_w3_org_2002_07_owl_Diff, __pyx_tuple__48) < 0) __PYX_ERR(0, 512, __pyx_L1_error)
   __Pyx_XGOTREF(__pyx_v_19owlready2_optimized_disjoints);
   __Pyx_DECREF_SET(__pyx_v_19owlready2_optimized_disjoints, ((PyObject*)__pyx_t_2));
   __Pyx_GIVEREF(__pyx_t_2);
   __pyx_t_2 = 0;
 
-  /* "owlready2_optimized.pyx":536
+  /* "owlready2_optimized.pyx":526
  * 
  * 
  * def parse_owlxml(object f, list objs, list datas, object insert_objs, object insert_datas, object _abbreviate, object new_blank, str default_base = ""):             # <<<<<<<<<<<<<<
  *   cdef object parser = xml.parsers.expat.ParserCreate(None, "")
  *   try:
  */
-  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_19owlready2_optimized_5parse_owlxml, NULL, __pyx_n_s_owlready2_optimized); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 536, __pyx_L1_error)
+  __pyx_t_2 = PyCFunction_NewEx(&__pyx_mdef_19owlready2_optimized_5parse_owlxml, NULL, __pyx_n_s_owlready2_optimized); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 526, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_parse_owlxml, __pyx_t_2) < 0) __PYX_ERR(0, 536, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_parse_owlxml, __pyx_t_2) < 0) __PYX_ERR(0, 526, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "owlready2_optimized.pyx":1

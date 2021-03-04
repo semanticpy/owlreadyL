@@ -56,7 +56,7 @@ if BACKEND == "postgresql":
 
 class BaseTest(object):
   def setUp(self):
-    self.nb_triple    = len(default_world.graph)
+    self.nb_triple = len(default_world.graph)
     
   def assert_nb_created_triples(self, x):
     assert (len(default_world.graph) - self.nb_triple) == x

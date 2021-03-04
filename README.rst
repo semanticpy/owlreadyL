@@ -521,6 +521,13 @@ version 2 - 0.27
   - Fix 'Class1(entityname); Class2(entityname)' (was changing the individual namespace)
   - Fix annotation request on RDF annotation properties, e.g. label.label
 
+version 2 - 0.28
+****************
+
+* Fix installation under Windows (contributed by CVK)
+* Under Windows, run the reasoners without opening a DOS windows
+
+
 Links
 -----
 

@@ -139,7 +139,7 @@ def _universal_abbrev_datatype(datatype, parser, unparser, *iris):
 
 
 def bool_parser(s):
-  return s == "true"
+  return (s == "true") or (s == 1)
 def bool_unparser(b):
   if b: return "true"
   return "false"
@@ -276,6 +276,9 @@ owl_disjointunion            = _universal_abbrev("http://www.w3.org/2002/07/owl#
 #owlready_is_a_construct         = _universal_abbrev("http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#is_a_construct")
 #owlready_context_is_a        = _universal_abbrev("http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#context_is_a")
 owlready_concrete            = _universal_abbrev("http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#concrete")
+
+rdf_langstring = _universal_abbrev("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString")
+_universal_abbrev_2_datatype[rdf_langstring] = locstr
 
 issubclass_python = issubclass
 

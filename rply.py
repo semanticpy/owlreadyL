@@ -492,6 +492,37 @@ class ParserGenerator(object):
       return func
     return inner
 
+  def optional(self, name, args = ""):
+    nb_args = len(args.split())
+    if nb_args < 2:
+      @self.production("%s : %s %s" % (name, name[:-1], args))
+      def f(p): return p[-1]
+    else:
+      @self.production("%s : %s %s" % (name, name[:-1], args))
+      def f(p): return p[1:]
+    @self.production("%s : " % name)
+    def f(p): return None
+  
+  def list(self, name, sep = ",", keep_sep = False):
+    item = name[:-1]
+    if name.endswith("*"):
+      @self.production("%s : " % name)
+      def f(p): return p
+    @self.production("%s : %s" % (name, item))
+    def f(p): return p
+    if keep_sep:
+      @self.production("%s : %s %s" % (name, item, sep))
+      def f(p): return p
+      @self.production("%s : %s %s %s" % (name, item, sep, name))
+      def f(p): return [p[0], p[1]] + p[-1]
+    else:
+      @self.production("%s : %s %s" % (name, item, sep))
+      def f(p):
+        del p[-1]
+        return p
+      @self.production("%s : %s %s %s" % (name, item, sep, name))
+      def f(p): return [p[0]] + p[-1]
+      
   def error(self, func):
     self.error_handler = func
     return func
