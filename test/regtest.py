@@ -30,7 +30,9 @@ next_id = 0
 
 TMPFILES = []
 def remove_tmps():
-  for f in TMPFILES: os.unlink(f)
+  for f in TMPFILES:
+    os.unlink(f)
+    if os.path.exists(f + "-journal"): os.unlink(f + "-journal")
 atexit.register(remove_tmps)
 
 fileno, filename = tempfile.mkstemp()
