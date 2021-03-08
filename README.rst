@@ -527,6 +527,11 @@ version 2 - 0.28
 * Fix installation under Windows (contributed by CVK)
 * Under Windows, run the reasoners without opening a DOS windows
 
+version 2 - 0.29
+****************
+
+* Fix installation as a requirement of another Python module
+
 
 Links
 -----

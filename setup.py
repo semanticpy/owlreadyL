@@ -20,7 +20,8 @@
 import os, os.path, sys, glob
 
 # get a canonical representation of relative path of the directory of this file
-HERE = os.path.relpath(os.path.dirname(os.path.abspath(sys.modules.get(__name__).__file__)))
+#HERE = os.path.relpath(os.path.dirname(os.path.abspath(sys.modules.get(__name__).__file__)))
+HERE = os.path.relpath(os.path.dirname(os.path.abspath(__file__)))
 
 if len(sys.argv) <= 1: sys.argv.append("install")
 
