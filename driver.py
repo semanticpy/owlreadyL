@@ -511,11 +511,6 @@ def _save(f, format, graph, filter = None):
           lines[-1].extend(l)
           lines[-1].append("")
           
-    def flatten(l, deep = ""):
-      for i in l:
-        if isinstance(i, list): yield from flatten(i, "%s    " % deep)
-        else:                   yield "%s%s" % (deep, i)
-        
     decls = []
     for iri, abbrev in xmlns.items():
       if   abbrev == "":  decls.append('xml:base="%s"' % iri)
@@ -524,6 +519,28 @@ def _save(f, format, graph, filter = None):
     if base_iri.endswith("/"):
       decls.append('xmlns="%s"' % base_iri)
       
+    def flatten(l):
+      if not l: return
+      
+      c = [l]
+      p = [0]
+      while c:
+        v = c[-1][p[-1]]
+        deep = len(c)
+        
+        if p[-1] + 1 < len(c[-1]):
+          p[-1] += 1
+        else:
+          del c[-1]
+          del p[-1]
+          
+        if isinstance(v, list):
+          if v:
+            c.append(v)
+            p.append(0)
+        else:
+          yield "%s%s" % ("    " * (deep - 1), v)
+          
     f.write(b"""<?xml version="1.0"?>\n""")
     f.write(("""<rdf:RDF %s>\n\n""" % "\n         ".join(decls)).encode("utf8"))
     f.write( """\n""".join(flatten(sum(lines, []))).encode("utf8"))
