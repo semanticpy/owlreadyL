@@ -38,8 +38,6 @@ INSERT DATA, DELETE DATA, DELETE WHERE (use INSERT or DELETE instead)
 
 VALUES
 
-nested SELECT queries
-
 """
 
 from owlready2.sparql.parser import *
@@ -169,6 +167,10 @@ class Translator(object):
       
     elif isinstance(block, NotExistsBlock):
       s = SQLCompoundQuery(name)
+      
+    elif isinstance(block, SubQueryBlock):
+      s = block.parse()
+      s.name = "prelim%s" % (len(self.preliminary_selects) + 1)
       
     else:
       raise ValueError("Unknown block type '%s'!" % block)
@@ -336,6 +338,9 @@ class Column(object):
     self.name        = name
     self.index       = index
     
+  def __repr__(self):
+    return """<Column #%s %s %s %s %s>""" % (self.index, self.var, self.type, self.binding, self.name)
+    
 class Variable(object):
   def __init__(self, name):
     self.name           = name
@@ -360,6 +365,9 @@ class Table(object):
     self.index           = index
     self.join            = join
     self.join_conditions = join_conditions or []
+    self.query           = None
+    
+  def __repr__(self): return "<Table '%s %s'>" % (self.type, self.name)
     
   def sql(self):
     return """%s %s%s%s""" % (self.type, self.name, self.index and (" INDEXED BY %s" % self.index) or "", self.join_conditions and (" ON (%s)" % " AND ". join(self.join_conditions)) or "")
@@ -469,6 +477,7 @@ class SQLQuery(FuncSupport):
       self.conditions.append(sub)
     else:
       table = Table("p%s" % self.next_table_id, sub.name)
+      table.query = sub
       self.next_table_id += 1
       self.tables.append(table)
       self.name_2_table[table.name] = table
@@ -483,6 +492,7 @@ class SQLQuery(FuncSupport):
         var.update_type(column.type)
         if not column.name.endswith("d"):
           self.create_conditions(conditions, table, column.name, var)
+          
           
   def parse_triples(self, triples):
     if self.triples: raise ValueError("Cannot parse triples twice!")
@@ -626,9 +636,18 @@ class SQLQuery(FuncSupport):
       x.create_conditions(conditions, table, n)
     else:
       sql, sql_type, sql_d, sql_d_type = self._to_sql(x)
-      if not sql   is None: conditions.append("%s.%s=%s" % (table.name, n, sql))
-      if not sql_d is None: conditions.append("%s.d=%s"  % (table.name,    sql_d)) # Datatype part
-
+      
+      if table.query: # If datatype is 0 (=auto), disable datatype conditions and replace it by IS NOT NULL
+        for column in table.query.columns:
+          if column.name == "%sd" % n[:-1]:
+            if str(column.binding) == "0":
+              sql_d = None
+              conditions.append("%s.%sd IS NOT NULL" % (table.name, n[:-1])) # Datatype part
+            break
+          
+      if not sql   is None: conditions.append("%s.%s=%s"  % (table.name, n,      sql))
+      if not sql_d is None: conditions.append("%s.%sd=%s" % (table.name, n[:-1], sql_d)) # Datatype part
+      
       if x.name == "VAR": x = self.vars[x.value]
       if   isinstance(x, Variable):
         if not x.bindings: x.initial_query = self
@@ -674,14 +693,14 @@ class SQLQuery(FuncSupport):
         
       else:
         var_name, sql, sql_type, sql_d, sql_d_type = do_select(select)
-
+        
       if sql is None: raise ValueError("Cannot select '%s'!" % select)
       self.columns.append(Column(var_name, sql_type,   sql,   "col%s_o" % i, j)); j += 1
       if not sql_d is None: self.columns.append(Column(var_name, sql_d_type, sql_d, "col%s_d" % i, j)); j += 1
         
   def _to_sql(self, x):
     if isinstance(x, rply.Token) and (x.name == "VAR"): x = self.parse_var(x)
-    
+
     if   isinstance(x, str): return x, "value", None, None
     elif isinstance(x, Variable):
       if not x.bindings: return None, None, None, None

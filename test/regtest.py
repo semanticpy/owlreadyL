@@ -8291,7 +8291,27 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     assert r == [["ZOignon"]]
     assert isinstance(r[0][0], locstr)
     assert r[0][0].lang == "fr"
-  
+    
+  def test_107(self):
+    world, onto = self.prepare1()
+    onto.b1.price = [9.0]
+    onto.b2.price = [15.0]
+    onto.b3.price = [18.0]
+    q, r = self.sparql(world, """SELECT  ?y  {  ?y onto:price ?m . { SELECT  (MIN(?p) AS ?m)  { ?x onto:price ?p . } } }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert r == [[onto.b1]]
+    q, r = self.sparql(world, """SELECT  ?y  {  ?y onto:price ?m . { SELECT  (MAX(?p) AS ?m)  { ?x onto:price ?p . } } }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert r == [[onto.b3]]
+    
+  def test_108(self):
+    world, onto = self.prepare1()
+    onto.b1.price = [9.0]
+    onto.b2.price = [15.0]
+    onto.b3.price = [18.0]
+    q, r = self.sparql(world, """SELECT  ?y ?x  {  ?y onto:price ?p . { SELECT  ?x (MIN(?p) AS ?m)  { ?x onto:price ?p . } } FILTER(?p < ?m + 2.0) }""", compare_with_rdflib = False)
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { (onto.b1, onto.b1), (onto.a1, onto.b1) }
 
 
     

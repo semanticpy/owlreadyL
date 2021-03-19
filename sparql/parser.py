@@ -129,7 +129,15 @@ pg = rply.ParserGenerator([rule.name for rule in lg.rules])
 #@pg.production("main : prefix_decl* construct_query values_clause?")
 #@pg.production("main : prefix_decl* describe_query values_clause?")
 #@pg.production("main : prefix_decl* ask_query values_clause?")
-def f(p): return p[1]
+def f(p): return _parse_select_query(p[1])
+
+def _parse_select_query(p):
+  translator = CURRENT_TRANSLATOR.get()
+  if isinstance(p[2], rply.Token) and (p[2].value == "*"): p[2] = None
+  main_query = translator.new_sql_query("main", p[4], p[2], p[1], p[5])
+  main_query.type = "select"
+  return main_query
+
 #@pg.production("main : prefix_decl* update1+ ;?")
 @pg.production("main : prefix_decl* modify")
 def f(p): return p[1]
@@ -151,12 +159,7 @@ pg.optional("WHERE?")
 #@pg.production("select_query : SELECT distinct_reduced? * WHERE? group_graph_pattern solution_modifier values_clause?")
 @pg.production("select_query : SELECT distinct_reduced? select_clause_part+ WHERE? group_graph_pattern solution_modifier")
 @pg.production("select_query : SELECT distinct_reduced? * WHERE? group_graph_pattern solution_modifier")
-def f(p):
-  translator = CURRENT_TRANSLATOR.get()
-  if isinstance(p[2], rply.Token) and (p[2].value == "*"): p[2] = None
-  main_query = translator.new_sql_query("main", p[4], p[2], p[1], p[5])
-  main_query.type = "select"
-  return main_query
+def f(p): return p
 
 @pg.production("distinct_reduced? : DISTINCT")
 @pg.production("distinct_reduced? : REDUCED")
@@ -389,7 +392,11 @@ pg.list("using_clause*", "")
 #def f(p): return p[0]
 #pg.optional("triples_template?")
 
-#@pg.production("group_graph_pattern : { select_query }")
+@pg.production("group_graph_pattern : { select_query }")
+def f(p):
+  r = SubQueryBlock(p[1])
+  return r
+
 @pg.production("group_graph_pattern : { group_graph_pattern_item* }")
 def f(p):
   r = SimpleTripleBlock()
@@ -1033,6 +1040,8 @@ class NotExistsBlock(FilterBlock): pass
     
 class MinusBlock(TripleBlock): pass
 
+class SubQueryBlock(Block):
+  def parse(self): return _parse_select_query(self)
 
 
 class Triple(tuple):
