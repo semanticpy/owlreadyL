@@ -815,7 +815,6 @@ def f(p):
   if p[2]: p[2].value += " "
   p[0].value = p[0].value.upper()
   p[0].name = "FUNC"
-  #if p[0].value == "SAMPLE": p[0].value = "MIN" # This is a valid "implementation" of sample!
   if len(p) > 5:
     p[4:-1] = [rply.Token(",", ","), p[-2]]
   return p
