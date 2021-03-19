@@ -27,6 +27,14 @@ from owlready2.triplelite import *
 
 CURRENT_NAMESPACES = ContextVar("CURRENT_NAMESPACES", default = None)
 
+PREDEFINED_ONTOLOGIES = {
+  "http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#" : "owlready_ontology.owl",
+  "http://purl.org/dc/elements/1.1/" : "dc.owl",
+  "http://purl.org/dc/dcam/" : "dcam.owl",
+  "http://purl.org/dc/dcmitype/" : "dcmitype.owl",
+  "http://purl.org/dc/terms/" : "dcterms.owl",
+  }
+
 _LOG_LEVEL = 0
 def set_log_level(x):
   global _LOG_LEVEL
@@ -515,9 +523,10 @@ class World(_GraphManager):
   
   def get_ontology(self, base_iri):
     if (not base_iri.endswith("/")) and (not base_iri.endswith("#")):
-      if   ("%s#" % base_iri) in self.ontologies: base_iri = base_iri = "%s#" % base_iri
-      elif ("%s/" % base_iri) in self.ontologies: base_iri = base_iri = "%s/" % base_iri
-      else:                                       base_iri = base_iri = "%s#" % base_iri
+      if   ("%s/" % base_iri) in PREDEFINED_ONTOLOGIES: base_iri = base_iri = "%s/" % base_iri
+      elif ("%s#" % base_iri) in self.ontologies:       base_iri = base_iri = "%s#" % base_iri
+      elif ("%s/" % base_iri) in self.ontologies:       base_iri = base_iri = "%s/" % base_iri
+      else:                                             base_iri = base_iri = "%s#" % base_iri
     if base_iri in self.ontologies: return self.ontologies[base_iri]
     return Ontology(self, base_iri)
   
@@ -866,8 +875,9 @@ class Ontology(Namespace, _GraphManager):
         
   def load(self, only_local = False, fileobj = None, reload = False, reload_if_newer = False, url = None, **args):
     if self.loaded and (not reload): return self
-    if self.base_iri == "http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#":
-      f = os.path.join(os.path.dirname(__file__), "owlready_ontology.owl")
+
+    if   self.base_iri in PREDEFINED_ONTOLOGIES:
+      f = os.path.join(os.path.dirname(__file__), "ontos", PREDEFINED_ONTOLOGIES[self.base_iri])
     elif not fileobj:
       f = fileobj or _get_onto_file(self.base_iri, self.name, "r", only_local)
     else:

@@ -6985,6 +6985,18 @@ Cheese ⊓ Meat ⊑ ⊥
 Cheese ⊓ Vegetable ⊑ ⊥""".split("\n"))
 
 
+  def test_dc_1(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://www.test.org/onto.owl")
+    onto.imported_ontologies.append(world.get_ontology("http://purl.org/dc/elements/1.1").load())
+    with onto:
+      class C(Thing): pass
+      C.creator.append("JBL")
+      C.coverage.append("test")
+      
+      
+      
+      
 class Paper(BaseTest, unittest.TestCase):
   def test_reasoning_paper_ic2017(self):
     world = self.new_world()

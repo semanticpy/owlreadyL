@@ -538,6 +538,7 @@ version 2 - 0.30
 ****************
 
 * New native SPARQL engine that translates SPARQL queries to SQL
+* Direct support for Dublin Core via the integration of an OWL translation
 * Bugfixes:
   - Fix RecursionError when saving very deep ontologies to RDF/XML
   - Fix IRI of the form 'urn:uuid:...'
