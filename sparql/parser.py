@@ -539,7 +539,6 @@ def _expand_triple(triples, s, ps_os):
         _expand_triple(t, s, [([p1], o)])
         u.append(t)
       triples.append(UnionBlock(u))
-      #raise NotImplementedError(p)
     else:
       if len(p[0]) == 1:
         _add_triple(triples, s, p[0][0], o)
