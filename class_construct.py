@@ -45,7 +45,7 @@ class Construct(object):
     return self
   
   def _set_ontology(self, ontology):
-    if not LOADING:
+    if (not LOADING) and (not DONT_COPY_BN):
       if   self.ontology and not ontology:
         self._destroy_triples(self.ontology)
       elif ontology and not self.ontology:

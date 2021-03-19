@@ -140,6 +140,11 @@ class _LazyListMixin(list):
     list.__init__(self, self._get_content())
     self.__class__ = self._PopulatedClass
   
+  def first(self):
+    self.populate()
+    if len(self) != 0: return self[0]
+    return None
+  
   def __repr__(self):
     self.populate()
     return repr(self)

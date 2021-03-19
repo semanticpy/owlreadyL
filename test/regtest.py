@@ -43,19 +43,12 @@ HERE = os.path.dirname(os.path.abspath(__file__)) or "."
 onto_path.append(HERE)
 get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test").load()
 
-BACKEND = "sqlite"
-if "--postgresql" in sys.argv:
-  sys.argv.remove("--postgresql")
-  BACKEND = "postgresql"
+SHOW_SQL = False
+if "--sql" in sys.argv:
+  SHOW_SQL = True
+  sys.argv.remove("--sql")
 
-_QUADSTORE_ID = 0
-
-if BACKEND == "postgresql":
-  def remove_dbs():
-    for i in range(1, _QUADSTORE_ID + 1):
-      os.system("dropdb owlready2_quadstore_%s &" % i)
-  atexit.register(remove_dbs)
-
+  
 class BaseTest(object):
   def setUp(self):
     self.nb_triple = len(default_world.graph)
@@ -110,17 +103,9 @@ class BaseTest(object):
     return filename
     
   def new_world(self):
-    global _QUADSTORE_ID
-    
-    if   BACKEND == "sqlite":
-      filename = self.new_tmp_file()
-      world = World(filename = filename)
-      
-    elif BACKEND == "postgresql":
-      _QUADSTORE_ID += 1
-      os.system("createdb owlready2_quadstore_%s" % _QUADSTORE_ID)
-      world = World(backend = "postgresql", dbname = "owlready2_quadstore_%s" % _QUADSTORE_ID)
-      
+    filename = self.new_tmp_file()
+    world = World(filename = filename)
+          
     return world
   
   def new_ontology(self):
@@ -256,7 +241,7 @@ class Test(BaseTest, unittest.TestCase):
   def test_world_5(self):
     world = self.new_world()
     n = world.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test").load()
-    if BACKEND == "sqlite": world.set_backend(filename = ":memory:")
+    world.set_backend(filename = ":memory:")
     assert set(world.classes()) == { n.Meat, n.Tomato, n.Eggplant, n.Olive, n.Vegetable, n.NonPizza, n.Pizza, n.Cheese, n.VegetarianPizza, n.Topping }
     assert set(world.data_properties()) == { n.price }
     assert set(world.object_properties()) == { n.has_topping, n.has_main_topping, n.main_topping_of, n.topping_of }
@@ -7222,6 +7207,1082 @@ constitutive hemorrhagic disorder CI         CI      CI   """.strip()
     
     assert ok == 1
 
+
+
+
+class TestSPARQL(BaseTest, unittest.TestCase):
+  def prepare1(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://test.org/onto.owl#")
+    with onto:
+      class A(Thing): pass
+      class A1(A): pass
+      class A11(A1): pass
+      class A2(A): pass
+      class B(Thing): pass
+      class C(Thing): pass
+
+      class price(Thing >> float): label = "price"
+      class price_vat_free(price): pass
+      class rel(ObjectProperty): label = "rel"
+      class subrel(rel): pass
+      class annot(AnnotationProperty): pass
+      
+      A.label.append("Classe A")
+      A1.label.append("Classe A1")
+      
+      b1 = B(label = [locstr("label_b", "en")])
+      b2 = B(label = [locstr("label_b", "en")])
+      b3 = B(label = [locstr("label_b", "fr")])
+      a1 = A(label = [locstr("label_a", "en")], price = [10.0], price_vat_free = [8.0], rel = [b2], subrel = [b3])
+    return world, onto
+
+  def sparql(self, world, sparql, params = (), compare_with_rdflib = True):
+    if SHOW_SQL:
+      t0 = time.time()
+    #q = Translator(world).parse(sparql)
+    q = world.prepare_sparql(sparql)
+    if SHOW_SQL:
+      t = time.time() - t0
+      print()
+      print()
+      print(sparql)
+      print()
+      print()
+      print(q.sql + ";")
+      print()
+      print()
+      print("prepared in %s s" % t)
+      t0 = time.time()
+      
+    if isinstance(q, owlready2.sparql.main.PreparedSelectQuery):
+      r = list(q.execute(params))
+    else:
+      r = [q.execute(params)]
+      compare_with_rdflib = False
+      
+    if SHOW_SQL:
+      print("executed in %s s" % (time.time() - t0))
+      if len(r) > 100: print("len(r) =", len(r))
+      else:            print("r =", r)
+
+    if compare_with_rdflib:
+      r2 = list(world.sparql_query("""PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX onto: <http://test.org/onto.owl#>\n""" + sparql))
+      
+      z  = { tuple(i) for i in r  }
+      z2 = { tuple(i) for i in r2 }
+      if (len(r) != len(r2)) or (z != z2):
+        print("Results differ with Owlready and RDFlib:")
+        print("OWLREADY:", r)
+        print("RDFLIB:  ", r2)
+        assert False
+        
+    return q, r
+  
+  def sparql_rdflib(self, world, sparql):
+    l = list(world.sparql_query(s))
+    return r
+  
+  
+  def test_1(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x ?y  { ?x a onto:A .  ?x rdfs:label ?y . }""")
+    assert len(r) == 1
+    assert r == [[onto.a1, "label_a"]]
+    assert q.column_names == ["?x", "?y"]
+    
+  def test_2(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [["label_a"]]
+  
+  def test_3(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x rdfs:subClassOf* onto:A . }""")
+    assert len(r) == 4
+    assert { x[0] for x in r } == { onto.A, onto.A1, onto.A11, onto.A2 }
+  
+  def test_4(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x a/rdfs:subClassOf* onto:A . }""")
+    assert len(r) == 1
+    assert r == [[onto.a1]]
+
+  def test_5(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?C rdfs:label "Classe A" .  ?x rdfs:subClassOf* ?C . }""")
+    assert len(r) == 4
+    assert { x[0] for x in r } == { onto.A, onto.A1, onto.A11, onto.A2 }
+    
+  def test_6(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [["label_a"]]
+    assert r[0][0].lang == "en"
+    
+  def test_7(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x rdfs:label "label_a" . }""")
+    assert len(r) == 1
+    assert r == [[onto.a1]]
+    
+  def test_8(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x rdfs:label "label_a"@en . }""")
+    assert len(r) == 1
+    assert r == [[onto.a1]]
+    
+  def test_9(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?y  { onto:b1 rdfs:label ?x . ?y rdfs:label ?x . }""", compare_with_rdflib = False)
+    assert len(r) == 2
+    assert { x[0] for x in r } == { onto.b1, onto.b2 }
+    q, r = self.sparql(world, """SELECT  ?y  { onto:b1 rdfs:label ?x1 . ?y rdfs:label ?x2 . FILTER(STR(?x1) = STR(?x2)) }""")
+    assert len(r) == 3
+    assert { x[0] for x in r } == { onto.b1, onto.b2, onto.b3 }
+    
+  def test_10(self):
+    world, onto = self.prepare1()
+    try:
+      q, r = self.sparql(world, """SELECT  ?y  { onto:b1 onto:price ?y . ?y a onto:A . }""")
+    except ValueError as e:
+      assert "cannot be both datas and objs" in str(e)
+    else: assert False
+    
+  def test_11(self):
+    world, onto = self.prepare1()
+    onto.b1.annot.append(10.0)
+    q, r = self.sparql(world, """SELECT  ?y  { onto:a1 onto:price ?x . ?y onto:annot ?x . }""")
+    assert len(r) == 1
+    assert { x[0] for x in r } == { onto.b1 }
+    assert not "quads" in q.sql
+    assert q.sql.count("datas ") == 2
+    #assert not "INDEXED BY" in q.sql
+    
+  def test_12(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x rdfs:subClassOf+ onto:A . }""")
+    assert len(r) == 3
+    assert { x[0] for x in r } == { onto.A1, onto.A11, onto.A2 }
+    
+  def test_13(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?p ?x  { ?p rdfs:label "price" . onto:a1 ?p ?x . }""")
+    assert len(r) == 1
+    assert r == [[onto.price, 10.0]]
+    
+  def test_14(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?p ?x  { ?p rdfs:subPropertyOf* onto:price . onto:a1 ?p ?x . }""")
+    assert len(r) == 2
+    assert { tuple(i) for i in r } == { (onto.price, 10.0), (onto.price_vat_free, 8.0) }
+    assert not "quads" in q.sql
+    assert "datas" in q.sql
+    
+  def test_15(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?p ?x  { ?p rdfs:label "rel" . onto:a1 ?p ?x . }""")
+    assert len(r) == 1
+    assert r == [[onto.rel, onto.b2]]
+    
+  def test_16(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?p ?x  { ?p rdfs:subPropertyOf* onto:rel . onto:a1 ?p ?x . }""")
+    assert len(r) == 2
+    assert { tuple(i) for i in r } == { (onto.rel, onto.b2), (onto.subrel, onto.b3) }
+    assert not "quads" in q.sql
+    assert "objs" in q.sql    
+    
+  def test_17(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x ?y  { ?x rdfs:subClassOf* onto:A . ?y rdfs:subClassOf* ?x . }""")
+    assert len(r) == 8
+    assert { tuple(i) for i in r } == { (onto.A, onto.A), (onto.A, onto.A1), (onto.A, onto.A11), (onto.A, onto.A2), (onto.A1, onto.A1), (onto.A1, onto.A11), (onto.A2, onto.A2), (onto.A11, onto.A11) }
+
+  def test_18(self):
+    world, onto = self.prepare1()
+    q, r1 = self.sparql(world, """SELECT  ?x  { ?C rdfs:label "Classe A" . ?x rdfs:subClassOf* ?C . } LIMIT 2""")
+    q, r2 = self.sparql(world, """SELECT  ?x  { ?C rdfs:label "Classe A" . ?x rdfs:subClassOf* ?C . } LIMIT 2 OFFSET 2""")
+    assert len(r1) == 2
+    assert len(r2) == 2
+    assert { i[0] for i in r1 + r2 } == { onto.A, onto.A1, onto.A11, onto.A2 }
+    
+  def test_19(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x ^rdfs:label onto:a1 . }""")
+    assert len(r) == 1
+    assert r == [["label_a"]]
+    assert r[0][0].lang == "en"
+    
+  def test_20(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { onto:A ^rdfs:subClassOf* ?x . }""")
+    assert len(r) == 4
+    assert { x[0] for x in r } == { onto.A, onto.A1, onto.A11, onto.A2 }
+    
+  def test_21(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x ^rdfs:subClassOf* onto:A11 ; rdfs:label "Classe A" }""")
+    assert len(r) == 1
+    assert { x[0] for x in r } == { onto.A }
+    
+  def test_22(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x ^rdfs:subClassOf* onto:A11 ; rdfs:label "Missing label" }""")
+    assert len(r) == 0
+    
+  def test_23(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x a/rdfs:subClassOf* onto:A ; rdfs:label "label_a"@en }""")
+    assert len(r) == 1
+    assert { x[0] for x in r } == { onto.a1 }
+    
+  def test_24(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { ?x a/rdfs:subClassOf* onto:A ; rdfs:label "Missing label" }""")
+    assert len(r) == 0
+    
+  def test_25(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x ?y  { ?x a onto:A . ?x onto:price ?p .  BIND (?p * 2.0 AS ?y) }""")
+    assert len(r) == 1
+    assert r == [[onto.a1, 20.0]]
+    assert type(r[0][1]) is float
+
+  def test_26(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x ?y2  { ?x a onto:A . ?x onto:price ?p .  BIND (?p * 2.0 AS ?y)  BIND (?y * 2.0 AS ?y2) }""")
+    assert len(r) == 1
+    assert r == [[onto.a1, 40.0]]
+    assert type(r[0][1]) is float
+
+  def test_27(self):
+    world, onto = self.prepare1()
+    with onto:
+      aa = onto.A("aa")
+      aa.price = [12.3]
+    q, r = self.sparql(world, """SELECT  ?y  { onto:aa onto:price ?p .  BIND (ROUND(?p) AS ?y) }""")
+    assert len(r) == 1
+    assert r == [[12]]
+    assert type(r[0][0]) is int
+    
+  def test_28(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x (?p * 2.0 AS ?y)  { ?x a onto:A . ?x onto:price ?p . }""")
+    assert len(r) == 1
+    assert r == [[onto.a1, 20.0]]
+    assert type(r[0][1]) is float
+    
+  def test_29(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?p  { [ a onto:A ] onto:price ?p . }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert r == [[10.0]]
+    q, r = self.sparql(world, """SELECT  ?p  { [ onto:price ?p ] a onto:A . }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert r == [[10.0]]
+
+  def test_30(self):
+    world, onto = self.prepare1()
+    onto.a1.price = [5.0, 8.0, 10.0, 20.0]
+    q, r = self.sparql(world, """SELECT  ?p  { onto:a1 onto:price ?p . FILTER (?p > 10.0) }""")
+    assert len(r) == 1
+    assert r == [[20.0]]
+    q, r = self.sparql(world, """SELECT  ?p  { onto:a1 onto:price ?p . FILTER (?p >= 10.0) }""")
+    assert len(r) == 2
+    assert { i[0] for i in r } == { 10.0, 20.0 }
+    q, r = self.sparql(world, """SELECT  ?p  { onto:a1 onto:price ?p . FILTER (?p < 0.0) }""")
+    assert len(r) == 0
+    q, r = self.sparql(world, """SELECT  ?p  { onto:a1 onto:price ?p . FILTER (?p <= 10.0) }""")
+    assert len(r) == 3
+    assert { i[0] for i in r } == { 5.0, 8.0, 10.0 }
+    
+  def test_31(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  (UCASE(?x) AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [["LABEL_A"]]
+    onto.a1.label = ["XxX"]
+    q, r = self.sparql(world, """SELECT  (LCASE(?x) AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [["xxx"]]
+    
+  def test_32(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  (STRLEN(?x) AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[7]]
+    
+    q, r = self.sparql(world, """SELECT  (CONTAINS(?x, "abel") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[True]]
+    q, r = self.sparql(world, """SELECT  (CONTAINS(?x, "yyy") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[False]]
+    q, r = self.sparql(world, """SELECT  (CONTAINS("xxxlabel_axxx", ?x) AS ?l)  { onto:a1 rdfs:label ?x . }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert r == [[True]]
+    q, r = self.sparql(world, """SELECT  (CONTAINS("xxx", ?x) AS ?l)  { onto:a1 rdfs:label ?x . }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert r == [[False]]
+    
+    q, r = self.sparql(world, """SELECT  (STRSTARTS(?x, "label") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[True]]
+    q, r = self.sparql(world, """SELECT  (STRSTARTS(?x, "abel") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[False]]
+    
+    q, r = self.sparql(world, """SELECT  (STRENDS(?x, "l_a") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[True]]
+    q, r = self.sparql(world, """SELECT  (STRENDS(?x, "bel") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[False]]
+    
+    q, r = self.sparql(world, """SELECT  (STRBEFORE(?x, "_") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [["label"]]
+    q, r = self.sparql(world, """SELECT  (STRBEFORE(?x, "zzz") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[""]]
+    
+    q, r = self.sparql(world, """SELECT  (STRAFTER(?x, "b") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [["el_a"]]
+    q, r = self.sparql(world, """SELECT  (STRAFTER(?x, "zzz") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [[""]]
+
+    q, r = self.sparql(world, """SELECT  (SUBSTR(?x, 2, 4) AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [["abel"]]
+    
+    q, r = self.sparql(world, """SELECT  (SIMPLEREPLACE(?x, "_", "-") AS ?l)  { onto:a1 rdfs:label ?x . }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert r == [["label-a"]]
+    
+    q, r = self.sparql(world, """SELECT  (CONCAT("before", ?x, "after") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert len(r) == 1
+    assert r == [["beforelabel_aafter"]]
+    
+  def test_33(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = ["123", 6, 7.6, "abc", onto.b1]
+    q, r = self.sparql(world, """SELECT  (STR(?x) AS ?l)  { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 5
+    assert { x[0] for x in r } == { "123", "6", "7.6", "abc", "%s" % onto.b1.iri }
+    
+  def test_34(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [locstr("lesson", "en"), locstr("leçon", "fr"), "xxx", 1.2, onto.b1]
+    q, r = self.sparql(world, """SELECT  ?x (LANG(?x) AS ?l)  { onto:a1 onto:annot ?x . }""", compare_with_rdflib = False)
+    assert len(r) == 5
+    assert { tuple(x) for x in r } == { ("lesson", "en"), ("leçon", "fr"), ("xxx", ""), (1.2, ""), (onto.b1, "") }
+    
+  def test_35(self):
+    world, onto = self.prepare1()
+    onto.A1.is_a.append(onto.price.value(10.0))
+    onto.a1.annot = ["xxx", 1.2, onto.b1, onto.A1.is_a[-1]]
+    q, r = self.sparql(world, """SELECT  ?x (ISIRI(?x) AS ?l1) (ISBLANK(?x) AS ?l2) (ISLITERAL(?x) AS ?l3) (ISNUMERIC(?x) AS ?l4) { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 4
+    assert { tuple(x) for x in r } == { ("xxx", False, False, True, False), (1.2, False, False, True, True), (onto.b1, True, False, False, False), (onto.A1.is_a[-1], False, True, False, False) }
+    
+  def test_36(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [onto.b1]
+    q, r = self.sparql(world, """SELECT  ?x (SAMETERM(?x, onto:b1) AS ?l1) { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 1
+    assert r == [[onto.b1, True]]
+    
+  def test_37(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = ["#b1"]
+    q, r = self.sparql(world, """SELECT  (IRI(CONCAT("http://test.org/onto.owl", ?x)) AS ?l1) { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 1
+    assert r == [[onto.b1]]
+    
+  def test_38(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [8.0, "eee", 4, locstr("xxx", "fr")]
+    q, r = self.sparql(world, """SELECT  ?x (DATATYPE(?x) AS ?l1) { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 4
+    assert { tuple(x) for x in r } == { ("xxx", locstr), (8.0, float), (4, int), ("eee", str) }
+    
+  def test_39(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [datetime.datetime(2021, 2, 19, 10, 41, 3, 123456), datetime.date(2020, 9, 2)]
+    q, r = self.sparql(world, """SELECT  ?x (YEAR(?x) AS ?l1) (MONTH(?x) AS ?l2) (DAY(?x) AS ?l3) (HOURS(?x) AS ?l4) (MINUTES(?x) AS ?l5) (SECONDS(?x) AS ?l6) { onto:a1 onto:annot ?x . }""", compare_with_rdflib = False)
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { (datetime.datetime(2021, 2, 19, 10, 41, 3, 123456), 2021, 2, 19, 10, 41, 3.123456), (datetime.date(2020, 9, 2), 2020, 9, 2, 0, 0, 0) }
+
+  def test_40(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  (CEIL(10.5) AS ?l1) (CEIL(-10.5) AS ?l2) (CEIL(5.0) AS ?l3) (CEIL(-5.0) AS ?l4) { }""")
+    assert len(r) == 1
+    assert r == [[11.0, -10.0, 5.0, -5.0]]
+    assert(type(r[0][0]) is float)
+    q, r = self.sparql(world, """SELECT  (FLOOR(10.5) AS ?l1) (FLOOR(-10.5) AS ?l2) (FLOOR(5.0) AS ?l3) (FLOOR(-5.0) AS ?l4) { }""")
+    assert len(r) == 1
+    assert r == [[10.0, -11.0, 5.0, -5.0]]
+    assert(type(r[0][0]) is float)
+    
+  def test_41(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = ["abc", "def"]
+    q, r = self.sparql(world, """SELECT  ?x (IF(?x = "abc", "ghi", ?x) AS ?l1) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { ("abc", "ghi"), ("def", "def") }
+    onto.a1.annot = ["abc", 9]
+    q, r = self.sparql(world, """SELECT  ?x (IF(?x = "abc", "ghi", ?x) AS ?l1) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { ("abc", "ghi"), (9, 9) }
+
+  def test_42(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [locstr("abc", "en"), locstr("def", "fr"), "ghi"]
+    q, r = self.sparql(world, """SELECT  ?x (LANGMATCHES(?x, "*") AS ?l1) { onto:a1 onto:annot ?x }""", compare_with_rdflib = False)
+    assert len(r) == 3
+    assert { tuple(x) for x in r } == { ("abc", True), ("def", True), ("ghi", False) }
+    q, r = self.sparql(world, """SELECT  ?x (LANGMATCHES(?x, "FR") AS ?l1) { onto:a1 onto:annot ?x }""", compare_with_rdflib = False)
+    assert len(r) == 3
+    assert { tuple(x) for x in r } == { ("abc", False), ("def", True), ("ghi", False) }
+    
+  def test_43(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = ["abc"]
+    q, r = self.sparql(world, """SELECT  (MD5(?x) AS ?l1) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 1
+    assert r == [["900150983cd24fb0d6963f7d28e17f72"]]
+    q, r = self.sparql(world, """SELECT  (SHA1(?x) AS ?l1) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 1
+    assert r == [["a9993e364706816aba3e25717850c26c9cd0d89d"]]
+    q, r = self.sparql(world, """SELECT  (SHA256(?x) AS ?l1) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 1
+    assert r == [["ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad"]]
+    q, r = self.sparql(world, """SELECT  (SHA384(?x) AS ?l1) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 1
+    assert r == [["cb00753f45a35e8bb5a03d699ac65007272c32ab0eded1631a8b605a43ff5bed8086072ba1e7cc2358baeca134c825a7"]]
+    q, r = self.sparql(world, """SELECT  (SHA512(?x) AS ?l1) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 1
+    assert r == [["ddaf35a193617abacc417349ae20413112e6fa4e89a97ea20a9eeee64b55d39a2192992a274fc1a836ba3c23a3feebbd454d4423643ce80e2a9ac94fa54ca49f"]]
+    
+  def test_44(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x (NOW() AS ?n) { ?x ?p ?y }""", compare_with_rdflib = False)
+    assert len({ i[1] for i in r }) == 1    
+    
+  def test_45(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [owlready2.base._parse_datetime("2011-01-10T14:45:13.815-05:00")]
+    q, r = self.sparql(world, """SELECT  (TZ(?x) AS ?l1) { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 1
+    assert r == [["-05:00"]]  
+    q, r = self.sparql(world, """SELECT  (STR(TIMEZONE(?x)) AS ?l1) { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 1
+    assert r == [["-PT5H"]]  
+    
+  def test_46(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = ["Los Angeles"]
+    q, r = self.sparql(world, """SELECT  (ENCODE_FOR_URI(?x) AS ?l1) { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 1
+    assert r == [["Los%20Angeles"]]
+
+  def test_47(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [1]
+    q, r = self.sparql(world, """SELECT  (STRDT(?x, xsd:decimal) AS ?l1) { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 1
+    assert r == [[1]]  
+    assert type(r[0][0]) is float
+    onto.a1.annot = ["abc", locstr("def", "en")]
+    q, r = self.sparql(world, """SELECT  (STRLANG(?x, "fr") AS ?l1) { onto:a1 onto:annot ?x . }""", compare_with_rdflib = False)
+    assert len(r) == 2
+    r = sorted([x[0] for x in r])
+    assert r == ["abc", "def"]  
+    assert r[0].lang == "fr"
+    assert r[1].lang == "fr"
+
+  def test_48(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  (STR(NEWINSTANCEIRI(?x)) AS ?r)  { ?x rdfs:subClassOf onto:A . }""", compare_with_rdflib = False)
+    assert len(r) == 2
+    assert r == [["http://test.org/onto.owl#a11"], ["http://test.org/onto.owl#a21"]]
+    
+  def test_49(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = ["Alice", "Yyopeajp", "eeAli"]
+    q, r = self.sparql(world, """SELECT  ?x (REGEX(?x, "^Ali", "i") AS ?r)  { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 3
+    assert { tuple(x) for x in r } == { ("Alice", True), ("Yyopeajp", False), ("eeAli", False) }
+    
+  def test_50(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = ["Alice", "Yyopeajp", "eeAzi"]
+    q, r = self.sparql(world, """SELECT  ?x (REPLACE(?x, "A.i", "XXX", "i") AS ?r)  { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 3
+    assert { tuple(x) for x in r } == { ("Alice", "XXXce"), ("Yyopeajp", "Yyopeajp"), ("eeAzi", "eeXXX") }
+    
+  def test_51(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?p ?x  { onto:a1 ?p ?x . }""")
+    assert len(r) == 7
+    assert { tuple(x) for x in r } == { (rdf_type, owl_named_individual), (rdf_type, onto.A), (onto.rel, onto.b2), (onto.subrel, onto.b3), (label, "label_a"), (onto.price, 10.0), (onto.price_vat_free, 8.0) }
+  
+  def test_52(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { onto:a1 !rdfs:label ?x . }""")
+    assert len(r) == 6
+    assert { tuple(x)[0] for x in r } == { owl_named_individual, onto.A, onto.b2, onto.b3, 10.0, 8.0 }
+  
+  def test_53(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { onto:a1 !(rdfs:label | rdf:type) ?x . }""")
+    assert len(r) == 4
+    assert { tuple(x)[0] for x in r } == { onto.b2, onto.b3, 10.0, 8.0 }
+
+  def test_54(self):
+    world, onto = self.prepare1()
+    b4 = onto.B()
+    b5 = onto.B()
+    onto.b3.rel = [b4]
+    onto.b4.rel = [b5]
+    q, r = self.sparql(world, """SELECT  ?x  { onto:a1 !(rdfs:label | rdf:type)+ ?x . }""")
+    assert len(r) == 6
+    assert { tuple(x)[0] for x in r } == { onto.b2, onto.b3, onto.b4, onto.b5, 10.0, 8.0 }
+
+  def test_55(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  *  { ?x a onto:A . ?x rdfs:label ?l . }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { tuple(x) for x in r } == { (onto.a1, "label_a") }
+    assert q.column_names == ["?x", "?l"]
+    q, r = self.sparql(world, """SELECT  *  { ?x rdfs:label ?l . ?x a onto:A . }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { tuple(x) for x in r } == { (onto.a1, "label_a") }
+    assert q.column_names == ["?x", "?l"]
+    q, r = self.sparql(world, """SELECT  *  { ?l ^rdfs:label ?x . ?x a onto:A . }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { tuple(x) for x in r } == { ("label_a", onto.a1) }
+    assert q.column_names == ["?l", "?x"]
+
+  def test_56(self):
+    world, onto = self.prepare1()
+    q, r1 = self.sparql(world, """SELECT  ?x ?l  { ?x a onto:A . ?x rdfs:label ?l . }""")
+    assert not "WITH" in q.sql
+    q, r2 = self.sparql(world, """SELECT  ?x ?l  { ?x a onto:A . BIND(?x AS ?y) ?x rdfs:label ?l . }""")
+    assert not "WITH" in q.sql
+    q, r3 = self.sparql(world, """SELECT  ?x ?l  { { ?x a onto:A . } ?x rdfs:label ?l . }""")
+    assert "WITH" in q.sql
+    q, r4 = self.sparql(world, """SELECT  ?x ?l  { ?x a onto:A . { ?x rdfs:label ?l . } }""")
+    assert "WITH" in q.sql
+    q, r5 = self.sparql(world, """SELECT  *  { ?x a onto:A . { ?x rdfs:label ?l . } }""", compare_with_rdflib = False)
+    assert "WITH" in q.sql
+    q, r6 = self.sparql(world, """SELECT  ?x ?l  { { ?x a onto:A . } { ?x rdfs:label ?l . } }""")
+    assert "WITH" in q.sql
+    assert "prelim2" in q.sql
+    q, r7 = self.sparql(world, """SELECT  ?x ?l  { { { ?x a onto:A . } } ?x rdfs:label ?l . }""")
+    assert "WITH" in q.sql
+    assert len(r1) == 1
+    assert len(r2) == 1
+    assert len(r3) == 1
+    assert len(r4) == 1
+    assert len(r5) == 1
+    assert len(r6) == 1
+    assert len(r7) == 1
+    r1 = frozenset({ tuple(x) for x in r1 })
+    r2 = frozenset({ tuple(x) for x in r2 })
+    r3 = frozenset({ tuple(x) for x in r3 })
+    r4 = frozenset({ tuple(x) for x in r4 })
+    r5 = frozenset({ tuple(x) for x in r5 })
+    r6 = frozenset({ tuple(x) for x in r6 })
+    r7 = frozenset({ tuple(x) for x in r6 })
+    assert len({r1, r2, r3, r4, r5, r6, r7}) == 1
+    
+  def test_57(self):
+    world, onto = self.prepare1()
+    onto.a1.comment = ["comm"]
+    q, r = self.sparql(world, """SELECT  ?x ?l  { ?x a onto:A . { ?x rdfs:label ?l } UNION { ?x rdfs:comment ?l } . }""")
+    assert not "WITH" in q.sql
+    assert " IN " in q.sql
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { (onto.a1, "label_a"), (onto.a1, "comm") }
+    
+  def test_58(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?l  { { onto:a1 rdfs:label ?l } UNION { onto:b1 rdfs:label  ?l } . }""")
+    assert not "WITH" in q.sql
+    assert " IN " in q.sql
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { ("label_a",), ("label_b",) }
+    
+  def test_59(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { { ?x a onto:B . } UNION { ?x rdfs:subClassOf onto:A . } }""")
+    assert len(r) == 5
+    assert { x[0] for x in r } == { onto.b1, onto.b2, onto.b3, onto.A1, onto.A2 }
+    
+  def test_60(self):
+    world, onto = self.prepare1()
+    onto.b2.comment = onto.A1.comment = ["ok"]
+    q, r = self.sparql(world, """SELECT  ?x  { ?x rdfs:comment "ok". { ?x a onto:B . } UNION { ?x rdfs:subClassOf onto:A . } }""")
+    assert len(r) == 2
+    assert { x[0] for x in r } == { onto.b2, onto.A1 }
+    
+  def test_61(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { { ?x a/rdfs:subClassOf* onto:A . } UNION { ?x a/rdfs:subClassOf* onto:B } . }""")
+    assert not "prelim2" in q.sql
+    assert len(r) == 4
+    assert { x[0] for x in r } == { onto.a1, onto.b1, onto.b2, onto.b3 }
+
+  def test_62(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  *  { ?x a/rdfs:subClassOf* onto:A . }""")
+    assert r == [[onto.a1]]
+    
+  def test_63(self):
+    world, onto = self.prepare1()
+    onto.b2.label.append("ok")
+    q, r = self.sparql(world, """SELECT  *  { ?x a/rdfs:subClassOf* onto:B . FILTER EXISTS { ?x rdfs:label "ok" . } }""")
+    assert r == [[onto.b2]]
+    
+  def test_64(self):
+    world, onto = self.prepare1()
+    onto.b2.label.append("ok")
+    onto.b3.label.reinit([])
+    q, r = self.sparql(world, """SELECT  *  { ?x a onto:B . FILTER EXISTS { ?x rdfs:label ?y . } }""", compare_with_rdflib = False)
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { (onto.b1,), (onto.b2,) }
+    
+  def test_65(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x  { { onto:a1 onto:rel ?x . } UNION { onto:a1 onto:price ?x } . }""")
+    assert len(r) == 2
+    assert { x[0] for x in r } == { onto.b2, 10.0 }
+    
+  def test_66(self):
+    world, onto = self.prepare1()
+    onto.b2.label.append("ok")
+    #for i in range(5000):
+    #  onto.B(label = ["abc"])
+    #  onto.B(label = ["ok"])
+    q, r = self.sparql(world, """SELECT  *  { ?x a onto:B . FILTER NOT EXISTS { ?x rdfs:label "ok" . } }""")
+    assert "INDEXED BY index_datas_sp" in q.sql
+    assert len(r) == 2
+    assert { x[0] for x in r } == { onto.b1, onto.b3 }
+    
+  def test_67(self):
+    world, onto = self.prepare1()
+    onto.b2.label.append("ok")
+    q, r = self.sparql(world, """SELECT  *  { ?x a/rdfs:subClassOf* onto:B . FILTER NOT EXISTS { ?x rdfs:label "ok" . } }""")
+    assert len(r) == 2
+    assert { x[0] for x in r } == { onto.b1, onto.b3 }
+    
+  def test_68(self):
+    world, onto = self.prepare1()
+    onto.b1.label = ["abc"]
+    onto.b2.label = ["ok"]
+    onto.b3.label = []
+    q, r = self.sparql(world, """SELECT  *  { ?x a/rdfs:subClassOf* onto:B . FILTER EXISTS { ?x rdfs:label ?y . } FILTER NOT EXISTS { ?x rdfs:label "ok" . } }""", compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { x[0] for x in r } == { onto.b1 }
+    
+  def test_69(self):
+    world, onto = self.prepare1()
+    r = world.sparql("""SELECT  ?x ?y  { ?x a onto:A .  ?x rdfs:label ?y . }""")
+    r = list(r)
+    assert len(r) == 1
+    assert r == [[onto.a1, "label_a"]]
+    q1 = world.prepare_sparql("""SELECT  ?x ?y  { ?x a onto:A .  ?x rdfs:label ?y . }""")
+    q2 = world.prepare_sparql("""SELECT  ?x ?y  { ?x a onto:A .  ?x rdfs:label ?y . }""")
+    assert q1 is q2
+    
+  def test_70(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://test.org/onto.owl#")
+    with onto:
+      class prop(Thing >> Thing): pass
+      class C(Thing):
+        is_a = [prop.some(Thing)]
+    q, r = self.sparql(world, """SELECT  ?x  { onto:C rdfs:subClassOf ?x . }""")
+    r2 = list(world.sparql_query("""SELECT  ?x  { <http://test.org/onto.owl#C> rdfs:subClassOf ?x . }"""))
+    assert r == r2
+    
+  def test_71(self):
+    world, onto = self.prepare1()
+    onto.b2.label.append("ok")
+    #for i in range(5000):
+    #  onto.B(label = ["abc"])
+    #  onto.B(label = ["ok"])
+    q, r = self.sparql(world, """SELECT  *  { ?x a onto:B . ?x rdfs:label "ok" . }""")
+    assert "INDEXED BY index_datas_sp" in q.sql
+    assert len(r) == 1
+    assert { x[0] for x in r } == { onto.b2 }
+
+  def test_72(self):
+    world, onto = self.prepare1()
+    onto.A.is_a.append(onto.rel.some(Thing))
+    q, r = self.sparql(world, """SELECT (STR(?x) AS ?i)  { ?x a <http://www.w3.org/2002/07/owl#Class> . FILTER (ISIRI(?x)) }""")
+    assert len(r) == 6
+    assert { x[0] for x in r } == { 'http://test.org/onto.owl#A', 'http://test.org/onto.owl#A1', 'http://test.org/onto.owl#A11', 'http://test.org/onto.owl#A2', 'http://test.org/onto.owl#B', 'http://test.org/onto.owl#C' }
+    
+  def test_73(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = ["abc", 9, onto.b1]
+    q, r = self.sparql(world, """SELECT  ?x (STR(?x) AS ?l) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 3
+    assert { tuple(x) for x in r } == { ("abc", "abc"), (9, "9"), (onto.b1, "http://test.org/onto.owl#b1") }
+    
+  def test_74(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [3, 5.9]
+    q, r = self.sparql(world, """SELECT  ?x (datatype(ABS(?x)) AS ?y) { onto:a1 onto:annot ?x }""")
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { (3, int), (5.9, float) }
+    
+  def test_75(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [3, 5.9]
+    q, r = self.sparql(world, """SELECT  ?x (datatype(?x) AS ?y) (datatype(2 * ?x) AS ?z) (datatype(2.5 * ?x) AS ?z2) { onto:a1 onto:annot ?x }""", compare_with_rdflib = False)
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { (3, int, int, float), (5.9, float, float, float) }
+    
+  def test_76(self):
+    world, onto = self.prepare1()
+    q1, r = self.sparql(world, """SELECT  ?l { ?? rdfs:label ?l }""", [onto.a1], compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { x[0] for x in r } == { "label_a" }
+    q2, r = self.sparql(world, """SELECT  ?l { ?? rdfs:label ?l }""", [onto.b1], compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { x[0] for x in r } == { "label_b" }
+    assert q1 is q2
+    
+  def test_77(self):
+    world, onto = self.prepare1()
+    q1, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { onto:a1 rdfs:label ?l }""", [locstr("test_", "fr")], compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { x[0] for x in r } == { "test_label_a" }
+    assert isinstance(r[0][0], locstr)
+    assert r[0][0].lang == "fr"
+    q2, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { onto:a1 rdfs:label ?l }""", [locstr("test_", "en")], compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { x[0] for x in r } == { "test_label_a" }
+    assert isinstance(r[0][0], locstr)
+    assert r[0][0].lang == "en"
+    assert q1 is q2
+    
+  def test_78(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [3]
+    q1, r = self.sparql(world, """SELECT  (?? + ?l AS ?l2) { onto:a1 onto:annot ?l }""", [2], compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { x[0] for x in r } == { 5 }
+    assert isinstance(r[0][0], int)
+    q2, r = self.sparql(world, """SELECT  (?? + ?l AS ?l2) { onto:a1 onto:annot ?l }""", [2.0], compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { x[0] for x in r } == { 5.0 }
+    assert isinstance(r[0][0], float)
+    assert q1 is q2
+    
+  def test_79(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?l { ??2 ??1 ?l }""", [label, onto.a1], compare_with_rdflib = False)
+    assert len(r) == 1
+    assert { x[0] for x in r } == { "label_a" }
+    
+  def test_80(self):
+    world, onto = self.prepare1()
+    onto.b2.label = []
+    q, r = self.sparql(world, """SELECT  ?x ?l  { ?x a onto:B . OPTIONAL { ?x rdfs:label ?l . } }""")
+    assert len(r) == 3
+    assert { tuple(x) for x in r } == { (onto.b1, "label_b"), (onto.b2, None), (onto.b3, "label_b") }
+    
+  def test_81(self):
+    world, onto = self.prepare1()
+    onto.a1.comment = ["test"]
+    q, r = self.sparql(world, """SELECT  ?l  { onto:a1 rdfs:label|rdfs:comment ?l . }""")
+    assert len(r) == 2
+    assert { x[0] for x in r } == { "label_a", "test" }
+    assert " IN " in q.sql
+
+  def test_82(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  (COUNT(?x) AS ?nb)  { ?x a onto:B . }""")
+    assert len(r) == 1
+    assert r == [[3]]
+    onto.a1.label = ["1", "2", "3"]
+    q, r = self.sparql(world, """SELECT  (COUNT(?x) AS ?nb)  { ?x rdfs:label ?l . }""")
+    assert len(r) == 1
+    assert r == [[10]]
+    q, r = self.sparql(world, """SELECT  (COUNT(DISTINCT ?x) AS ?nb)  { ?x rdfs:label ?l . }""")
+    assert len(r) == 1
+    assert r == [[8]]
+
+  def test_83(self):
+    world, onto = self.prepare1()
+    onto.b2.price = [12.0]
+    q, r = self.sparql(world, """SELECT  (SUM(?y) AS ?nb)  { ?x onto:price ?y . }""")
+    assert len(r) == 1
+    assert r == [[22.0]]
+    q, r = self.sparql(world, """SELECT  (MIN(?y) AS ?nb)  { ?x onto:price ?y . }""")
+    assert len(r) == 1
+    assert r == [[10.0]]
+    q, r = self.sparql(world, """SELECT  (MAX(?y) AS ?nb)  { ?x onto:price ?y . }""")
+    assert len(r) == 1
+    assert r == [[12.0]]
+    q, r = self.sparql(world, """SELECT  (AVG(?y) AS ?nb)  { ?x onto:price ?y . }""")
+    assert len(r) == 1
+    assert r == [[11.0]]
+    q, r = self.sparql(world, """SELECT  (SAMPLE(?y) AS ?nb)  { ?x onto:price ?y . }""")
+    assert len(r) == 1
+    assert (r == [[10.0]]) or (r == [[12.0]])
+    q, r = self.sparql(world, """SELECT  (GROUP_CONCAT(?y; separator=";") AS ?nb)  { ?x onto:price ?y . }""")
+    assert len(r) == 1
+    assert r == [["10.0;12.0"]]
+    
+  def test_84(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x (COUNT(DISTINCT ?y) AS ?nb)  { ?x onto:rel ?y . }""")
+    assert len(r) == 1
+    assert r == [[onto.a1, 1]]
+    assert q.column_types == ['objs', 'datas', 'datas']
+    onto.b2.rel = [onto.b1, onto.b3]
+    q, r = self.sparql(world, """SELECT  ?x (COUNT(DISTINCT ?y) AS ?nb)  { ?x onto:rel ?y . } GROUP BY ?x""")
+    assert len(r) == 2
+    assert { tuple(x) for x in r } == { (onto.a1, 1), (onto.b2, 2) }
+    q, r = self.sparql(world, """SELECT  ?x (COUNT(?y) AS ?nb)  { ?x onto:rel ?y . } GROUP BY ?x HAVING(COUNT(?y) > 1)""")
+    assert len(r) == 1
+    assert { tuple(x) for x in r } == { (onto.b2, 2) }
+    
+  def test_85(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x ?l { ?x rdfs:label ?l . } ORDER BY ?l""")
+    assert r == [[onto.A, 'Classe A'], [onto.A1, 'Classe A1'], [onto.a1, 'label_a'], [onto.b1, 'label_b'], [onto.b2, 'label_b'], [onto.b3, 'label_b'], [onto.price, 'price'], [onto.rel, 'rel']]
+    q, r = self.sparql(world, """SELECT  ?x ?l { ?x rdfs:label ?l . } ORDER BY DESC(?l)""")
+    assert r == [[onto.rel, 'rel'], [onto.price, 'price'], [onto.b3, 'label_b'], [onto.b2, 'label_b'], [onto.b1, 'label_b'], [onto.a1, 'label_a'], [onto.A1, 'Classe A1'], [onto.A, 'Classe A']]
+    q, r = self.sparql(world, """SELECT  ?x ?l { ?x rdfs:label ?l . } ORDER BY DESC(?l) ?x""")
+    assert r == [[onto.rel, 'rel'], [onto.price, 'price'], [onto.b1, 'label_b'], [onto.b2, 'label_b'], [onto.b3, 'label_b'], [onto.a1, 'label_a'], [onto.A1, 'Classe A1'], [onto.A, 'Classe A']]
+    
+  def test_86(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?x a onto:B . }  WHERE  { ?x a onto:A . }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert set(onto.a1.is_a) == { onto.A, onto.B }
+    assert len(onto2.graph) == 2
+    self.assert_triple(onto.a1.storid, rdf_type, onto.B.storid, world = world)
+    
+  def test_87(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    q, r = self.sparql(world, """WITH <%s>  INSERT  { ?x a onto:B . }  WHERE  { ?x a onto:A . }""" % onto2.base_iri, compare_with_rdflib = False)
+    assert r == [1]
+    assert set(onto.a1.is_a) == { onto.A, onto.B }
+    assert len(onto2.graph) == 2
+    self.assert_triple(onto.a1.storid, rdf_type, onto.B.storid, world = world)
+    
+  def test_88(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?x a onto:A . }  WHERE  { ?x a onto:B . }""", compare_with_rdflib = False)
+    assert r == [3]
+    assert set(onto.b1.is_a) == { onto.A, onto.B }
+    assert set(onto.b2.is_a) == { onto.A, onto.B }
+    assert set(onto.b3.is_a) == { onto.A, onto.B }
+    assert len(onto2.graph) == 4
+    self.assert_triple(onto.b1.storid, rdf_type, onto.A.storid, world = world)
+    self.assert_triple(onto.b2.storid, rdf_type, onto.A.storid, world = world)
+    self.assert_triple(onto.b3.storid, rdf_type, onto.A.storid, world = world)
+    
+  def test_89(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?a a owl:NamedIndividual . ?a a onto:A . ?b onto:rel ?a }  WHERE  { ?b a onto:B . BIND(NEWINSTANCEIRI(onto:A) AS ?a) }""", compare_with_rdflib = False)
+    assert r == [3]
+    assert len(onto2.graph) == 10
+    assert onto2.a1.is_a == [onto.A]
+    assert onto2.a1 in onto.b1.rel
+    assert onto2.a2.is_a == [onto.A]
+    assert onto2.a2 in onto.b2.rel
+    assert onto2.a3.is_a == [onto.A]
+    assert onto2.a3 in onto.b3.rel
+    
+  def test_90(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?b a owl:NamedIndividual . ?b a onto:B . ?a onto:rel ?b }  WHERE  { ?a a onto:A . BIND(UUID() AS ?b) }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert len(onto2.graph) == 4
+    i = list(onto2.individuals())[0]
+    assert i.is_a == [onto.B]
+    assert i in onto.a1.rel
+    
+  def test_91(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?b a owl:Restriction . ?b owl:onProperty onto:rel . ?b owl:someValuesFrom onto:B . ?a a ?b }  WHERE  { ?a a onto:A . BIND(BNODE() AS ?b) }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert len(onto2.graph) == 5
+    assert onto.rel.some(onto.B) in onto.a1.is_a
+    
+  def test_92(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?a onto:price "12"^^xsd:integer . }  WHERE  { ?a a onto:A }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert len(onto2.graph) == 2
+    assert onto.a1.price == [10.0, 12]
+    assert onto.a1.price[-1].__class__ is int
+    
+  def test_93(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?a onto:price "12.0"^^xsd:decimal . }  WHERE  { ?a a onto:A }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert len(onto2.graph) == 2
+    assert onto.a1.price == [10.0, 12.0]
+    assert onto.a1.price[-1].__class__ is float
+    
+  def test_94(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?a  { ?a onto:price 10.0 }""", compare_with_rdflib = False)
+    assert r == [[onto.a1]]
+    q, r = self.sparql(world, """SELECT  ?a  { ?a onto:price "10.0"^^xsd:decimal }""", compare_with_rdflib = False)
+    assert r == [[onto.a1]]
+    
+  def test_95(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """DELETE  { ?a a onto:A }  WHERE  { ?a a onto:A }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert onto.a1.is_a == [Thing]
+    
+  def test_96(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """DELETE  { ?a a onto:A }  INSERT  { ?a a onto:B }  WHERE  { ?a a onto:A }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert len(onto2.graph) == 2
+    assert not onto.A in onto.a1.is_a
+    assert onto.B in onto.a1.is_a
+    
+  def test_97(self):
+    world, onto = self.prepare1()
+    onto.b2.label = []
+    onto.b3.label.append("b3")
+    q, r = self.sparql(world, """SELECT  ?b ?l  { ?b a onto:B . OPTIONAL { ?b rdfs:label ?l . } FILTER(BOUND(?l)) }""")
+    assert len(r) == 3
+    assert { tuple(x) for x in r } == { (onto.b1, "label_b"), (onto.b3, "label_b"), (onto.b3, "b3") }
+    
+  def test_98(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x ?b  { ?x a owl:NamedIndividual . OPTIONAL { ?x a ?b . ?b rdfs:subClassOf* onto:B . } }""")
+    assert len(r) == 4
+    assert { tuple(x) for x in r } == { (onto.a1, None), (onto.b1, onto.B), (onto.b2, onto.B), (onto.b3, onto.B) }
+    
+  def test_99(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?a a [ a owl:Restriction ; owl:onProperty onto:rel ; owl:someValuesFrom onto:B ] . }  WHERE  { ?a a onto:A }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert len(onto2.graph) == 5
+    assert onto.rel.some(onto.B) in onto.a1.is_a
+    
+  def test_100(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { _:bn a owl:Restriction . _:bn owl:onProperty onto:rel . _:bn owl:someValuesFrom onto:B . ?a a _:bn }  WHERE  { ?a a onto:A }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert len(onto2.graph) == 5
+    assert onto.rel.some(onto.B) in onto.a1.is_a
+    
+  def test_101(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?b a ?? . ?b onto:price ?? . }  WHERE  { ?b a ?? }""", [onto.A, 13.0, onto.B], compare_with_rdflib = False)
+    assert r == [3]
+    assert len(onto2.graph) == 7
+    assert onto.A in onto.b1.is_a
+    assert onto.b1.price == [13.0]
+    assert onto.A in onto.b2.is_a
+    assert onto.b2.price == [13.0]
+    assert onto.A in onto.b3.is_a
+    assert onto.b3.price == [13.0]
+    
+  def test_102(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?b onto:annot ??1 . ?b onto:price ??2 . }  WHERE  { ?b a ??1 }""", [onto.B, 9], compare_with_rdflib = False)
+    assert r == [3]
+    assert len(onto2.graph) == 7
+    assert onto.b1.annot == [onto.B]
+    assert onto.b1.price == [9]
+    assert onto.b2.annot == [onto.B]
+    assert onto.b2.price == [9]
+    assert onto.b3.annot == [onto.B]
+    assert onto.b3.price == [9]
+    
+  def test_103(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { ?b onto:annot ??2 . ?b onto:price ??1 . }  WHERE  { ?b a ??2 }""", [9, onto.B], compare_with_rdflib = False)
+    assert r == [3]
+    assert len(onto2.graph) == 7
+    assert onto.b1.annot == [onto.B]
+    assert onto.b1.price == [9]
+    assert onto.b2.annot == [onto.B]
+    assert onto.b2.price == [9]
+    assert onto.b3.annot == [onto.B]
+    assert onto.b3.price == [9]
+    
+  def test_104(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT  { onto:a1 a onto:B . }  WHERE  {  }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert len(onto2.graph) == 2
+    assert onto.B in onto.a1.is_a
+    
+  def test_105(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """DELETE  { onto:a1 a onto:A . }  WHERE  {  }""", compare_with_rdflib = False)
+    assert r == [1]
+    assert onto.a1.is_a == [Thing]
+    
+  def test_106(self):
+    world, onto = self.prepare1()
+    onto.a1.annot = [locstr("Oignon", "fr")]
+    q, r = self.sparql(world, """SELECT  (CONCAT(?x, "s") AS ?r)  { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 1
+    assert r == [["Oignons"]]
+    assert isinstance(r[0][0], locstr)
+    assert r[0][0].lang == "fr"
+    q, r = self.sparql(world, """SELECT  (CONCAT("Z", ?x) AS ?r)  { onto:a1 onto:annot ?x . }""")
+    assert len(r) == 1
+    assert r == [["ZOignon"]]
+    assert isinstance(r[0][0], locstr)
+    assert r[0][0].lang == "fr"
+  
+
+
+    
 
 # Add test for Pellet
 

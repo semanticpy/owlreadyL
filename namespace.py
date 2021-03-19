@@ -18,6 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import importlib, urllib.request, urllib.parse
+from functools import lru_cache
 
 from owlready2.base import *
 from owlready2.base import _universal_abbrev_2_iri, _universal_iri_2_abbrev, _universal_abbrev_2_datatype, _universal_datatype_2_abbrev
@@ -33,7 +34,7 @@ def set_log_level(x):
   
 class Namespace(object):
   def __init__(self, world_or_ontology, base_iri, name = None):
-    if not(base_iri.endswith("#") or base_iri.endswith("/")): raise ValueError("base_iri must end with '#' or '/' !")
+    if not(base_iri.endswith("#") or base_iri.endswith("/") or base_iri.endswith(":")): raise ValueError("base_iri must end with '#', '/' or ':' !")
     name = name or base_iri[:-1].rsplit("/", 1)[-1]
     if name.endswith(".owl") or name.endswith(".rdf"): name = name[:-4]
     
@@ -499,7 +500,19 @@ class World(_GraphManager):
   def sparql_query(self, sparql, *args, **kargs):
     yield from self.as_rdflib_graph().query_owlready(sparql, *args, **kargs)
     
-      
+  def sparql(self, sparql, params = (), error_on_undefined_entities = True):
+    import owlready2.sparql.main
+    query = self._prepare_sparql(sparql, error_on_undefined_entities)
+    return query.execute(params)
+  
+  @lru_cache(maxsize = 1024)
+  def _prepare_sparql(self, sparql, error_on_undefined_entities):
+    import owlready2.sparql.main
+    return owlready2.sparql.main.Translator(self, error_on_undefined_entities).parse(sparql)
+  
+  def prepare_sparql(self, sparql, error_on_undefined_entities = True): # lru_cache does not handle optional args
+    return self._prepare_sparql(sparql, error_on_undefined_entities)
+  
   def get_ontology(self, base_iri):
     if (not base_iri.endswith("/")) and (not base_iri.endswith("#")):
       if   ("%s#" % base_iri) in self.ontologies: base_iri = base_iri = "%s#" % base_iri
@@ -509,14 +522,106 @@ class World(_GraphManager):
     return Ontology(self, base_iri)
   
   def get_namespace(self, base_iri, name = ""):
-    if (not base_iri.endswith("/")) and (not base_iri.endswith("#")):
+    if (not base_iri.endswith("/")) and (not base_iri.endswith("#")) and (not base_iri.endswith(":")):
       if   ("%s#" % base_iri) in self.ontologies: base_iri = base_iri = "%s#" % base_iri
       elif ("%s/" % base_iri) in self.ontologies: base_iri = base_iri = "%s/" % base_iri
+      elif ("%s:" % base_iri) in self.ontologies: base_iri = base_iri = "%s:" % base_iri
       else:                                       base_iri = base_iri = "%s#" % base_iri
     if base_iri in self._namespaces: return self._namespaces[base_iri]
     return Namespace(self, base_iri, name or base_iri[:-1].rsplit("/", 1)[-1])
     
-  
+  def _del_triple_with_update(self, s, p, o, d = None):
+    sub = None
+    
+    if   (s > 0) and (s in self.world._entities):
+      sub = self._entities[s]
+    elif  s < 0:
+      for ontology in self.ontologies.values():
+        if s in ontology._bnodes:
+          sub = ontology._bnodes[s]
+          break
+        
+    if not sub is None:
+      prop = self._entities.get(p)
+      if   prop:
+        try: delattr(sub, prop.python_name)
+        except: pass
+        
+      elif d is None:
+        obj = self._load_by_storid(o)
+        if not obj is None:
+          if (p == rdf_type) or (p == rdfs_subclassof) or (p == rdfs_subpropertyof):
+            sub.is_a.remove(obj)
+            return
+          
+          elif (p == owl_equivalentindividual) or (p == owl_equivalentclass) or (p == owl_equivalentproperty):
+            sub.equivalent_to.remove(obj)
+            return
+          
+          elif (p == owl_inverse_property):
+            if sub.inverse_property is obj: sub.inverse_property = None
+            return
+          
+          elif (p == rdf_domain):
+            sub.domain.remove(obj)
+            return
+          
+          elif (p == rdf_range):
+            sub.range.remove(obj)
+            return
+          
+    if d is None: self._del_obj_triple_raw_spo  (s,p,o)
+    else:         self._del_data_triple_raw_spod(s,p,o,d)
+    
+  def _add_triple_with_update(self, ontology0, s, p, o, d = None):
+    l = owlready2.namespace.CURRENT_NAMESPACES.get()
+    if l:
+      ontology = l[-1].ontology
+    else:
+      ontology = ontology0
+      if not ontology:
+        raise ValueError("Cannot add triples outside a 'with' block. Please start a 'with' block to indicate in which ontology the new triple is added, or include a 'WITH <onto_IRI>' statement in SPARQL.")
+      
+    sub = None
+    if   (s > 0) and (s in self.world._entities): sub = self._entities[s]
+    elif (s < 0) and (s in ontology._bnodes):     sub = ontology._bnodes[s]
+    if not sub is None:
+      prop = self._entities.get(p)
+      if   prop:
+        try: delattr(sub, prop.python_name)
+        except: pass
+        
+      elif d is None:
+        if o > 0: obj = self._load_by_storid(o)
+        else:     obj = self._parse_bnode(o)
+        
+        if not obj is None:
+          if   (p == rdf_type) or (p == rdfs_subclassof) or (p == rdfs_subpropertyof):
+            with DONT_COPY_BN:
+              with ontology: sub.is_a.append(obj)
+            return
+          
+          elif (p == owl_equivalentindividual) or (p == owl_equivalentclass) or (p == owl_equivalentproperty):
+            with DONT_COPY_BN:
+              with ontology: sub.equivalent_to.append(obj)
+            return
+          
+          elif (p == owl_inverse_property):
+            with ontology: sub.inverse_property = obj
+            return
+          
+          elif (p == rdf_domain):
+            with ontology: sub.domain.append(obj)
+            return
+          
+          elif (p == rdf_range):
+            with ontology: sub.range.append(obj)
+            return
+          
+    if d is None: ontology.graph._add_obj_triple_raw_spo  (s,p,o)
+    else:         ontology.graph._add_data_triple_raw_spod(s,p,o,d)
+    
+    
   def get(self, iri, default = None):
     storid = self._abbreviate(iri, False)
     if storid is None: return default
@@ -538,7 +643,7 @@ class World(_GraphManager):
       return self._load_by_storid(storid, full_iri, main_type, main_onto, default_to_none)
     except RecursionError:
       return self._load_by_storid(storid, full_iri, main_type, main_onto, default_to_none, ())
-        
+    
   def _load_by_storid(self, storid, full_iri = None, main_type = None, main_onto = None, default_to_none = True, trace = None):
     with LOADING:
       types       = []
@@ -595,6 +700,7 @@ class World(_GraphManager):
         else:
           full_iri = full_iri or self._unabbreviate(storid)
           splitted = full_iri.rsplit("#", 1)
+          
           if len(splitted) == 2:
             namespace = main_onto.get_namespace("%s#" % splitted[0])
             name = splitted[1]
@@ -604,9 +710,14 @@ class World(_GraphManager):
               namespace = main_onto.get_namespace("%s/" % splitted[0])
               name = splitted[1]
             else:
-              namespace = main_onto.get_namespace("")
-              name = full_iri
-              
+              splitted = full_iri.split(":", 1)
+              if len(splitted) == 2:
+                namespace = main_onto.get_namespace("%s:" % splitted[0])
+                name = splitted[1]
+              else:
+                namespace = main_onto.get_namespace("")
+                name = full_iri
+                
               
       # Read and create with classes first, but not construct, in order to break cycles.
       if   main_type is ThingClass:
@@ -660,8 +771,6 @@ class World(_GraphManager):
       if is_a_bnodes:
         list.extend(entity.is_a, (onto._parse_bnode(bnode) for onto, bnode in is_a_bnodes))
         
-    #_cache_entity(entity)
-    
     return entity
   
   def _parse_bnode(self, bnode):
@@ -737,7 +846,7 @@ class Ontology(Namespace, _GraphManager):
       self._add_obj_triple_spo(self.storid, owl_imports, ontology.storid)
       
   def get_namespace(self, base_iri, name = ""):
-    if (not base_iri.endswith("/")) and (not base_iri.endswith("#")): base_iri = "%s#" % base_iri
+    if (not base_iri.endswith("/")) and (not base_iri.endswith("#")) and (not base_iri.endswith(":")): base_iri = "%s#" % base_iri
     r = self._namespaces.get(base_iri)
     if not r is None: return r
     return Namespace(self, base_iri, name or base_iri[:-1].rsplit("/", 1)[-1])

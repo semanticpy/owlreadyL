@@ -50,9 +50,9 @@ def to_literal(o):
   return unparser(o), datatype
   
 def from_literal(o, d):
-  #from owlready2 import default_world
-  #print(repr(o), repr(d), default_world._unabbreviate(d))
-  if isinstance(d, str) and d.startswith("@"): return locstr(o, lang = d[1:])
+  if isinstance(d, str):
+    if d.startswith("@"): return locstr(o, lang = d[1:])
+    return o
   if d == 0: return o
   datatype, parser = _universal_abbrev_2_datatype_parser.get(d) or (None, None)
   if parser is None: raise ValueError("Cannot read literal of datatype %s!" % repr(d))
@@ -118,6 +118,7 @@ SPECIAL_ATTRS      = { "namespace",  "name", "_name", "iri", "_iri", "storid", "
 SPECIAL_PROP_ATTRS = { "namespace",  "name", "_name", "python_name", "_python_name", "_domain", "_property_chain", "_inverse_property", "inverse_property", "inverse", "_range", "iri", "_iri", "storid", "is_a", "equivalent_to", "_equivalent_to", "disjoint_with", "_disjoint_with", "__class__", "__qualname__", "__module__", "__doc__", "__bases__" }
 
 
+DONT_COPY_BN = Environment()
 
 LOADING = Environment()
 LOADING.__enter__() # Avoid creating triple when creating base classes like Thing

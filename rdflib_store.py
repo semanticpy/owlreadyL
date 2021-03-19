@@ -22,6 +22,7 @@ from rdflib import URIRef, BNode, Literal
 
 import owlready2.triplelite, owlready2.namespace
 from owlready2.base import *
+from owlready2.base import _universal_abbrev_2_datatype
 
 class TripleLiteRDFlibStore(rdflib.store.Store):
   context_aware = True
@@ -94,96 +95,14 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
     return s,p,o
   
   def add(self, xxx_todo_changeme, context, quoted = False):
-    s,p,o,d = self._rdflib_2_owlready(xxx_todo_changeme)
-    
     if isinstance(context.triplelite, owlready2.triplelite.SubGraph):
-      triplelite = context.triplelite
+      ontology = context.triplelite.onto
     else:
-      l = owlready2.namespace.CURRENT_NAMESPACES.get()
-      if not l: raise ValueError("Cannot add triples to a graph outside a 'with' block. Please start a 'with' block to indicate in which ontology the new triple is added.")
-      triplelite = l[-1].ontology.graph
-      
-    sub = None
-    if   (s > 0) and (s in self.world._entities):    sub = self.world._entities[s]
-    elif (s < 0) and (s in triplelite.onto._bnodes): sub = triplelite.onto._bnodes[s]
-    if not sub is None:
-      prop = self.world._entities.get(p)
-      if   prop:
-        try: delattr(sub, prop.python_name)
-        except: pass
-        
-      #elif isinstance(sub, owlready2.class_construct.Construct):
-      #  self._bn_needing_update.append((triplelite.onto, s))
-      
-      elif d is None:
-        obj = self.world._load_by_storid(o)
-        if not obj is None:
-          if (p == rdf_type) or (p == rdfs_subclassof) or (p == rdfs_subpropertyof):
-            sub.is_a.append(obj)
-            return
-          
-          elif (p == owl_equivalentindividual) or (p == owl_equivalentclass) or (p == owl_equivalentproperty):
-            sub.equivalent_to.append(obj)
-            return
-          
-          elif (p == owl_inverse_property):
-            sub.owl_inverse_property = obj
-            return
-          
-          elif (p == rdf_domain):
-            sub.domain.append(obj)
-            return
-          
-          elif (p == rdf_range):
-            sub.range.append(obj)
-            return
-        
-    if d is None: triplelite._add_obj_triple_raw_spo(s,p,o)
-    else:         triplelite._add_data_triple_raw_spod(s,p,o,d)
+      ontology = None
+    self.world._add_triple_with_update(ontology, *self._rdflib_2_owlready(xxx_todo_changeme))
     
   def remove(self, xxx_todo_changeme, context = None):
-    s,p,o,d = self._rdflib_2_owlready(xxx_todo_changeme)
-    
-    sub = None
-    if   (s > 0) and (s in self.world._entities):
-      sub = self.world._entities[s]
-    elif  s < 0:
-      for ontology in self.world.ontologies.values():
-        if s in ontology._bnodes:
-          sub = ontology._bnodes[s]
-          break
-        
-    if not sub is None:
-      prop = self.world._entities.get(p)
-      if   prop:
-        try: delattr(sub, prop.python_name)
-        except: pass
-        
-      elif d is None:
-        obj = self.world._load_by_storid(o)
-        if not obj is None:
-          if (p == rdf_type) or (p == rdfs_subclassof) or (p == rdfs_subpropertyof):
-            sub.is_a.remove(obj)
-            return
-          
-          elif (p == owl_equivalentindividual) or (p == owl_equivalentclass) or (p == owl_equivalentproperty):
-            sub.equivalent_to.remove(obj)
-            return
-          
-          elif (p == owl_inverse_property):
-            sub.owl_inverse_property = None
-            return
-          
-          elif (p == rdf_domain):
-            sub.domain.remove(obj)
-            return
-          
-          elif (p == rdf_range):
-            sub.range.remove(obj)
-            return
-          
-    if d is None: context.triplelite._del_obj_triple_raw_spo(s,p,o)
-    else:         context.triplelite._del_data_triple_raw_spod(s,p,o,d)
+    self.world._del_triple_with_update(*self._rdflib_2_owlready(xxx_todo_changeme))
     
     
   def triples(self, triple_pattern, context = None):
@@ -283,13 +202,18 @@ class TripleLiteRDFlibGraph(rdflib.Graph):
   #   return r
   
   def _rdflib_2_owlready(self, o):
-    if   isinstance(o, rdflib.term.URIRef ): o = self.store.world[str(o)]
-    elif isinstance(o, rdflib.term.BNode  ): o = (self.onto or self.store.world)._parse_bnode(o)
+    if   isinstance(o, rdflib.term.URIRef ):
+      o = self.store.world[str(o)] or self.store.world._abbreviate(str(o))
+      if isinstance(o, int):
+        if o in _universal_abbrev_2_datatype: o = _universal_abbrev_2_datatype[o] 
+    elif isinstance(o, rdflib.term.BNode  ):
+      o = (self.onto or self.store.world)._parse_bnode(-int(o))
     elif isinstance(o, rdflib.term.Literal):
       if o.language is None:
         if o.datatype:
           d = self.triplelite._abbreviate(str(o.datatype))
-          o = o.value
+          #o = o.value
+          o = str(o)
         else:
           d = ""
           o = str(o)

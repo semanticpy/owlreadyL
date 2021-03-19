@@ -104,9 +104,6 @@ class Thing(metaclass = ThingClass):
           
         return already_existing
       
-    #_cache_entity(entity)
-    #return object.__new__(Class)
-    #print(namespace, kargs)
     return _cache_entity(object.__new__(Class))
   
   def __init__(self, name = None, namespace = None, **kargs):
