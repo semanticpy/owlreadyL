@@ -43,6 +43,7 @@ Table of content
    reasoning.rst
    annotations.rst
    namespace.rst
+   sparql.rst
    world.rst
    rule.rst
    pymedtermino2.rst

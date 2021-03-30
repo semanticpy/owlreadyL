@@ -542,6 +542,7 @@ version 2 - 0.30
 * Bugfixes:
   - Fix RecursionError when saving very deep ontologies to RDF/XML
   - Fix IRI of the form 'urn:uuid:...'
+  - Fix loading ontologies that modify an imported property
 
 
 Links

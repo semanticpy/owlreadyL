@@ -8312,6 +8312,65 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     q, r = self.sparql(world, """SELECT  ?y ?x  {  ?y onto:price ?p . { SELECT  ?x (MIN(?p) AS ?m)  { ?x onto:price ?p . } } FILTER(?p < ?m + 2.0) }""", compare_with_rdflib = False)
     assert len(r) == 2
     assert { tuple(x) for x in r } == { (onto.b1, onto.b1), (onto.a1, onto.b1) }
+    
+  def test_109(self):
+    world, onto = self.prepare1()
+    #q, r = self.sparql(world, """SELECT  ?x ?y  {  ?x rdfs:label "Classe A" . ?y a/rdfs:subClassOf* ?x }""", compare_with_rdflib = False)
+    q, r = self.sparql(world, """SELECT  ?x ?y  {  ?x rdfs:label "Classe A" . ?y a ?z . ?z rdfs:subClassOf* ?x }""", compare_with_rdflib = False)
+    #assert len(r) == 2
+    #assert { tuple(x) for x in r } == { (onto.b1, onto.b1), (onto.a1, onto.b1) }
+    assert """AS (SELECT q1.s""" in q.sql # Fix o
+    assert len(r) == 1
+    assert { tuple(x) for x in r } == { (onto.A, onto.a1, ) }
+    
+  def test_110(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?y  {  ?x rdfs:label "Classe A" . ?y a ?z . ?z rdfs:subClassOf* ?x }""", compare_with_rdflib = False)
+    assert """AS (SELECT q1.s""" in q.sql # Fix o
+    assert len(r) == 1
+    assert { tuple(x) for x in r } == { (onto.a1, ) }
+
+  def test_111(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT { ?x rdfs:label "un A"@fr } WHERE  { ?x a onto:A . }""", compare_with_rdflib = False)
+    assert len(onto.a1.label) == 2
+    l = sorted(onto.a1.label)
+    assert l[0] == "label_a"
+    assert l[0].lang == "en"
+    assert l[1] == "un A"
+    assert l[1].lang == "fr"
+    del onto.a1.label
+    assert len(onto.a1.label) == 2
+    assert l[0] == "label_a"
+    assert l[0].lang == "en"
+    assert l[1] == "un A"
+    assert l[1].lang == "fr"
+
+  def test_112(self):
+    world, onto = self.prepare1()
+    onto2 = world.get_ontology("http://test.org/insertions.owl")
+    with onto2:
+      q, r = self.sparql(world, """INSERT { ?x rdfs:label "un A" } WHERE  { ?x a onto:A . }""", compare_with_rdflib = False)
+    assert len(onto.a1.label) == 2
+    l = sorted(onto.a1.label)
+    assert l[0] == "label_a"
+    assert l[0].lang == "en"
+    assert l[1] == "un A"
+    del onto.a1.label
+    assert len(onto.a1.label) == 2
+    assert l[0] == "label_a"
+    assert l[0].lang == "en"
+    assert l[1] == "un A"
+
+    
+  # def test_109(self):
+  #   world, onto = self.prepare1()
+  #   onto.b3.label = []
+  #   q, r = self.sparql(world, """SELECT  ?x  {  ?x a onto:B . MINUS { ?x rdfs:label ?l }  }""", compare_with_rdflib = False)
+  #   assert len(r) == 2
+  #   assert { tuple(x) for x in r } == { (onto.b1,), (onto.b2,) }
 
 
     

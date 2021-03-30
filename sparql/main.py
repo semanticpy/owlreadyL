@@ -38,6 +38,8 @@ INSERT DATA, DELETE DATA, DELETE WHERE (use INSERT or DELETE instead)
 
 VALUES
 
+MINUS
+
 """
 
 from owlready2.sparql.parser import *
@@ -48,7 +50,7 @@ class Translator(object):
   def __init__(self, world, error_on_undefined_entities = True):
     self.world                         = world
     self.error_on_undefined_entities   = error_on_undefined_entities
-    self.prefixes                      = { "rdf:" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdfs:" : "http://www.w3.org/2000/01/rdf-schema#", "owl:" : "http://www.w3.org/2002/07/owl#", "xsd:" : "http://www.w3.org/2001/XMLSchema#", "obo" : "http://purl.obolibrary.org/obo/", "owlready:" : "http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#" }
+    self.prefixes                      = { "rdf:" : "http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdfs:" : "http://www.w3.org/2000/01/rdf-schema#", "owl:" : "http://www.w3.org/2002/07/owl#", "xsd:" : "http://www.w3.org/2001/XMLSchema#", "obo:" : "http://purl.obolibrary.org/obo/", "owlready:" : "http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#" }
     self.base_iri                      = ""
     self.current_anonynous_var         = 0
     self.current_parameter             = 0
@@ -133,17 +135,22 @@ class Translator(object):
           if len(triple) == 3: # in 'o' position => can be datas!
             triple.append(("paramdatatype", x.number - 1))
         else:
-          if (len(triple) == 2) and hasattr(x, "datatype"): # in 'o' position => can be objs or datas!
-            triple.append(("datas", x.value))
-            triple.append(("datas", x.datatype))
+          if   isinstance(x.value, locstr):
+            triple.append(("datas", x.value[1:-1]))
+            triple.append(("datas", "@%s" % x.value.lang))
           else:
-            triple.append(("datas", x.value))
+            if isinstance(x.value, str): v, d = self.world._to_rdf(x.value[1:-1])
+            else:                        v, d = self.world._to_rdf(x.value)
+            d2 = getattr(x, "datatype", None) or d
+            triple.append(("datas", v))
+            triple.append(("datas", d2))
+            
       r.append(triple)
     return r
   
   def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None):
     if preliminary and not name: name = "prelim%s" % (len(self.preliminary_selects) + 1)
-    
+
     if isinstance(block, UnionBlock) and block.simple_union_triples: block = SimpleTripleBlock(block.simple_union_triples)
     
     if   isinstance(block, SimpleTripleBlock):
@@ -508,6 +515,8 @@ class SQLQuery(FuncSupport):
       if isinstance(triple, UnionBlock) and triple.simple_union_triples:
         self.triples[i:i+1] = triple.simple_union_triples
         
+    remnant_triples = set(self.triples)
+        
     for triple in list(self.triples): # Pass 1: Determine var type and prop type
       if isinstance(triple, (Bind, Filter, Block)): continue
       s, p, o = triple
@@ -531,7 +540,7 @@ class SQLQuery(FuncSupport):
       if o.name == "VAR": self.parse_var(o).update_type(triple.local_table_type)
       
     non_preliminary_triples = []
-    for triple in list(self.triples): # Pass 3: Create recursive preliminary select
+    for triple in list(self.triples): # Pass 3: Create recursive preliminary selects
       if isinstance(triple, Block): continue
       if isinstance(triple, (Bind, Filter)):
         non_preliminary_triples.append(triple)
@@ -543,15 +552,19 @@ class SQLQuery(FuncSupport):
         if   (s.name != "VAR"): fixed = "s"
         elif (o.name != "VAR"): fixed = "o"
         else:
-          nb_s = nb_o = 0
-          for triple in self.triples:
-            for x in triple.var_names:
-              if x == s.value: nb_s += 1
-              if x == o.value: nb_o += 1
-          if   nb_s == 1:    fixed = "o"
-          elif nb_o == 1:    fixed = "s"
-          elif nb_s <= nb_o: fixed = "s"
-          else:              fixed = "o"
+          # nb_s = nb_o = 0
+          # for triple2 in self.triples:
+          #   for x in triple2.var_names:
+          #     if x == s.value: nb_s += 1
+          #     if x == o.value: nb_o += 1
+          # if   nb_s == 1:    fixed = "o"
+          # elif nb_o == 1:    fixed = "s"
+          # elif nb_s <= nb_o: fixed = "s"
+          # else:              fixed = "o"
+          # print("NB", nb_s, nb_o)
+          fix_levels = self.get_fix_levels([self.parse_var(s), self.parse_var(o)], triple)
+          if fix_levels[self.parse_var(s)] >= fix_levels[self.parse_var(o)]: fixed = "s"
+          else:                                                              fixed = "o"
           
         non_fixed = "o" if fixed == "s" else "s"
         vars = []
@@ -563,6 +576,8 @@ class SQLQuery(FuncSupport):
         
         prelim_triples = self.extract_triples(self.triples, vars, triple)
         
+        remnant_triples.remove(triple)
+        remnant_triples.difference_update(prelim_triples)
         prelim = self.translator.get_recursive_preliminary_select(triple, fixed, fixed_var, prelim_triples)
         triple.local_table_type = prelim.name
         triple.consider_p = False
@@ -574,7 +589,8 @@ class SQLQuery(FuncSupport):
         non_preliminary_triples.append(triple)
         
     selected_non_preliminary_triples = frozenset(self.extract_triples(non_preliminary_triples, self.vars_needed_for_select))
-    
+    selected_non_preliminary_triples = selected_non_preliminary_triples | remnant_triples
+
     for triple in self.triples: # Pass 4: create triples tables and conditions
       if   isinstance(triple, Bind):
         self.parse_bind(triple)
@@ -622,6 +638,58 @@ class SQLQuery(FuncSupport):
       
       if p.modifier == "+": conditions.append("%s.nb>0"  % table.name)
       
+
+  def get_fix_levels(self, vars0, exclude_triple = None):
+    vars0_names = { var.name for var in vars0 }
+    fix_levels  = defaultdict(float)
+    fix_triples = {}
+    
+    def fix(var, triple, via_vars, w = 1.0):
+      nonlocal changed
+      
+      w0 = min((0.5 * fix_levels[via_var] for via_var in via_vars), default = 1.0)
+      w  = w * w0
+      
+      if w > fix_levels[var]:
+        changed          = True
+        fix_levels [var] = w
+        fix_triples[var] = l = { triple }
+        for via_var in via_vars: l.update(fix_triples[via_var])
+        
+    def scan_triple(triples, w = 1):
+      for triple in self.triples:
+        if triple is exclude_triple: continue
+        
+        if   isinstance(triple, Triple):
+          if   len(triple.var_names) == 1:
+            var = self.parse_var(tuple(triple.var_names)[0])
+            fix(var, triple, [], w)
+            
+          elif len(triple.var_names) == 2:
+            if triple.var_names != vars0_names:
+              vars = [self.parse_var(var_name) for var_name in triple.var_names]
+              for v1, v2 in [(vars[0], vars[1]), (vars[1], vars[0])]:
+                fix(v1, triple, [v2], w)
+                
+        elif isinstance(triple, Filter):
+          pass
+        elif isinstance(triple, Bind):
+          var = self.parse_var(triple.var)
+          fix(var, triple, [self.parse_var(var_name) for var_name in triple.var_names], w)
+          
+        elif isinstance(triple, UnionBlock):
+          for alternative in triple: scan_triple(alternative, w / len(triple))
+          
+    while True:
+      changed = False
+      scan_triple(self.triples)
+      if not changed: break
+      for var in vars0:
+        if not var in fix_levels: break
+      else:
+        break
+      
+    return fix_levels
       
   def extract_triples(self, triples, vars, except_triple = None):
     var_names = { var.name for var in vars }
@@ -797,7 +865,8 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
     else:                                 self.need_d = (p.modifier == "?") and not isinstance(triple.Prop, ObjectPropertyClass)
     
     self.need_orig    = not self.fixed_var is None # XXX Optimizable
-    self.need_nb      =  p.modifier != "*"
+    self.need_nb      = p.modifier != "*"
+    
     SQLQuery.__init__(self, "%s_%s" % (name, "quads" if self.need_d else "objs"))
     self.recursive    = True
     self.preliminary  = True

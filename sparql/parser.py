@@ -61,6 +61,7 @@ lg.add(".",                    r"""\.""")
 lg.add("PREFIXED_NAME",        r"""[\w\.\-]*:([\w\.\-:]|%[0-9a-fA-F]{2}|\\[_~\.\-!$&"'()*+,;=/?#@%])+""")
 lg.add("PNAME_NS",             r"""[\w\.\-]*:""")
 lg.add("FUNC",                 r"""(?:STRLANG)|(?:STRDT)|(?:STRLEN)|(?:STRSTARTS)|(?:STRENDS)|(?:STRBEFORE)|(?:STRAFTER)|(?:LANGMATCHES)|(?:LANG)|(?:DATATYPE)|(?:BOUND)|(?:IRI)|(?:URI)|(?:BNODE)|(?:RAND)|(?:ABS)|(?:CEIL)|(?:FLOOR)|(?:ROUND)|(?:CONCAT)|(?:STR)|(?:UCASE)|(?:LCASE)|(?:ENCODE_FOR_URI)|(?:CONTAINS)|(?:YEAR)|(?:MONTH)|(?:DAY)|(?:HOURS)|(?:MINUTES)|(?:SECONDS)|(?:TIMEZONE)|(?:TZ)|(?:NOW)|(?:UUID)|(?:STRUUID)|(?:MD5)|(?:SHA1)|(?:SHA256)|(?:SHA384)|(?:SHA512)|(?:COALESCE)|(?:IF)|(?:sameTerm)|(?:isIRI)|(?:isURI)|(?:isBLANK)|(?:isLITERAL)|(?:isNUMERIC)|(?:REGEX)|(?:SUBSTR)|(?:REPLACE)|(?:SIMPLEREPLACE)|(?:NEWINSTANCEIRI)\b""", re.IGNORECASE)
+lg.add("MINUS",                r"""MINUS\b""", re.IGNORECASE)
 lg.add("AGGREGATE_FUNC",       r"""(?:COUNT)|(?:SUM)|(?:MIN)|(?:MAX)|(?:AVG)|(?:SAMPLE)|(?:GROUP_CONCAT)\b""", re.IGNORECASE)
 lg.add("BASE",                 r"""BASE\b""", re.IGNORECASE)
 lg.add("PREFIX",               r"""PREFIX\b""", re.IGNORECASE)
@@ -71,7 +72,6 @@ lg.add("EXISTS",               r"""EXISTS\b""", re.IGNORECASE)
 lg.add("NOT_EXISTS",           r"""NOT\s+EXISTS\b""", re.IGNORECASE)
 lg.add("FILTER",               r"""FILTER\b""", re.IGNORECASE)
 lg.add("UNION",                r"""UNION\b""", re.IGNORECASE)
-lg.add("MINUS",                r"""MINUS\b""", re.IGNORECASE)
 #lg.add("UNDEF",                r"""UNDEF\b""", re.IGNORECASE)
 #lg.add("VALUES",               r"""VALUES\b""", re.IGNORECASE)
 lg.add("BIND",                 r"""BIND\b""", re.IGNORECASE)
@@ -433,7 +433,8 @@ def f(p):
     return p
   return OptionalBlock(p)
 @pg.production("group_graph_pattern_item : MINUS group_graph_pattern")
-def f(p): return p
+def f(p):
+  return MinusBlock(p[1])
 @pg.production("group_graph_pattern_item : FILTER constraint")
 def f(p):
   if   isinstance(p[1], list) and isinstance(p[1][0], rply.Token) and p[1][0].name == "EXISTS":
@@ -949,6 +950,8 @@ class Block(list):
     return ordered_vars
   
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False): raise NotImplementedError
+  
+  def __hash__(self): return id(self)
   
 class UnionBlock(Block):
   def __init__(self, l = None):

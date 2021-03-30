@@ -928,12 +928,12 @@ class Ontology(Namespace, _GraphManager):
       
     self.world.graph.release_write_lock()
     
-    # Search for property names
-    if self.world.graph.indexed: self._load_properties()
-    
     # Load imported ontologies
     imported_ontologies = [self.world.get_ontology(self._unabbreviate(abbrev_iri)).load() for abbrev_iri in self.world._get_obj_triples_sp_o(self.storid, owl_imports)]
     self._imported_ontologies._set(imported_ontologies)
+    
+    # Search for property names
+    if self.world.graph.indexed: self._load_properties()
     
     # Import Python module
     global default_world, IRIS, get_ontology
