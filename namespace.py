@@ -932,7 +932,7 @@ class Ontology(Namespace, _GraphManager):
     imported_ontologies = [self.world.get_ontology(self._unabbreviate(abbrev_iri)).load() for abbrev_iri in self.world._get_obj_triples_sp_o(self.storid, owl_imports)]
     self._imported_ontologies._set(imported_ontologies)
     
-    # Search for property names
+    # Search for property names -- must be done AFTER loading imported ontologies, because the properties might be partly defined in the imported ontologies
     if self.world.graph.indexed: self._load_properties()
     
     # Import Python module
