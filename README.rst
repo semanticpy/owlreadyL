@@ -60,6 +60,7 @@ Load an ontology from a local repository, or from Internet:
 Create new classes in the ontology, possibly mixing OWL constructs and Python methods:
 
 ::
+
   >>> with onto:
   ...     class NonVegetarianPizza(onto.Pizza):
   ...       equivalent_to = [
