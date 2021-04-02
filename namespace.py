@@ -940,7 +940,7 @@ class Ontology(Namespace, _GraphManager):
     for module, d in self._get_data_triples_sp_od(self.storid, owlready_python_module):
       module = from_literal(module, d)
       if _LOG_LEVEL: print("* Owlready2 *     ...importing Python module %s required by ontology %s..." % (module, self.name), file = sys.stderr)
-
+      
       import owlready2
       saved = owlready2.default_world, owlready2.IRIS, owlready2.get_ontology, owlready2.get_namespace
       try:

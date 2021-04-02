@@ -8364,6 +8364,14 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     assert l[0].lang == "en"
     assert l[1] == "un A"
 
+  def test_113(self):
+    world, onto = self.prepare1()
+    with onto:
+      onto.A.is_a.append(onto.rel.some(onto.B))
+    nb = len(onto.graph)
+    q, r = self.sparql(world, """DELETE { ?r ?p ?o . } WHERE  { onto:A rdfs:subClassOf ?r . ?r a owl:Restriction . ?r ?p ?o . }""", compare_with_rdflib = False)
+    assert len(onto.graph) == nb - 3
+    
     
   # def test_109(self):
   #   world, onto = self.prepare1()

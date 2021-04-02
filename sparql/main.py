@@ -112,7 +112,7 @@ class Translator(object):
       return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns), select_param_indexes)
     
   def parse_inserts_deletes(self, triples, columns):
-    var_2_column = { column.var : column for column in self.main_query.columns }
+    var_2_column = { column.var : column for column in self.main_query.columns if not column.name.endswith("d") }
     r = []
     for triple0 in triples:
       triple = []
@@ -309,7 +309,7 @@ class PreparedModifyQuery(PreparedQuery):
     nb_match = 0
     if self.sql: resultss = PreparedQuery.execute(self, [params[i] for i in self.select_param_indexes])
     else:        resultss = [[]]
-    for results in resultss:
+    for results in list(resultss):
       nb_match += 1
       
       for delete in self.deletes:

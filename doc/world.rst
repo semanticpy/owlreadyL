@@ -88,8 +88,8 @@ Finally, the reasoner can be executed on a specific World:
    >>> sync_reasoner(my_world)
 
 
-Working with RDFlib for performing SPARQL queries
--------------------------------------------------
+Working with RDFlib
+-------------------
 
 Owlready2 uses an optimized RDF quadstore. This quadstore can also be accessed
 as an RDFlib graph as follows:
