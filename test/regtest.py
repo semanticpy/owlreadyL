@@ -8372,6 +8372,13 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     q, r = self.sparql(world, """DELETE { ?r ?p ?o . } WHERE  { onto:A rdfs:subClassOf ?r . ?r a owl:Restriction . ?r ?p ?o . }""", compare_with_rdflib = False)
     assert len(onto.graph) == nb - 3
     
+  def test_114(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x ?y  { ?x a onto:A.  ?x rdfs:label ?y. }""")
+    assert len(r) == 1
+    assert r == [[onto.a1, "label_a"]]
+    assert q.column_names == ["?x", "?y"]
+    
     
   # def test_109(self):
   #   world, onto = self.prepare1()
