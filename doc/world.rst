@@ -119,6 +119,10 @@ The results can be automatically converted to Python and Owlready using the .que
    }"""))
 
 
+.. note::
+   
+   Owlready now include its own SPARQL engine, documented here: :doc:`sparql`.
+
 Owlready blank nodes can be created with the graph.BNode() method:
 
 ::

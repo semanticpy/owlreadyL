@@ -272,8 +272,10 @@ The .prepare_sparql() method of the World object can be used to prepare a SPARQL
 The .execute() method of the PreparedQuery can be used to execute the query. It takes as argument the list of parameters,
 if any.
 
-Note that the .sparql() method calls .prepare_sparql(). Thus, there is no interest, in terms of performances, to use
-.prepare_sparql() instead of .sparql().
+.. note::
+   
+   The .sparql() method calls .prepare_sparql(). Thus, there is no interest, in terms of performances, to use
+   .prepare_sparql() instead of .sparql().
 
 The PreparedQuery can be used to determine the type of query:
 
@@ -297,9 +299,11 @@ The following attributes are availble on the PreparedQuery object:
    >>> query.sql
    'SELECT  COUNT(q1.s), 43 FROM objs q1 WHERE q1.p=6 AND q1.o=11'
    
-Note: for INSERT and DELETE query, the .sql translation only involves the WHERE part. Insertions and deletions are
-performed in Python, not in SQL, in order to update the modified Owlready Python objects, if needed.
-
+.. note::
+   
+   For INSERT and DELETE query, the .sql translation only involves the WHERE part. Insertions and deletions are
+   performed in Python, not in SQL, in order to update the modified Owlready Python objects, if needed.
+   
 
 Using RDFlib for executing SPARQL queries
 *****************************************
