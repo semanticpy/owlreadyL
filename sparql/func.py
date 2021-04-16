@@ -192,25 +192,30 @@ class _Func(object):
   
   
 def register_python_function(world):
-  world.graph.db.create_function("md5",            1, _md5,      deterministic = True)
-  world.graph.db.create_function("sha1",           1, _sha1,     deterministic = True)
-  world.graph.db.create_function("sha256",         1, _sha256,   deterministic = True)
-  world.graph.db.create_function("sha384",         1, _sha384,   deterministic = True)
-  world.graph.db.create_function("sha512",         1, _sha512,   deterministic = True)
-  world.graph.db.create_function("seconds",        1, _seconds,  deterministic = True)
-  world.graph.db.create_function("tz",             1, _tz,       deterministic = True)
-  world.graph.db.create_function("timezone",       1, _timezone, deterministic = True)
-  world.graph.db.create_function("encode_for_uri", 1, urllib.parse.quote, deterministic = True)
-  world.graph.db.create_function("uuid",           0, _uuid)
-  world.graph.db.create_function("struuid",        0, _struuid)
-  world.graph.db.create_function("regex",         -1, _regex,          deterministic = True)
-  world.graph.db.create_function("sparql_replace",-1, _sparql_replace, deterministic = True)
+  if (sys.version_info.major == 3) and (sys.version_info.minor < 8):
+    def create_function(name, num_params, func, deterministic = False):
+      world.graph.db.create_function(name, num_params, func)
+  else:
+    create_function = world.graph.db.create_function
+  create_function("md5",            1, _md5,      deterministic = True)
+  create_function("sha1",           1, _sha1,     deterministic = True)
+  create_function("sha256",         1, _sha256,   deterministic = True)
+  create_function("sha384",         1, _sha384,   deterministic = True)
+  create_function("sha512",         1, _sha512,   deterministic = True)
+  create_function("seconds",        1, _seconds,  deterministic = True)
+  create_function("tz",             1, _tz,       deterministic = True)
+  create_function("timezone",       1, _timezone, deterministic = True)
+  create_function("encode_for_uri", 1, urllib.parse.quote, deterministic = True)
+  create_function("uuid",           0, _uuid)
+  create_function("struuid",        0, _struuid)
+  create_function("regex",         -1, _regex,          deterministic = True)
+  create_function("sparql_replace",-1, _sparql_replace, deterministic = True)
   
   world._nb_sparql_call = 0
   func = _Func(world)
-  world.graph.db.create_function("now",             0, func._now, deterministic = True)
-  world.graph.db.create_function("bnode",          -1, func._bnode)
-  world.graph.db.create_function("newinstanceiri",  1, func._newinstanceiri)
+  create_function("now",             0, func._now, deterministic = True)
+  create_function("bnode",          -1, func._bnode)
+  create_function("newinstanceiri",  1, func._newinstanceiri)
   
   
 class FuncSupport(object):
