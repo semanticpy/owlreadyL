@@ -11,6 +11,7 @@ global-include *.svg
 
 graft doc
 graft test
+graft ontos
 graft hermit
 graft pellet
 graft locale

@@ -60,8 +60,9 @@ def do_setup(extensions):
     ],
   
   package_dir  = {"owlready2" : HERE},
-  packages     = ["owlready2", "owlready2.pymedtermino2"],
+  packages     = ["owlready2", "owlready2.pymedtermino2", "owlready2.sparql"],
   package_data = {"owlready2" : ["owlready_ontology.owl",
+                                 "ontos/*.owl",
                                  "hermit/*.*", "hermit/org/semanticweb/HermiT/*", "hermit/org/semanticweb/HermiT/cli/*", "hermit/org/semanticweb/HermiT/hierarchy/*",
                                  "pellet/*.*", "pellet/org/mindswap/pellet/taxonomy/printer/*",
                                 ]},
