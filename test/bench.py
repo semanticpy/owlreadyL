@@ -2,8 +2,8 @@
 
 # python ./owlready2/test/bench.py -f > /dev/null
 
-#Load time 10.203434944152832 s.
-#List class time 11.326752662658691 s.
+#Load time 9.838808059692383 s.
+#List class time 11.055774211883545 s.
 
 import sys, time#, cProfile
 
@@ -14,8 +14,6 @@ t = time.time()
 
 if "-f" in sys.argv:
   default_world.set_backend(filename = "/home/jiba/tmp/go.sqlite3", exclusive = True) #, profiling = True)
-  #default_world.set_backend("postgresql", user = "jiba")
-  #default_world.set_backend("mysql", user = "jiba")
 if "-fro" in sys.argv:
   default_world.set_backend(filename = "/home/jiba/tmp/go.sqlite3", exclusive = True, read_only = True) #, profiling = True)
   
