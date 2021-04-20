@@ -346,7 +346,7 @@ class LexerStream(object):
         token = Token(rule.name, self.s[match[0]:match[1]], source_pos)
         return token
     else:
-      raise LexingError(None, self.idx)
+      raise LexingError('Lexing error near "%s..."!' % self.s[self.idx : self.idx + 15], self.idx)
 
   __next__ = next
 

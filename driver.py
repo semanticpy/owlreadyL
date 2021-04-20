@@ -232,7 +232,7 @@ def _guess_format(f):
     f.seek(0)
   else:
     s = f.peek(1000).lstrip()
-
+    
   if isinstance(s, str): s = s.encode("utf8")
   if s.startswith(b"\xef\xbb\xbf"): s = s[3:] # Ignore byte-order mask
   
