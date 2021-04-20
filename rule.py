@@ -384,6 +384,7 @@ def _create_rule_parser():
   lg.add("(", r"\(")
   lg.add(")", r"\)")
   lg.add(",", r",")
+  lg.add(",", r"\^")
   lg.add("IMP", r"->")
   lg.add("FLOAT", r"-[0-9]*\.[0-9]+")
   lg.add("FLOAT", r"[0-9]*\.[0-9]+")
