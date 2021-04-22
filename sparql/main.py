@@ -150,7 +150,9 @@ class Translator(object):
   
   def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None):
     if preliminary and not name: name = "prelim%s" % (len(self.preliminary_selects) + 1)
-
+    
+    #print("BLOCK", name, block)
+    
     if isinstance(block, UnionBlock) and block.simple_union_triples: block = SimpleTripleBlock(block.simple_union_triples)
     
     if   isinstance(block, SimpleTripleBlock):
@@ -278,13 +280,14 @@ class PreparedQuery(object):
   
 class PreparedSelectQuery(PreparedQuery):
   def execute(self, params = ()):
+
     for l in PreparedQuery.execute(self, params):
       l2 = []
       i = 0
       while i < len(l):
         if self.column_types[i] == "objs":
           if l[i] is None: l2.append(None)
-          else:            l2.append(self.world._to_python(l[i], None) or l[i])
+          else: l2.append(self.world._to_python(l[i], None) or l[i])
           i += 1
         else:
           if l[i + 1] is None:
@@ -295,6 +298,110 @@ class PreparedSelectQuery(PreparedQuery):
           i += 2
       yield l2
       
+  def execute_csv(self, params = (), separator = ","):
+    import csv, io
+    b = io.StringIO()
+    f = csv.writer(b, delimiter = separator)
+    f.writerow(col[1:] for col in self.column_names)
+    rows = []
+
+    for l in PreparedQuery.execute(self, params):
+      l2 = []
+      i = 0
+      while i < len(l):
+        if self.column_types[i] == "objs":
+          if   l[i] is None: l2.append("")
+          elif l[i] > 0:     l2.append(self.world._unabbreviate(l[i]))
+          else:              l2.append("_:%s" % (-l[i]))
+          i += 1
+        else:
+          if l[i + 1] is None:
+            if   l[i] is None: l2.append("")
+            elif l[i] > 0:     l2.append(self.world._unabbreviate(l[i]))
+            else:              l2.append("_:%s" % (-l[i]))
+          else:
+            l2.append(str(self.world._to_python(l[i], l[i + 1])))
+          i += 2
+      f.writerow(l2)
+    return b.getvalue()
+  
+  def execute_tsv(self, params = ()): return self.execute_csv(params, "\t")
+
+  def execute_json(self, params = ()):
+    bindings = []
+    colnames = [col[1:] for col in self.column_names]
+    json = { "head" : { "vars" : colnames },
+             "results" : { "bindings" : bindings } }
+    for l in PreparedQuery.execute(self, params):
+      binding = {}
+      bindings.append(binding)
+      i = 0
+      c = 0
+      while i < len(l):
+        if self.column_types[i] == "objs":
+          if   l[i] is None: pass
+          elif l[i] > 0:     binding[colnames[c]] = { "type" : "uri", "value" : self.world._unabbreviate(l[i]) }
+          else:              binding[colnames[c]] = { "type" : "bnode", "value" : "r%s" % (-l[i]) }
+          i += 1
+        else:
+          if l[i + 1] is None:
+            if   l[i] is None: pass
+            elif l[i] > 0:     binding[colnames[c]] = { "type" : "uri", "value" : self.world._unabbreviate(l[i]) }
+            else:              binding[colnames[c]] = { "type" : "bnode", "value" : "r%s" % (-l[i]) }
+          else:
+            value = str(self.world._to_python(l[i], l[i + 1]))
+            if   isinstance(l[i + 1], str): binding[colnames[c]] = { "type" : "literal", "value" : value, "xml:lang" : l[i + 1][1:] }
+            elif l[i + 1]:                  binding[colnames[c]] = { "type" : "literal", "value" : value, "datatype" : self.world._unabbreviate(l[i + 1]) }
+            else:                           binding[colnames[c]] = { "type" : "literal", "value" : value }
+          i += 2
+        c += 1
+    return repr(json)
+
+  def execute_xml(self, params = ()):
+    bindings = []
+    colnames = [col[1:] for col in self.column_names]
+    xml = """<?xml version="1.0"?>
+<sparql xmlns="http://www.w3.org/2005/sparql-results#">
+  <head>
+"""
+    for colname in colnames:
+      xml += """    <variable name="%s"/>\n""" % colname
+    xml += """  </head>
+  <results>
+"""
+    
+    for l in PreparedQuery.execute(self, params):
+      xml += """    <result>\n"""
+      i = 0
+      c = 0
+      while i < len(l):
+        xml += """      <binding name="%s">\n""" % colnames[c]
+        if self.column_types[i] == "objs":
+          if   l[i] is None: pass
+          elif l[i] > 0:     xml += """        <uri>%s</uri>\n""" % self.world._unabbreviate(l[i])
+          else:              xml += """        <bnode>r%s</bnode>\n""" % (-l[i])
+          i += 1
+        else:
+          if l[i + 1] is None:
+            if   l[i] is None: pass
+            elif l[i] > 0:     xml += """        <uri>%s</uri>\n""" % self.world._unabbreviate(l[i])
+            else:              xml += """        <bnode>r%s</bnode>\n""" % (-l[i])
+          else:
+            value = str(self.world._to_python(l[i], l[i + 1]))
+            if   isinstance(l[i + 1], str): xml += """        <literal xml:lang="%s">%s</literal>\n""" % (l[i + 1][1:], value)
+            elif l[i + 1]:                  xml += """        <literal datatype="%s">%s</literal>\n""" % (self.world._unabbreviate(l[i + 1]), value)
+            else:                           xml += """        <literal>%s</literal>\n""" % value
+          i += 2
+        c += 1
+        xml += """      </binding>\n"""
+      xml += """    </result>\n"""
+        
+    xml += """  </results>
+</sparql>
+"""
+    return xml
+  
+  
 class PreparedModifyQuery(PreparedQuery):
   def __init__(self, world, sql, column_names, column_types, nb_parameter, parameter_datatypes, ontology, deletes, inserts, select_param_indexes):
     PreparedQuery.__init__(self, world, sql, column_names, column_types, nb_parameter, parameter_datatypes)
@@ -552,16 +659,6 @@ class SQLQuery(FuncSupport):
         if   (s.name != "VAR"): fixed = "s"
         elif (o.name != "VAR"): fixed = "o"
         else:
-          # nb_s = nb_o = 0
-          # for triple2 in self.triples:
-          #   for x in triple2.var_names:
-          #     if x == s.value: nb_s += 1
-          #     if x == o.value: nb_o += 1
-          # if   nb_s == 1:    fixed = "o"
-          # elif nb_o == 1:    fixed = "s"
-          # elif nb_s <= nb_o: fixed = "s"
-          # else:              fixed = "o"
-          # print("NB", nb_s, nb_o)
           fix_levels = self.get_fix_levels([self.parse_var(s), self.parse_var(o)], triple)
           if fix_levels[self.parse_var(s)] >= fix_levels[self.parse_var(o)]: fixed = "s"
           else:                                                              fixed = "o"
@@ -762,10 +859,15 @@ class SQLQuery(FuncSupport):
       else:
         var_name, sql, sql_type, sql_d, sql_d_type = do_select(select)
         
-      if sql is None: raise ValueError("Cannot select '%s'!" % select)
+      if sql is None:
+        if not self.name: # Inside a UNION => the variable is not available in this alternative of th UNION
+          sql = "NULL"
+          sql_type = "objs"
+        else:
+          raise ValueError("Cannot select '%s'!" % select)
       self.columns.append(Column(var_name, sql_type,   sql,   "col%s_o" % i, j)); j += 1
       if not sql_d is None: self.columns.append(Column(var_name, sql_d_type, sql_d, "col%s_d" % i, j)); j += 1
-        
+      
   def _to_sql(self, x):
     if isinstance(x, rply.Token) and (x.name == "VAR"): x = self.parse_var(x)
 
@@ -831,7 +933,7 @@ class SQLCompoundQuery(object):
       for i, column in enumerate(query.columns): # Re-index columns
         column.index = i
     self.columns = self.queries[0].columns
-    
+        
     
 class SQLNestedQuery(SQLQuery):
   def __init__(self, name):

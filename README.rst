@@ -545,6 +545,14 @@ version 2 - 0.30
   - Fix IRI of the form 'urn:uuid:...'
   - Fix loading ontologies that modify an imported property
 
+version 2 - 0.31
+****************
+
+* Can open SPARQL endpoints (see module owlready2.sparql.endpoint)
+* Bugfixes:
+  - Fix prefix in SPARQL that does not correspond to an existing ontology
+  - Fix ! in SPARQL FILTER
+
 
 Links
 -----

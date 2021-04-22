@@ -80,6 +80,9 @@ _FUNC_2_DATATYPE = {
   #"SIMPLEREPLACE" :  # ok
   "NEWINSTANCEIRI" : None, # ok
 
+  "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#INTEGER" : _universal_datatype_2_abbrev[int], # ok
+  "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#DOUBLE" : _universal_datatype_2_abbrev[float], # ok
+  
   "COUNT" : _universal_datatype_2_abbrev[int], # ok
   "MIN" : 0, # ok
   "MAX" : 0, # ok
@@ -247,6 +250,12 @@ class FuncSupport(object):
             if   e_type == "objs":  return "(SELECT iri FROM resources WHERE storid=%s)" % eo
             elif e_type == "datas": return "''||%s" % eo
             else:                   return "IIF(%s IS NULL, (SELECT iri FROM resources WHERE storid=%s), ''||%s)" % (ed, eo, eo)
+          elif func == "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#DOUBLE":
+            eo = self.parse_expression(expression[2])
+            return "CAST(%s AS DOUBLE)" % eo
+          elif func == "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#INTEGER":
+            eo = self.parse_expression(expression[2])
+            return "CAST(%s AS INTEGER)" % eo
           elif (func == "IRI") or (func == "URI"):
             eo         = self.parse_expression     (expression[2])
             e_type, ed = self.infer_expression_type(expression[2])

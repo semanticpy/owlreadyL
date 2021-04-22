@@ -61,6 +61,7 @@ lg.add(".",                    r"""\.""")
 lg.add("PREFIXED_NAME",        r"""[\w\.\-]*:([\w\.\-:]|%[0-9a-fA-F]{2}|\\[_~\.\-!$&"'()*+,;=/?#@%])*([\w\-:]|%[0-9a-fA-F]{2}|\\[_~\.\-!$&"'()*+,;=/?#@%])""")
 lg.add("PNAME_NS",             r"""[\w\.\-]*:""")
 lg.add("FUNC",                 r"""(?:STRLANG)|(?:STRDT)|(?:STRLEN)|(?:STRSTARTS)|(?:STRENDS)|(?:STRBEFORE)|(?:STRAFTER)|(?:LANGMATCHES)|(?:LANG)|(?:DATATYPE)|(?:BOUND)|(?:IRI)|(?:URI)|(?:BNODE)|(?:RAND)|(?:ABS)|(?:CEIL)|(?:FLOOR)|(?:ROUND)|(?:CONCAT)|(?:STR)|(?:UCASE)|(?:LCASE)|(?:ENCODE_FOR_URI)|(?:CONTAINS)|(?:YEAR)|(?:MONTH)|(?:DAY)|(?:HOURS)|(?:MINUTES)|(?:SECONDS)|(?:TIMEZONE)|(?:TZ)|(?:NOW)|(?:UUID)|(?:STRUUID)|(?:MD5)|(?:SHA1)|(?:SHA256)|(?:SHA384)|(?:SHA512)|(?:COALESCE)|(?:IF)|(?:sameTerm)|(?:isIRI)|(?:isURI)|(?:isBLANK)|(?:isLITERAL)|(?:isNUMERIC)|(?:REGEX)|(?:SUBSTR)|(?:REPLACE)|(?:SIMPLEREPLACE)|(?:NEWINSTANCEIRI)\b""", re.IGNORECASE)
+#lg.add("FUNC",                 r"""(?:STRLANG)|(?:STRDT)|(?:STRLEN)|(?:STRSTARTS)|(?:STRENDS)|(?:STRBEFORE)|(?:STRAFTER)|(?:LANGMATCHES)|(?:LANG)|(?:DATATYPE)|(?:BOUND)|(?:IRI)|(?:URI)|(?:BNODE)|(?:RAND)|(?:ABS)|(?:CEIL)|(?:FLOOR)|(?:ROUND)|(?:CONCAT)|(?:STR)|(?:UCASE)|(?:LCASE)|(?:ENCODE_FOR_URI)|(?:CONTAINS)|(?:YEAR)|(?:MONTH)|(?:DAY)|(?:HOURS)|(?:MINUTES)|(?:SECONDS)|(?:TIMEZONE)|(?:TZ)|(?:NOW)|(?:UUID)|(?:STRUUID)|(?:MD5)|(?:SHA1)|(?:SHA256)|(?:SHA384)|(?:SHA512)|(?:COALESCE)|(?:IF)|(?:sameTerm)|(?:isIRI)|(?:isURI)|(?:isBLANK)|(?:isLITERAL)|(?:isNUMERIC)|(?:REGEX)|(?:SUBSTR)|(?:REPLACE)|(?:SIMPLEREPLACE)|(?:NEWINSTANCEIRI)|(?:XSD:DOUBLE)|(?:XSD:INTEGER)\b""", re.IGNORECASE)
 lg.add("MINUS",                r"""MINUS\b""", re.IGNORECASE)
 lg.add("AGGREGATE_FUNC",       r"""(?:COUNT)|(?:SUM)|(?:MIN)|(?:MAX)|(?:AVG)|(?:SAMPLE)|(?:GROUP_CONCAT)\b""", re.IGNORECASE)
 lg.add("BASE",                 r"""BASE\b""", re.IGNORECASE)
@@ -134,6 +135,8 @@ def f(p): return _parse_select_query(p[1])
 def _parse_select_query(p):
   translator = CURRENT_TRANSLATOR.get()
   if isinstance(p[2], rply.Token) and (p[2].value == "*"): p[2] = None
+  if isinstance(p[4], UnionBlock) and (p[5][0] or p[5][1] or p[5][2] or p[5][3] or p[5][4]): # UNION with some solution modifier
+    p[4] = SimpleTripleBlock([p[4]])
   main_query = translator.new_sql_query("main", p[4], p[2], p[1], p[5])
   main_query.type = "select"
   return main_query
@@ -143,7 +146,7 @@ def _parse_select_query(p):
 def f(p): return p[1]
 #pg.optional(";?")
 
-@pg.production("prefix_decl : PREFIX PNAME_NS iri")
+@pg.production("prefix_decl : PREFIX PNAME_NS unabbreviated_iri")
 def f(p):
   CURRENT_TRANSLATOR.get().prefixes[p[1].value] = p[2].value
   return None
@@ -719,7 +722,7 @@ def f(p):
 
 @pg.production("conditional_or_expression_operand : || conditional_and_expression")
 def f(p):
-  p[0].sql = "OR"
+  p[0].sql = "OR "
   return p
 pg.list("conditional_or_expression_operand*", "")
 @pg.production("expression : conditional_and_expression conditional_or_expression_operand*")
@@ -729,7 +732,7 @@ pg.list("expression+", ",", keep_sep = True)
 
 @pg.production("conditional_and_expression_operand : && relational_expression")
 def f(p):
-  p[0].sql = "AND"
+  p[0].sql = "AND "
   return p
 pg.list("conditional_and_expression_operand*", "")
 @pg.production("conditional_and_expression : relational_expression conditional_and_expression_operand*")
@@ -769,6 +772,9 @@ def f(p):
   return r
 
 @pg.production("unary_expression : ! primary_expression")
+def f(p):
+  p[0].sql = "NOT "
+  return p
 @pg.production("unary_expression : + primary_expression")
 @pg.production("unary_expression : - primary_expression")
 def f(p): return p
@@ -797,6 +803,11 @@ def f(p): return p[0]
 @pg.production("builtin_call : aggregate")
 def f(p): return p[0]
 
+@pg.production("func : iri ( expression* )")
+def f(p):
+  func_name = p[0].value.upper()
+  p[0].name = "FUNC"
+  return p
 @pg.production("func : FUNC ( expression* )")
 @pg.production("func : FUNC NIL")
 def f(p):
@@ -887,6 +898,13 @@ def f(p):
   p.value = "'%s'" % p.value[3:-3].replace("'", r"\'")
   return p
 
+@pg.production("unabbreviated_iri : IRI")
+def f(p):
+  translator = CURRENT_TRANSLATOR.get()
+  p = p[0]
+  p.value  = p.value[1:-1]
+  if not ":" in p.value: p.value = "%s%s" % (translator.base_iri, p.value) # Relative IRI
+  return p
 @pg.production("iri : IRI")
 def f(p):
   translator = CURRENT_TRANSLATOR.get()
@@ -978,7 +996,8 @@ class UnionBlock(Block):
     if len(ss) > 1: nb_many += 1; n = 0
     if len(ps) > 1: nb_many += 1; n = 1
     if len(os) > 1: nb_many += 1; n = 2
-    if nb_many > 1: return None
+    if nb_many > 1:  return None
+    if nb_many == 0: return None
     
     vs = [i[0][n] for i in self]
     for v in vs:

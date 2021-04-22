@@ -8379,6 +8379,87 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     assert r == [[onto.a1, "label_a"]]
     assert q.column_names == ["?x", "?y"]
     
+  def test_115(self):
+    world, onto = self.prepare1()
+    onto.a1.label = ['''test " ' ''']
+    q, r = self.sparql(world, """SELECT  ?x ?y  { ?x rdfs:label ?y. } ORDER BY DESC(?y)""")
+    
+    csv = q.execute_csv()
+    assert csv.replace("\r", "") == """x,y
+http://test.org/onto.owl#a1,"test "" ' "
+http://test.org/onto.owl#rel,rel
+http://test.org/onto.owl#price,price
+http://test.org/onto.owl#b3,label_b
+http://test.org/onto.owl#b2,label_b
+http://test.org/onto.owl#b1,label_b
+http://test.org/onto.owl#A1,Classe A1
+http://test.org/onto.owl#A,Classe A
+""".replace("\r", "")
+    
+    tsv = q.execute_tsv()
+    assert tsv.replace("\r", "") == """x\ty
+http://test.org/onto.owl#a1\t"test "" ' "
+http://test.org/onto.owl#rel\trel
+http://test.org/onto.owl#price\tprice
+http://test.org/onto.owl#b3\tlabel_b
+http://test.org/onto.owl#b2\tlabel_b
+http://test.org/onto.owl#b1\tlabel_b
+http://test.org/onto.owl#A1\tClasse A1
+http://test.org/onto.owl#A\tClasse A
+""".replace("\r", "")
+
+    json = q.execute_json()
+    assert eval(json) == {'head': {'vars': ['x', 'y']}, 'results': {'bindings': [{'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#a1'}, 'y': {'type': 'literal', 'value': 'test " \' ', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#rel'}, 'y': {'type': 'literal', 'value': 'rel', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#price'}, 'y': {'type': 'literal', 'value': 'price', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b3'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'fr'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b2'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'en'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b1'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'en'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#A1'}, 'y': {'type': 'literal', 'value': 'Classe A1', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#A'}, 'y': {'type': 'literal', 'value': 'Classe A', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}]}}
+    
+    xml = q.execute_xml()
+    assert xml.replace("\r", "") == '<?xml version="1.0"?>\n<sparql xmlns="http://www.w3.org/2005/sparql-results#">\n  <head>\n    <variable name="x"/>\n    <variable name="y"/>\n  </head>\n  <results>\n    <result>\n      <binding name="x">\n        <uri>http://test.org/onto.owl#a1</uri>\n      </binding>\n      <binding name="y">\n        <literal datatype="http://www.w3.org/2001/XMLSchema#string">test " \' </literal>\n      </binding>\n    </result>\n    <result>\n      <binding name="x">\n        <uri>http://test.org/onto.owl#rel</uri>\n      </binding>\n      <binding name="y">\n        <literal datatype="http://www.w3.org/2001/XMLSchema#string">rel</literal>\n      </binding>\n    </result>\n    <result>\n      <binding name="x">\n        <uri>http://test.org/onto.owl#price</uri>\n      </binding>\n      <binding name="y">\n        <literal datatype="http://www.w3.org/2001/XMLSchema#string">price</literal>\n      </binding>\n    </result>\n    <result>\n      <binding name="x">\n        <uri>http://test.org/onto.owl#b3</uri>\n      </binding>\n      <binding name="y">\n        <literal xml:lang="fr">label_b</literal>\n      </binding>\n    </result>\n    <result>\n      <binding name="x">\n        <uri>http://test.org/onto.owl#b2</uri>\n      </binding>\n      <binding name="y">\n        <literal xml:lang="en">label_b</literal>\n      </binding>\n    </result>\n    <result>\n      <binding name="x">\n        <uri>http://test.org/onto.owl#b1</uri>\n      </binding>\n      <binding name="y">\n        <literal xml:lang="en">label_b</literal>\n      </binding>\n    </result>\n    <result>\n      <binding name="x">\n        <uri>http://test.org/onto.owl#A1</uri>\n      </binding>\n      <binding name="y">\n        <literal datatype="http://www.w3.org/2001/XMLSchema#string">Classe A1</literal>\n      </binding>\n    </result>\n    <result>\n      <binding name="x">\n        <uri>http://test.org/onto.owl#A</uri>\n      </binding>\n      <binding name="y">\n        <literal datatype="http://www.w3.org/2001/XMLSchema#string">Classe A</literal>\n      </binding>\n    </result>\n  </results>\n'.replace("\r", "")
+    
+  def test_116(self):
+    import flask, werkzeug.serving, multiprocessing, urllib.request, time
+    from owlready2.sparql.endpoint import EndPoint
+    world, onto = self.prepare1()
+    
+    app = flask.Flask("OwlreadyTest")
+    endpoint = EndPoint(world)
+    app.route("/sparql", methods = ["GET"])(endpoint)
+    
+    p = multiprocessing.Process(target = werkzeug.serving.run_simple, args = ("localhost", 5000, app))
+    p.start()
+    
+    time.sleep(0.3)
+    r = urllib.request.urlopen("http://localhost:5000/sparql?query=SELECT%20%20?x%20?y%20%20{%20?x%20rdfs:label%20?y.%20}%20ORDER%20BY%20DESC(?y)").read()
+    assert r == b'x,y\r\nhttp://test.org/onto.owl#rel,rel\r\nhttp://test.org/onto.owl#price,price\r\nhttp://test.org/onto.owl#b3,label_b\r\nhttp://test.org/onto.owl#b2,label_b\r\nhttp://test.org/onto.owl#b1,label_b\r\nhttp://test.org/onto.owl#a1,label_a\r\nhttp://test.org/onto.owl#A1,Classe A1\r\nhttp://test.org/onto.owl#A,Classe A\r\n'
+    
+    r = urllib.request.urlopen(urllib.request.Request("http://localhost:5000/sparql?query=SELECT%20%20?x%20?y%20%20{%20?x%20rdfs:label%20?y.%20}%20ORDER%20BY%20DESC(?y)", headers = { "Accept" : "application/json" })).read()
+    assert r == b"{'head': {'vars': ['x', 'y']}, 'results': {'bindings': [{'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#rel'}, 'y': {'type': 'literal', 'value': 'rel', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#price'}, 'y': {'type': 'literal', 'value': 'price', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b3'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'fr'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b2'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'en'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b1'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'en'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#a1'}, 'y': {'type': 'literal', 'value': 'label_a', 'xml:lang': 'en'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#A1'}, 'y': {'type': 'literal', 'value': 'Classe A1', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#A'}, 'y': {'type': 'literal', 'value': 'Classe A', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}]}}"
+    
+    p.terminate()
+    
+  def test_117(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT DISTINCT ?x ?l  { { ?x rdfs:label ?l. } UNION { ?x rdfs:label ?l. } } ORDER BY ?l""")
+    assert set(tuple(x) for x in r) == set(tuple(x) for x in [[onto.A, 'Classe A'], [onto.A1, 'Classe A1'], [onto.a1, 'label_a'], [onto.b1, 'label_b'], [onto.b2, 'label_b'], [onto.b3, 'label_b'], [onto.price, 'price'], [onto.rel, 'rel']])
+    
+  def test_118(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT DISTINCT (xsd:integer(?p) as ?p2)  { ?x onto:price ?p. }""", compare_with_rdflib = False)
+    assert r == [[10]]
+    assert isinstance(r[0][0], int)
+    
+    onto.a1.price = [11]
+    q, r = self.sparql(world, """SELECT DISTINCT (xsd:double(?p) as ?p2)  { ?x onto:price ?p. }""")
+    assert r == [[11.0]]
+    assert isinstance(r[0][0], float)
+    
+  def test_119(self):
+    world, onto = self.prepare1()
+    e = set(tuple(x) for x in [[None, 6, 11], [None, 9, Thing], [None, label, 'Classe A'], [onto.A1, 9, None], [onto.A2, 9, None], [onto.a1, 6, None]])
+    
+    q, r = self.sparql(world, """SELECT ?s ?p ?o { { ?s ?p onto:A } UNION { onto:A ?p ?o } }""")
+    assert set(tuple(x) for x in r) == e
+    
+    q, r = self.sparql(world, """SELECT ?s ?p ?o { { onto:A ?p ?o } UNION { ?s ?p onto:A } }""")
+    assert set(tuple(x) for x in r) == e
     
   # def test_109(self):
   #   world, onto = self.prepare1()
