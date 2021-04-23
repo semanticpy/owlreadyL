@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import sys, os, os.path, sqlite3, time, re, threading
+import sys, os, os.path, sqlite3, time, re, multiprocessing
 from collections import defaultdict
 from itertools import chain
 
@@ -36,29 +36,6 @@ def all_combinations(l):
   for a in l[0]: r.extend((a,) + b for b in all_combinations(l[1:]))
   return r
 
-# def group_iters(quad_cursor, data_cursor):
-#   s = None
-  
-#   quad = next(quad_cursor, None)
-#   data = next(data_cursor, None)
-  
-#   while quad or data:
-#     if quad and data:
-#       if quad[0] < data[0]: s = quad[0]
-#       else:                 s = data[0]
-#     elif quad:              s = quad[0]
-#     else:                   s = data[0]
-    
-#     while quad:
-#       if quad[0] != s: break
-#       yield quad
-#       quad = next(quad_cursor, None)
-      
-#     while data:
-#       if data[0] != s: break
-#       yield data
-#       data = next(data_cursor, None)
-      
 
 class Graph(BaseMainGraph):
   _SUPPORT_CLONING = True
@@ -137,45 +114,23 @@ class Graph(BaseMainGraph):
       
     self.c_2_onto          = {}
     self.onto_2_subgraph   = {}
-    self.last_numbered_iri = {}
+    #self.last_numbered_iri = {}
     self.world             = world
     self.c                 = None
     
-    self.lock              = threading.RLock()
+    self.lock              = multiprocessing.RLock()
     self.lock_level        = 0
     
     if initialize_db:
-      self.current_blank    = 0
-      self.current_resource = 300 # 300 first values are reserved
+      self.current_blank    = multiprocessing.Value("i", 0)
+      self.current_resource = multiprocessing.Value("i", 300) # 300 first values are reserved
       self.prop_fts         = set()
       
       self.execute("""CREATE TABLE store (version INTEGER, current_blank INTEGER, current_resource INTEGER)""")
-      self.execute("""INSERT INTO store VALUES (8, 0, 300)""")
+      self.execute("""INSERT INTO store VALUES (9, 0, 300)""")
       self.execute("""CREATE TABLE objs (c INTEGER, s INTEGER, p INTEGER, o INTEGER)""")
       self.execute("""CREATE TABLE datas (c INTEGER, s INTEGER, p INTEGER, o BLOB, d INTEGER)""")
-      #self.execute("""CREATE VIEW quads (c,s,p,o,d) AS SELECT c,s,p,o,NULL FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""")
       self.execute("""CREATE VIEW quads AS SELECT c,s,p,o,NULL AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""")
-      
-#       self.execute("""CREATE TABLE equivs (rowid INTEGER, c INTEGER, s TEXT, o TEXT)""")
-#       self.db.cursor().executescript("""
-# CREATE TRIGGER equivs_insert AFTER INSERT ON objs WHEN new.p='x' BEGIN
-#   INSERT INTO equivs VALUES (new.rowid * 2, new.c, new.s, new.o), (new.rowid * 2 + 1, new.c, new.o, new.s);
-# END;
-# CREATE TRIGGER equivs_delete AFTER DELETE ON objs WHEN old.p='x' BEGIN
-#   DELETE FROM equivs WHERE rowid IN (old.rowid * 2, old.rowid * 2 + 1);
-# END;
-# CREATE TRIGGER equivs_update AFTER UPDATE ON objs WHEN new.p='%s' BEGIN
-#   UPDATE equivs SET s=new.s, o=new.o  WHERE rowid = new.rowid * 2;
-#   UPDATE equivs SET s=new.o, o=new.s  WHERE rowid = new.rowid * 2;
-# END;
-# """)
-#       self.execute("""CREATE INDEX index_equivs_s ON equivs(s)""")
-
-#       """
-# INSERT INTO equivs VALUES SELECT c,s,o FROM objs WHERE p='x';
-# INSERT INTO equivs VALUES SELECT c,o,s FROM objs WHERE p='x';
-# """
-      
       
       self.execute("""CREATE TABLE ontologies (c INTEGER PRIMARY KEY, iri TEXT, last_update DOUBLE)""")
       self.execute("""CREATE TABLE ontology_alias (iri TEXT, alias TEXT)""")
@@ -186,15 +141,16 @@ class Graph(BaseMainGraph):
         self.execute("""CREATE TABLE resources (storid INTEGER PRIMARY KEY, iri TEXT)""")
       self.db.executemany("INSERT INTO resources VALUES (?,?)", _universal_abbrev_2_iri.items())
       self.execute("""CREATE UNIQUE INDEX index_resources_iri ON resources(iri)""")
-      #self.set_indexed(True)
+
       self.execute("""CREATE INDEX index_objs_sp ON objs(s,p)""")
-      #self.execute("""CREATE INDEX index_objs_op ON objs(o,p,c)""") # c is for onto.classes(), etc
       self.execute("""CREATE UNIQUE INDEX index_objs_op ON objs(o,p,c,s)""") # c is for onto.classes(), etc
       
       self.execute("""CREATE INDEX index_datas_sp ON datas(s,p)""")
-      #self.execute("""CREATE INDEX index_datas_op ON datas(o,p)""")
       self.execute("""CREATE UNIQUE INDEX index_datas_op ON datas(o,p,c,d,s)""")
       self.indexed = True
+      
+      self.execute("""CREATE TABLE last_numbered_iri(prefix TEXT, i INTEGER)""")
+      self.execute("""CREATE INDEX index_last_numbered_iri ON last_numbered_iri(prefix)""")
       
       self.db.commit()
       
@@ -205,23 +161,26 @@ class Graph(BaseMainGraph):
         self.db.cursor().executescript(s)
         
       version, self.current_blank, self.current_resource = self.execute("SELECT version, current_blank, current_resource FROM store").fetchone()
-      self.current_resource = self.execute("SELECT MAX(storid) FROM resources").fetchone()[0]
+      self.current_blank    = multiprocessing.Value("i", self.current_blank)
+      self.current_resource = multiprocessing.Value("i", self.execute("SELECT MAX(storid) FROM resources").fetchone()[0])
       
       if clone:
-        self.current_blank    = clone.current_blank
-        self.current_resource = clone.current_resource
-      
+        self.current_blank    = multiprocessing.Value("i", clone.current_blank.value)
+        self.current_resource = multiprocessing.Value("i", clone.current_resource.value)
+        
       if version == 1:
         print("* Owlready2 * Converting quadstore to internal format 2...", file = sys.stderr)
         self.execute("""CREATE TABLE ontology_alias (iri TEXT, alias TEXT)""")
         self.execute("""UPDATE store SET version=2""")
         self.db.commit()
+        version += 1
         
       if version == 2:
         print("* Owlready2 * Converting quadstore to internal format 3...", file = sys.stderr)
         self.execute("""CREATE TABLE prop_fts (fts INTEGER PRIMARY KEY, storid TEXT)""")
         self.execute("""UPDATE store SET version=3""")
         self.db.commit()
+        version += 1
         
       if version == 3:
         print("* Owlready2 * Converting quadstore to internal format 4 (this can take a while)...", file = sys.stderr)
@@ -253,6 +212,7 @@ class Graph(BaseMainGraph):
         
         self.execute("""UPDATE store SET version=4""")
         self.db.commit()
+        version += 1
         
       if version == 4:
         print("* Owlready2 * Converting quadstore to internal format 5 (this can take a while)...", file = sys.stderr)
@@ -333,6 +293,7 @@ class Graph(BaseMainGraph):
         
         self.execute("""UPDATE store SET version=5""")
         self.db.commit()
+        version += 1
 
       if version == 5:
         print("* Owlready2 * Converting quadstore to internal format 6 (this can take a while)...", file = sys.stderr)
@@ -343,6 +304,7 @@ class Graph(BaseMainGraph):
         
         self.execute("""UPDATE store SET version=6""")
         self.db.commit()
+        version += 1
         
       if version == 6:
         print("* Owlready2 * Converting quadstore to internal format 7 (this can take a while)...", file = sys.stderr)
@@ -359,6 +321,7 @@ class Graph(BaseMainGraph):
         
         self.execute("""UPDATE store SET version=7""")
         self.db.commit()
+        version += 1
         
       if version == 7:
         print("* Owlready2 * Converting quadstore to internal format 8...", file = sys.stderr)
@@ -386,34 +349,24 @@ class Graph(BaseMainGraph):
         ])
         self.execute("""UPDATE store SET version=8""")
         self.db.commit()
+        version += 1
         
+      if version == 8:
+        print("* Owlready2 * Converting quadstore to internal format 9...", file = sys.stderr)
+        self.execute("""CREATE TABLE last_numbered_iri(prefix TEXT, i INTEGER)""")
+        self.execute("""CREATE INDEX index_last_numbered_iri ON last_numbered_iri(prefix)""")
+        self.execute("""UPDATE store SET version=9""")
+        self.db.commit()
+        version += 1
         
       self.prop_fts = { storid for (storid,) in self.execute("""SELECT storid FROM prop_fts;""") }
       
     self.current_changes = self.db.total_changes
     self.select_abbreviate_method()
 
-
     
-  def set_indexed(self, indexed):
-    pass
-    #self.indexed = indexed
-    #if indexed:
-    #  self.execute("""CREATE INDEX index_objs_sp ON objs(s,p)""")
-    #  #self.execute("""CREATE INDEX index_objs_op ON objs(o,p,c)""") # c is for onto.classes(), etc
-    #  self.execute("""CREATE UNIQUE INDEX index_objs_op ON objs(o,p,c,s)""") # c is for onto.classes(), etc
-    #  
-    #  self.execute("""CREATE INDEX index_datas_sp ON datas(s,p)""")
-    #  #self.execute("""CREATE INDEX index_datas_op ON datas(o,p)""")
-    #  self.execute("""CREATE UNIQUE INDEX index_datas_op ON datas(o,p,c,d,s)""")
-    #  
-    #  for onto in self.world.ontologies.values():
-    #    onto._load_properties()
-    #else:
-    #  self.execute("""DROP INDEX IF EXISTS index_objs_sp""")
-    #  self.execute("""DROP INDEX IF EXISTS index_objs_op""")
-    #  self.execute("""DROP INDEX IF EXISTS index_datas_sp""")
-    #  self.execute("""DROP INDEX IF EXISTS index_datas_op""")
+    
+  def set_indexed(self, indexed): pass
     
   def close(self):
     self.db.close()
@@ -427,20 +380,20 @@ class Graph(BaseMainGraph):
   def has_write_lock(self): return self.lock_level
   
   def select_abbreviate_method(self):
-    nb = self.execute("SELECT count(*) FROM resources").fetchone()[0]
-    if nb < 100000:
-      iri_storid = self.execute("SELECT iri, storid FROM resources").fetchall()
-      self.  _abbreviate_d = dict(iri_storid)
-      self._unabbreviate_d = dict((storid, iri) for (iri, storid) in  iri_storid)
-      self._abbreviate   = self._abbreviate_dict
-      self._unabbreviate = self._unabbreviate_dict
-      self._refactor     = self._refactor_dict
-    else:
-      self.  _abbreviate_d = None
-      self._unabbreviate_d = None
-      self._abbreviate   = self._abbreviate_sql
-      self._unabbreviate = self._unabbreviate_sql
-      self._refactor     = self._refactor_sql
+    # nb = self.execute("SELECT count(*) FROM resources").fetchone()[0]
+    # if 0 and (nb < 100000):
+    #   iri_storid = self.execute("SELECT iri, storid FROM resources").fetchall()
+    #   self.  _abbreviate_d = dict(iri_storid)
+    #   self._unabbreviate_d = dict((storid, iri) for (iri, storid) in  iri_storid)
+    #   self._abbreviate   = self._abbreviate_dict
+    #   self._unabbreviate = self._unabbreviate_dict
+    #   self._refactor     = self._refactor_dict
+    # else:
+    #   self.  _abbreviate_d = None
+    #   self._unabbreviate_d = None
+    #   self._abbreviate   = self._abbreviate_sql
+    #   self._unabbreviate = self._unabbreviate_sql
+    #   self._refactor     = self._refactor_sql
     if self.world:
       self.world._abbreviate   = self._abbreviate
       self.world._unabbreviate = self._unabbreviate
@@ -475,63 +428,87 @@ class Graph(BaseMainGraph):
   def ontologies_iris(self):
     for (iri,) in self.execute("SELECT iri FROM ontologies").fetchall(): yield iri
       
-  def _abbreviate_sql(self, iri, create_if_missing = True):
+  #def _abbreviate_sql(self, iri, create_if_missing = True):
+  def _abbreviate(self, iri, create_if_missing = True):
     r = self.execute("SELECT storid FROM resources WHERE iri=? LIMIT 1", (iri,)).fetchone()
     if r: return r[0]
     if create_if_missing:
-      self.current_resource += 1
-      storid = self.current_resource
+      self.current_resource.value += 1
+      storid = self.current_resource.value
       self.execute("INSERT INTO resources VALUES (?,?)", (storid, iri))
       return storid
     
-  def _unabbreviate_sql(self, storid):
+  #def _unabbreviate_sql(self, storid):
+  def _unabbreviate(self, storid):
     return self.execute("SELECT iri FROM resources WHERE storid=? LIMIT 1", (storid,)).fetchone()[0]
   
-  def _abbreviate_dict(self, iri, create_if_missing = True):
-    storid = self._abbreviate_d.get(iri)
-    if (storid is None) and create_if_missing:
-      self.current_resource += 1
-      storid = self._abbreviate_d[iri] = self.current_resource
-      self._unabbreviate_d[storid] = iri
-      self.execute("INSERT INTO resources VALUES (?,?)", (storid, iri))
-    return storid
+  # def _abbreviate_dict(self, iri, create_if_missing = True):
+  #   storid = self._abbreviate_d.get(iri)
+  #   if (storid is None) and create_if_missing:
+  #     self.current_resource += 1
+  #     storid = self._abbreviate_d[iri] = self.current_resource
+  #     self._unabbreviate_d[storid] = iri
+  #     self.execute("INSERT INTO resources VALUES (?,?)", (storid, iri))
+  #   return storid
   
-  def _unabbreviate_dict(self, storid):
-    return self._unabbreviate_d[storid]
+  # def _unabbreviate_dict(self, storid):
+  #   return self._unabbreviate_d[storid]
   
   def get_storid_dict(self):
     return dict(self.execute("SELECT storid, iri FROM resources").fetchall())
   
+  # def _new_numbered_iri(self, prefix):
+  #   if prefix in self.last_numbered_iri:
+  #     i = self.last_numbered_iri[prefix] = self.last_numbered_iri[prefix] + 1
+  #     return "%s%s" % (prefix, i)
+  #   else:
+  #     cur = self.execute("SELECT iri FROM resources WHERE iri GLOB ? ORDER BY LENGTH(iri) DESC, iri DESC", ("%s*" % prefix,))
+  #     while True:
+  #       iri = cur.fetchone()
+  #       if not iri: break
+  #       num = iri[0][len(prefix):]
+  #       if num.isdigit():
+  #         self.last_numbered_iri[prefix] = i = int(num) + 1
+  #         return "%s%s" % (prefix, i)
+        
+  #   self.last_numbered_iri[prefix] = 1
+  #   return "%s1" % prefix
+  
   def _new_numbered_iri(self, prefix):
-    if prefix in self.last_numbered_iri:
-      i = self.last_numbered_iri[prefix] = self.last_numbered_iri[prefix] + 1
-      return "%s%s" % (prefix, i)
-    else:
+    i = self.execute("""SELECT i FROM last_numbered_iri WHERE prefix=?""", (prefix,)).fetchone()
+    if i is None:
       cur = self.execute("SELECT iri FROM resources WHERE iri GLOB ? ORDER BY LENGTH(iri) DESC, iri DESC", ("%s*" % prefix,))
       while True:
         iri = cur.fetchone()
         if not iri: break
         num = iri[0][len(prefix):]
         if num.isdigit():
-          self.last_numbered_iri[prefix] = i = int(num) + 1
+          i = int(num) + 1
+          self.execute("""INSERT INTO last_numbered_iri VALUES (?,?)""", (prefix, i))
           return "%s%s" % (prefix, i)
         
-    self.last_numbered_iri[prefix] = 1
+    else:
+      i = i[0] + 1
+      self.execute("""UPDATE last_numbered_iri SET i=? WHERE prefix=?""", (i, prefix))
+      return "%s%s" % (prefix, i)
+    
+    self.execute("""INSERT INTO last_numbered_iri VALUES (?,?)""", (prefix, 1))
     return "%s1" % prefix
   
-  def _refactor_sql(self, storid, new_iri):
+  #def _refactor_sql(self, storid, new_iri):
+  def _refactor(self, storid, new_iri):
     self.execute("UPDATE resources SET iri=? WHERE storid=?", (new_iri, storid,))
     
-  def _refactor_dict(self, storid, new_iri):
-    self.execute("UPDATE resources SET iri=? WHERE storid=?", (new_iri, storid,))
-    del self._abbreviate_d[self._unabbreviate_d[storid]]
-    self.  _abbreviate_d[new_iri] = storid
-    self._unabbreviate_d[storid]  = new_iri
+  # def _refactor_dict(self, storid, new_iri):
+  #   self.execute("UPDATE resources SET iri=? WHERE storid=?", (new_iri, storid,))
+  #   del self._abbreviate_d[self._unabbreviate_d[storid]]
+  #   self.  _abbreviate_d[new_iri] = storid
+  #   self._unabbreviate_d[storid]  = new_iri
     
   def commit(self):
     if self.current_changes != self.db.total_changes:
       self.current_changes = self.db.total_changes
-      self.execute("UPDATE store SET current_blank=?, current_resource=?", (self.current_blank, self.current_resource))
+      self.execute("UPDATE store SET current_blank=?, current_resource=?", (self.current_blank.value, self.current_resource.value))
       self.db.commit()
 
   def context_2_user_context(self, c):
@@ -542,8 +519,8 @@ class Graph(BaseMainGraph):
     return user_c
   
   def new_blank_node(self):
-    self.current_blank += 1
-    return -self.current_blank
+    self.current_blank.value += 1
+    return -self.current_blank.value
   
   def _get_obj_triples_spo_spo(self, s, p, o):
     if s is None:
@@ -916,15 +893,15 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
   
   def restore_iri(self, storid, iri):
     self.execute("INSERT INTO resources VALUES (?,?)", (storid, iri))
-    if self._abbreviate_d:
-      self._unabbreviate_d[storid] = iri
-      self._abbreviate_d  [iri]    = storid
+    #if self._abbreviate_d:
+    #  self._unabbreviate_d[storid] = iri
+    #  self._abbreviate_d  [iri]    = storid
       
   def destroy_entity(self, storid, destroyer, relation_updater, undoer_objs = None, undoer_datas = None):
     self.execute("DELETE FROM resources WHERE storid=?", (storid,))
-    if self._abbreviate_d and (storid > 0):
-      del self._abbreviate_d  [self._unabbreviate_d[storid]]
-      del self._unabbreviate_d[storid]
+    #if self._abbreviate_d and (storid > 0):
+    #  del self._abbreviate_d  [self._unabbreviate_d[storid]]
+    #  del self._unabbreviate_d[storid]
       
     destroyed_storids   = { storid }
     modified_relations  = defaultdict(set)
@@ -1081,31 +1058,31 @@ class SubGraph(BaseSubGraph):
     #  reindex = False
     
     # Re-implement _abbreviate() for speed
-    if self.parent._abbreviate_d is None:
-      abbrevs = {}
-      def _abbreviate(iri):
+    # if self.parent._abbreviate_d is None:
+    abbrevs = {}
+    def _abbreviate(iri):
         storid = abbrevs.get(iri)
         if not storid is None: return storid
         r = cur.execute("SELECT storid FROM resources WHERE iri=? LIMIT 1", (iri,)).fetchone()
         if r:
           abbrevs[iri] = r[0]
           return r[0]
-        self.parent.current_resource += 1
-        storid = self.parent.current_resource
+        self.parent.current_resource.value += 1
+        storid = self.parent.current_resource.value
         new_abbrevs.append((storid, iri))
         abbrevs[iri] = storid
         return storid
-    else:
-      abbrevs = self.parent._abbreviate_d
-      def _abbreviate(iri):
-        storid = abbrevs.get(iri)
-        if not storid is None: return storid
+    # else:
+    #   abbrevs = self.parent._abbreviate_d
+    #   def _abbreviate(iri):
+    #     storid = abbrevs.get(iri)
+    #     if not storid is None: return storid
         
-        self.parent.current_resource += 1
-        storid = self.parent.current_resource
-        new_abbrevs.append((storid, iri))
-        abbrevs[iri] = storid
-        return storid
+    #     self.parent.current_resource += 1
+    #     storid = self.parent.current_resource
+    #     new_abbrevs.append((storid, iri))
+    #     abbrevs[iri] = storid
+    #     return storid
       
     def insert_objs():
       nonlocal objs, new_abbrevs
