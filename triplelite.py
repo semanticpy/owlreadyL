@@ -71,6 +71,7 @@ class Graph(BaseMainGraph):
       
     if sqlite_tmp_dir: os.environ["SQLITE_TMPDIR"] = sqlite_tmp_dir
 
+    self.read_only = read_only
     if read_only:
       if exclusive:
         self.db = sqlite3.connect("file:%s?mode=ro" % filename, isolation_level = "EXCLUSIVE", check_same_thread = False, uri = True)

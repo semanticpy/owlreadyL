@@ -18,6 +18,7 @@
 
 
 import flask
+from owlready2.sparql.main import PreparedSelectQuery
 
 
 _mime_2_format = {
@@ -32,10 +33,11 @@ _mime_2_format = {
 }
 
 class EndPoint(object):
-  def __init__(self, world, no_cache = False):
-    self.world    = world
-    self.no_cache = no_cache
-    self.__name__ = "endpoint%s" % id(self)
+  def __init__(self, world, read_only = True, no_cache = False):
+    self.world     = world
+    self.read_only = read_only
+    self.no_cache  = no_cache
+    self.__name__  = "endpoint%s" % id(self)
     
   def __call__(self):
     query  = flask.request.args.get("query", "")
@@ -46,6 +48,7 @@ class EndPoint(object):
       format = "execute_csv"
       
     q = self.world.prepare_sparql(query)
+    if self.read_only and not isinstance(q, PreparedSelectQuery): return ""
     
     r = flask.Response( getattr(q, format)() , mimetype = mime)
     if self.no_cache: r.cache_control.no_cache = True

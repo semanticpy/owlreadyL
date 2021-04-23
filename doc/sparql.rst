@@ -291,7 +291,7 @@ The following attributes are availble on the PreparedQuery object:
 
  * .nb_parameter: the number of parameters
  * .column_names: a list with the names of the columns in the query results, e.g. ["?nb"] in the example above.
- * .world: the world object fo which the query has been prepared
+ * .world: the world object for which the query has been prepared
  * .sql: the SQL translation of the SPARQL query
 
 ::
@@ -303,7 +303,39 @@ The following attributes are availble on the PreparedQuery object:
    
    For INSERT and DELETE query, the .sql translation only involves the WHERE part. Insertions and deletions are
    performed in Python, not in SQL, in order to update the modified Owlready Python objects, if needed.
+
+
+Open a SPARQL endpoint
+----------------------
+
+The owlready2.sparql.endpoint module can be used to open a SPARQL endpoint. It requires Flask. It contains the EndPoint
+class, that takes a World and can be used as a Flask page function.
+
+The following script creates a SPARQL endpoint:
+
+::
    
+   import flask
+   
+   from owlready2 import *
+   from owlready2.sparql.endpoint import *
+
+   # Load one or more ontologies
+   go = get_ontology("http://purl.obolibrary.org/obo/go.owl").load() # (~ 170 Mb), can take a moment!
+   
+   app = flask.Flask("Owlready_sparql_endpoint")
+   endpoint = EndPoint(default_world)
+   app.route("/sparql", methods = ["GET"])(endpoint)
+   
+   # Run the server with Werkzeug; you may use any other WSGI-compatible server
+   import werkzeug.serving
+   werkzeug.serving.run_simple("localhost", 5000, app)
+
+
+You can then query the endpoint, e.g. by opening the following URL in your browser:
+
+   `<http://localhost:5000/sparql?query=SELECT(COUNT(?x)AS%20?nb){?x%20a%20owl:Class.}>`_
+
 
 Using RDFlib for executing SPARQL queries
 *****************************************

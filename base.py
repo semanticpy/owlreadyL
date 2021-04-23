@@ -189,11 +189,12 @@ def declare_datatype(datatype, iri, parser, unparser):
   storid = _universal_abbrev(iri)
   from owlready2 import WORLDS
   for world in WORLDS:
-    world.graph.execute("INSERT OR IGNORE INTO resources VALUES (?,?)", (storid, iri))
-    if world.graph._abbreviate_d:
-      world.graph._abbreviate_d  [iri]    = storid
-      world.graph._unabbreviate_d[storid] = iri
-
+    if not world.graph.read_only:
+      world.graph.execute("INSERT OR IGNORE INTO resources VALUES (?,?)", (storid, iri))
+      if world.graph._abbreviate_d:
+        world.graph._abbreviate_d  [iri]    = storid
+        world.graph._unabbreviate_d[storid] = iri
+        
   _universal_datatype_2_abbrev         [datatype] =  storid
   _universal_datatype_2_abbrev_unparser[datatype] = (storid, unparser)
   _universal_abbrev_2_datatype         [storid]   =  datatype
