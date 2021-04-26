@@ -301,7 +301,7 @@ class Test(BaseTest, unittest.TestCase):
     db = sqlite3.connect(tmp)
     sql = db.cursor()
     sql.execute("""SELECT * from ontologies;""")
-    assert sql.fetchall() == []
+    assert sql.fetchall() == [(1, 'http://anonymous/', 0.0)]
     
     tmp   = self.new_tmp_file()
     tmp2  = self.new_tmp_file()
@@ -621,13 +621,13 @@ class Test(BaseTest, unittest.TestCase):
     onto = world.get_ontology("file://" + filename).load()
     
     r = set(onto.get_triples(onto.Pizza.storid))
-    assert r == {(305, 39, '"Comment on Pizza"@en'), (305, 6, 11)}
+    assert r == {(306, 39, '"Comment on Pizza"@en'), (306, 6, 11)}
     
     r = set(onto.get_triples(None, rdf_type, onto.Pizza.storid))
-    assert r == {(319, 6, 305)}
+    assert r == {(320, 6, 306)}
     
     r = set(onto.get_triples(None, None, '"9.9"^^<http://www.w3.org/2001/XMLSchema#float>'))
-    assert r == {(319, 310, 9.9, 58)}
+    assert r == {(320, 311, 9.9, 58)}
     
   def test_ontology_25(self):
     w = self.new_world()
@@ -4733,6 +4733,7 @@ I took a placebo
     
   def test_format_10(self):
     world = self.new_world()
+    nb_triple = len(world.graph)
     onto  = world.get_ontology("http://test.org/test_owlxml_bug.owl")
     ok    = 0
     try:
@@ -4742,10 +4743,11 @@ I took a placebo
     
     assert ok == 1
     assert not onto.loaded
-    assert len(world.graph) == 1
+    assert len(world.graph) == 1 + nb_triple
     
   def test_format_11(self):
     world = self.new_world()
+    nb_triple = len(world.graph)
     onto  = world.get_ontology("http://test.org/test_rdfxml_bug.owl")
     ok    = 0
     try:
@@ -4755,10 +4757,11 @@ I took a placebo
       
     assert ok == 1
     assert not onto.loaded
-    assert len(world.graph) == 1
+    assert len(world.graph) == 1 + nb_triple
     
   def test_format_13(self):
     world = self.new_world()
+    nb_triple = len(world.graph)
     onto  = world.get_ontology("http://test.org/test_ntriples_bug.ntriples")
     ok    = 0
     try:
@@ -4768,7 +4771,7 @@ I took a placebo
       
     assert ok == 1
     assert not onto.loaded
-    assert len(world.graph) == 1
+    assert len(world.graph) == 1 + nb_triple
     
   def test_format_14(self):
     import re, owlready2.owlxml_2_ntriples
@@ -4952,6 +4955,7 @@ multiple lines with " and ’ and \ and & and < and > and é."""
     
   def test_format_26(self):
     world = self.new_world()
+    nb_triple = len(world.graph)
     onto = world.get_ontology("http://test.org/test.org#")
     self.assert_triple(onto.storid, rdf_type, owl_ontology, None, world)
     
@@ -4959,7 +4963,7 @@ multiple lines with " and ’ and \ and & and < and > and é."""
     onto.load(fileobj = BytesIO(s.encode("utf8")))
     
     self.assert_triple(onto.storid, rdf_type, owl_ontology, None, world)
-    assert len(world.graph) == 2
+    assert len(world.graph) == 2 + nb_triple
     
   def test_format_27(self):
     # Verify that Cython PYX version is used
@@ -6069,14 +6073,16 @@ ask where
     
   def test_destroy_1(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test").load()
     
     destroy_entity(o.Pizza)
     
-    assert len(w.graph) == 58
+    assert len(w.graph) == 58 + nb
     
   def test_destroy_2(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test").load()
     
     o.Pizza
@@ -6088,18 +6094,19 @@ ask where
     
     destroy_entity(o.Pizza)
     
-    assert len(w.graph) == 58
+    assert len(w.graph) == 58 + nb
     assert o.Pizza is None
     assert len(o.NonPizza.is_a) == 1
     assert o.NonPizza.is_a[0] is Thing
     
   def test_destroy_3(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test").load()
     
     destroy_entity(o.Meat)
 
-    assert len(w.graph) == 68
+    assert len(w.graph) == 68 + nb
     
   def test_destroy_4(self):
     w = self.new_world()
@@ -6117,6 +6124,7 @@ ask where
     
   def test_destroy_5(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6129,11 +6137,7 @@ ask where
         
     destroy_entity(C2)
     
-    #w.graph.dump()
-    #print(len(w.graph))
-    #print(D.is_a)
-    
-    assert len(w.graph) == 7
+    assert len(w.graph) == 7 + nb
     assert D.is_a == [Thing]
     
   def test_destroy_6(self):
@@ -6155,6 +6159,7 @@ ask where
     
   def test_destroy_7(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6162,20 +6167,21 @@ ask where
 
     c = C()
 
-    assert len(w.graph) == 5
+    assert len(w.graph) == 5 + nb
     
     undestroy = destroy_entity(C, undoable = True)
     
     assert c.is_a  == [Thing]
-    assert len(w.graph) == 2
+    assert len(w.graph) == 2 + nb
     
     undestroy()
     
-    assert len(w.graph) == 5
+    assert len(w.graph) == 5 + nb
     assert c.is_a  == [C]
     
   def test_destroy_8(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6186,11 +6192,12 @@ ask where
       
     destroy_entity(C)
     
-    assert len(w.graph) == 5
+    assert len(w.graph) == 5 + nb
     assert len(list(o.disjoints())) == 0
     
   def test_destroy_9(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6203,11 +6210,12 @@ ask where
       
     destroy_entity(c1)
     
-    assert len(w.graph) == 7
+    assert len(w.graph) == 7 + nb
     assert len(list(o.disjoints())) == 0
     
   def test_destroy_10(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6217,10 +6225,11 @@ ask where
       
     destroy_entity(D)
     
-    assert len(w.graph) == 3
+    assert len(w.graph) == 3 + nb
     
   def test_destroy_11(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6235,10 +6244,11 @@ ask where
     
     assert list(C.equivalent_to.indirect()) == []
     assert list(E.equivalent_to.indirect()) == []
-    assert len(w.graph) == 5
+    assert len(w.graph) == 5 + nb
     
   def test_destroy_12(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6250,10 +6260,11 @@ ask where
       
     destroy_entity(C)
     
-    assert len(w.graph) == 4
+    assert len(w.graph) == 4 + nb
     
   def test_destroy_13(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6267,10 +6278,11 @@ ask where
     destroy_entity(C)
     
     assert D.is_a == [Thing]
-    assert len(w.graph) == 5
+    assert len(w.graph) == 5 + nb
     
   def test_destroy_14(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6282,10 +6294,11 @@ ask where
     destroy_entity(c1)
     
     assert C.is_a == [Thing]
-    assert len(w.graph) == 4
+    assert len(w.graph) == 4 + nb
     
   def test_destroy_15(self):
     w = self.new_world()
+    nb = len(w.graph)
     o = w.get_ontology("http://www.test.org/test.owl")
     
     with o:
@@ -6299,7 +6312,7 @@ ask where
     
     assert C.is_a == [Thing]
     assert getattr(c1, "p", None) == None
-    assert len(w.graph) == 5
+    assert len(w.graph) == 5 + nb
     
   def test_destroy_16(self):
     w = self.new_world()

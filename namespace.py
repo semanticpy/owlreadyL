@@ -66,14 +66,12 @@ class Namespace(object):
   def __enter__(self):
     if self.ontology is None: raise ValueError("Cannot assert facts in this namespace: it is not linked to an ontology! (it is probably a global namespace created by get_namespace(); please use your_ontology.get_namespace() instead)")
     if self.world.graph: self.world.graph.acquire_write_lock()
-    #CURRENT_NAMESPACES.append(self)
     l = CURRENT_NAMESPACES.get()
     if l is None: CURRENT_NAMESPACES.set([self])
     else:         l.append(self)
     return self
     
   def __exit__(self, exc_type = None, exc_val = None, exc_tb = None):
-    #del CURRENT_NAMESPACES[-1]
     del CURRENT_NAMESPACES.get()[-1]
     if self.world.graph: self.world.graph.release_write_lock()
     
@@ -444,11 +442,13 @@ class World(_GraphManager):
       
     if filename:
       self.set_backend(backend, filename, dbname, **kargs)
+
+    self.get_ontology("http://anonymous/") # Pre-create, in order to avoird creation during a reading sequence
       
   def set_backend(self, backend = "sqlite", filename = ":memory:", dbname = "owlready2_quadstore", **kargs):
     if   backend == "sqlite":
       from owlready2.triplelite import Graph
-      if self.graph and len(self.graph):
+      if self.graph and (len(self.graph) > 1): # 1 is for http://anonymous ontology
         self.graph = Graph(filename, world = self, clone = self.graph, **kargs)
       else:
         self.graph = Graph(filename, world = self, **kargs)
@@ -657,6 +657,7 @@ class World(_GraphManager):
     with LOADING:
       types       = []
       is_a_bnodes = []
+
       for graph, obj in self._get_obj_triples_sp_co(storid, rdf_type):
         if main_onto is None: main_onto = self.graph.context_2_user_context(graph)
         if   obj == owl_class: main_type = ThingClass
@@ -860,8 +861,13 @@ class Ontology(Namespace, _GraphManager):
     if not r is None: return r
     return Namespace(self, base_iri, name or base_iri[:-1].rsplit("/", 1)[-1])
   
-  def __exit__(self, exc_type = None, exc_val = None, exc_tb = None):
-    Namespace.__exit__(self, exc_type, exc_val, exc_tb)
+  #def __exit__(self, exc_type = None, exc_val = None, exc_tb = None):
+  #  Namespace.__exit__(self, exc_type, exc_val, exc_tb)
+  #  if not self.loaded:
+  #    self.loaded = True
+  #    if self.graph: self.graph.set_last_update_time(time.time())
+  def __enter__(self): # Do this in __enter__ and not __exit__, because set_last_update_time() modify the database. Modifying the database in __exit__ prevents calling World.save() inside the 'with onto:' block. 
+    Namespace.__enter__(self)
     if not self.loaded:
       self.loaded = True
       if self.graph: self.graph.set_last_update_time(time.time())

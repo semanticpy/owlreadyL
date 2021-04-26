@@ -47,28 +47,45 @@ class Graph(BaseMainGraph):
       if exists: raise ValueError("Cannot save existent quadstore in '%s': File already exists! Use a new filename for saving quadstore or, for opening an already existent quadstore, do not create any triple before calling set_backend()." % filename)
       
     if sqlite_tmp_dir: os.environ["SQLITE_TMPDIR"] = sqlite_tmp_dir
-
+    
+    if filename == ":memory:":
+      filename = str(id(self))
+      extra_options = "&mode=memory"
+    else:
+      extra_options = ""
+      
     self.read_only = read_only
     if read_only:
       if exclusive:
-        self.db = sqlite3.connect("file:%s?mode=ro" % filename, isolation_level = "EXCLUSIVE", check_same_thread = False, uri = True)
+        #self.db = sqlite3.connect("file:%s?mode=ro" % filename, isolation_level = "EXCLUSIVE", check_same_thread = False, uri = True)
+        self.db = sqlite3.connect("file:%s?mode=ro&cache=shared%s" % (filename, extra_options), isolation_level = "EXCLUSIVE", check_same_thread = False, uri = True)
         self.db.execute("""PRAGMA locking_mode = EXCLUSIVE""")
         self.db.execute("""PRAGMA query_only = 1""")
+        self.db.execute("""PRAGMA read_uncommitted = True""") # Exclusive + no write => no need for read lock
       else:
-        self.db = sqlite3.connect("file:%s?mode=ro" % filename, check_same_thread = False, uri = True)
+        self.db = sqlite3.connect("file:%s?mode=ro&cache=shared%s" % (filename, extra_options), check_same_thread = False, uri = True)
         self.db.execute("""PRAGMA locking_mode = NORMAL""")
         self.db.execute("""PRAGMA query_only = 1""")
     else:
       if exclusive:
-        self.db = sqlite3.connect(filename, isolation_level = "EXCLUSIVE", check_same_thread = False)
+        #self.db = sqlite3.connect(filename, isolation_level = "EXCLUSIVE", check_same_thread = False)
+        self.db = sqlite3.connect("file:%s?cache=shared%s" % (filename, extra_options), isolation_level = "EXCLUSIVE", check_same_thread = False, uri = True)
         self.db.execute("""PRAGMA locking_mode = EXCLUSIVE""")
       else:
-        self.db = sqlite3.connect(filename, check_same_thread = False)
+        #self.db = sqlite3.connect(filename, check_same_thread = False)
+        self.db = sqlite3.connect("file:%s?cache=shared%s" % (filename, extra_options), check_same_thread = False, uri = True)
         self.db.execute("""PRAGMA locking_mode = NORMAL""")
         
+      #self.db.execute("""PRAGMA journal_mode = WAL""")
+    self.db.execute("""PRAGMA cache_size = -200000""")
+    self.db.execute("""PRAGMA mmap_size = 30000000000""")
+    self.db.execute("""PRAGMA page_size = 32768""")
+    
     if sqlite_tmp_dir:
       try: self.db.execute("""PRAGMA temp_store_directory = '%s'""" % sqlite_tmp_dir)
       except: pass # Deprecated PRAGMA
+    else:
+      self.db.execute("""PRAGMA temp_store = memory""")
       
     if profiling:
       import time
