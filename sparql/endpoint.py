@@ -17,7 +17,6 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import flask
 from owlready2.sparql.main import PreparedSelectQuery
 
 
@@ -40,6 +39,7 @@ class EndPoint(object):
     self.__name__  = "endpoint%s" % id(self)
     
   def __call__(self):
+    import flask
     query  = flask.request.args.get("query", "")
     mime   = flask.request.headers.get("Accept", "text/csv")
     format = _mime_2_format.get(mime)
@@ -54,3 +54,22 @@ class EndPoint(object):
     if self.no_cache: r.cache_control.no_cache = True
     return r
   
+  def wsgi_app(self, environ, start_response):
+    import urllib.parse
+    args   = urllib.parse.parse_qs(environ["QUERY_STRING"])
+    query  = args.get("query")[0]
+    mime   = environ.get("HTTP_ACCEPT", "text/csv")
+    format = _mime_2_format.get(mime)
+    if format is None:
+      mime   = "text/csv"
+      format = "execute_csv"
+      
+    q = self.world.prepare_sparql(query)
+    if self.read_only and not isinstance(q, PreparedSelectQuery): return ""
+    
+    headers = [("Content-type", "%s; charset=utf-8" % mime)]
+    if self.no_cache: headers.append(("Cache-Control", "no-cache"))
+    start_response("200 OK", headers)
+    
+    return [ getattr(q, format)().encode("utf-8") ]
+    

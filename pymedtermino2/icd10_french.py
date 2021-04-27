@@ -23,7 +23,190 @@ from collections import defaultdict, Counter
 from owlready2 import *
 
 
-def import_icd10_french(atih_data = "https://www.atih.sante.fr/plateformes-de-transmission-et-logiciels/logiciels-espace-de-telechargement/telecharger/gratuit/11616/456"):
+def import_icd10_french_claml(atih_data = "https://www.atih.sante.fr/sites/default/files/public/content/3963/cim10fmclassification_internationale_des_maladies_cim-10-fr_2021syst_claml_20210302.zip"):
+  import xml.sax as sax, xml.sax.handler as handler
+  
+  PYM  = get_ontology("http://PYM/").load()
+  ICD10 = PYM["ICD10"]
+  
+  print("Importing CIM10 from %s..." % atih_data)
+  if atih_data.startswith("http:") or atih_data.startswith("https:"):
+    f = urllib.request.urlopen(atih_data)
+    f = io.BytesIO(f.read())
+  else:
+    f = open(atih_data, "rb")
+  
+  parents = []
+  
+  CHAPTER_2_CODE = {
+    "I" : "A00-B99",
+    "II" : "C00-D48",
+    "III" : "D50-D89",
+    "IV" : "E00-E90",
+    "V" : "F00-F99",
+    "VI" : "G00-G99",
+    "VII" : "H00-H59",
+    "VIII" : "H60-H95",
+    "IX" : "I00-I99",
+    "X" : "J00-J99",
+    "XI" : "K00-K93",
+    "XII" : "L00-L99",
+    "XIII" : "M00-M99",
+    "XIV" : "N00-N99",
+    "XV" : "O00-O99",
+    "XVI" : "P00-P96",
+    "XVII" : "Q00-Q99",
+    "XVIII" : "R00-R99",
+    "XIX" : "S00-T98",
+    "XXII" : "U00-U99",
+    "XX" : "V01-Y98",
+    "XXI" : "Z00-Z99",
+  }
+  
+  onto = get_ontology("http://atih/cim10/")
+  with onto:
+    class dagger        (AnnotationProperty): pass
+    class star          (AnnotationProperty): pass
+    class frenchspecific(AnnotationProperty): pass
+    class note          (AnnotationProperty): pass
+    class definition    (AnnotationProperty): pass
+    class include       (AnnotationProperty): pass
+    class exclude       (AnnotationProperty): pass
+    class reference     (AnnotationProperty): pass
+    class coding_hint   (AnnotationProperty): pass
+    class introduction  (AnnotationProperty): pass
+    class text          (AnnotationProperty): pass
+    class footnote      (AnnotationProperty): pass
+    
+  with onto.get_namespace("http://PYM/SRC/"):
+    ICD10_FRENCH = types.new_class("CIM10", (PYM["SRC"],))
+    onto._set_obj_triple_spo  (ICD10_FRENCH.storid, PYM.terminology.storid, PYM["SRC"].storid)
+    onto._set_data_triple_spod(ICD10_FRENCH.storid, label.storid, "CIM10", "@fr")
+    
+  ANNOTS = []
+  class Handler(handler.ContentHandler):
+    def __init__(self):
+      self.concept    = None
+      self.inhibited  = 0
+      self.content    = ""
+      self.references = []
+      
+    def startElement(self, name, attrs):
+      if self.inhibited: return
+      
+      if   name == "Fragment":
+        self.content = "%s " % self.content.strip()
+        if attrs.get("usage") == "dagger": self.dagger = True
+        
+      elif name == "Reference":
+        self.content = "%s " % self.content.strip()
+        
+      elif (name == "Modifier") or (name == "ModifierClass"):
+        self.inhibited += 1
+        
+      elif name == "Class":
+        self.concept = types.new_class(attrs["code"].replace("–", "-"), (ICD10_FRENCH,))
+        if attrs.get("usage") == "dagger": self.concept.dagger = True
+        if attrs.get("usage") == "aster":  self.concept.star   = True
+        
+        onto._set_obj_triple_spo(self.concept.storid, PYM.terminology.storid, ICD10_FRENCH.storid)
+        
+        if self.concept.name in CHAPTER_2_CODE:
+          icd10 = ICD10[CHAPTER_2_CODE[self.concept.name]]
+          if not icd10:
+            icd10 = ICD10[CHAPTER_2_CODE[self.concept.name] + ".9"]
+        else:
+          icd10 = ICD10[self.concept.name]
+          if (not icd10) and ("-" in self.concept.name):
+            icd10 = ICD10[self.concept.name + ".9"]
+            
+        if icd10:
+          self.concept.unifieds = icd10.unifieds
+          for cui in icd10.unifieds: cui.originals.append(self.concept)
+          
+      elif name == "SuperClass":
+        l = list(self.concept.is_a)
+        l.remove(ICD10_FRENCH)
+        l.append(ICD10_FRENCH[attrs["code"]])
+        self.concept.is_a = l
+        
+      elif name == "Meta":
+        if   (attrs["name"] == "frenchspecific") and (attrs["value"] == "true"): self.concept.frenchspecific = True
+        
+      elif name == "Rubric":
+        self.kind = attrs["kind"]
+        
+      elif name == "Label":
+        self.content    = ""
+        self.references = []
+        self.dagger     = False
+        
+    def endElement(self, name):
+      if (name == "Modifier") or (name == "ModifierClass"): self.inhibited -= 1
+      if self.inhibited: return
+      
+      self.content = self.content.strip()
+      
+      if self.content:
+        if   name == "Label":
+          self.content = locstr(self.content, "fr")
+          if   self.kind == "preferred":    prop = label
+          elif self.kind == "note":         prop = note
+          elif self.kind == "inclusion":    prop = include
+          elif self.kind == "exclusion":    prop = exclude
+          elif self.kind == "coding-hint":  prop = coding_hint
+          elif self.kind == "introduction": prop = introduction
+          elif self.kind == "definition":   prop = definition
+          elif self.kind == "text":         prop = text
+          elif self.kind == "footnote":     prop = footnote
+          elif self.kind == "modifierlink": prop = None
+          
+          if prop:
+            getattr(self.concept, prop.name).append(self.content)
+            
+            if self.dagger: dagger[(self.concept, prop, self.content)] = True
+              
+            for ref in self.references:
+              ANNOTS.append(((self.concept, prop, self.content), reference, ref))
+              
+        elif name == "Reference":
+          self.references.append(self.content.strip().split()[-1])
+          
+        elif name == "Fragment":
+          if self.content.endswith(":"): self.content = self.content[:-1]
+          
+    def characters(self, content):
+      if self.inhibited: return
+      self.content += content
+      
+      
+  with onto.get_namespace("http://PYM/CIM10/"):
+    with zipfile.ZipFile(f, "r") as atih_zip:
+      for filename in atih_zip.namelist():
+        if filename.endswith(".xml"): break
+      xml = atih_zip.open(filename, "r").read()
+      xml = StringIO(xml.decode("utf8"))
+      parser = sax.make_parser()
+      parser.setContentHandler(Handler())
+      parser.parse(xml)
+      
+      for s, p, o in ANNOTS:
+        o = o.replace("–", "-")
+        o2 = ICD10_FRENCH[o]
+        if o2: p[s].append(o2)
+        
+
+    for k, v in CHAPTER_2_CODE.items():
+      ICD10_FRENCH[k].name = v
+    
+  default_world.save()
+
+import_icd10_french = import_icd10_french_claml
+
+
+
+# TXT data are no longer available, kept only for archive
+def import_icd10_french_txt(atih_data = "https://www.atih.sante.fr/plateformes-de-transmission-et-logiciels/logiciels-espace-de-telechargement/telecharger/gratuit/11616/456"):
   PYM  = get_ontology("http://PYM/").load()
   ICD10 = PYM["ICD10"]
   
@@ -48,7 +231,7 @@ def import_icd10_french(atih_data = "https://www.atih.sante.fr/plateformes-de-tr
     onto._set_data_triple_spod(ICD10_FRENCH.storid, label.storid, "CIM10", "@fr")
     
   with onto.get_namespace("http://PYM/CIM10/"):
-    for line in open(os.path.join(os.path.dirname(__file__), "icd10_french_group_name.txt")).read().split(u"\n"):
+    for line in open(os.path.join(os.path.dirname(__file__), "icd10_french_group_name.txt")).read().split("\n"):
       line = line.strip()
       if line and not line.startswith("#"):
         code, term = line.split(" ", 1)

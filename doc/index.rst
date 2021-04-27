@@ -45,6 +45,7 @@ Table of content
    namespace.rst
    sparql.rst
    world.rst
+   sync.rst
    rule.rst
    pymedtermino2.rst
    porting1.rst

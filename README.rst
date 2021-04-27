@@ -548,7 +548,8 @@ version 2 - 0.30
 version 2 - 0.31
 ****************
 
-* Can open SPARQL endpoints (see module owlready2.sparql.endpoint)
+* Can open SPARQL endpoints (see module owlready2.sparql.endpoint and doc)
+* Support ClaML file format in PyMedTermino2 for French ICD10
 * Bugfixes:
   - Fix prefix in SPARQL that does not correspond to an existing ontology
   - Fix ! in SPARQL FILTER
