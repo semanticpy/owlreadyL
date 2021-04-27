@@ -86,7 +86,22 @@ Export to OWL file:
 ::
 
   >>> onto.save()
+
+Load Gene Ontology (GO), a large ontology (~ 170 Mb, can take a moment!):
   
+::
+   
+   >>> go = get_ontology("http://purl.obolibrary.org/obo/go.owl").load()
+
+Access entities with an IRI that does not start with the ontology's IRI, by creating a Namespace:
+
+::
+
+   >>> obo = get_namespace("http://purl.obolibrary.org/obo/")
+   
+   >>> print(obo.GO_0000001.label)
+   ['mitochondrion inheritance']
+
 
 Architecture
 ------------
