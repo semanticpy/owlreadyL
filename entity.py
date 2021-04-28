@@ -343,8 +343,12 @@ class EntityClass(type):
         world = owlready2.default_world
         
       for x, in world.graph.db.execute(
-    """SELECT q1.s FROM objs q1 WHERE q1.s > 0 and q1.p = ? AND q1.o = ?
-EXCEPT SELECT q2.s FROM objs q2 WHERE q2.p = ? and q2.o != ? and q2.o > 0""",
+#    """SELECT q1.s FROM objs q1 WHERE q1.s > 0 and q1.p = ? AND q1.o = ?
+#EXCEPT SELECT q2.s FROM objs q2 WHERE q2.p = ? and q2.o != ? and q2.o > 0""",
+#          (rdf_type, owl_class, rdfs_subclassof, owl_thing)):
+          """SELECT q1.s FROM objs q1 WHERE q1.p=? AND q1.o=? AND ((q1.s > 0))
+    AND (SELECT 1 FROM objs q2 INDEXED BY index_objs_sp
+    WHERE q2.s=q1.s AND q2.p=? AND ((q2.o > 0) AND q2.o != ?)) IS NULL""",
           (rdf_type, owl_class, rdfs_subclassof, owl_thing)):
         if only_loaded:
           subclass = world._entities.get(x)
