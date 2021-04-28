@@ -45,7 +45,7 @@ class Namespace(object):
     if not(base_iri.endswith("#") or base_iri.endswith("/") or base_iri.endswith(":")): raise ValueError("base_iri must end with '#', '/' or ':' !")
     name = name or base_iri[:-1].rsplit("/", 1)[-1]
     if name.endswith(".owl") or name.endswith(".rdf"): name = name[:-4]
-    
+
     if   isinstance(world_or_ontology, Ontology):
       self.ontology = world_or_ontology
       self.world    = world_or_ontology.world
@@ -55,7 +55,6 @@ class Namespace(object):
       self.ontology = None
       self.world    = world_or_ontology
       self.world._namespaces[base_iri] = self
-      
     else:
       self.ontology = None
       self.world    = None

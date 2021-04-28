@@ -553,6 +553,7 @@ version 2 - 0.31
 * Bugfixes:
   - Fix prefix in SPARQL that does not correspond to an existing ontology
   - Fix ! in SPARQL FILTER
+  - Fix Thing.subclasses() so as it now returns classes that have parent constructs but no parent named classes
 
 
 Links

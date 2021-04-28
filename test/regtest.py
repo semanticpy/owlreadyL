@@ -1138,7 +1138,18 @@ class Test(BaseTest, unittest.TestCase):
       assert set(C.         equivalent_to) == { A }
       assert set(C.INDIRECT_equivalent_to) == { Not(B), A }
       
+  def test_class_28(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test")
+    with o:
+      class p(Thing >> Thing): pass
+      class A(Thing): pass
+      class B(A): pass
+      class C(Thing): is_a = [p.some(A)]
       
+    assert set(Thing.subclasses(world = w)) == { A, C }
+    
+    
   def test_individual_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
     
