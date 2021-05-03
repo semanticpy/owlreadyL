@@ -397,8 +397,11 @@ class FusionClass(ThingClass):
     name = "_AND_".join(Class.__name__ for Class in Classes)
     
     with anonymous: # Force triple insertion into anonymous
-      fusion_class = FusionClass(name, Classes, { "namespace" : anonymous })
-      
+      try:
+        fusion_class = FusionClass(name, Classes, { "namespace" : anonymous })
+      except TypeError:
+        fusion_class = ThingClass(name, Classes, { "namespace" : anonymous })
+        
     FusionClass._FUSION_CLASSES[Classes] = FusionClass._CACHES[key] = fusion_class
     return fusion_class
   

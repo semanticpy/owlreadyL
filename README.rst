@@ -554,7 +554,8 @@ version 2 - 0.31
   - Fix prefix in SPARQL that does not correspond to an existing ontology
   - Fix ! in SPARQL FILTER
   - Fix Thing.subclasses() so as it now returns classes that have parent constructs but no parent named classes
-
+  - Fix metaclass of FusionClass when creating individuals belonging to several classes, including one from PyMedTermino
+    
 
 Links
 -----
