@@ -555,7 +555,8 @@ version 2 - 0.31
   - Fix ! in SPARQL FILTER
   - Fix Thing.subclasses() so as it now returns classes that have parent constructs but no parent named classes
   - Fix metaclass of FusionClass when creating individuals belonging to several classes, including one from PyMedTermino
-    
+  - Fix Prop[individual] for functional properties with no relation for the given individual
+
 
 Links
 -----

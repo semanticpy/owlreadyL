@@ -2084,7 +2084,7 @@ class Test(BaseTest, unittest.TestCase):
     label[C] = ["c", "d"]
     assert set(C.label) == set(["c", "d"])
     
-  def test_prop_31(self):
+  def test_prop_31_2(self):
     world   = self.new_world()
     o       = world.get_ontology("http://www.semanticweb.org/test.owl")
     
@@ -2493,6 +2493,16 @@ class Test(BaseTest, unittest.TestCase):
     assert onto1.C in onto1.p.domain
     assert onto1.p.python_name == "my_prop"
     assert onto1.p.inverse     is  onto1.i
+    
+  def test_prop_50(self):
+    w = self.new_world()
+    o = w.get_ontology("http://test.org/o.owl")
+    with o:
+      class p(ObjectProperty, FunctionalProperty): pass
+      class C(Thing): pass
+      c = C()
+    assert p[c] == []
+    assert p[C] == []
     
     
   def test_prop_inverse_1(self):

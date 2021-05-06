@@ -374,8 +374,11 @@ class PropertyClass(EntityClass):
       return Prop._get_values_for_class(entity)
     else:
       if Prop is entity.namespace.world._props.get(Prop._python_name): # use cached value
-        if Prop.is_functional_for(entity.__class__): return FunctionalIndividualValueList([getattr(entity, Prop._python_name)], entity, Prop)
-        else:                                        return getattr(entity, Prop._python_name)
+        if Prop.is_functional_for(entity.__class__):
+          value = getattr(entity, Prop._python_name)
+          if value is None: return FunctionalIndividualValueList([],      entity, Prop)
+          else:             return FunctionalIndividualValueList([value], entity, Prop)
+        else:               return getattr(entity, Prop._python_name)
       else:
         l = Prop._get_values_for_individual(entity)
         if Prop.is_functional_for(entity.__class__): l.__class__ = FunctionalIndividualValueList
