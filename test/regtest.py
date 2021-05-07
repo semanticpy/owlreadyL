@@ -1554,7 +1554,23 @@ class Test(BaseTest, unittest.TestCase):
 
     assert list(Thing.instances(world)) == [c]
 
-    
+  def test_individual_25(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class C1(Thing): pass
+      
+      C()
+      C1()
+      for i in range(13): C()
+      C1()
+      
+    for i in world.individuals():
+      l = list(world.graph.execute("select o from objs where s=? and p=6", (i.storid,)))
+      assert len(l) == 2
+      
+      
   def test_prop_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
     assert "has_topping" in default_world._props

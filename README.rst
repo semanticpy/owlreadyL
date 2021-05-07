@@ -557,6 +557,12 @@ version 2 - 0.31
   - Fix metaclass of FusionClass when creating individuals belonging to several classes, including one from PyMedTermino
   - Fix Prop[individual] for functional properties with no relation for the given individual
 
+version 2 - 0.32
+****************
+
+* Bugfixes:
+  - Fix name clash when creating individuals from classes whose names end with a number, e.g. "c1" + "1" vs "c" + "11"
+    
 
 Links
 -----

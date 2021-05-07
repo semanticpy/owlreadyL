@@ -491,26 +491,31 @@ class Graph(BaseMainGraph):
   #   self.last_numbered_iri[prefix] = 1
   #   return "%s1" % prefix
   
+  def _new_numbered_iri_2(self, prefix):
+    cur = self.execute("SELECT iri FROM resources WHERE iri GLOB ? ORDER BY LENGTH(iri) DESC, iri DESC", ("%s*" % prefix,))
+    while True:
+      iri = cur.fetchone()
+      if not iri:
+        self.execute("""INSERT INTO last_numbered_iri VALUES (?,?)""", (prefix, 1))
+        return "%s1" % prefix
+      num = iri[0][len(prefix):]
+      if num.isdigit():
+        i = int(num) + 1
+        self.execute("""INSERT INTO last_numbered_iri VALUES (?,?)""", (prefix, i))
+        return "%s%s" % (prefix, i)
+      
   def _new_numbered_iri(self, prefix):
     i = self.execute("""SELECT i FROM last_numbered_iri WHERE prefix=?""", (prefix,)).fetchone()
-    if i is None:
-      cur = self.execute("SELECT iri FROM resources WHERE iri GLOB ? ORDER BY LENGTH(iri) DESC, iri DESC", ("%s*" % prefix,))
-      while True:
-        iri = cur.fetchone()
-        if not iri: break
-        num = iri[0][len(prefix):]
-        if num.isdigit():
-          i = int(num) + 1
-          self.execute("""INSERT INTO last_numbered_iri VALUES (?,?)""", (prefix, i))
-          return "%s%s" % (prefix, i)
-        
-    else:
-      i = i[0] + 1
-      self.execute("""UPDATE last_numbered_iri SET i=? WHERE prefix=?""", (i, prefix))
-      return "%s%s" % (prefix, i)
+    if i is None: return self._new_numbered_iri_2(prefix)
+
+    i = i[0] + 1
+    iri = "%s%s" % (prefix, i)
+    if self.execute("""SELECT storid FROM resources WHERE iri=?""", (iri,)).fetchone(): # Already exists, due to a name clash, e.g. "c1" + "1" vs "c" + "11"
+      return self._new_numbered_iri_2(prefix)
     
-    self.execute("""INSERT INTO last_numbered_iri VALUES (?,?)""", (prefix, 1))
-    return "%s1" % prefix
+    self.execute("""UPDATE last_numbered_iri SET i=? WHERE prefix=?""", (i, prefix))
+    return iri
+    
   
   #def _refactor_sql(self, storid, new_iri):
   def _refactor(self, storid, new_iri):
@@ -790,7 +795,8 @@ class Graph(BaseMainGraph):
   
   def __bool__(self): return True # Reimplemented to avoid calling __len__ in this case
   def __len__(self):
-    return self.execute("SELECT COUNT() FROM quads").fetchone()[0]
+    #return self.execute("SELECT COUNT() FROM quads").fetchone()[0] # slow
+    return self.execute("SELECT COUNT() FROM objs").fetchone()[0] + self.execute("SELECT COUNT() FROM datas").fetchone()[0]
 
   
 #  def get_equivs_s_o(self, s):
@@ -1415,7 +1421,8 @@ class SubGraph(BaseSubGraph):
   def search(self, prop_vals, c = None, debug = False): return self.parent.search(prop_vals, self.c, debug)
   
   def __len__(self):
-    return self.execute("SELECT COUNT() FROM quads WHERE c=?", (self.c,)).fetchone()[0]
+    #return self.execute("SELECT COUNT() FROM quads WHERE c=?", (self.c,)).fetchone()[0] # slow
+    return self.execute("SELECT COUNT() FROM objs WHERE c=?", (self.c,)).fetchone()[0] + self.execute("SELECT COUNT() FROM datas WHERE c=?", (self.c,)).fetchone()[0]
   
   
   def _iter_ontology_iri(self, c = None):
