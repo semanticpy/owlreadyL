@@ -148,13 +148,14 @@ class Translator(object):
       r.append(triple)
     return r
   
-  def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None):
+  def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None, copy_vars = False):
     if preliminary and not name: name = "prelim%s" % (len(self.preliminary_selects) + 1)
     
     #print("BLOCK", name, block)
     
-    if isinstance(block, UnionBlock) and block.simple_union_triples: block = SimpleTripleBlock(block.simple_union_triples)
-    
+    if isinstance(block, UnionBlock) and block.simple_union_triples:
+      block = SimpleTripleBlock(block.simple_union_triples)
+      
     if   isinstance(block, SimpleTripleBlock):
       s = SQLQuery(name)
       
@@ -163,7 +164,7 @@ class Translator(object):
       s.optional = True
       
     elif isinstance(block, UnionBlock):
-      s = SQLCompoundQuery(name)
+      s = SQLCompoundQuery(name, nested_inside)
       if selects is None: selects = block.get_ordered_vars()
       
     elif isinstance(block, FilterBlock):
@@ -175,7 +176,7 @@ class Translator(object):
       preliminary = False
       
     elif isinstance(block, NotExistsBlock):
-      s = SQLCompoundQuery(name)
+      s = SQLCompoundQuery(name, nested_inside)
       
     elif isinstance(block, SubQueryBlock):
       s = block.parse()
@@ -188,6 +189,12 @@ class Translator(object):
       s.preliminary = True
       self.preliminary_selects.append(s)
       
+    #if copy_vars:
+    #  if hasattr(nested_inside, "vars"):
+    #    s.vars = nested_inside.vars.copy()
+    #  else:
+    #    s.vars = nested_inside.parent.vars.copy()
+    
     extra_binds = extra_binds or []
     if isinstance(selects, list): # Otherwise, it is "SELECT *"
       for i, select in enumerate(selects):
@@ -213,7 +220,8 @@ class Translator(object):
       
     elif isinstance(block, UnionBlock):
       for alternative in block:
-        query = self.new_sql_query(None, alternative, selects, distinct, None, False, extra_binds)
+        #print("   ", s.parent.vars)
+        query = self.new_sql_query(None, alternative, selects, distinct, None, False, extra_binds, nested_inside = s, copy_vars = True)
         s.append(query, "UNION")
       s.finalize_compounds()
       
@@ -703,7 +711,7 @@ class SQLQuery(FuncSupport):
           self.add_subqueries(sub)
           continue
         else:
-          sub = self.translator.new_sql_query(None, triple, preliminary = True)
+          sub = self.translator.new_sql_query(None, triple, preliminary = True, nested_inside = self, copy_vars = True)
           self.add_subqueries(sub)
           continue
         
@@ -789,11 +797,14 @@ class SQLQuery(FuncSupport):
     return fix_levels
       
   def extract_triples(self, triples, vars, except_triple = None):
+    #print("   EXTRACT", triples, vars, except_triple)
     var_names = { var.name for var in vars }
     while True:
       r = [triple for triple in triples if (not triple == except_triple) and isinstance(triple, (Triple, Filter, Bind)) and (not triple.var_names.isdisjoint(var_names))]
       var_names2 = { var_name for triple in r for var_name in triple.var_names }
-      if var_names2 == var_names: return r
+      if var_names2 == var_names:
+        #print("   EXTRACTED", r)
+        return r
       var_names = var_names2
       
   def create_conditions(self, conditions, table, n, x):
@@ -896,15 +907,16 @@ class SQLQuery(FuncSupport):
     
 class SQLCompoundQuery(object):
   recursive = False
-  def __init__(self, name):
+  def __init__(self, name, parent):
     self.name                    = name
+    self.parent                  = parent
     self.translator              = CURRENT_TRANSLATOR.get()
     self.queries                 = []
     self.preliminary             = False
     self.optional                = False
     
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
-
+  
   def append(self, query, operator = ""):
     query.operator = operator
     self.queries.append(query)

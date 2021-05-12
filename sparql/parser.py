@@ -983,7 +983,9 @@ class UnionBlock(Block):
       if r: return r
       
     for i in self:
+      if not isinstance(i, SimpleTripleBlock): return None
       if len(i) > 1: return None
+      if not isinstance(i[0], Triple): return None
       
     ss = set()
     ps = set()

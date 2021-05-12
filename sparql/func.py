@@ -338,7 +338,10 @@ class FuncSupport(object):
           
         return "".join(self.parse_expression(i) for i in expression) 
     elif expression is None: pass
-    elif expression.name  == "VAR":    return self.parse_var(expression).bindings[0]
+    elif expression.name  == "VAR":
+      #print(expression, self.vars, self.parse_var(expression))
+      
+      return self.parse_var(expression).bindings[0]
     elif expression.name  == "PARAM":  return "?%s" % expression.number
     elif expression.value == "(":      return "("
     elif expression.value == ")":      return ")"

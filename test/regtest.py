@@ -8511,6 +8511,30 @@ http://test.org/onto.owl#A\tClasse A
     q, r = self.sparql(world, """SELECT ?s ?p ?o { { onto:A ?p ?o } UNION { ?s ?p onto:A } }""")
     assert set(tuple(x) for x in r) == e
     
+  def test_120(self):
+    world, onto = self.prepare1()
+    a2 = onto.A(label = "XXX")
+    
+    q = world.prepare_sparql("""SELECT ?x { ?x rdfs:label ?l. FILTER(CONTAINS(?l, "_a")) }""")
+    print()
+    print(q.sql)
+    print()
+    
+    q = world.prepare_sparql("""SELECT ?x { ?x rdfs:label ?l. { FILTER(CONTAINS(?l, "_a")) } }""")
+    print()
+    print(q.sql)
+    print()
+    
+    q = world.prepare_sparql("""SELECT ?x { ?x rdfs:label ?l. { FILTER(CONTAINS(?l, "_a")) } UNION { FILTER(CONTAINS(?l, "_b")) } }""")
+    print()
+    print(q.sql)
+    print()
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x rdfs:label ?l. { FILTER(CONTAINS(?l, "_a")) } UNION { FILTER(CONTAINS(?l, "_b")) } }""")
+    print(r)
+    assert set(tuple(x) for x in r) == e
+    
+    
   # def test_109(self):
   #   world, onto = self.prepare1()
   #   onto.b3.label = []
