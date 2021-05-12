@@ -37,6 +37,9 @@ OMOP_CDM_v5_FILE = "./abimed/omop_cdm/OMOP_CDM_v5_3_1.csv"
 # Path to the OMOP sample data ZIP file, can be downloaded from http://www.ltscomputingllc.com/downloads/
 OMOP_SAMPLE_DATA_FILE = "./abimed/omop_cdm/synpuf1k_omop_cdm_5.2.2.zip"
 
+# Path to the generated OMOP sample data NT (leave empty to not generate the file; it is useful only if you want to use the data outside Owlready)
+SAMPLE_DATA_NT_FILE = ""
+
 
 
 import sys, os, csv, types, datetime, operator, functools, zipfile, io, types
@@ -260,3 +263,4 @@ with data:
       
 default_world.save()
 print(len(default_world.graph), "RDF triples")
+if SAMPLE_DATA_NT_FILE: default_world.save(SAMPLE_DATA_NT_FILE)
