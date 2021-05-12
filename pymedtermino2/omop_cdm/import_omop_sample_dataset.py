@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+# Please change the following paths:
 
 # A new file where the Owlready quadstore will be stored
 QUADSTORE_FILE = "/home/jiba/src/abimed/omop_cdm/quadstore_omop_sample_dataset.sqlite3"
