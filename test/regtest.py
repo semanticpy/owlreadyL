@@ -8533,7 +8533,8 @@ http://test.org/onto.owl#A\tClasse A
     q, r = self.sparql(world, """SELECT ?x { ?x rdfs:label ?l. { FILTER(CONTAINS(?l, "_a")) } UNION { FILTER(CONTAINS(?l, "_b")) } }""")
     print(r)
     assert set(tuple(x) for x in r) == e
-    
+
+        
     
   # def test_109(self):
   #   world, onto = self.prepare1()

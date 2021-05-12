@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import sys, os
+import sys, os, re
 from owlready2 import *
 
 """
@@ -45,6 +45,8 @@ MINUS
 from owlready2.sparql.parser import *
 from owlready2.sparql.func   import register_python_function, FuncSupport
 
+_RE_AUTOMATIC_INDEX = re.compile(r"TABLE (.*?) AS (.*?) USING AUTOMATIC.*\((.*?)\)")
+_RE_NORMAL_INDEX    = re.compile(r"TABLE (.*?) AS (.*?) USING (COVERING )?INDEX (.*?) ")
 
 class Translator(object):
   def __init__(self, world, error_on_undefined_entities = True):
@@ -103,7 +105,9 @@ class Translator(object):
             parameter_datatypes.append(number - 1)
         return "?%s" % r
       sql = re.sub("%s[^ ]*" % self.escape_mark, sub, sql)
-      
+
+    sql = self.optimize_sql(sql)
+    
     if   self.main_query.type == "select":
       return PreparedSelectQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes)
     
@@ -111,6 +115,91 @@ class Translator(object):
       select_param_indexes = [i - 1 for i in self.main_query.select_param_indexes]
       return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns), select_param_indexes)
     
+    
+  def optimize_sql(self, sql):
+    # Avoid Sqlite3 AUTOMATIC INDEX when a similar index can be used.
+    plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
+    for l in plan:
+      if (" USING AUTOMATIC " in l[3]) and not (" TABLE " in l[3]): break
+    else:
+      try:
+        self.world.graph.execute("PRAGMA automatic_index = false")
+        plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
+      finally:
+        self.world.graph.execute("PRAGMA automatic_index = true")
+        
+      for l in plan:
+        match = _RE_NORMAL_INDEX.search(l[3])
+        if match:
+          table_type = match.group(1)
+          table_name = match.group(2)
+          index_name = match.group(4)
+          if table_name == "q": continue # Recursive hard-coded sub-queries
+          #if ("%s INDEXED" % table_name) in sql: continue
+          table_def = "%s %s" % (table_type, table_name)
+          #print("OPTIMIZE!!!", l, table_type, table_name, index_name)
+          sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
+      return sql
+    
+          
+    while True:
+      changed = False
+      plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
+      
+      for l in plan:
+        match = _RE_AUTOMATIC_INDEX.search(l[3])
+        if match:
+          table_type = match.group(1)
+          table_name = match.group(2)
+          #if table_name in indexeds: continue
+          cols       = { i[0] for i in match.group(3).split(" AND ") }
+          
+          if cols == { "s", "p", "o" }:
+            #print("OPTIMIZE!!!", l, table_type, table_name, cols)
+            table_def = "%s %s" % (table_type, table_name)
+            sql_s = sql.replace(table_def, "%s INDEXED BY index_%s_sp" % (table_def, table_type), 1)
+            sql_o = sql.replace(table_def, "%s INDEXED BY index_%s_op" % (table_def, table_type), 1)
+            sql_s = self.optimize_sql(sql_s)
+            sql_o = self.optimize_sql(sql_o)
+            s_nb_not_indexed = sql_s.count("NOT INDEXED")
+            o_nb_not_indexed = sql_o.count("NOT INDEXED")
+            if s_nb_not_indexed <= o_nb_not_indexed: sql = sql_s #; print("CHOIX s", s_nb_not_indexed, o_nb_not_indexed)
+            else:                                    sql = sql_o #; print("CHOIX o", s_nb_not_indexed, o_nb_not_indexed)
+            #indexeds.add(table_name)
+            changed = True
+            break
+          
+      if changed: continue
+            
+      for l in plan:
+        match = _RE_AUTOMATIC_INDEX.search(l[3])
+        if match:
+          table_type = match.group(1)
+          table_name = match.group(2)
+          cols       = { i[0] for i in match.group(3).split(" AND ") }
+          #print("OPTIMIZE!!!", l, table_type, table_name, cols)
+          
+          table_def = "%s %s" % (table_type, table_name)
+          if   "s" in cols:
+            sql = sql.replace(table_def, "%s INDEXED BY index_%s_sp" % (table_def, table_type), 1)
+            #indexeds.add(table_name)
+            changed = True
+          elif "o" in cols:
+            sql = sql.replace(table_def, "%s INDEXED BY index_%s_op" % (table_def, table_type), 1)
+            #indexeds.add(table_name)
+            changed = True
+          elif "p" in cols:
+            sql = sql.replace(table_def, "%s NOT INDEXED" % table_def, 1)
+            #indexeds.add(table_name)
+            changed = True
+            
+      if not changed: break
+    return sql
+
+
+
+
+  
   def parse_inserts_deletes(self, triples, columns):
     var_2_column = { column.var : column for column in self.main_query.columns if not column.name.endswith("d") }
     r = []
@@ -728,15 +817,15 @@ class SQLQuery(FuncSupport):
       self.tables.append(table)
       self.name_2_table[table.name] = table
       
-      s_fixed = triple.consider_s and self.is_fixed(s)
-      o_fixed = triple.consider_o and self.is_fixed(o)
-      if   s_fixed and o_fixed: # Favor index SP over index OP, because there are usually more diversity in the values of S than in O
-        if   table.type == "objs":  table.index = "index_objs_sp"
-        elif table.type == "datas": table.index = "index_datas_sp"
-      elif s_fixed: # Favor index SP over SQLite3 partial covering index, because benchmark suggests better performances
-        if   table.type == "objs":  table.index = "index_objs_sp"
-        elif table.type == "datas": table.index = "index_datas_sp"
-        
+      #s_fixed = triple.consider_s and self.is_fixed(s)
+      #o_fixed = triple.consider_o and self.is_fixed(o)
+      #if   s_fixed and o_fixed: # Favor index SP over index OP, because there are usually more diversity in the values of S than in O
+      #  if   table.type == "objs":  table.index = "index_objs_sp"
+      #  elif table.type == "datas": table.index = "index_datas_sp"
+      #elif s_fixed: # Favor index SP over SQLite3 partial covering index, because benchmark suggests better performances
+      #  if   table.type == "objs":  table.index = "index_objs_sp"
+      #  elif table.type == "datas": table.index = "index_datas_sp"
+      
       if triple.consider_s: self.create_conditions(conditions, table, "s", s)
       if triple.consider_p: self.create_conditions(conditions, table, "p", p)
       if triple.consider_o: self.create_conditions(conditions, table, "o", o)

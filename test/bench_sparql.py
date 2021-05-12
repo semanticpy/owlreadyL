@@ -13,6 +13,7 @@ go  = get_ontology ("http://purl.obolibrary.org/obo/go.owl").load()
 obo = get_namespace("http://purl.obolibrary.org/obo/")
 default_world.save()
 
+
 PLANS = ""
 
 def sparql_owlready(sparql):
@@ -23,6 +24,7 @@ def sparql_owlready(sparql):
   #PLANS += plan + "\n\n"
   
   #print(default_world.prepare_sparql(sparql).sql)
+  #for i in list(default_world.graph.execute("""EXPLAIN QUERY PLAN %s""" % default_world.prepare_sparql(sparql).sql)): print(i)
   
   t0 = time.time()
   r = list(default_world.sparql(sparql))
@@ -64,6 +66,7 @@ list(default_world.sparql_query("""SELECT  ?x  { ?x rdfs:label "xxx" . }"""))
 print()
 
 
+sparql("""SELECT (STR(?x) AS ?i)  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0008150> . ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> }""")
 
 sparql("""SELECT ?l  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
 
@@ -81,7 +84,6 @@ sparql("""SELECT (STR(?x) AS ?i)  { ?x a <http://www.w3.org/2002/07/owl#Class> .
 
 sparql("""SELECT (COUNT(?x) AS ?i)  { ?x a <http://www.w3.org/2002/07/owl#Class> . }""")
 
-sparql("""SELECT (STR(?x) AS ?i)  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0008150> . ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> }""")
 
 
 print()
