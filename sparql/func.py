@@ -220,6 +220,10 @@ def register_python_function(world):
   create_function("bnode",          -1, func._bnode)
   create_function("newinstanceiri",  1, func._newinstanceiri)
   
+  # Unindexed table for deprioritizing subqueries
+  world.graph.execute("""CREATE TEMP TABLE one (i INTEGER)""")
+  world.graph.execute("""INSERT INTO one VALUES (1)""")
+  
   
 class FuncSupport(object):
   def parse_expression(self, expression):

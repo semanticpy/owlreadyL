@@ -48,6 +48,8 @@ from owlready2.sparql.func   import register_python_function, FuncSupport
 _RE_AUTOMATIC_INDEX = re.compile(r"TABLE (.*?) AS (.*?) USING AUTOMATIC.*\((.*?)\)")
 _RE_NORMAL_INDEX    = re.compile(r"TABLE (.*?) AS (.*?) USING (COVERING )?INDEX (.*?) ")
 
+_DEPRIORIZE_SUBQUERIES_OPT = True
+
 class Translator(object):
   def __init__(self, world, error_on_undefined_entities = True):
     self.world                         = world
@@ -106,7 +108,8 @@ class Translator(object):
         return "?%s" % r
       sql = re.sub("%s[^ ]*" % self.escape_mark, sub, sql)
 
-    sql = self.optimize_sql(sql)
+    #sql = self.optimize_sql(sql)
+    
     
     if   self.main_query.type == "select":
       return PreparedSelectQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes)
@@ -119,82 +122,82 @@ class Translator(object):
   def optimize_sql(self, sql):
     # Avoid Sqlite3 AUTOMATIC INDEX when a similar index can be used.
     plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
-    for l in plan:
-      if (" USING AUTOMATIC " in l[3]) and not (" TABLE " in l[3]): break
-    else:
-      try:
-        self.world.graph.execute("PRAGMA automatic_index = false")
-        plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
-      finally:
-        self.world.graph.execute("PRAGMA automatic_index = true")
+    #for l in plan:
+      #if (" USING AUTOMATIC " in l[3]) and not (" TABLE " in l[3]): break
+    #else:
+    try:
+      self.world.graph.execute("PRAGMA automatic_index = false")
+      plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
+    finally:
+      self.world.graph.execute("PRAGMA automatic_index = true")
         
-      for l in plan:
+    for l in plan:
         match = _RE_NORMAL_INDEX.search(l[3])
         if match:
           table_type = match.group(1)
           table_name = match.group(2)
           index_name = match.group(4)
-          if table_name == "q": continue # Recursive hard-coded sub-queries
+          if table_name == "q": continue # Recursive hard-coded preliminary queries
           #if ("%s INDEXED" % table_name) in sql: continue
           table_def = "%s %s" % (table_type, table_name)
           #print("OPTIMIZE!!!", l, table_type, table_name, index_name)
           sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
-      return sql
-    
-          
-    while True:
-      changed = False
-      plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
-      
-      for l in plan:
-        match = _RE_AUTOMATIC_INDEX.search(l[3])
-        if match:
-          table_type = match.group(1)
-          table_name = match.group(2)
-          #if table_name in indexeds: continue
-          cols       = { i[0] for i in match.group(3).split(" AND ") }
-          
-          if cols == { "s", "p", "o" }:
-            #print("OPTIMIZE!!!", l, table_type, table_name, cols)
-            table_def = "%s %s" % (table_type, table_name)
-            sql_s = sql.replace(table_def, "%s INDEXED BY index_%s_sp" % (table_def, table_type), 1)
-            sql_o = sql.replace(table_def, "%s INDEXED BY index_%s_op" % (table_def, table_type), 1)
-            sql_s = self.optimize_sql(sql_s)
-            sql_o = self.optimize_sql(sql_o)
-            s_nb_not_indexed = sql_s.count("NOT INDEXED")
-            o_nb_not_indexed = sql_o.count("NOT INDEXED")
-            if s_nb_not_indexed <= o_nb_not_indexed: sql = sql_s #; print("CHOIX s", s_nb_not_indexed, o_nb_not_indexed)
-            else:                                    sql = sql_o #; print("CHOIX o", s_nb_not_indexed, o_nb_not_indexed)
-            #indexeds.add(table_name)
-            changed = True
-            break
-          
-      if changed: continue
-            
-      for l in plan:
-        match = _RE_AUTOMATIC_INDEX.search(l[3])
-        if match:
-          table_type = match.group(1)
-          table_name = match.group(2)
-          cols       = { i[0] for i in match.group(3).split(" AND ") }
-          #print("OPTIMIZE!!!", l, table_type, table_name, cols)
-          
-          table_def = "%s %s" % (table_type, table_name)
-          if   "s" in cols:
-            sql = sql.replace(table_def, "%s INDEXED BY index_%s_sp" % (table_def, table_type), 1)
-            #indexeds.add(table_name)
-            changed = True
-          elif "o" in cols:
-            sql = sql.replace(table_def, "%s INDEXED BY index_%s_op" % (table_def, table_type), 1)
-            #indexeds.add(table_name)
-            changed = True
-          elif "p" in cols:
-            sql = sql.replace(table_def, "%s NOT INDEXED" % table_def, 1)
-            #indexeds.add(table_name)
-            changed = True
-            
-      if not changed: break
     return sql
+    
+    
+    # while True:
+    #   changed = False
+    #   plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
+      
+    #   for l in plan:
+    #     match = _RE_AUTOMATIC_INDEX.search(l[3])
+    #     if match:
+    #       table_type = match.group(1)
+    #       table_name = match.group(2)
+    #       #if table_name in indexeds: continue
+    #       cols       = { i[0] for i in match.group(3).split(" AND ") }
+          
+    #       if cols == { "s", "p", "o" }:
+    #         #print("OPTIMIZE!!!", l, table_type, table_name, cols)
+    #         table_def = "%s %s" % (table_type, table_name)
+    #         sql_s = sql.replace(table_def, "%s INDEXED BY index_%s_sp" % (table_def, table_type), 1)
+    #         sql_o = sql.replace(table_def, "%s INDEXED BY index_%s_op" % (table_def, table_type), 1)
+    #         sql_s = self.optimize_sql(sql_s)
+    #         sql_o = self.optimize_sql(sql_o)
+    #         s_nb_not_indexed = sql_s.count("NOT INDEXED")
+    #         o_nb_not_indexed = sql_o.count("NOT INDEXED")
+    #         if s_nb_not_indexed <= o_nb_not_indexed: sql = sql_s #; print("CHOIX s", s_nb_not_indexed, o_nb_not_indexed)
+    #         else:                                    sql = sql_o #; print("CHOIX o", s_nb_not_indexed, o_nb_not_indexed)
+    #         #indexeds.add(table_name)
+    #         changed = True
+    #         break
+          
+    #   if changed: continue
+            
+    #   for l in plan:
+    #     match = _RE_AUTOMATIC_INDEX.search(l[3])
+    #     if match:
+    #       table_type = match.group(1)
+    #       table_name = match.group(2)
+    #       cols       = { i[0] for i in match.group(3).split(" AND ") }
+    #       #print("OPTIMIZE!!!", l, table_type, table_name, cols)
+          
+    #       table_def = "%s %s" % (table_type, table_name)
+    #       if   "s" in cols:
+    #         sql = sql.replace(table_def, "%s INDEXED BY index_%s_sp" % (table_def, table_type), 1)
+    #         #indexeds.add(table_name)
+    #         changed = True
+    #       elif "o" in cols:
+    #         sql = sql.replace(table_def, "%s INDEXED BY index_%s_op" % (table_def, table_type), 1)
+    #         #indexeds.add(table_name)
+    #         changed = True
+    #       elif "p" in cols:
+    #         sql = sql.replace(table_def, "%s NOT INDEXED" % table_def, 1)
+    #         #indexeds.add(table_name)
+    #         changed = True
+            
+    #   if not changed: break
+    # return sql
 
 
 
@@ -258,8 +261,9 @@ class Translator(object):
       
     elif isinstance(block, FilterBlock):
       s = SQLNestedQuery(name)
-      if isinstance(block, ExistsBlock): s.extra_sql = "IS NOT NULL"
-      else:                              s.extra_sql = "IS NULL"
+      #if isinstance(block, ExistsBlock): s.extra_sql = "IS NOT NULL"
+      #else:                              s.extra_sql = "IS NULL"
+      s.exists = isinstance(block, ExistsBlock)
       s.next_table_id = nested_inside.next_table_id
       s.vars = nested_inside.vars
       preliminary = False
@@ -603,6 +607,7 @@ class SQLQuery(FuncSupport):
     self.extra_sql               = ""
     self.select_simple_union     = False
     self.optional                = False
+    self.has_one                 = False
     
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
   
@@ -686,6 +691,9 @@ class SQLQuery(FuncSupport):
   def add_subqueries(self, sub):
     if isinstance(sub, SQLNestedQuery):
       self.conditions.append(sub)
+      if _DEPRIORIZE_SUBQUERIES_OPT and not self.has_one:
+        self.tables.append(Table("one", "one"))
+        self.has_one = True
     else:
       table = Table("p%s" % self.next_table_id, sub.name)
       table.query = sub
@@ -807,7 +815,9 @@ class SQLQuery(FuncSupport):
       s, p, o = triple
       if (not p.modifier) and (not triple in selected_non_preliminary_triples): continue
       
-      table = Table("q%s" % self.next_table_id, triple.local_table_type)
+      if self.name == "main": select_name = ""
+      else:                   select_name = "%s_" % self.name
+      table = Table("%sq%s" % (select_name, self.next_table_id), triple.local_table_type)
       if triple.optional:
         table.join = "LEFT JOIN"
         conditions = table.join_conditions
@@ -822,6 +832,7 @@ class SQLQuery(FuncSupport):
       #if   s_fixed and o_fixed: # Favor index SP over index OP, because there are usually more diversity in the values of S than in O
       #  if   table.type == "objs":  table.index = "index_objs_sp"
       #  elif table.type == "datas": table.index = "index_datas_sp"
+      #  pass
       #elif s_fixed: # Favor index SP over SQLite3 partial covering index, because benchmark suggests better performances
       #  if   table.type == "objs":  table.index = "index_objs_sp"
       #  elif table.type == "datas": table.index = "index_datas_sp"
@@ -1034,23 +1045,36 @@ class SQLCompoundQuery(object):
       for i, column in enumerate(query.columns): # Re-index columns
         column.index = i
     self.columns = self.queries[0].columns
-        
+    
     
 class SQLNestedQuery(SQLQuery):
   def __init__(self, name):
     SQLQuery.__init__(self, name)
+    self.exists = True
     
   def finalize_columns(self):
     self.columns = [Column(None, "datas", "1", "col1_o", 1)]
     
   def sql(self):
-    extra_sql = self.extra_sql
-    self.extra_sql = ""
+    #extra_sql = self.extra_sql
+    #self.extra_sql = ""
     
-    sql = "(%s)" % SQLQuery.sql(self)
+    #sql = "(%s)" % SQLQuery.sql(self)
     
-    if extra_sql: sql += " %s" % extra_sql
-    self.extra_sql = extra_sql
+    #if extra_sql: sql += " %s" % extra_sql
+    #self.extra_sql = extra_sql
+    
+    sql = SQLQuery.sql(self)
+
+    if _DEPRIORIZE_SUBQUERIES_OPT:
+      if   self.exists == True:  sql =     "one.i= EXISTS(%s)" % sql
+      elif self.exists == False: sql = "NOT one.i= EXISTS(%s)" % sql
+      else:                      sql = "(%s)" % sql
+    else:
+      if   self.exists == True:  sql =     "EXISTS(%s)" % sql
+      elif self.exists == False: sql = "NOT EXISTS(%s)" % sql
+      else:                      sql = "(%s)" % sql
+      
     return sql
   
   def __str__(self): return self.sql()

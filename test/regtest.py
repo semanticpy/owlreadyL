@@ -1,4 +1,3 @@
-
 import sys, os, unittest, tempfile, atexit, datetime
 from io import StringIO, BytesIO
 
@@ -7932,6 +7931,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     #for i in range(5000):
     #  onto.B(label = ["abc"])
     #  onto.B(label = ["ok"])
+    #world.graph.analyze()
     q, r = self.sparql(world, """SELECT  *  { ?x a onto:B . FILTER NOT EXISTS { ?x rdfs:label "ok" . } }""")
     assert "INDEXED BY index_datas_sp" in q.sql
     assert len(r) == 2

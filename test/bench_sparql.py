@@ -23,8 +23,8 @@ def sparql_owlready(sparql):
   #plan = "\n".join(" ".join(str(j) for j in l) for l in plan)
   #PLANS += plan + "\n\n"
   
-  #print(default_world.prepare_sparql(sparql).sql)
-  #for i in list(default_world.graph.execute("""EXPLAIN QUERY PLAN %s""" % default_world.prepare_sparql(sparql).sql)): print(i)
+  print(default_world.prepare_sparql(sparql).sql)
+  for i in list(default_world.graph.execute("""EXPLAIN QUERY PLAN %s""" % default_world.prepare_sparql(sparql).sql)): print(i)
   
   t0 = time.time()
   r = list(default_world.sparql(sparql))
@@ -66,23 +66,24 @@ list(default_world.sparql_query("""SELECT  ?x  { ?x rdfs:label "xxx" . }"""))
 print()
 
 
-sparql("""SELECT (STR(?x) AS ?i)  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0008150> . ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> }""")
+# sparql("""SELECT (STR(?x) AS ?i)  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0008150> . ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> }""")
 
-sparql("""SELECT ?l  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
+# sparql("""SELECT ?l  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
 
-sparql("""SELECT ?l  { ?x a/rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
+# sparql("""SELECT ?l  { ?x a/rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
 
-sparql("""SELECT (STR(?x) AS ?i)  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . FILTER EXISTS { ?x rdfs:label ?l } }""")
+# sparql("""SELECT (STR(?x) AS ?i)  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . FILTER EXISTS { ?x rdfs:label ?l } }""")
 
-sparql("""SELECT (STR(?x) AS ?i)  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . FILTER NOT EXISTS { ?x rdfs:label ?l } }""")
+# sparql("""SELECT (STR(?x) AS ?i)  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . FILTER NOT EXISTS { ?x rdfs:label ?l } }""")
 
-sparql("""SELECT (STR(?x) AS ?i)  { ?x a <http://www.w3.org/2002/07/owl#Class> . ?x rdfs:label ?l. FILTER (STRSTARTS(?l, "A")) }""")
+# sparql("""SELECT (STR(?x) AS ?i)  { ?x a <http://www.w3.org/2002/07/owl#Class> . ?x rdfs:label ?l. FILTER (STRSTARTS(?l, "A")) }""")
 
-sparql("""SELECT ?l  { { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . } UNION { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0008150> . } ?x rdfs:label ?l }""")
+# sparql("""SELECT ?l  { { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . } UNION { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0008150> . } ?x rdfs:label ?l }""")
+
 
 sparql("""SELECT (STR(?x) AS ?i)  { ?x a <http://www.w3.org/2002/07/owl#Class> . FILTER (ISIRI(?x)) FILTER NOT EXISTS { ?x rdfs:label ?l } }""")
 
-sparql("""SELECT (COUNT(?x) AS ?i)  { ?x a <http://www.w3.org/2002/07/owl#Class> . }""")
+#sparql("""SELECT (COUNT(?x) AS ?i)  { ?x a <http://www.w3.org/2002/07/owl#Class> . }""")
 
 
 

@@ -80,6 +80,7 @@ class Graph(BaseMainGraph):
     self.db.execute("""PRAGMA cache_size = -200000""")
     self.db.execute("""PRAGMA mmap_size = 30000000000""")
     self.db.execute("""PRAGMA page_size = 32768""")
+    #self.db.execute("""PRAGMA analysis_limit = 1000""")
     
     if sqlite_tmp_dir:
       try: self.db.execute("""PRAGMA temp_store_directory = '%s'""" % sqlite_tmp_dir)
@@ -377,14 +378,31 @@ class Graph(BaseMainGraph):
         version += 1
         
       self.prop_fts = { storid for (storid,) in self.execute("""SELECT storid FROM prop_fts;""") }
+
+      self.analyze()
       
     self.current_changes = self.db.total_changes
     self.select_abbreviate_method()
-
     
+  def analyze(self):
+    if self.read_only: return
+    try:
+      self.execute("""DELETE FROM sqlite_stat1""")
+    except:
+      self.execute("""PRAGMA analysis_limit = 20""")
+      self.execute("""ANALYZE""")
+      self.execute("""DELETE FROM sqlite_stat1""")
+    nb_objs  = self.execute("""SELECT COUNT(*) FROM objs""" ).fetchone()[0]
+    nb_datas = self.execute("""SELECT COUNT(*) FROM datas""").fetchone()[0]
+    self.execute("""INSERT INTO sqlite_stat1 VALUES
+('objs', 'index_objs_op', '%s 4 3 3 1'),
+('objs', 'index_objs_sp', '%s 3 2'),
+('datas', 'index_datas_op', '%s 4 3 3 3 1'),
+('datas', 'index_datas_sp', '%s 3 2')""" % (nb_objs, nb_objs, nb_datas, nb_datas))
+    self.execute("""ANALYZE sqlite_schema""")
     
   def set_indexed(self, indexed): pass
-    
+  
   def close(self):
     self.db.close()
     
@@ -1163,6 +1181,7 @@ class SubGraph(BaseSubGraph):
         cur.execute("UPDATE ontologies SET last_update=? WHERE c=?", (date, self.c,))
         
       self.parent.select_abbreviate_method()
+      self.parent.analyze()
       
       return onto_base_iri
     
