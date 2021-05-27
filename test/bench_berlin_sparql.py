@@ -35,8 +35,8 @@ if QUADSTORE_ON_DISK:
   world.save()
   world.close()
   
-  default_world.set_backend(filename = "/tmp/t.sqlite3", read_only = True, exclusive = True)
-  #default_world.set_backend(filename = "/tmp/t.sqlite3", exclusive = True)
+  #default_world.set_backend(filename = "/tmp/t.sqlite3", read_only = True, exclusive = True)
+  default_world.set_backend(filename = "/tmp/t.sqlite3", exclusive = True)
   
   
 app = flask.Flask("OwlreadyBench")

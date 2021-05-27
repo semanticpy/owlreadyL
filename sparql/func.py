@@ -221,7 +221,7 @@ def register_python_function(world):
   create_function("newinstanceiri",  1, func._newinstanceiri)
   
   # Unindexed table for deprioritizing subqueries
-  world.graph.execute("""CREATE TEMP TABLE one (i INTEGER)""")
+  world.graph.execute("""CREATE TEMP TABLE one (i INTEGER)""") # CREATE TEMP TABLE one (i INTEGER); INSERT INTO one VALUES (1);
   world.graph.execute("""INSERT INTO one VALUES (1)""")
   
   
@@ -345,7 +345,7 @@ class FuncSupport(object):
     elif expression.name  == "VAR":
       #print(expression, self.vars, self.parse_var(expression))
       
-      return self.parse_var(expression).bindings[0]
+      return self.parse_var(expression).get_binding()
     elif expression.name  == "PARAM":  return "?%s" % expression.number
     elif expression.value == "(":      return "("
     elif expression.value == ")":      return ")"
@@ -429,7 +429,7 @@ class FuncSupport(object):
     elif  expression.name == "VAR":
       var = self.parse_var(expression)
       if var.type == "objs": return "objs", "NULL"
-      return var.type, "%sd" % var.bindings[0][:-1]
+      return var.type, "%sd" % var.get_binding()[:-1]
     elif  expression.name == "PARAM":
       return "quads", "%sTypeOfParam?%s " % (self.translator.escape_mark, expression.number)
     return None, None

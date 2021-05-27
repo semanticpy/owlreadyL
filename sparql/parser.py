@@ -1070,8 +1070,10 @@ class SubQueryBlock(Block):
 
 class Triple(tuple):
   def __init__(self, l):
-    self.optional = False
-    self.var_names = { x.value for x in self if x.name == "VAR" }
+    self.optional     = False
+    self.likelihood_p = None
+    self.likelihood_o = None
+    self.var_names    = { x.value for x in self if x.name == "VAR" }
     p_storid = getattr(self[1], "storid", None)
     self.Prop = p_storid and CURRENT_TRANSLATOR.get().world._get_by_storid(p_storid)
     
@@ -1083,6 +1085,22 @@ class Triple(tuple):
     elif isinstance(self.Prop, ObjectPropertyClass): self.table_type = "objs"
     elif isinstance(self.Prop, DataPropertyClass):   self.table_type = "datas"
     else:                                            self.table_type = "quads"
+    
+    #if (getattr(self[1], "storid", None) == rdf_type) and (self[2].name == "IRI"):
+    #  self.likelihood_o = 0.9375
+    #if (getattr(self[1], "storid", None) == rdfs_subclassof) and (self[2].name == "IRI"):
+    #  self.likelihood_o = 0.7
+    #if (getattr(self[1], "storid", None) == rdf_type):
+    #  self.likelihood_p = 0.2
+    #  self.likelihood_o = 0.2
+    #if (getattr(self[1], "storid", None) == rdfs_subclassof):
+    #  self.likelihood_p = 0.1
+    #  self.likelihood_o = 0.15
+    #if (getattr(self[1], "storid", None) == label.storid) and (self[2].name == "STRING"):
+    #  self.likelihood_o = 0.01
+    #elif self.Prop and self.Prop.range == [bool]:
+    #  self.likelihood_o = 0.5
+      
     
   def _get_ordered_vars(self, vars, ordered_vars):
     if self[1].inversed: triple = self[::-1]

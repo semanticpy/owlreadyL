@@ -7933,7 +7933,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     #  onto.B(label = ["ok"])
     #world.graph.analyze()
     q, r = self.sparql(world, """SELECT  *  { ?x a onto:B . FILTER NOT EXISTS { ?x rdfs:label "ok" . } }""")
-    assert "INDEXED BY index_datas_sp" in q.sql
+    #assert "INDEXED BY index_datas_sp" in q.sql
     assert len(r) == 2
     assert { x[0] for x in r } == { onto.b1, onto.b3 }
     
@@ -7981,7 +7981,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     #  onto.B(label = ["abc"])
     #  onto.B(label = ["ok"])
     q, r = self.sparql(world, """SELECT  *  { ?x a onto:B . ?x rdfs:label "ok" . }""")
-    assert "INDEXED BY index_datas_sp" in q.sql
+    #assert "INDEXED BY index_datas_sp" in q.sql
     assert len(r) == 1
     assert { x[0] for x in r } == { onto.b2 }
 
@@ -8365,18 +8365,15 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     
   def test_109(self):
     world, onto = self.prepare1()
-    #q, r = self.sparql(world, """SELECT  ?x ?y  {  ?x rdfs:label "Classe A" . ?y a/rdfs:subClassOf* ?x }""", compare_with_rdflib = False)
     q, r = self.sparql(world, """SELECT  ?x ?y  {  ?x rdfs:label "Classe A" . ?y a ?z . ?z rdfs:subClassOf* ?x }""", compare_with_rdflib = False)
-    #assert len(r) == 2
-    #assert { tuple(x) for x in r } == { (onto.b1, onto.b1), (onto.a1, onto.b1) }
-    assert """AS (SELECT q1.s""" in q.sql # Fix o
+    assert """AS (SELECT prelim1_objs_q1.s""" in q.sql # Fix o
     assert len(r) == 1
     assert { tuple(x) for x in r } == { (onto.A, onto.a1, ) }
     
   def test_110(self):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?y  {  ?x rdfs:label "Classe A" . ?y a ?z . ?z rdfs:subClassOf* ?x }""", compare_with_rdflib = False)
-    assert """AS (SELECT q1.s""" in q.sql # Fix o
+    assert """AS (SELECT prelim1_objs_q1.s""" in q.sql # Fix o
     assert len(r) == 1
     assert { tuple(x) for x in r } == { (onto.a1, ) }
 
@@ -8533,16 +8530,60 @@ http://test.org/onto.owl#A\tClasse A
     q, r = self.sparql(world, """SELECT ?x { ?x rdfs:label ?l. { FILTER(CONTAINS(?l, "_a")) } UNION { FILTER(CONTAINS(?l, "_b")) } }""")
     print(r)
     assert set(tuple(x) for x in r) == e
-
-        
     
-  # def test_109(self):
-  #   world, onto = self.prepare1()
-  #   onto.b3.label = []
-  #   q, r = self.sparql(world, """SELECT  ?x  {  ?x a onto:B . MINUS { ?x rdfs:label ?l }  }""", compare_with_rdflib = False)
-  #   assert len(r) == 2
-  #   assert { tuple(x) for x in r } == { (onto.b1,), (onto.b2,) }
+  def test_121(self):
+    world, onto = self.prepare1()
+    # q, r = self.sparql(world, """SELECT ?x ?l { ?x rdfs:subClassOf* onto:A. ?x rdfs:label ?l. }""", compare_with_rdflib = False)
+    # assert set(tuple(x) for x in r) == { (onto.A, 'Classe A'), (onto.A1, 'Classe A1') }
+    # assert " IN " in q.sql
+    
+    # q, r = self.sparql(world, """SELECT ?x { ?x a ?y. ?y rdfs:subClassOf* onto:A. }""", compare_with_rdflib = False)
+    # assert set(x[0] for x in r) == { onto.a1 }
+    # assert " IN " in q.sql
+    
+    # q, r = self.sparql(world, """SELECT ?x { ?x a ?y. ?y rdfs:subClassOf* ?r. ?r rdfs:label "Classe A". }""", compare_with_rdflib = False)
+    # print(q.sql)
+    # assert set(x[0] for x in r) == { onto.a1 }
+    # assert " IN " in q.sql
+    
+    
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x rdfs:subClassOf* onto:A. }""", compare_with_rdflib = False)
+    assert set(x[0] for x in r) == { onto.A, onto.A1, onto.A11, onto.A2 }
+    assert not " IN " in q.sql
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x rdfs:subClassOf* onto:A. FILTER(ISIRI(?x)) }""", compare_with_rdflib = False)
+    assert set(x[0] for x in r) == { onto.A, onto.A1, onto.A11, onto.A2 }
+    assert not " IN " in q.sql
+    
+    q, r = self.sparql(world, """SELECT ?x ?l { ?x rdfs:subClassOf* onto:A. ?x rdfs:label ?l. FILTER(ISIRI(?x)) }""", compare_with_rdflib = False)
+    assert set(tuple(x) for x in r) == { (onto.A, 'Classe A'), (onto.A1, 'Classe A1') }
+    assert " IN " in q.sql
+    
+    q, r = self.sparql(world, """SELECT ?x { { ?x rdfs:subClassOf* onto:A. } FILTER(ISIRI(?x)) }""", compare_with_rdflib = False)
+    assert set(x[0] for x in r) == { onto.A, onto.A1, onto.A11, onto.A2 }
+    assert not " IN " in q.sql
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x rdfs:subClassOf* onto:A. { FILTER(ISIRI(?x)) } }""", compare_with_rdflib = False)
+    assert set(x[0] for x in r) == { onto.A, onto.A1, onto.A11, onto.A2 }
+    assert not " IN " in q.sql
+    
+    with onto:
+      class A1B(onto.A1, onto.B): pass
+      A1B.label = "A1B"
+    q, r = self.sparql(world, """SELECT ?x ?l { ?x rdfs:subClassOf* onto:A. ?x rdfs:subClassOf* onto:B. ?x rdfs:label ?l. }""", compare_with_rdflib = False)
+    assert r == [[A1B, "A1B"]]
+    assert q.sql.count(" IN ") == 2
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x rdfs:subClassOf* onto:A. ?x rdfs:subClassOf* onto:B. }""", compare_with_rdflib = False)
+    assert r == [[A1B]]
 
+    
+  def test_xxx(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT ?x { ?x rdfs:subClassOf* onto:A. { FILTER(ISIRI(?x)) } }""", compare_with_rdflib = False)
+    assert set(x[0] for x in r) == { onto.A, onto.A1, onto.A11, onto.A2 }
+    assert not " IN " in q.sql
 
     
 

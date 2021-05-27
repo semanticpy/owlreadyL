@@ -110,7 +110,6 @@ class Translator(object):
 
     #sql = self.optimize_sql(sql)
     
-    
     if   self.main_query.type == "select":
       return PreparedSelectQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes)
     
@@ -130,7 +129,7 @@ class Translator(object):
       plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
     finally:
       self.world.graph.execute("PRAGMA automatic_index = true")
-        
+      
     for l in plan:
         match = _RE_NORMAL_INDEX.search(l[3])
         if match:
@@ -565,8 +564,15 @@ class Variable(object):
     self.bindings       = []
     self.bind           = None
     self.initial_query  = None
+    self.nb_table       = 0
     
   def __repr__(self): return """<Variable %s type %s, %s bindings>""" % (self.name, self.type, len(self.bindings))
+  
+  def get_binding(self):
+    i = 0
+    for binding in self.bindings:
+      if not binding.startswith("IN "): break
+    return binding
   
   def update_type(self, type):
     if   self.type == "quads": self.type = type
@@ -590,24 +596,24 @@ class Table(object):
   
 class SQLQuery(FuncSupport):
   def __init__(self, name):
-    self.name                    = name
-    self.preliminary             = False
-    self.recursive               = False
-    self.translator              = CURRENT_TRANSLATOR.get()
-    self.distinct                = False
-    self.raw_selects             = None
-    self.next_table_id           = 1
-    self.tables                  = []
-    self.name_2_table            = {}
-    self.columns                 = []
-    self.conditions              = []
-    self.triples                 = []
-    self.vars_needed_for_select  = set()
-    self.vars                    = {}
-    self.extra_sql               = ""
-    self.select_simple_union     = False
-    self.optional                = False
-    self.has_one                 = False
+    self.name                     = name
+    self.preliminary              = False
+    self.recursive                = False
+    self.translator               = CURRENT_TRANSLATOR.get()
+    self.distinct                 = False
+    self.raw_selects              = None
+    self.next_table_id            = 1
+    self.tables                   = []
+    self.name_2_table             = {}
+    self.columns                  = []
+    self.conditions               = []
+    self.triples                  = []
+    self.vars_needed_for_select   = set()
+    self.vars                     = {}
+    self.extra_sql                = ""
+    self.select_simple_union      = False
+    self.optional                 = False
+    self.has_one                  = False
     
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
   
@@ -651,8 +657,7 @@ class SQLQuery(FuncSupport):
     if isinstance(x, rply.Token): name = x.value
     else:                         name = x
     var = self.vars.get(name)
-    if not var:
-      self.vars[name] = var = Variable(name)
+    if not var: self.vars[name] = var = Variable(name)
     return var
   
   def parse_selects(self, selects):
@@ -688,7 +693,7 @@ class SQLQuery(FuncSupport):
     sql = self.parse_expression(filter.constraint)
     self.conditions.append(sql)
     
-  def add_subqueries(self, sub):
+  def add_subquery(self, sub):
     if isinstance(sub, SQLNestedQuery):
       self.conditions.append(sub)
       if _DEPRIORIZE_SUBQUERIES_OPT and not self.has_one:
@@ -705,7 +710,7 @@ class SQLQuery(FuncSupport):
         conditions = table.join_conditions
       else:
         conditions = self.conditions
-        
+
       for column in sub.columns:
         var = self.parse_var(column.var)
         var.update_type(column.type)
@@ -792,8 +797,44 @@ class SQLQuery(FuncSupport):
         
     selected_non_preliminary_triples = frozenset(self.extract_triples(non_preliminary_triples, self.vars_needed_for_select))
     selected_non_preliminary_triples = selected_non_preliminary_triples | remnant_triples
-
-    for triple in self.triples: # Pass 4: create triples tables and conditions
+    
+    
+    vars_needing_binding = set(self.vars_needed_for_select)
+    for triple in self.triples: # Pass 4: compute number of bindings per variable
+      if   isinstance(triple, (Bind, Filter)):
+        for var_name in triple.var_names:
+          vars_needing_binding.add(self.parse_var(var_name))
+        continue
+      if   isinstance(triple, Block): continue
+      s, p, o = triple
+      if (not p.modifier) and (not triple in selected_non_preliminary_triples): continue
+      if triple.local_table_type.startswith("prelim") and not triple.consider_p: continue
+      for (x, consider) in zip(triple, [triple.consider_s, triple.consider_p, triple.consider_o]):
+        if consider and (x.name == "VAR"):
+          x = self.parse_var(x)
+          x.nb_table += 1
+          
+    for triple in self.triples: # Pass 5: pre-register bindings for preliminary table
+      if   isinstance(triple, (Bind, Filter, Block)): continue
+      s, p, o = triple
+      if (not p.modifier) and (not triple in selected_non_preliminary_triples): continue
+      
+      triple.to_skip = False
+      if self.raw_selects == "*": continue
+      if triple.local_table_type.startswith("prelim") and not triple.consider_p:
+        if (s.name == "VAR") and (self.parse_var(s) in vars_needing_binding) and self.parse_var(s).nb_table == 0: continue
+        if (o.name == "VAR") and (self.parse_var(o) in vars_needing_binding) and self.parse_var(o).nb_table == 0: continue
+        triple.to_skip = True
+        extra = ""
+        if p.modifier == "+": extra = " WHERE nb>0"
+        if s.name == "VAR":
+          s = self.parse_var(s)
+          s.bindings.insert(0, """IN (SELECT s FROM %s%s)""" % (triple.local_table_type, extra))
+        if o.name == "VAR":
+          o = self.parse_var(o)
+          o.bindings.insert(0, """IN (SELECT o FROM %s%s)""" % (triple.local_table_type, extra))
+          
+    for triple in self.triples: # Pass 6: create triples tables and conditions
       if   isinstance(triple, Bind):
         self.parse_bind(triple)
         continue
@@ -805,13 +846,14 @@ class SQLQuery(FuncSupport):
           continue
         elif isinstance(triple, FilterBlock):
           sub = self.translator.new_sql_query(None, triple, nested_inside = self)
-          self.add_subqueries(sub)
+          self.add_subquery(sub)
           continue
         else:
           sub = self.translator.new_sql_query(None, triple, preliminary = True, nested_inside = self, copy_vars = True)
-          self.add_subqueries(sub)
+          self.add_subquery(sub)
           continue
-        
+      if triple.to_skip: continue
+      
       s, p, o = triple
       if (not p.modifier) and (not triple in selected_non_preliminary_triples): continue
       
@@ -827,22 +869,11 @@ class SQLQuery(FuncSupport):
       self.tables.append(table)
       self.name_2_table[table.name] = table
       
-      #s_fixed = triple.consider_s and self.is_fixed(s)
-      #o_fixed = triple.consider_o and self.is_fixed(o)
-      #if   s_fixed and o_fixed: # Favor index SP over index OP, because there are usually more diversity in the values of S than in O
-      #  if   table.type == "objs":  table.index = "index_objs_sp"
-      #  elif table.type == "datas": table.index = "index_datas_sp"
-      #  pass
-      #elif s_fixed: # Favor index SP over SQLite3 partial covering index, because benchmark suggests better performances
-      #  if   table.type == "objs":  table.index = "index_objs_sp"
-      #  elif table.type == "datas": table.index = "index_datas_sp"
-      
       if triple.consider_s: self.create_conditions(conditions, table, "s", s)
-      if triple.consider_p: self.create_conditions(conditions, table, "p", p)
-      if triple.consider_o: self.create_conditions(conditions, table, "o", o)
+      if triple.consider_p: self.create_conditions(conditions, table, "p", p, triple.likelihood_p)
+      if triple.consider_o: self.create_conditions(conditions, table, "o", o, triple.likelihood_o)
       
       if p.modifier == "+": conditions.append("%s.nb>0"  % table.name)
-      
 
   def get_fix_levels(self, vars0, exclude_triple = None):
     vars0_names = { var.name for var in vars0 }
@@ -907,7 +938,7 @@ class SQLQuery(FuncSupport):
         return r
       var_names = var_names2
       
-  def create_conditions(self, conditions, table, n, x):
+  def create_conditions(self, conditions, table, n, x, likelihood = None):
     if isinstance(x, SpecialCondition):
       x.create_conditions(conditions, table, n)
     else:
@@ -921,14 +952,22 @@ class SQLQuery(FuncSupport):
               conditions.append("%s.%sd IS NOT NULL" % (table.name, n[:-1])) # Datatype part
             break
           
-      if not sql   is None: conditions.append("%s.%s=%s"  % (table.name, n,      sql))
-      if not sql_d is None: conditions.append("%s.%sd=%s" % (table.name, n[:-1], sql_d)) # Datatype part
-      
+      if not sql is None:
+        if isinstance(sql, str) and sql.startswith("IN "): operator = " "; sqls = self.parse_var(x).bindings
+        else:                                              operator = "="; sqls = [sql]
+        
+        for sql in sqls:
+          condition = "%s.%s%s%s"  % (table.name, n, operator, sql)
+          if likelihood is None: conditions.append(condition)
+          else:                  conditions.append("LIKELIHOOD(%s, %s)" % (condition, likelihood))
+      if not sql_d is None:
+        conditions.append("%s.%sd=%s" % (table.name, n[:-1], sql_d)) # Datatype part
+        
       if x.name == "VAR": x = self.vars[x.value]
       if   isinstance(x, Variable):
-        if not x.bindings: x.initial_query = self
+        if not x.initial_query: x.initial_query = self
         x.bindings.append("%s.%s" % (table.name, n))
-
+        
   def is_fixed(self, x):
     if x.name != "VAR": return True
     x = self.parse_var(x)
@@ -985,7 +1024,7 @@ class SQLQuery(FuncSupport):
     if   isinstance(x, str): return x, "value", None, None
     elif isinstance(x, Variable):
       if not x.bindings: return None, None, None, None
-      binding = x.bindings[0]
+      binding = x.get_binding()
       
       if   x.type == "objs":  return binding, "objs", None, None
       else:
