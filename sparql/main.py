@@ -570,7 +570,10 @@ class Variable(object):
     
   def __repr__(self): return """<Variable %s type %s, %s bindings>""" % (self.name, self.type, len(self.bindings))
   
-  def get_binding(self):
+  def get_binding(self, query):
+    if not self.bindings:
+      print("* Owlready2 * WARNING: variable without binding in SPARQL, use a suboptimal option", file = sys.stderr)
+      
     i = 0
     for binding in self.bindings:
       if not binding.startswith("IN "): break
@@ -1025,7 +1028,7 @@ class SQLQuery(FuncSupport):
     if   isinstance(x, str): return x, "value", None, None
     elif isinstance(x, Variable):
       if not x.bindings: return None, None, None, None
-      binding = x.get_binding()
+      binding = x.get_binding(self)
       
       if   x.type == "objs":  return binding, "objs", None, None
       else:

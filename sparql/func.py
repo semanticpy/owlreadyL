@@ -345,7 +345,7 @@ class FuncSupport(object):
     elif expression.name  == "VAR":
       #print(expression, self.vars, self.parse_var(expression))
       
-      return self.parse_var(expression).get_binding()
+      return self.parse_var(expression).get_binding(self)
     elif expression.name  == "PARAM":  return "?%s" % expression.number
     elif expression.value == "(":      return "("
     elif expression.value == ")":      return ")"
@@ -429,7 +429,7 @@ class FuncSupport(object):
     elif  expression.name == "VAR":
       var = self.parse_var(expression)
       if var.type == "objs": return "objs", "NULL"
-      return var.type, "%sd" % var.get_binding()[:-1]
+      return var.type, "%sd" % var.get_binding(self)[:-1]
     elif  expression.name == "PARAM":
       return "quads", "%sTypeOfParam?%s " % (self.translator.escape_mark, expression.number)
     return None, None
