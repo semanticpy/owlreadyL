@@ -108,8 +108,25 @@ GROUP BY ?gender ?age ORDER BY ?gender ?age
 """)
   assert len(l) == 70
 
-  
 def bench_omop_cdm_2():
+  q, l = do(omop_cdm_world, """
+PREFIX umls: <http://PYM/>
+PREFIX atc: <http://PYM/ATC/>
+PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+
+SELECT ?gender ?age (COUNT(DISTINCT ?patient) as ?num_patients) {
+?patient omop_cdm:has_condition_era ?condition .
+?condition omop_cdm:has_concept/a/rdfs:subClassOf*/rdfs:label "Fracture of bone of hip region" .
+?patient omop_cdm:has_gender/a/rdfs:label ?gender .
+?patient omop_cdm:year_of_birth ?birth_year .
+?condition omop_cdm:start_date ?start .
+BIND(YEAR(?start) - ?birth_year AS ?age) . }
+GROUP BY ?gender ?age ORDER BY ?gender ?age
+""")
+  assert len(l) == 70
+
+  
+def bench_omop_cdm_3():
   q, l = do(omop_cdm_world, """
 PREFIX umls: <http://PYM/>
 PREFIX atc: <http://PYM/ATC/>
@@ -122,7 +139,7 @@ SELECT ?patient ?drug_era { # SPARQL query for STOPP B1
 }""")
   assert len(l) == 726
 
-def bench_omop_cdm_3():
+def bench_omop_cdm_4():
   q, l = do(omop_cdm_world, """
 PREFIX umls: <http://PYM/>
 PREFIX atc: <http://PYM/ATC/>
@@ -140,7 +157,7 @@ SELECT ?patient {
 }""")
   assert len(l) == 218
 
-def bench_omop_cdm_4():
+def bench_omop_cdm_5():
   q, l = do(omop_cdm_world, """
 PREFIX umls: <http://PYM/>
 PREFIX atc: <http://PYM/ATC/>
@@ -169,7 +186,7 @@ SELECT ?patient { # SPARQL query for STOPP C2
   assert len(l) == 196
 
 
-def bench_omop_cdm_5():
+def bench_omop_cdm_6():
   q, l = do(omop_cdm_world, """
 PREFIX umls: <http://PYM/>
 PREFIX atc: <http://PYM/ATC/>
@@ -222,12 +239,15 @@ if __name__ == "__main__":
 
   def run_test(filename):
     s = ""
+    total_t = 0.0
     for test in TESTS or ALL_TESTS:
       func = globals()[test]
       t = time.perf_counter()
       for i in range(NB): func()
       t = (time.perf_counter() - t) / NB
       s += "test_%s %s\n" % (test, t * 1000.0)
+      total_t += t
+    s += "test_TOTAL %s\n" % (total_t * 1000.0)
     open(filename, "w").write(s)
 
       
