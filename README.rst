@@ -564,7 +564,7 @@ version 2 - 0.32
 * SPARQL engine optimization
 * Bugfixes:
   - Fix name clash when creating individuals from classes whose names end with a number, e.g. "c1" + "1" vs "c" + "11"
-    
+  - Fix block with only a FILTER in SPARQL
 
 
 
