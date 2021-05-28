@@ -572,8 +572,13 @@ class Variable(object):
   
   def get_binding(self, query):
     if not self.bindings:
-      print("* Owlready2 * WARNING: variable without binding in SPARQL, use a suboptimal option", file = sys.stderr)
-      
+      #print("* Owlready2 * WARNING: variable without binding in SPARQL, use a suboptimal option", file = sys.stderr)
+      table = Table("any%s" % query.next_table_id, """(SELECT DISTINCT s AS o, NULL AS d FROM quads UNION SELECT DISTINCT o, d FROM quads)""")
+      table.query = query
+      query.tables.append(table)
+      query.name_2_table[table.name] = table
+      query.next_table_id += 1
+      self.bindings.append("%s.o" % table.name)
     i = 0
     for binding in self.bindings:
       if not binding.startswith("IN "): break
@@ -982,7 +987,7 @@ class SQLQuery(FuncSupport):
   def finalize_columns(self):
     selected_parameter_index = 0
     i = j = 0
-    if self.raw_selects == "*": selects = [self.vars[var] for var in self.block.get_ordered_vars() if not var.startswith("??")]
+    if self.raw_selects == "*": selects = [self.vars[var] for var in self.block.get_ordered_vars() if not var.startswith("??")]      
     else:                       selects = self.raw_selects
     
     def do_select(select):

@@ -1166,7 +1166,10 @@ class Filter(object):
     self.constraint = constraint
     self.var_names = set(_get_vars(constraint))
     
-  def _get_ordered_vars(self, vars, ordered_vars): pass
-  
+  def _get_ordered_vars(self, vars, ordered_vars):
+    for var in self.var_names:
+      _var_found(var, vars, ordered_vars)
+    #pass
+    
   
   
