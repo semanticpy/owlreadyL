@@ -281,12 +281,14 @@ class Translator(object):
       s.preliminary = True
       self.preliminary_selects.append(s)
       
-    #if copy_vars:
-    #  if hasattr(nested_inside, "vars"):
-    #    s.vars = nested_inside.vars.copy()
-    #  else:
-    #    s.vars = nested_inside.parent.vars.copy()
-    
+      
+    # if copy_vars:
+    #   if hasattr(nested_inside, "vars"):
+    #     s.vars = nested_inside.vars.copy()
+    #   elif hasattr(nested_inside, "parent") and nested_inside.parent:
+    #     s.vars = nested_inside.parent.vars.copy()
+
+        
     extra_binds = extra_binds or []
     if isinstance(selects, list): # Otherwise, it is "SELECT *"
       for i, select in enumerate(selects):
@@ -313,7 +315,7 @@ class Translator(object):
     elif isinstance(block, UnionBlock):
       for alternative in block:
         #print("   ", s.parent.vars)
-        query = self.new_sql_query(None, alternative, selects, distinct, None, False, extra_binds, nested_inside = s, copy_vars = True)
+        query = self.new_sql_query(None, alternative, selects, distinct, None, False, extra_binds, nested_inside = s, copy_vars = False)
         s.append(query, "UNION")
       s.finalize_compounds()
       
@@ -842,8 +844,7 @@ class SQLQuery(FuncSupport):
         self.parse_filter(triple)
         continue
       elif isinstance(triple, Block):
-        if   isinstance(triple, SimpleTripleBlock) and len(triple) == 0: # Empty
-          continue
+        if   isinstance(triple, SimpleTripleBlock) and (len(triple) == 0): continue # Empty
         elif isinstance(triple, FilterBlock):
           sub = self.translator.new_sql_query(None, triple, nested_inside = self)
           self.add_subquery(sub)
