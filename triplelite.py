@@ -138,7 +138,7 @@ class Graph(BaseMainGraph):
     
     self.lock              = multiprocessing.RLock()
     self.lock_level        = 0
-    
+
     if initialize_db:
       self.current_blank    = multiprocessing.Value("i", 0)
       self.current_resource = multiprocessing.Value("i", 300) # 300 first values are reserved
@@ -170,6 +170,7 @@ class Graph(BaseMainGraph):
       self.execute("""CREATE TABLE last_numbered_iri(prefix TEXT, i INTEGER)""")
       self.execute("""CREATE INDEX index_last_numbered_iri ON last_numbered_iri(prefix)""")
       
+      self.analyze()
       self.db.commit()
       
     else:
@@ -386,14 +387,14 @@ class Graph(BaseMainGraph):
     
   def analyze(self):
     if self.read_only: return
+    nb_objs  = self.execute("""SELECT COUNT(*) FROM objs""" ).fetchone()[0]
+    nb_datas = self.execute("""SELECT COUNT(*) FROM datas""").fetchone()[0]
     try:
       self.execute("""DELETE FROM sqlite_stat1""")
     except:
       self.execute("""PRAGMA analysis_limit = 20""")
       self.execute("""ANALYZE""")
       self.execute("""DELETE FROM sqlite_stat1""")
-    nb_objs  = self.execute("""SELECT COUNT(*) FROM objs""" ).fetchone()[0]
-    nb_datas = self.execute("""SELECT COUNT(*) FROM datas""").fetchone()[0]
     self.execute("""INSERT INTO sqlite_stat1 VALUES
 ('objs', 'index_objs_op', '%s 4 3 3 1'),
 ('objs', 'index_objs_sp', '%s 3 2'),
