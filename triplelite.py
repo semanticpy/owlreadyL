@@ -387,6 +387,8 @@ class Graph(BaseMainGraph):
     
   def analyze(self):
     if self.read_only: return
+    if sqlite3.sqlite_version_info[1] < 33: return # ANALYZE sqlite_schema not supported
+    
     nb_objs  = self.execute("""SELECT COUNT(*) FROM objs""" ).fetchone()[0]
     nb_datas = self.execute("""SELECT COUNT(*) FROM datas""").fetchone()[0]
     try:

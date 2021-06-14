@@ -566,6 +566,11 @@ version 2 - 0.32
   - Fix name clash when creating individuals from classes whose names end with a number, e.g. "c1" + "1" vs "c" + "11"
   - Fix block with only a FILTER in SPARQL
 
+version 2 - 0.33
+****************
+
+* Bugfixes:
+  - Fix 'sqlite3.OperationalError: no such table: sqlite_schema' with SQLite3 < 0.33
 
 
 Links
