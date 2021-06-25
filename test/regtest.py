@@ -6004,10 +6004,12 @@ ask where
       if len(h) % 2 != 0: return "0%s" % h
       return h
     
-    hex_storid = declare_datatype(Hex, "http://www.w3.org/2001/XMLSchema#hexBinary", parser, unparser)
-
     world = self.new_world()
     onto = world.get_ontology("http://www.test.org/t.owl")
+    
+    hex_storid = declare_datatype(Hex, "http://www.w3.org/2001/XMLSchema#hexBinary", parser, unparser)
+    define_datatype_in_ontology(Hex, "http://www.w3.org/2001/XMLSchema#hexBinary", onto)
+    onto.graph.dump()
     
     with onto:
       class p(Thing >> Hex): pass

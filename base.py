@@ -201,6 +201,12 @@ def declare_datatype(datatype, iri, parser, unparser):
   _universal_abbrev_2_datatype_parser  [storid]   = (datatype, parser)
   return storid
 
+def define_datatype_in_ontology(datatype, iri, ontology):
+  storid = ontology.world._abbreviate(iri)
+  ontology._add_obj_triple_spo(storid, rdf_type, rdfs_datatype)
+  
+
+
 owl_alldisjointproperties = _universal_abbrev("http://www.w3.org/2002/07/owl#AllDisjointProperties")
 owl_equivalentproperty    = _universal_abbrev("http://www.w3.org/2002/07/owl#equivalentProperty")
 owl_equivalentindividual  = _universal_abbrev("http://www.w3.org/2002/07/owl#sameAs")

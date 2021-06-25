@@ -37,7 +37,7 @@ Here is an example for adding support for the XSD "hexBinary" datatype:
    >>> declare_datatype(Hex, "http://www.w3.org/2001/XMLSchema#hexBinary", parser, unparser)
 
 
-The datatype can then be used as any others:
+The new datatype can then be used as any others:
 
 ::
    
@@ -50,3 +50,23 @@ The datatype can then be used as any others:
    
    ...   c1 = C()
    ...   c1.p.append(Hex(14))
+
+
+
+
+In addition, the define_datatype_in_ontology() function allows to define the datatype in a given ontology.
+This was not needed for hexBinary above, because it is already defined in XMLSchema.
+However, for user-defined datatype, it is recommended to define them in an ontology
+(Owlready does not strictly require that, but other tools like Protégé do).
+
+The following example (re)define the hexBinary datatype in our ontology:
+
+::
+   
+   >>> define_datatype_in_ontology(Hex, "http://www.w3.org/2001/XMLSchema#hexBinary", onto)
+   
+This add the (xsd:hexBinary, rdf:type, rdfs:datatype) RDF triple in the quadstore.
+
+As said above, declare_datatype() must be called * before * using the datatype.
+On the contrary, define_datatype_in_ontology() may be called after loading an ontology that use the datatype.
+

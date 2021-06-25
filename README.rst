@@ -572,6 +572,11 @@ version 2 - 0.33
 * Bugfixes:
   - Fix 'sqlite3.OperationalError: no such table: sqlite_schema' with SQLite3 < 0.33
 
+version 2 - 0.34
+****************
+
+* Add define_datatype_in_ontology() global function for defining a new user-defined datatype in an ontology
+
 
 Links
 -----
