@@ -7800,7 +7800,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     q, r = self.sparql(world, """SELECT  ?x  { onto:a1 !rdfs:label ?x . }""")
     assert len(r) == 6
     assert { tuple(x)[0] for x in r } == { owl_named_individual, onto.A, onto.b2, onto.b3, 10.0, 8.0 }
-  
+    
   def test_53(self):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?x  { onto:a1 !(rdfs:label | rdf:type) ?x . }""")

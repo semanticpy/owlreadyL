@@ -143,64 +143,6 @@ class Translator(object):
           sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
     return sql
     
-    
-    # while True:
-    #   changed = False
-    #   plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
-      
-    #   for l in plan:
-    #     match = _RE_AUTOMATIC_INDEX.search(l[3])
-    #     if match:
-    #       table_type = match.group(1)
-    #       table_name = match.group(2)
-    #       #if table_name in indexeds: continue
-    #       cols       = { i[0] for i in match.group(3).split(" AND ") }
-          
-    #       if cols == { "s", "p", "o" }:
-    #         #print("OPTIMIZE!!!", l, table_type, table_name, cols)
-    #         table_def = "%s %s" % (table_type, table_name)
-    #         sql_s = sql.replace(table_def, "%s INDEXED BY index_%s_sp" % (table_def, table_type), 1)
-    #         sql_o = sql.replace(table_def, "%s INDEXED BY index_%s_op" % (table_def, table_type), 1)
-    #         sql_s = self.optimize_sql(sql_s)
-    #         sql_o = self.optimize_sql(sql_o)
-    #         s_nb_not_indexed = sql_s.count("NOT INDEXED")
-    #         o_nb_not_indexed = sql_o.count("NOT INDEXED")
-    #         if s_nb_not_indexed <= o_nb_not_indexed: sql = sql_s #; print("CHOIX s", s_nb_not_indexed, o_nb_not_indexed)
-    #         else:                                    sql = sql_o #; print("CHOIX o", s_nb_not_indexed, o_nb_not_indexed)
-    #         #indexeds.add(table_name)
-    #         changed = True
-    #         break
-          
-    #   if changed: continue
-            
-    #   for l in plan:
-    #     match = _RE_AUTOMATIC_INDEX.search(l[3])
-    #     if match:
-    #       table_type = match.group(1)
-    #       table_name = match.group(2)
-    #       cols       = { i[0] for i in match.group(3).split(" AND ") }
-    #       #print("OPTIMIZE!!!", l, table_type, table_name, cols)
-          
-    #       table_def = "%s %s" % (table_type, table_name)
-    #       if   "s" in cols:
-    #         sql = sql.replace(table_def, "%s INDEXED BY index_%s_sp" % (table_def, table_type), 1)
-    #         #indexeds.add(table_name)
-    #         changed = True
-    #       elif "o" in cols:
-    #         sql = sql.replace(table_def, "%s INDEXED BY index_%s_op" % (table_def, table_type), 1)
-    #         #indexeds.add(table_name)
-    #         changed = True
-    #       elif "p" in cols:
-    #         sql = sql.replace(table_def, "%s NOT INDEXED" % table_def, 1)
-    #         #indexeds.add(table_name)
-    #         changed = True
-            
-    #   if not changed: break
-    # return sql
-
-
-
-
   
   def parse_inserts_deletes(self, triples, columns):
     var_2_column = { column.var : column for column in self.main_query.columns if not column.name.endswith("d") }
@@ -1136,8 +1078,8 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
     self.fixed_var    = fixed_var
     self.non_fixed    = "o" if fixed == "s" else "s"
     
-    if isinstance(p, NegatedPropSetPath): self.need_d = True
-    else:                                 self.need_d = (p.modifier == "?") and not isinstance(triple.Prop, ObjectPropertyClass)
+    if isinstance(p, NegatedPropPath): self.need_d = True
+    else:                              self.need_d = (p.modifier == "?") and not isinstance(triple.Prop, ObjectPropertyClass)
     
     self.need_orig    = not self.fixed_var is None # XXX Optimizable
     self.need_nb      = p.modifier != "*"

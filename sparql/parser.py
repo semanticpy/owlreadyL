@@ -23,8 +23,6 @@ from owlready2.util import ContextVar
 from owlready2 import *
 
 
-class _List(list): pass
-
 lg = rply.LexerGenerator()
 lg.add("}",                    r"\}")
 lg.add("{",                    r"\{")
@@ -531,37 +529,42 @@ def _expand_blank(triples, x):
   _expand_triple(triples, v, x)
   return v
   
+def _expand_triple(triples, s, ps_os):
+  for p, o in ps_os:
+    if   isinstance(p, rply.Token):
+      if (p.name == "VAR") or (p.name == "PARAM"):
+        p.inversed = False
+        p.modifier = None
+      _add_triple(triples, s, p, o)
+      
+    elif isinstance(p, NegatedPropPath):
+      _add_triple(triples, s, p, o)
+      
+    elif isinstance(p, UnionPropPath):
+      u = []
+      for p1 in p:
+        t = SimpleTripleBlock()
+        _expand_triple(t, s, [(p1, o)])
+        u.append(t)
+      triples.append(UnionBlock(u))
+      
+    elif isinstance(p, SequencePropPath):
+      translator = CURRENT_TRANSLATOR.get()
+      s2 = s
+      for p2 in p:
+        if p2 is p[-1]: o2 = o
+        else:                 o2 = rply.Token("VAR", translator.new_var())
+        _add_triple(triples, s2, p2, o2)
+        s2 = o2
+
+    else: raise ValueError(p)
+ 
 def _add_triple(triples, s, pr, o):
   if isinstance(s, list): s = _expand_blank(triples, s)
   if isinstance(o, list): o = _expand_blank(triples, o)
   if getattr(pr, "inversed", False): triples.append(Triple([o, pr, s]))
   else:                              triples.append(Triple([s, pr, o]))
-
-def _expand_triple(triples, s, ps_os):
-  for p, o in ps_os:
-    if   isinstance(p, rply.Token) and ((p.name == "VAR") or (p.name == "PARAM")):
-      p.inversed = False
-      p.modifier = None
-      _add_triple(triples, s, p, o)
-    elif len(p) > 1: # '|' in path
-      u = []
-      for p1 in p:
-        t = SimpleTripleBlock()
-        _expand_triple(t, s, [([p1], o)])
-        u.append(t)
-      triples.append(UnionBlock(u))
-    else:
-      if len(p[0]) == 1:
-        _add_triple(triples, s, p[0][0], o)
-      else: # '/' in path
-        translator = CURRENT_TRANSLATOR.get()
-        s2 = s
-        for p2 in p[0]:
-          if p2 is p[0][-1]: o2 = o
-          else:              o2 = rply.Token("VAR", translator.new_var())
-          _add_triple(triples, s2, p2, o2)
-          s2 = o2
-  
+ 
   
 @pg.production("triples_same_subject_path : var_or_term property_list_path_not_empty")
 @pg.production("triples_same_subject_path : triples_node_path property_list_path_not_empty?")
@@ -592,10 +595,16 @@ def f(p): # Expand ',' in triples
 pg.optional("property_list_path_not_empty?")
 
 @pg.production("path : path_sequence+")
-def f(p): return p[0]
+def f(p):
+  p = p[0]
+  if len(p) == 1: return p[0]
+  return UnionPropPath(p)
 
 @pg.production("path_sequence : path_element_or_inverse+")
-def f(p): return p[0]
+def f(p):
+  p = p[0]
+  if len(p) == 1: return p[0]
+  return SequencePropPath(p)
 pg.list("path_sequence+", "|")
 
 @pg.production("path_element_or_inverse : path_element")
@@ -603,14 +612,12 @@ def f(p): return p[0]
 @pg.production("path_element_or_inverse : ^ path_element")
 def f(p):
   p = p[1]
-  if isinstance(p, list): p = _List(p)
   p.inversed = True
   return p
 pg.list("path_element_or_inverse+", "/")
 
 @pg.production("path_element : path_primary path_mod?")
 def f(p):
-  if isinstance(p[0], list): p[0] = _List(p[0])
   p[0].modifier = p[1] and p[1].value
   return p[0]
 
@@ -627,8 +634,8 @@ def f(p):
   return p[0]
 @pg.production("path_primary : ! path_negated_property_set")
 def f(p):
-  prop_path = NegatedPropSetPath()
-  for i in p[1]: prop_path.props.append(i)
+  prop_path = NegatedPropPath()
+  for i in p[1]: prop_path.append(i)
   return prop_path
 @pg.production("path_primary : ( path )")
 def f(p): return p
@@ -647,6 +654,7 @@ def f(p):
   p[0].inversed = True
   return p[0]
 pg.list("path_one_in_property_set+", "|")
+
 
 @pg.production("triples_node : collection")
 @pg.production("triples_node : blank_node_property_list")
@@ -1106,7 +1114,8 @@ class Triple(tuple):
     if self[1].inversed: triple = self[::-1]
     else:                triple = self
     for x in triple:
-      if x.name == "VAR": _var_found(x.value, vars, ordered_vars)
+      if   x.name == "VAR": _var_found(x.value, vars, ordered_vars)
+      elif isinstance(x, PropPath): x._get_ordered_vars(vars, ordered_vars)
       
   
 class SpecialCondition(object): pass
@@ -1123,19 +1132,37 @@ class SimpleUnion(SpecialCondition):
 
   def __repr__(self): return "<SimpleUnion %s>" % self.items
   def __str__ (self): return ",".join(str(i) for i in self.items)
-    
-class PropPath(SpecialCondition): pass
-class NegatedPropSetPath(PropPath):
-  name = "NEGATED_PROP_PATH"
-  def __init__(self):
-    self.props = []
-
-  def create_conditions(self, conditions, table, n):
-    if len(self.props) == 1:
-      conditions.append("%s.%s!=%s" % (table.name, n, self.props[0].storid))
-    else:
-      conditions.append("%s.%s NOT IN (%s)" % (table.name, n, ",".join(str(p.storid) for p in self.props)))
+  
+  
+class PropPath(list):
+  def __init__(self, l = None):
+    list.__init__(self, l or [])
+    self.inversed = False
+    self.modifier = None
+  __hash__ = object.__hash__
+  
+  def _get_ordered_vars(self, vars, ordered_vars):
+    for x in self:
+      if   x.name == "VAR": _var_found(x.value, vars, ordered_vars)
+      elif isinstance(x, PropPath): x._get_ordered_vars(vars, ordered_vars)
       
+class NegatedPropPath(PropPath, SpecialCondition):
+  name = "NEGATED_PROP_PATH"
+  def create_conditions(self, conditions, table, n):
+    if len(self) == 1:
+      conditions.append("%s.%s!=%s" % (table.name, n, self[0].storid))
+    else:
+      conditions.append("%s.%s NOT IN (%s)" % (table.name, n, ",".join(str(p.storid) for p in self)))
+  def __repr__(self): return "!(%s)" % " ".join(repr(prop) for prop in self)
+      
+class SequencePropPath(PropPath):
+  name = "SEQUENCE_PROP_PATH"
+  def __repr__(self): return "(%s)" % "/".join(repr(prop) for prop in self)
+  
+class UnionPropPath(PropPath):
+  name = "UNION_PROP_PATH"
+  def __repr__(self): return "(%s)" % "|".join(repr(prop) for prop in self)
+  
 
 def _get_vars(x):
   for i in x:
@@ -1169,7 +1196,5 @@ class Filter(object):
   def _get_ordered_vars(self, vars, ordered_vars):
     for var in self.var_names:
       _var_found(var, vars, ordered_vars)
-    #pass
     
-  
   
