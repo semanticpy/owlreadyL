@@ -20,12 +20,12 @@ SPARQL elements supported
 
 * SELECT, INSERT and DELETE queries
 * UNION, OPTIONAL
-* FILTER, BIND
-* FILTER EXISTS, FILTER NOT EXISTS
+* FILTER, BIND, FILTER EXISTS, FILTER NOT EXISTS
 * SELECT sub queries
 * All SPARQL functions and aggregation functions
 * Blank nodes notations with square bracket, e.g. '[ a XXX]'
-* Property path expressions, e.g. 'a/rdfs:subClassOf*', excepted those with parentheses
+* Property path expressions, e.g. 'a/rdfs:subClassOf*',
+  including those with parentheses of the forms '(p1|p2|...|^p11|^p12|...)*' and '^(p1|p2|...|^p11|^p12|...)*'
 * Parameters in queries (i.e. '??')
 
 
@@ -38,7 +38,7 @@ SPARQL elements not supported
 * GRAPH, FROM, FROM NAMED keywords
 * VALUES in SELECT queries
 * MINUS
-* Parentheses in property path expressions, e.g. '(a/rdfs:subClassOf)*'
+* Parentheses in property path expressions, other than the supported forms listed above
 
 
 Performing SPARQL queries

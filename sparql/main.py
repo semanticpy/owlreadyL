@@ -184,8 +184,6 @@ class Translator(object):
   def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None, copy_vars = False):
     if preliminary and not name: name = "prelim%s" % (len(self.preliminary_selects) + 1)
     
-    #print("BLOCK", name, block)
-    
     if isinstance(block, UnionBlock) and block.simple_union_triples:
       block = SimpleTripleBlock(block.simple_union_triples)
       
@@ -685,7 +683,7 @@ class SQLQuery(FuncSupport):
         self.triples[i:i+1] = triple.simple_union_triples
         
     remnant_triples = set(self.triples)
-        
+    
     for triple in list(self.triples): # Pass 1: Determine var type and prop type
       if isinstance(triple, (Bind, Filter, Block)): continue
       s, p, o = triple
@@ -1098,9 +1096,29 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
     self.finalize_columns()
     self.set_column_names(column_names)
     
-    p_conditions = []
-    self.create_conditions(p_conditions, Table("q", "quads" if self.need_d else "objs"), "p", p)
-    self.extra_sql = """
+    p_direct_conditions   = []
+    p_inversed_conditions = []
+    if isinstance(p, UnionPropPath):
+      direct_ps   = [i for i in p if not i.inversed]
+      inversed_ps = [i for i in p if     i.inversed]
+      if direct_ps:
+        if len(direct_ps) == 1:
+          self.create_conditions(p_direct_conditions, Table("q", "quads" if self.need_d else "objs"), "p", direct_ps[0])
+        else:
+          p_direct_conditions  .append("q.p IN (%s)" % ",".join(str(self._to_sql(i)[0]) for i in direct_ps))
+          
+      if inversed_ps:
+        if len(inversed_ps) == 1:
+          self.create_conditions(p_inversed_conditions, Table("q", "quads" if self.need_d else "objs"), "p", inversed_ps[0])
+        else:
+          p_inversed_conditions.append("q.p IN (%s)" % ",".join(str(self._to_sql(i)[0]) for i in inversed_ps))
+          
+    else:
+      self.create_conditions(p_direct_conditions, Table("q", "quads" if self.need_d else "objs"), "p", p)
+      
+    self.extra_sql = ""
+    if p_direct_conditions:
+      self.extra_sql += """
 UNION
 SELECT q.%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
   self.non_fixed,
@@ -1108,8 +1126,20 @@ SELECT q.%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
   ", rec.%s" % self.fixed if self.need_orig else "",
   ", rec.nb+1"            if self.need_nb   else "",
   "quads"                 if self.need_d    else "objs",
-  self.name, " AND ".join(p_conditions),
+  self.name, " AND ".join(p_direct_conditions),
   "AND rec.nb=0 " if p.modifier == "?" else "",
   self.fixed, self.non_fixed)
   
+    if p_inversed_conditions:
+      self.extra_sql += """
+UNION
+SELECT q.%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
+  self.fixed,
+  ", q.d"                     if self.need_d    else "",
+  ", rec.%s" % self.non_fixed if self.need_orig else "",
+  ", rec.nb+1"                if self.need_nb   else "",
+  "quads"                     if self.need_d    else "objs",
+  self.name, " AND ".join(p_inversed_conditions),
+  "AND rec.nb=0 " if p.modifier == "?" else "",
+  self.non_fixed, self.non_fixed)
   

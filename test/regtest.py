@@ -7299,7 +7299,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
       b3 = B(label = [locstr("label_b", "fr")])
       a1 = A(label = [locstr("label_a", "en")], price = [10.0], price_vat_free = [8.0], rel = [b2], subrel = [b3])
     return world, onto
-
+  
   def sparql(self, world, sparql, params = (), compare_with_rdflib = True):
     if SHOW_SQL:
       t0 = time.time()
@@ -8564,6 +8564,28 @@ http://test.org/onto.owl#A\tClasse A
     onto.A11.comment.append("ok")
     q, r = self.sparql(world, """SELECT ?x { ?x rdfs:subClassOf* onto:A. { ?x rdfs:label "Classe A1". } UNION { ?x rdfs:comment "ok". } }""")
     assert set(x[0] for x in r) == { onto.A1, onto.A11 }
+
+  def test_123(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT ?x { onto:a1 onto:rel|onto:subrel ?x }""")
+    assert set(x[0] for x in r) == { onto.b2, onto.b3 }
+    q, r = self.sparql(world, """SELECT ?x { ?x ^(onto:rel|onto:subrel) onto:a1 }""")
+    assert set(x[0] for x in r) == { onto.b2, onto.b3 }
+    
+  def test_124(self):
+    world, onto = self.prepare1()
+    onto.A1.equivalent_to.append(onto.B)
+    q, r = self.sparql(world, """SELECT ?i { ?i a ?c .  ?c (rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* onto:A . }""")
+    assert set(x[0] for x in r) == { onto.a1, onto.b1, onto.b2, onto.b3 }
+    
+  def test_125(self):
+    world, onto = self.prepare1()
+    onto.A11.equivalent_to.append(onto.C)
+    onto.B.equivalent_to.append(onto.C)
+    q, r = self.sparql(world, """SELECT ?i { ?i a ?c .  ?c (rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* onto:A . }""")
+    assert set(x[0] for x in r) == { onto.a1, onto.b1, onto.b2, onto.b3 }
+    
+    
 
 
     

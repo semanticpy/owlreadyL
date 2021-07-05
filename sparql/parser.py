@@ -541,22 +541,29 @@ def _expand_triple(triples, s, ps_os):
       _add_triple(triples, s, p, o)
       
     elif isinstance(p, UnionPropPath):
-      u = []
-      for p1 in p:
-        t = SimpleTripleBlock()
-        _expand_triple(t, s, [(p1, o)])
-        u.append(t)
-      triples.append(UnionBlock(u))
-      
+      if p.modifier:
+        _add_triple(triples, s, p, o)
+      else:
+        u = []
+        for p1 in p:
+          t = SimpleTripleBlock()
+          if p.inversed: _expand_triple(t, o, [(p1, s)])
+          else:          _expand_triple(t, s, [(p1, o)])
+          u.append(t)
+        triples.append(UnionBlock(u))
+        
     elif isinstance(p, SequencePropPath):
-      translator = CURRENT_TRANSLATOR.get()
-      s2 = s
-      for p2 in p:
-        if p2 is p[-1]: o2 = o
-        else:                 o2 = rply.Token("VAR", translator.new_var())
-        _add_triple(triples, s2, p2, o2)
-        s2 = o2
-
+      if p.modifier:
+        raise NotImplementedError("Property path expressions of the form '(p1/p2)*' are not yet supported by Owlready2 native SPARQL engine. You may use RDFlib instead.")
+      else:
+        translator = CURRENT_TRANSLATOR.get()
+        s2 = s
+        for p2 in p:
+          if p2 is p[-1]: o2 = o
+          else:                 o2 = rply.Token("VAR", translator.new_var())
+          _add_triple(triples, s2, p2, o2)
+          s2 = o2
+          
     else: raise ValueError(p)
  
 def _add_triple(triples, s, pr, o):
@@ -638,7 +645,7 @@ def f(p):
   for i in p[1]: prop_path.append(i)
   return prop_path
 @pg.production("path_primary : ( path )")
-def f(p): return p
+def f(p): return p[1]
 
 @pg.production("path_negated_property_set : path_one_in_property_set")
 def f(p): return p
@@ -985,6 +992,8 @@ class UnionBlock(Block):
     
     self.simple_union_triples = self._to_simple_union()
     
+  def __repr__(self): return "<%s %s %s>" % (self.__class__.__name__, "Simple" if self.simple_union_triples else "Non-Simple", list.__repr__(self))
+  
   def _to_simple_union(self):
     if len(self[0]) == 2:
       r = self._to_simple_union2()
@@ -999,6 +1008,7 @@ class UnionBlock(Block):
     ps = set()
     os = set()
     for i in self:
+      if i[0][1].modifier: return None
       ss.add(repr(i[0][0]))
       ps.add(repr(i[0][1]))
       os.add(repr(i[0][2]))
