@@ -262,6 +262,8 @@ The NEWINSTANCEIRI() function create a new IRI for an instance of the class give
 created by default by Owlready. Note that the function does not create any RDF triple, so you need to create triples for
 asserting the new individual parents (including OWL NamedIndividual and the desired class(es)).
 
+The LOADED(iri) function returns True if the given IRI is currently loaded in Python, and False otherwise.
+
 
 
 Prepare SPARQL queries

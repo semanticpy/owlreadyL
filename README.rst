@@ -578,6 +578,7 @@ version 2 - 0.34
 * Support SPARQL property path expressions of the forms '(p1|p2|...|^p11|^p12|...)*' and '^(p1|p2|...|^p11|^p12|...)*'
 * Add define_datatype_in_ontology() global function for defining a new user-defined datatype in an ontology
 * Class.instances() now takes into account equivalent classes (like other class methods such as .descendants())
+* Add the LOADED(iri) SPARQL function
 
 
 Links

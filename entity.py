@@ -293,6 +293,24 @@ class EntityClass(type):
       Class._fill_descendants(s, include_self, only_loaded, Class.namespace.world, Class.namespace.ontology)
     return s
   
+  # def descendants2(Class, include_self = True, only_loaded = False, world = None):
+  #   if (Class.namespace.world is owl_world) and (world is None):
+  #     import owlready2
+  #     world = owlready2.default_world
+  #   else:
+  #     world = Class.namespace.world
+
+  #   if only_loaded:
+  #     if include_self:
+  #       return set(world.prepare_sparql("""SELECT ?c { ?c (rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* ?? . FILTER(ISIRI(?c)) . FILTER(LOADED(?c)) }""").execute_flat((Class,)))
+  #     else:
+  #       return set(world.prepare_sparql("""SELECT ?c { ?c (rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)*/rdfs:subClassOf ?? . FILTER(ISIRI(?c)) . FILTER(LOADED(?c)) }""").execute_flat((Class,)))
+  #   else:
+  #     if include_self:
+  #       return set(world.prepare_sparql("""SELECT ?c { ?c (rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* ?? . FILTER(ISIRI(?c)) }""").execute_flat((Class,)))
+  #     else:
+  #       return set(world.prepare_sparql("""SELECT ?c { ?c (rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)*/rdfs:subClassOf ?? . FILTER(ISIRI(?c)) }""").execute_flat((Class,)))
+    
   def _fill_ancestors(Class, s, include_self, include_constructs):
     if include_self:
       if not Class in s:

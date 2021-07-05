@@ -79,6 +79,7 @@ _FUNC_2_DATATYPE = {
   #"REPLACE" :  # ok
   #"SIMPLEREPLACE" :  # ok
   "NEWINSTANCEIRI" : None, # ok
+  "LOADED" : _universal_datatype_2_abbrev[bool], # ok
 
   "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#INTEGER" : _universal_datatype_2_abbrev[int], # ok
   "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#DOUBLE" : _universal_datatype_2_abbrev[float], # ok
@@ -192,6 +193,9 @@ class _Func(object):
     namespace = (owlready2.CURRENT_NAMESPACES.get() and owlready2.CURRENT_NAMESPACES.get()[-1]) or x.namespace
     iri = self.world.graph._new_numbered_iri("%s%s" % (namespace.base_iri, x.name.lower()))
     return self.world._abbreviate(iri)
+
+  def _loaded(self, x):
+    return x in self.world._entities
   
   
 def register_python_function(world):
@@ -219,6 +223,7 @@ def register_python_function(world):
   create_function("now",             0, func._now, deterministic = True)
   create_function("bnode",          -1, func._bnode)
   create_function("newinstanceiri",  1, func._newinstanceiri)
+  create_function("loaded",          1, func._loaded)
   
   # Unindexed table for deprioritizing subqueries
   world.graph.execute("""CREATE TEMP TABLE one (i INTEGER)""") # CREATE TEMP TABLE one (i INTEGER); INSERT INTO one VALUES (1);
