@@ -322,7 +322,6 @@ class PreparedQuery(object):
   
 class PreparedSelectQuery(PreparedQuery):
   def execute(self, params = ()):
-
     for l in PreparedQuery.execute(self, params):
       l2 = []
       i = 0
@@ -340,6 +339,22 @@ class PreparedSelectQuery(PreparedQuery):
           i += 2
       yield l2
       
+  def execute_flat(self, params = ()):
+    for l in PreparedQuery.execute(self, params):
+      i = 0
+      while i < len(l):
+        if self.column_types[i] == "objs":
+          if l[i] is None: l2.append(None)
+          else: yield self.world._to_python(l[i], None) or l[i]
+          i += 1
+        else:
+          if l[i + 1] is None:
+            if l[i] is None: l2.append(None)
+            else:            l2.append(self.world._to_python(l[i], None) or l[i])
+          else:
+            yield self.world._to_python(l[i], l[i + 1])
+          i += 2
+          
   def execute_csv(self, params = (), separator = ","):
     import csv, io
     b = io.StringIO()

@@ -314,7 +314,7 @@ class EntityClass(type):
         if isinstance(parent, EntityClass):
           if not parent in s:
             parent._fill_ancestors(s, True, False)
-        
+            
   def _fill_descendants(Class, s, include_self, only_loaded, world, onto):
     if include_self:
       s.add(Class)
@@ -343,9 +343,6 @@ class EntityClass(type):
         world = owlready2.default_world
         
       for x, in world.graph.db.execute(
-#    """SELECT q1.s FROM objs q1 WHERE q1.s > 0 and q1.p = ? AND q1.o = ?
-#EXCEPT SELECT q2.s FROM objs q2 WHERE q2.p = ? and q2.o != ? and q2.o > 0""",
-#          (rdf_type, owl_class, rdfs_subclassof, owl_thing)):
           """SELECT q1.s FROM objs q1 WHERE q1.p=? AND q1.o=? AND ((q1.s > 0))
     AND (SELECT 1 FROM objs q2 INDEXED BY index_objs_sp
     WHERE q2.s=q1.s AND q2.p=? AND ((q2.o > 0) AND q2.o != ?)) IS NULL""",
@@ -464,14 +461,23 @@ class ThingClass(EntityClass):
     new._set(new2)
   disjoint_unions = property(get_disjoint_unions, set_disjoint_unions)
   
-      
+  
+  # def instances(Class, world = None):
+  #   if Class.namespace.world is owl_world:
+  #     import owlready2
+  #     world = (world or owlready2.default_world).world
+  #     if Class is Thing: return world.individuals()
+  #     return world.search(type = Class)
+  #   return Class.namespace.world.search(type = Class)
+  
   def instances(Class, world = None):
     if Class.namespace.world is owl_world:
       import owlready2
       world = (world or owlready2.default_world).world
       if Class is Thing: return world.individuals()
-      return world.search(type = Class)
-    return Class.namespace.world.search(type = Class)
+    else:
+      world = Class.namespace.world
+    return world.prepare_sparql("""SELECT ?i { ?i a/(rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* ?? . }""").execute_flat((Class,))
   
   def direct_instances(Class, world = None):
     if Class.namespace.world is owl_world:
