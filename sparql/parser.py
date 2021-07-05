@@ -1008,7 +1008,6 @@ class UnionBlock(Block):
     ps = set()
     os = set()
     for i in self:
-      if i[0][1].modifier: return None
       ss.add(repr(i[0][0]))
       ps.add(repr(i[0][1]))
       os.add(repr(i[0][2]))
@@ -1018,7 +1017,10 @@ class UnionBlock(Block):
     if len(os) > 1: nb_many += 1; n = 2
     if nb_many > 1:  return None
     if nb_many == 0: return None
-    
+    if n == 1: # Prop; prop path modifier not supported in that case
+      for i in self:
+        if i[0][1].modifier: return None
+        
     vs = [i[0][n] for i in self]
     for v in vs:
       if (not isinstance(v, rply.Token)) or (v.name != "IRI"): return None

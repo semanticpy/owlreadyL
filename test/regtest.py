@@ -8585,7 +8585,12 @@ http://test.org/onto.owl#A\tClasse A
     q, r = self.sparql(world, """SELECT ?i { ?i a ?c .  ?c (rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* onto:A . }""")
     assert set(x[0] for x in r) == { onto.a1, onto.b1, onto.b2, onto.b3 }
     
+  def test_126(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT ?i { { ?i rdfs:subClassOf* onto:A } UNION { ?i rdfs:subClassOf* onto:B } }""")
+    assert q.sql.count("UNION") == 1
     
+     
 
 
     
