@@ -40,7 +40,7 @@ SPARQL elements not supported
 
   - nested repeats, e.g. (a/p*)*
   - sequence nested inside a repeat, e.g. (p1/p2)*
-  - negative property set nested inside a repeat, e.g. (!(p1 p2))*
+  - negative property set nested inside a repeat, e.g. (!(p1 | p2))*
 
   i.e. repeats cannot contain other repeats, sequences and negative property sets.
 
