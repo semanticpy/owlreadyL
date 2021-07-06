@@ -24,10 +24,8 @@ SPARQL elements supported
 * SELECT sub queries
 * All SPARQL functions and aggregation functions
 * Blank nodes notations with square bracket, e.g. '[ a XXX]'
-* Property path expressions, e.g. 'a/rdfs:subClassOf*',
-  including those with parentheses of the forms '(p1|p2|...|^p11|^p12|...)*' and '^(p1|p2|...|^p11|^p12|...)*'
 * Parameters in queries (i.e. '??')
-
+* Property path expressions, e.g. 'a/rdfs:subClassOf*',  excepted those listed below
 
 SPARQL elements not supported
 -----------------------------
@@ -38,7 +36,13 @@ SPARQL elements not supported
 * GRAPH, FROM, FROM NAMED keywords
 * VALUES in SELECT queries
 * MINUS
-* Parentheses in property path expressions, other than the supported forms listed above
+* Property path expressions with parentheses of the following forms:
+
+  - nested repeats, e.g. (a/p*)*
+  - sequence nested inside a repeat, e.g. (p1/p2)*
+  - negative property set nested inside a repeat, e.g. (!(p1 p2))*
+
+  i.e. repeats cannot contain other repeats, sequences and negative property sets.
 
 
 Performing SPARQL queries

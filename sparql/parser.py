@@ -560,8 +560,9 @@ def _expand_triple(triples, s, ps_os):
         s2 = s
         for p2 in p:
           if p2 is p[-1]: o2 = o
-          else:                 o2 = rply.Token("VAR", translator.new_var())
-          _add_triple(triples, s2, p2, o2)
+          else:           o2 = rply.Token("VAR", translator.new_var())
+          #_add_triple(triples, s2, p2, o2)
+          _expand_triple(triples, s2, [(p2, o2)])
           s2 = o2
           
     else: raise ValueError(p)
