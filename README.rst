@@ -579,6 +579,7 @@ version 2 - 0.34
 * Add define_datatype_in_ontology() global function for defining a new user-defined datatype in an ontology
 * Class.instances() now takes into account equivalent classes (like other class methods such as .descendants())
 * Add the LOADED(iri) SPARQL function
+* Support Thing.is_a.append(...)
 
 
 Links

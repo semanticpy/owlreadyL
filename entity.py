@@ -230,7 +230,7 @@ class EntityClass(type):
       type.__setattr__(Class, "is_a", CallbackList(value, Class, Class.__class__._class_is_a_changed))
       Class._class_is_a_changed(old)
       return
-      
+
     type.__setattr__(Class, attr, value)
     
   def _class_is_a_changed(Class, old):
@@ -248,8 +248,9 @@ class EntityClass(type):
       Class.__bases__ = bases
     else:
       if   isinstance(Class, ThingClass):
-        Class.__bases__ = (Thing,)
-        list.insert(Class.is_a, 0, Thing)
+        if not Class is Thing:
+          Class.__bases__ = (Thing,)
+          list.insert(Class.is_a, 0, Thing)
       elif isinstance(Class, ObjectPropertyClass):
         Class.__bases__ = (ObjectProperty,)
         list.insert(Class.is_a, 0, ObjectProperty)
@@ -259,7 +260,10 @@ class EntityClass(type):
         
     for base in new - old:
       if isinstance(base, Construct):
-        base = base._set_ontology_copy_if_needed(Class.namespace.ontology, Class.is_a)
+        if Class is Thing:
+          base = base._set_ontology_copy_if_needed(CURRENT_NAMESPACES.get()[-1].ontology, Class.is_a)
+        else:
+          base = base._set_ontology_copy_if_needed(Class.namespace.ontology, Class.is_a)
       if not LOADING: Class._add_is_a_triple(base)
       
   def disjoints(Class):

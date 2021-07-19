@@ -6009,7 +6009,6 @@ ask where
     
     hex_storid = declare_datatype(Hex, "http://www.w3.org/2001/XMLSchema#hexBinary", parser, unparser)
     define_datatype_in_ontology(Hex, "http://www.w3.org/2001/XMLSchema#hexBinary", onto)
-    onto.graph.dump()
     
     with onto:
       class p(Thing >> Hex): pass
