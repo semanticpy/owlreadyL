@@ -1106,21 +1106,6 @@ class Triple(tuple):
     elif isinstance(self.Prop, ObjectPropertyClass): self.table_type = "objs"
     elif isinstance(self.Prop, DataPropertyClass):   self.table_type = "datas"
     else:                                            self.table_type = "quads"
-    
-    #if (getattr(self[1], "storid", None) == rdf_type) and (self[2].name == "IRI"):
-    #  self.likelihood_o = 0.9375
-    #if (getattr(self[1], "storid", None) == rdfs_subclassof) and (self[2].name == "IRI"):
-    #  self.likelihood_o = 0.7
-    #if (getattr(self[1], "storid", None) == rdf_type):
-    #  self.likelihood_p = 0.2
-    #  self.likelihood_o = 0.2
-    #if (getattr(self[1], "storid", None) == rdfs_subclassof):
-    #  self.likelihood_p = 0.1
-    #  self.likelihood_o = 0.15
-    #if (getattr(self[1], "storid", None) == label.storid) and (self[2].name == "STRING"):
-    #  self.likelihood_o = 0.01
-    #elif self.Prop and self.Prop.range == [bool]:
-    #  self.likelihood_o = 0.5
       
     
   def _get_ordered_vars(self, vars, ordered_vars):

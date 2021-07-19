@@ -361,7 +361,7 @@ class PropertyClass(EntityClass):
   def _set_value_for_individual(Prop, entity, value):
     if value is None: entity.namespace.ontology._del_triple_spod(entity.storid, Prop.storid, None, None)
     else:             entity.namespace.ontology._set_triple_spod(entity.storid, Prop.storid, *entity.namespace.ontology._to_rdf(value))
-    if (not instance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
+    if (not isinstance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
       entity.__dict__[Prop.python_name] = [value]
       
   _set_value_for_class  = _set_value_for_individual
@@ -740,7 +740,7 @@ class ObjectPropertyClass(ReasoningPropertyClass):
   def _set_value_for_individual(Prop, entity, value):
     if value is None: entity.namespace.ontology._del_obj_triple_spo(entity.storid, Prop.storid, None)
     else:             entity.namespace.ontology._set_obj_triple_spo(entity.storid, Prop.storid, value.storid)
-    if (not instance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
+    if (not isinstance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
       entity.__dict__[Prop.python_name] = value
       
   def _set_value_for_class (Prop, entity, value ): Prop._get_values_for_class(entity).reinit([value])
@@ -839,7 +839,7 @@ class DataPropertyClass(ReasoningPropertyClass):
   def _set_value_for_individual(Prop, entity, value):
     if value is None: entity.namespace.ontology._del_data_triple_spod(entity.storid, Prop.storid, None, None)
     else:             entity.namespace.ontology._set_data_triple_spod(entity.storid, Prop.storid, *entity.namespace.ontology._to_rdf(value))
-    if (not instance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
+    if (not isinstance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
       entity.__dict__[Prop.python_name] = value
       
   def _set_value_for_class (Prop, entity, value ): Prop._get_values_for_class(entity).reinit([value])
