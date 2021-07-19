@@ -580,6 +580,7 @@ version 2 - 0.34
 * Class.instances() now takes into account equivalent classes (like other class methods such as .descendants())
 * Add the LOADED(iri) SPARQL function
 * Support Thing.is_a.append(...)
+* Faster loading of very large quadstores
 
 
 Links

@@ -77,10 +77,10 @@ class Graph(BaseMainGraph):
         self.db.execute("""PRAGMA locking_mode = NORMAL""")
         
       #self.db.execute("""PRAGMA journal_mode = WAL""")
+      
     self.db.execute("""PRAGMA cache_size = -200000""")
     self.db.execute("""PRAGMA mmap_size = 30000000000""")
     self.db.execute("""PRAGMA page_size = 32768""")
-    #self.db.execute("""PRAGMA analysis_limit = 1000""")
     
     if sqlite_tmp_dir:
       try: self.db.execute("""PRAGMA temp_store_directory = '%s'""" % sqlite_tmp_dir)
@@ -389,8 +389,17 @@ class Graph(BaseMainGraph):
     if self.read_only: return
     if sqlite3.sqlite_version_info[1] < 33: return # ANALYZE sqlite_schema not supported
     
-    nb_objs  = self.execute("""SELECT COUNT(*) FROM objs""" ).fetchone()[0]
-    nb_datas = self.execute("""SELECT COUNT(*) FROM datas""").fetchone()[0]
+    self.db.execute("""PRAGMA cache_size = -100""") # The two following queries are * faster * with a small cache!
+    #import time
+    #t0 = time.time()
+    nb_datas = self.execute("""SELECT COUNT() FROM datas INDEXED BY index_datas_sp""").fetchone()[0]
+    #if nb_datas: print(nb_datas, time.time() - t0)
+    #t0 = time.time()
+    nb_objs  = self.execute("""SELECT COUNT() FROM objs INDEXED BY index_objs_sp""" ).fetchone()[0]
+    #nb_objs  = self.execute("""SELECT MAX(rowid) FROM objs""" ).fetchone()[0]
+    #if nb_objs: print(nb_objs, time.time() - t0)
+    self.db.execute("""PRAGMA cache_size = -200000""")
+    
     try:
       self.execute("""DELETE FROM sqlite_stat1""")
     except:
@@ -1525,7 +1534,7 @@ class _SearchMixin(list):
   
   def __len__(self):
     sql, params = self.sql_request()
-    sql =  "SELECT COUNT(*) FROM (%s)" % sql
+    sql =  "SELECT COUNT() FROM (%s)" % sql
     return self.world.graph.execute(sql, params).fetchone()[0]
         
       
