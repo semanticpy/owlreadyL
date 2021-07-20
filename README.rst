@@ -11,7 +11,7 @@ Owlready2
 
 
          
-Owlready2 is a module for ontology-oriented programming in Python 3, including an optimized RDF quadstore.
+Owlready2 is a module for ontology-oriented programming in Python 3. It can manage ontologies and knwoledge graphs, and includes an optimized RDF/OWL quadstore.
 
 Owlready2 can:
 
