@@ -379,7 +379,7 @@ class Graph(BaseMainGraph):
         version += 1
         
       self.prop_fts = { storid for (storid,) in self.execute("""SELECT storid FROM prop_fts;""") }
-
+      
       self.analyze()
       
     self.current_changes = self.db.total_changes
@@ -389,16 +389,17 @@ class Graph(BaseMainGraph):
     if self.read_only: return
     if sqlite3.sqlite_version_info[1] < 33: return # ANALYZE sqlite_schema not supported
     
-    self.db.execute("""PRAGMA cache_size = -100""") # The two following queries are * faster * with a small cache!
+    #self.db.execute("""PRAGMA cache_size = -100""") # The two following queries are * faster * with a small cache!
     #import time
-    #t0 = time.time()
-    nb_datas = self.execute("""SELECT COUNT() FROM datas INDEXED BY index_datas_sp""").fetchone()[0]
-    #if nb_datas: print(nb_datas, time.time() - t0)
-    #t0 = time.time()
-    nb_objs  = self.execute("""SELECT COUNT() FROM objs INDEXED BY index_objs_sp""" ).fetchone()[0]
-    #nb_objs  = self.execute("""SELECT MAX(rowid) FROM objs""" ).fetchone()[0]
-    #if nb_objs: print(nb_objs, time.time() - t0)
-    self.db.execute("""PRAGMA cache_size = -200000""")
+    #t0 = time.perf_counter()
+    #nb_datas = self.execute("""SELECT COUNT() FROM datas INDEXED BY index_datas_sp""").fetchone()[0]
+    nb_datas = self.execute("""SELECT MAX(rowid) FROM datas""").fetchone()[0]
+    #if nb_datas: print(nb_datas, time.perf_counter() - t0)
+    #t0 = time.perf_counter()
+    #nb_objs  = self.execute("""SELECT COUNT() FROM objs INDEXED BY index_objs_sp""" ).fetchone()[0]
+    nb_objs  = self.execute("""SELECT MAX(rowid) FROM objs""" ).fetchone()[0]
+    #if nb_objs: print(nb_objs, time.perf_counter() - t0)
+    #self.db.execute("""PRAGMA cache_size = -200000""")
     
     try:
       self.execute("""DELETE FROM sqlite_stat1""")
