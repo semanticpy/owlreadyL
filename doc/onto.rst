@@ -238,6 +238,13 @@ The metadata of the ontology can be accessed with .metadata, in read and write a
 
 Any annotation can be used with .metadata.
 
+In addition, you can list the available annotions by iterating through .metadata, for example:
+
+::
+
+   >>> for annot_prop in onto.metadata:
+   ...         print(annot_prop, ":", annot_prop[onto.metadata])
+
 
 Importing other ontologies
 --------------------------
