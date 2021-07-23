@@ -742,6 +742,19 @@ class Test(BaseTest, unittest.TestCase):
     assert o1.get_instances_of(G) == []
     assert o2.get_instances_of(G) == [i]
     
+  def test_ontology_32(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/o.owl")
+    
+    assert list(o.metadata) == []
+
+    o.metadata.label   = ["o"]
+    o.metadata.comment = ["e", "f"]
+    
+    assert len(list(o.metadata)) == 2
+    assert set(o.metadata) == { label, comment }
+    
+    
   def test_class_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
     assert issubclass(n.Tomato, n.Vegetable)

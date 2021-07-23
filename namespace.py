@@ -1238,7 +1238,12 @@ class Metadata(object):
   def __init__(self, namespace, storid):
     object.__setattr__(self, "namespace", namespace)
     object.__setattr__(self, "storid"   , storid)
-    
+
+  def __iter__(self):
+    for p in self.namespace.world._get_triples_s_p(self.storid):
+      if p == rdf_type: continue
+      yield self.namespace.ontology._to_python(p)
+      
   def __getattr__(self, attr):
     Prop = self.namespace.world._props.get(attr)
     values = [self.namespace.ontology._to_python(o, d) for o, d in self.namespace.world._get_triples_sp_od(self.storid, Prop.storid)]
