@@ -107,6 +107,12 @@ def _keep_most_specific(s, consider_equivalence = True):
           r.add(i)
   return r
 
+def _decode(s):
+  try:
+    return s.decode("utf8")
+  except UnicodeDecodeError:
+    return s.decode("latin")
+    
 
 def sync_reasoner_hermit(x = None, infer_property_values = False, debug = 1, keep_tmp_file = False):
   if   isinstance(x, World):    world = x
@@ -143,13 +149,10 @@ def sync_reasoner_hermit(x = None, infer_property_values = False, debug = 1, kee
       if (e.returncode == 1) and (b"Inconsistent ontology" in (e.output or b"")):
         raise OwlReadyInconsistentOntologyError()
       else:
-        raise OwlReadyJavaError("Java error message is:\n%s" % (e.stderr or e.output or b"").decode("utf8"))
+        raise OwlReadyJavaError("Java error message is:\n%s" % _decode(e.stderr or e.output or b""))
       
-    try:
-      output = output.decode("utf8").replace("\r","")
-    except UnicodeDecodeError:
-      output = output.decode("latin").replace("\r","")
-
+    output = _decode(output).replace("\r","")
+    
     if debug:
       print("* Owlready2 * HermiT took %s seconds" % (time.time() - t0), file = sys.stderr)
       if debug > 1:
@@ -254,23 +257,20 @@ def sync_reasoner_pellet(x = None, infer_property_values = False, infer_data_pro
       output = subprocess.run(command, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = True, **_subprocess_kargs).stdout
     except subprocess.CalledProcessError as e:
       if (e.returncode == 1) and (b"ERROR: Ontology is inconsistent" in (e.stderr or b"")): # XXX
-        msg = (e.stderr or e.output or b"").decode("utf8")
+        msg = _decode(e.stderr or e.output or b"")
         
         if debug > 1:
           command_explain = [owlready2.JAVA_EXE, "-Xmx%sM" % JAVA_MEMORY, "-cp", _PELLET_CLASSPATH, "pellet.Pellet", "explain", "--ignore-imports", tmp.name]
           process = subprocess.run(command_explain, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = False, **_subprocess_kargs)
-          msg += "\nThis is the output of `pellet explain`: \n {}\n{}".format(process.stdout.decode("utf8"), process.stderr.decode("utf8"))
+          msg += "\nThis is the output of `pellet explain`: \n {}\n{}".format(_decode(process), _decode(process.stderr))
           
         raise OwlReadyInconsistentOntologyError("Java error message is: %s" % msg)
       
       else:
-        raise OwlReadyJavaError("Java error message is:\n%s" % (e.stderr or e.output or b"").decode("utf8"))
+        raise OwlReadyJavaError("Java error message is:\n%s" % _decode((e.stderr or e.output or b"")))
 
-    try:
-      output = output.decode("utf8").replace("\r","")
-    except UnicodeDecodeError:
-      output = output.decode("latin").replace("\r","")
-      
+    output = _decode(output).replace("\r","")
+    
     if debug:
       print("* Owlready2 * Pellet took %s seconds" % (time.time() - t0), file = sys.stderr)
       if debug > 1:

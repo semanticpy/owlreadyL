@@ -753,7 +753,7 @@ class Test(BaseTest, unittest.TestCase):
     
     assert len(list(o.metadata)) == 2
     assert set(o.metadata) == { label, comment }
-
+    
     
   def test_class_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
