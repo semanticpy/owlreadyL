@@ -584,7 +584,8 @@ version 2 - 0.34
 * list(onto.metadata) now lists the annotations present on the ontology
 * Bugfixes:
   - Accept UTF8 and latin encoding from reasoners (thanks Francesco Compagno)
-
+  - Fix SPARQL query with a UNION without variables
+    
 
 Links
 -----

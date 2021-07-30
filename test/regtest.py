@@ -8601,6 +8601,18 @@ http://test.org/onto.owl#A\tClasse A
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT ?i { { ?i rdfs:subClassOf* onto:A } UNION { ?i rdfs:subClassOf* onto:B } }""")
     assert q.sql.count("UNION") == 1
+        
+  def test_127(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT DISTINCT ?x ?r { ?x onto:price ?r . { ?x onto:rel onto:b2 } UNION { ?x onto:subrel onto:b3 } }""")
+    assert r == [[onto.a1, 10.0]]
+    
+  def test_128(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT ?r { onto:a1 onto:price ?r . { onto:a1 onto:rel onto:b2 } UNION { onto:a1 onto:subrel onto:b3 } }""", compare_with_rdflib = False)
+    assert r == [[10.0]]
+    q, r = self.sparql(world, """SELECT ?r { onto:a1 onto:price ?r . { onto:a1 onto:rel onto:b1 } UNION { onto:a1 onto:subrel onto:b1 } }""", compare_with_rdflib = False)
+    assert r == []
     
      
 

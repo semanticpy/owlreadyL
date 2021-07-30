@@ -118,30 +118,30 @@ class Translator(object):
       return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns), select_param_indexes)
     
     
-  def optimize_sql(self, sql):
-    # Avoid Sqlite3 AUTOMATIC INDEX when a similar index can be used.
-    plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
-    #for l in plan:
-      #if (" USING AUTOMATIC " in l[3]) and not (" TABLE " in l[3]): break
-    #else:
-    try:
-      self.world.graph.execute("PRAGMA automatic_index = false")
-      plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
-    finally:
-      self.world.graph.execute("PRAGMA automatic_index = true")
+  # def optimize_sql(self, sql):
+  #   # Avoid Sqlite3 AUTOMATIC INDEX when a similar index can be used.
+  #   plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
+  #   #for l in plan:
+  #     #if (" USING AUTOMATIC " in l[3]) and not (" TABLE " in l[3]): break
+  #   #else:
+  #   try:
+  #     self.world.graph.execute("PRAGMA automatic_index = false")
+  #     plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
+  #   finally:
+  #     self.world.graph.execute("PRAGMA automatic_index = true")
       
-    for l in plan:
-        match = _RE_NORMAL_INDEX.search(l[3])
-        if match:
-          table_type = match.group(1)
-          table_name = match.group(2)
-          index_name = match.group(4)
-          if table_name == "q": continue # Recursive hard-coded preliminary queries
-          #if ("%s INDEXED" % table_name) in sql: continue
-          table_def = "%s %s" % (table_type, table_name)
-          #print("OPTIMIZE!!!", l, table_type, table_name, index_name)
-          sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
-    return sql
+  #   for l in plan:
+  #       match = _RE_NORMAL_INDEX.search(l[3])
+  #       if match:
+  #         table_type = match.group(1)
+  #         table_name = match.group(2)
+  #         index_name = match.group(4)
+  #         if table_name == "q": continue # Recursive hard-coded preliminary queries
+  #         #if ("%s INDEXED" % table_name) in sql: continue
+  #         table_def = "%s %s" % (table_type, table_name)
+  #         #print("OPTIMIZE!!!", l, table_type, table_name, index_name)
+  #         sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
+  #   return sql
     
   
   def parse_inserts_deletes(self, triples, columns):
@@ -197,7 +197,7 @@ class Translator(object):
     elif isinstance(block, UnionBlock):
       s = SQLCompoundQuery(name, nested_inside)
       if selects is None: selects = block.get_ordered_vars()
-      
+        
     elif isinstance(block, FilterBlock):
       s = SQLNestedQuery(name)
       #if isinstance(block, ExistsBlock): s.extra_sql = "IS NOT NULL"
@@ -942,8 +942,10 @@ class SQLQuery(FuncSupport):
   def finalize_columns(self):
     selected_parameter_index = 0
     i = j = 0
-    if self.raw_selects == "*": selects = [self.vars[var] for var in self.block.get_ordered_vars() if not var.startswith("??")]      
-    else:                       selects = self.raw_selects
+    if   self.raw_selects == "*": selects = [self.vars[var] for var in self.block.get_ordered_vars() if not var.startswith("??")]      
+    elif self.raw_selects:        selects = self.raw_selects
+    elif self.tables:             selects = ["%s.s" % self.tables[0].name]
+    else:                         selects = []
     
     def do_select(select):
       nonlocal selected_parameter_index
