@@ -2,7 +2,7 @@
 Contact and links
 =================
 
-A forum/mailing list is available for Owlready on Nabble: http://owlready.8326.n8.nabble.com
+A forum/mailing list is available for Owlready on Nabble: http://owlready.306.s1.nabble.com
 
 In case of trouble, please write to the forum or contact Jean-Baptiste Lamy <jean-baptiste.lamy *@* univ-paris13 *.* fr>
 
