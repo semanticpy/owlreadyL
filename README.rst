@@ -582,10 +582,11 @@ version 2 - 0.34
 * Support Thing.is_a.append(...)
 * Faster loading of very large quadstores
 * list(onto.metadata) now lists the annotations present on the ontology
+* Add OntologyClass and NamespaceClass argument to get_ontology() and get_namespace(), allowing the use of custom classes
 * Bugfixes:
   - Accept UTF8 and latin encoding from reasoners (thanks Francesco Compagno)
   - Fix SPARQL query with a UNION without variables
-    
+
 
 Links
 -----
