@@ -575,6 +575,7 @@ version 2 - 0.33
 version 2 - 0.34
 ****************
 
+* NEW FORUM ADDRESS: http://owlready.306.s1.nabble.com
 * Support SPARQL property path expressions with parentheses without sequences, repeats or negative property set nested inside repeats
 * Add define_datatype_in_ontology() global function for defining a new user-defined datatype in an ontology
 * Class.instances() now takes into account equivalent classes (like other class methods such as .descendants())
