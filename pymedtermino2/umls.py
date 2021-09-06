@@ -276,8 +276,6 @@ def parse_mrsty(PYM, terminologies, langs, importer, f, remnant = ""):
       sem = importer._abbreviate("http://PYM/TUI/%s" % tui)
       importer.semantic_types[tui] = sem
       importer.datas.append((sem, label.storid, sty, 0))
-      print(cui, tui, stn, sty, atui, cvf, _dropit)
-      print(sty)
       
     cui = importer._abbreviate("http://PYM/CUI/%s" % cui)
     importer.objs.append((cui, rdfs_subclassof, sem))
