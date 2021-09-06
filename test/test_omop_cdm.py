@@ -19,7 +19,6 @@ print(len(default_world.graph))
 
 
 
-t = time.time()
 q = default_world.prepare_sparql("""
 PREFIX umls: <http://PYM/>
 PREFIX atc: <http://PYM/ATC/>
@@ -36,19 +35,37 @@ BIND(YEAR(?start) - ?birth_year AS ?age) . }
 GROUP BY ?gender ?age ORDER BY ?gender ?age
 
 """)
+t = time.perf_counter()
 
 #print(q.sql)
 #for i in default_world.graph.execute("""EXPLAIN QUERY PLAN %s""" % q.sql): print(i)
 l = list(q.execute())
 
 
-t = time.time() - t
+t = time.perf_counter() - t
 for i in l: print(i)
 print(len(l))
 print(t)
 print()
 
 
+print(q.sql)
 
 
+q = default_world.prepare_sparql("""
+PREFIX umls: <http://PYM/>
+PREFIX atc: <http://PYM/ATC/>
+PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+
+SELECT ?x {
+?x rdfs:subClassOf*/rdfs:label "Fracture of bone" .
+}
+""")
+
+l = list(q.execute())
+print(len(l))
+for i in range(len(l)):
+  pass
+  #print(l[i][0].storid, end = ", ")
+  #if i % 9 == 0: print()
 

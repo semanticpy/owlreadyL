@@ -44,7 +44,7 @@ class Graph(BaseMainGraph):
     initialize_db = (clone is None) and ((filename == ":memory:") or (not exists))
     
     if clone and (filename != ":memory:"):
-      if exists: raise ValueError("Cannot save existent quadstore in '%s': File already exists! Use a new filename for saving quadstore or, for opening an already existent quadstore, do not create any triple before calling set_backend()." % filename)
+      if exists: raise ValueError("Cannot save existent quadstore in '%s': File already exists! Use a new filename for saving quadstore or, for opening an already existent quadstore, do not create any triple before calling set_backend() (including creating an empty ontology or loading a module that does so)." % filename)
       
     if sqlite_tmp_dir: os.environ["SQLITE_TMPDIR"] = sqlite_tmp_dir
     

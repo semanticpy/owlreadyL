@@ -276,7 +276,10 @@ def parse_mrsty(PYM, terminologies, langs, importer, f, remnant = ""):
       sem = importer._abbreviate("http://PYM/TUI/%s" % tui)
       importer.semantic_types[tui] = sem
       importer.datas.append((sem, label.storid, sty, 0))
+      print(cui, tui, stn, sty, atui, cvf, _dropit)
+      print(sty)
       
+    cui = importer._abbreviate("http://PYM/CUI/%s" % cui)
     importer.objs.append((cui, rdfs_subclassof, sem))
     
     importer.check_insert()
@@ -636,10 +639,10 @@ def import_umls(umls_zip_filename, terminologies = None, langs = None, fts_index
     ("MRRANK",  parse_mrrank),
     ("MRCONSO", parse_mrconso),
   ]
-  if extract_definitions: parsers.append(("MRDEF"  , parse_mrdef))
-  parsers.append(("MRREL"  , parse_mrrel))
-  if extract_attributes: parsers.append(("MRSAT"  , parse_mrsat))
-  #if (not terminology) or ("CUI" in terminologies): parsers["MRSTY"] = parse_mrsty
+  if extract_definitions: parsers.append(("MRDEF", parse_mrdef))
+  parsers.append(("MRREL", parse_mrrel))
+  if extract_attributes: parsers.append(("MRSAT", parse_mrsat))
+  if (not terminologies) or ("CUI" in terminologies): parsers.append(("MRSTY", parse_mrsty))
   
   remnants = defaultdict(str)
   
