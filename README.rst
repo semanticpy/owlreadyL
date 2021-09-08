@@ -27,9 +27,11 @@ Owlready2 can:
 
  - Load DBpedia or UMLS (for medical terminology, using the integrated PyMedTermino2 submodule)
 
- - Tested up to 1 billion of RDF triples! (but can potentially support more)
+ - Native support for optimized SPARQL queries
 
- - In addition, the quadstore is compatible with the RDFlib Python module, which can be used to perform SPARQL queries
+ - Tested up to 1 billion of RDF triples! (but can potentially support more)
+   
+ - In addition, the quadstore is compatible with the RDFlib Python module
  
  - Finally, Owlready2 can also be used as an ORM (Object-Relational mapper) -- as a graph/object database, it beats Neo4J, MongoDB, SQLObject and SQLAlchemy in terms of performances
   
@@ -101,6 +103,14 @@ Perform reasoning, and classify instances and classes:
    onto.NonVegetarianPizza
    >>> test_pizza.eat()
    Beurk! I'm vegetarian !
+
+Perform SPARQL queries:
+
+::
+   
+   >>> list(default_world.sparql("""SELECT * { ?x a owl:Class . FILTER(ISIRI(?x)) }"""))
+   [[pizza_onto.CheeseTopping], [pizza_onto.FishTopping], [pizza_onto.MeatTopping], [pizza_onto.Pizza], [pizza_onto.TomatoTopping], [pizza_onto.Topping], [pizza_onto.NonVegetarianPizza]]
+
 
 Access to medical terminologies from UMLS:
 
@@ -588,6 +598,12 @@ version 2 - 0.34
   - Accept UTF8 and latin encoding from reasoners (thanks Francesco Compagno)
   - Fix SPARQL query with a UNION without variables
   - Fix semantic type support in UMLS
+
+version 2 - 0.35
+****************
+
+* Support for VALUES in SPARQL
+
 
 Links
 -----

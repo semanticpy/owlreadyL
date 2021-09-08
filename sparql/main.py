@@ -528,10 +528,8 @@ class Variable(object):
   def get_binding(self, query):
     if not self.bindings:
       #print("* Owlready2 * WARNING: variable without binding in SPARQL, use a suboptimal option", file = sys.stderr)
-      table = Table("any%s" % query.next_table_id, """(SELECT DISTINCT s AS o, NULL AS d FROM quads UNION SELECT DISTINCT o, d FROM quads)""")
-      table.query = query
-      query.tables.append(table)
-      query.name_2_table[table.name] = table
+      table = Table(query, "any%s" % query.next_table_id, """(SELECT DISTINCT s AS o, NULL AS d FROM quads UNION SELECT DISTINCT o, d FROM quads)""")
+      table.subquery = query
       query.next_table_id += 1
       self.bindings.append("%s.o" % table.name)
     i = 0
@@ -545,13 +543,16 @@ class Variable(object):
       raise ValueError("Variable %s cannot be both %s and %s!" % (self.name, self.type, type))
     
 class Table(object):
-  def __init__(self, name, type = "quads", index = None, join = ",", join_conditions = None):
+  def __init__(self, query, name, type = "quads", index = None, join = ",", join_conditions = None):
     self.name            = name
     self.type            = type
     self.index           = index
     self.join            = join
     self.join_conditions = join_conditions or []
-    self.query           = None
+    self.subquery        = None
+    if query:
+      query.tables.append(self)
+      query.name_2_table[name] = self
     
   def __repr__(self): return "<Table '%s %s'>" % (self.type, self.name)
     
@@ -578,7 +579,7 @@ class SQLQuery(FuncSupport):
     self.extra_sql                = ""
     self.select_simple_union      = False
     self.optional                 = False
-    self.has_one                  = False
+    #self.static_valuess           = []
     
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
   
@@ -661,15 +662,11 @@ class SQLQuery(FuncSupport):
   def add_subquery(self, sub):
     if isinstance(sub, SQLNestedQuery):
       self.conditions.append(sub)
-      if _DEPRIORIZE_SUBQUERIES_OPT and not self.has_one:
-        self.tables.append(Table("one", "one"))
-        self.has_one = True
+      if _DEPRIORIZE_SUBQUERIES_OPT and not ("one" in self.name_2_table): Table(self, "one", "one")
     else:
-      table = Table("p%s" % self.next_table_id, sub.name)
-      table.query = sub
+      table = Table(self, "p%s" % self.next_table_id, sub.name)
+      table.subquery = sub
       self.next_table_id += 1
-      self.tables.append(table)
-      self.name_2_table[table.name] = table
       if sub.optional:
         table.join = "LEFT JOIN"
         conditions = table.join_conditions
@@ -692,7 +689,7 @@ class SQLQuery(FuncSupport):
     
     if self.raw_selects == "*":
       self.vars_needed_for_select = { self.parse_var(var_name) for var_name in self.block.get_ordered_vars() }         
-      
+
     for i, triple in enumerate(self.triples): # Pass 0: Simple union blocks
       if isinstance(triple, UnionBlock) and triple.simple_union_triples:
         self.triples[i:i+1] = triple.simple_union_triples
@@ -823,22 +820,37 @@ class SQLQuery(FuncSupport):
       
       if self.name == "main": select_name = ""
       else:                   select_name = "%s_" % self.name
-      table = Table("%sq%s" % (select_name, self.next_table_id), triple.local_table_type)
+      table = Table(self, "%sq%s" % (select_name, self.next_table_id), triple.local_table_type)
       if triple.optional:
         table.join = "LEFT JOIN"
         conditions = table.join_conditions
       else:
         conditions = self.conditions
       self.next_table_id += 1
-      self.tables.append(table)
-      self.name_2_table[table.name] = table
       
       if triple.consider_s: self.create_conditions(conditions, table, "s", s)
       if triple.consider_p: self.create_conditions(conditions, table, "p", p, triple.likelihood_p)
       if triple.consider_o: self.create_conditions(conditions, table, "o", o, triple.likelihood_o)
       
       if p.modifier == "+": conditions.append("%s.nb>0"  % table.name)
-
+      
+      
+    if isinstance(triples, SimpleTripleBlock):
+      for static_values in triples.static_valuess:
+        if len(static_values.vars) == 1:
+          var = self.parse_var(static_values.vars[0])
+          sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
+          conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static_values.valuess)))
+        else:
+          prelim = SQLStaticValuesPreliminaryQuery("prelim%s" % (len(self.translator.preliminary_selects) + 1), static_values)
+          self.translator.preliminary_selects.append(prelim)
+          table = Table(self, prelim.name, prelim.name)
+          for i, var in enumerate(static_values.vars):
+            var = self.parse_var(var)
+            sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
+            conditions.append("%s=%s.col%s" % (sql, prelim.name, i + 1))
+            
+          
   def get_fix_levels(self, vars0, exclude_triple = None):
     vars0_names = { var.name for var in vars0 }
     fix_levels  = defaultdict(float)
@@ -908,8 +920,8 @@ class SQLQuery(FuncSupport):
     else:
       sql, sql_type, sql_d, sql_d_type = self._to_sql(x)
       
-      if table.query: # If datatype is 0 (=auto), disable datatype conditions and replace it by IS NOT NULL
-        for column in table.query.columns:
+      if table.subquery: # If datatype is 0 (=auto), disable datatype conditions and replace it by IS NOT NULL
+        for column in table.subquery.columns:
           if column.name == "%sd" % n[:-1]:
             if str(column.binding) == "0":
               sql_d = None
@@ -927,8 +939,8 @@ class SQLQuery(FuncSupport):
       if not sql_d is None:
         conditions.append("%s.%sd=%s" % (table.name, n[:-1], sql_d)) # Datatype part
         
-      if x.name == "VAR": x = self.vars[x.value]
-      if   isinstance(x, Variable):
+      if isinstance(x, rply.Token) and (x.name == "VAR"): x = self.vars[x.value]
+      if isinstance(x, Variable):
         if not x.initial_query: x.initial_query = self
         x.bindings.append("%s.%s" % (table.name, n))
         
@@ -1120,18 +1132,18 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
       inversed_ps = [i for i in p if     i.inversed]
       if direct_ps:
         if len(direct_ps) == 1:
-          self.create_conditions(p_direct_conditions, Table("q", "quads" if self.need_d else "objs"), "p", direct_ps[0])
+          self.create_conditions(p_direct_conditions, Table(None, "q", "quads" if self.need_d else "objs"), "p", direct_ps[0])
         else:
           p_direct_conditions  .append("q.p IN (%s)" % ",".join(str(self._to_sql(i)[0]) for i in direct_ps))
           
       if inversed_ps:
         if len(inversed_ps) == 1:
-          self.create_conditions(p_inversed_conditions, Table("q", "quads" if self.need_d else "objs"), "p", inversed_ps[0])
+          self.create_conditions(p_inversed_conditions, Table(None, "q", "quads" if self.need_d else "objs"), "p", inversed_ps[0])
         else:
           p_inversed_conditions.append("q.p IN (%s)" % ",".join(str(self._to_sql(i)[0]) for i in inversed_ps))
           
     else:
-      self.create_conditions(p_direct_conditions, Table("q", "quads" if self.need_d else "objs"), "p", p)
+      self.create_conditions(p_direct_conditions, Table(None, "q", "quads" if self.need_d else "objs"), "p", p)
       
     self.extra_sql = ""
     if p_direct_conditions:
@@ -1159,4 +1171,16 @@ SELECT q.%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
   self.name, " AND ".join(p_inversed_conditions),
   "AND rec.nb=0 " if p.modifier == "?" else "",
   self.non_fixed, self.non_fixed)
-  
+      
+      
+class SQLStaticValuesPreliminaryQuery(object):
+  recursive = False
+  def __init__(self, name, static_values):
+    self.name          = name
+    self.static_values = static_values
+    
+  def sql(self):
+    return "%s(%s) AS (VALUES %s)" % (self.name,
+                                      ",".join("col%s" % (i+1) for i in range(len(self.static_values.vars))),
+                                      ",".join("(%s)" % ",".join(str(value) for value in values) for values in self.static_values.valuess) )
+

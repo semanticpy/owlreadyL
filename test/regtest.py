@@ -8617,9 +8617,18 @@ http://test.org/onto.owl#A\tClasse A
   def test_129(self):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT ?x { FILTER(STRSTARTS(STR(?x), "http://test.org/onto.owl#b")) }""", compare_with_rdflib = False)
-    print(r)
-    print(q.sql)
     assert set(i[0] for i in r) == { onto.b1, onto.b2, onto.b3 }
+    
+  def test_130(self):
+    world, onto = self.prepare1()
+    onto.b1.label = ["b1"]
+    onto.b2.label = ["b2"]
+    onto.b3.label = ["b3"]
+    q, r = self.sparql(world, """SELECT ?x { ?x rdfs:label ?l . VALUES ?l { "b1" "b2" } }""", compare_with_rdflib = False)
+    assert set(i[0] for i in r) == { onto.b1, onto.b2 }
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x ?p ?l . VALUES (?p ?l) { (rdfs:label "b1") (rdfs:label "b3") } }""", compare_with_rdflib = False)
+    assert set(i[0] for i in r) == { onto.b1, onto.b3 }
 
      
 

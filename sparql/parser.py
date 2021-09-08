@@ -71,8 +71,8 @@ lg.add("EXISTS",               r"""EXISTS\b""", re.IGNORECASE)
 lg.add("NOT_EXISTS",           r"""NOT\s+EXISTS\b""", re.IGNORECASE)
 lg.add("FILTER",               r"""FILTER\b""", re.IGNORECASE)
 lg.add("UNION",                r"""UNION\b""", re.IGNORECASE)
-#lg.add("UNDEF",                r"""UNDEF\b""", re.IGNORECASE)
-#lg.add("VALUES",               r"""VALUES\b""", re.IGNORECASE)
+lg.add("UNDEF",                r"""UNDEF\b""", re.IGNORECASE)
+lg.add("VALUES",               r"""VALUES\b""", re.IGNORECASE)
 lg.add("BIND",                 r"""BIND\b""", re.IGNORECASE)
 lg.add("WITH",                 r"""WITH\b""", re.IGNORECASE)
 lg.add("AS",                   r"""AS\b""", re.IGNORECASE)
@@ -402,12 +402,12 @@ def f(p):
 def f(p):
   r = SimpleTripleBlock()
   for i in p[1]:
-    if   isinstance(i, Block) or isinstance(i, Bind) or isinstance(i, Filter):
-      r.append(i)
-    elif isinstance(i, list):
-      r.extend(i)
-    else:
-      raise ValueError
+    if   isinstance(i, Block) \
+      or isinstance(i, Bind) \
+      or isinstance(i, Filter):       r.append(i)
+    elif isinstance(i, list):         r.extend(i)
+    elif isinstance(i, StaticValues): r.static_valuess.append(i)
+    else: raise ValueError
   if (len(r) == 1) and isinstance(r[0], Block): return r[0]
   return r
 pg.list("group_graph_pattern+", "UNION")
@@ -448,19 +448,27 @@ def f(p):
 def f(p): return Bind(p[2], p[4])
 #@pg.production("group_graph_pattern_item : GRAPH var_or_iri group_graph_pattern")
 #@pg.production("group_graph_pattern_item : SERVICE SILENT? var_or_iri group_graph_pattern")
-#@pg.production("group_graph_pattern_item : inline_data")
+
+@pg.production("group_graph_pattern_item : inline_data")
+def f(p): return p[0]
+
 pg.list("group_graph_pattern_item*", ".?")
 pg.optional(".?")
 
-#@pg.production("inline_data : VALUES data_block")
-#def f(p): return p
+@pg.production("inline_data : VALUES data_block")
+def f(p): return p[1]
 
-#@pg.production("data_block : inline_data_one_var")
-#@pg.production("data_block : inline_data_full")
-#def f(p): return p[0]
+@pg.production("data_block : inline_data_one_var")
+def f(p): return p[0]
+@pg.production("data_block : inline_data_full")
+def f(p): return p[0]
 
-#@pg.production("inline_data_one_var : var { data_block_value* }")
-#def f(p): return p
+@pg.production("inline_data_one_var : var { data_block_value* }")
+def f(p):
+  static_values = StaticValues()
+  static_values.vars.append(p[0])
+  static_values.valuess.extend(i.sql if hasattr(i, "sql") else i.value  for i in p[2])
+  return static_values
 
 #@pg.production("nil_or_var* : NIL")
 #@pg.production("nil_or_var* : var*")
@@ -470,16 +478,26 @@ pg.optional(".?")
 #def f(p): return p
 #pg.list("data_block_value*_or_nil*", "")
 
-#@pg.production("inline_data_full : nil_or_var* { data_block_value*_or_nil* }")
-#def f(p): return p
+@pg.production("data_block_values : ( data_block_value* )")
+def f(p): return p[1]
+pg.list("data_block_values*", "")
 
-#@pg.production("data_block_value : iri")
-#@pg.production("data_block_value : rdf_literal")
-#@pg.production("data_block_value : numeric_literal")
-#@pg.production("data_block_value : BOOL")
-#@pg.production("data_block_value : UNDEF")
-#def f(p): return p[0]
-#pg.list("data_block_value*", "")
+#@pg.production("inline_data_full : nil_or_var* { data_block_value*_or_nil* }")
+@pg.production("inline_data_full : ( var* ) { data_block_values* }")
+def f(p):
+  static_values = StaticValues()
+  for var in p[1]: static_values.vars.append(var)
+  static_values.valuess.extend([i.sql if hasattr(i, "sql") else i.value for i in l] for l in p[4])
+  return static_values
+
+@pg.production("data_block_value : iri")
+@pg.production("data_block_value : rdf_literal")
+@pg.production("data_block_value : numeric_literal")
+@pg.production("data_block_value : BOOL")
+@pg.production("data_block_value : undef")
+def f(p): return p[0]
+pg.list("data_block_value*", "")
+
 
 @pg.production("constraint : bracketted_expression")
 @pg.production("constraint : builtin_call")
@@ -958,6 +976,12 @@ def f(p):
   p.value  = CURRENT_TRANSLATOR.get().new_var()
   return p
 
+@pg.production("undef : UNDEF")
+def f(p):
+  p = p[0]
+  p.value = p.sql = "NULL"
+  return p
+
 PARSER = pg.build()
 del lg, pg
 
@@ -1065,6 +1089,11 @@ def _var_found(var, vars, ordered_vars):
     ordered_vars.append(var)
     
 class SimpleTripleBlock(TripleBlock):
+  def __init__(self, l = None):
+    TripleBlock.__init__(self, l or [])
+
+    self.static_valuess = []
+    
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     for triple in self:
       triple._get_ordered_vars(vars, ordered_vars)
@@ -1196,3 +1225,9 @@ class Filter(object):
       _var_found(var, vars, ordered_vars)
     
   
+class StaticValues(object):
+  def __init__(self):
+    self.vars    = []
+    self.valuess = []
+  #def __repr__(self): return "VALUES (%s) { %s }" % (" ".join(repr(var) for var in self.vars), " ".join("( %s )" % " ".join(repr(value) for value in values) for values in self.valuess))
+  def __repr__(self): return "VALUES (%s) %s" % (" ".join(repr(var) for var in self.vars), self.valuess)
