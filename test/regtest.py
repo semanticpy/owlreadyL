@@ -8613,7 +8613,14 @@ http://test.org/onto.owl#A\tClasse A
     assert r == [[10.0]]
     q, r = self.sparql(world, """SELECT ?r { onto:a1 onto:price ?r . { onto:a1 onto:rel onto:b1 } UNION { onto:a1 onto:subrel onto:b1 } }""", compare_with_rdflib = False)
     assert r == []
-    
+        
+  def test_129(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT ?x { FILTER(STRSTARTS(STR(?x), "http://test.org/onto.owl#b")) }""", compare_with_rdflib = False)
+    print(r)
+    print(q.sql)
+    assert set(i[0] for i in r) == { onto.b1, onto.b2, onto.b3 }
+
      
 
 

@@ -587,7 +587,7 @@ version 2 - 0.34
 * Bugfixes:
   - Accept UTF8 and latin encoding from reasoners (thanks Francesco Compagno)
   - Fix SPARQL query with a UNION without variables
-
+  - Fix semantic type support in UMLS
 
 Links
 -----
