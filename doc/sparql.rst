@@ -22,6 +22,7 @@ SPARQL elements supported
 * UNION, OPTIONAL
 * FILTER, BIND, FILTER EXISTS, FILTER NOT EXISTS
 * SELECT sub queries
+* VALUES in SELECT queries
 * All SPARQL functions and aggregation functions
 * Blank nodes notations with square bracket, e.g. '[ a XXX]'
 * Parameters in queries (i.e. '??')
@@ -34,7 +35,6 @@ SPARQL elements not supported
 * INSERT DATA, DELETE DATA, DELETE WHERE queries (you may use INSERT or DELETE instead)
 * SERVICE (Federated queries)
 * GRAPH, FROM, FROM NAMED keywords
-* VALUES in SELECT queries
 * MINUS
 * Property path expressions with parentheses of the following forms:
 
