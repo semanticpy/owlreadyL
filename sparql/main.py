@@ -168,7 +168,7 @@ class Translator(object):
             triple.append(("vars", column.index))
             if len(triple) == 3: # in 'o' position => can be objs or datas!
               if column.index + 1 < len(columns):
-                next_column = columns[column.index]
+                next_column = columns[column.index + 1]
                 if next_column.name.endswith("d"):
                   triple.append(("vars", next_column.index))
         elif x.name == "PARAM":
@@ -187,6 +187,7 @@ class Translator(object):
             triple.append(("datas", d2))
             
       r.append(triple)
+
     return r
   
   def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None, copy_vars = False):
@@ -539,7 +540,7 @@ class PreparedModifyQuery(PreparedQuery):
           elif type == "param":         triple.append(self.world._to_rdf(params[value])[0])
           elif type == "paramdatatype": triple.append(self.world._to_rdf(params[value])[1])
           else:                         triple.append(value)
-        #print("ADD", triple)
+        #print("ADD", insert, triple)
         self.world._add_triple_with_update(self.ontology, *triple)
         
     return nb_match

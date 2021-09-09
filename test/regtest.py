@@ -8677,7 +8677,36 @@ http://test.org/onto.owl#A\tClasse A
     assert not "WITH" in q.sql
     assert set(i[0] for i in r) == { onto.a1, a11 }
 
-
+  def test_136(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class D(Thing): pass
+      C.label = ["l1"]
+      D.label = ["l1"]
+      c = C()
+      c.label = ["l3"]
+      d = D()
+      d.label = ["l4"]
+      
+      nb = world.sparql("""
+INSERT {
+  [
+    rdf:type owl:Axiom ;
+    owl:annotatedSource ?c ; 
+    owl:annotatedProperty rdfs:label ; 
+    owl:annotatedTarget ?l ; 
+  ] rdfs:comment "Annotation sur une relation" .
+}
+WHERE {
+  ?c rdfs:label ?l .
+  ?c a owl:Class .
+}
+""")
+      assert nb == 2
+      
+    assert comment[C, label, "l1"] == ['Annotation sur une relation']
 
     
 # Add test for Pellet
