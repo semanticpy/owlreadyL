@@ -603,6 +603,7 @@ version 2 - 0.35
 ****************
 
 * Support for VALUES in SPARQL
+* STATIC optimization keyword extension to SPARQL
 
 
 Links

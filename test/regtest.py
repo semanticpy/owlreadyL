@@ -8629,8 +8629,54 @@ http://test.org/onto.owl#A\tClasse A
     
     q, r = self.sparql(world, """SELECT ?x { ?x ?p ?l . VALUES (?p ?l) { (rdfs:label "b1") (rdfs:label "b3") } }""", compare_with_rdflib = False)
     assert set(i[0] for i in r) == { onto.b1, onto.b3 }
+    
+  def test_131(self):
+    world, onto = self.prepare1()
+    a11 = onto.A11()
+    q, r = self.sparql(world, """SELECT ?x { ?x a ?c . ?c rdfs:subClassOf* onto:A . }""", compare_with_rdflib = False)
+    assert set(i[0] for i in r) == { onto.a1, a11 }
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x a ?c . STATIC { ?c rdfs:subClassOf* onto:A . } }""", compare_with_rdflib = False)
+    assert not "WITH" in q.sql
+    assert set(i[0] for i in r) == { onto.a1, a11 }
+    
+  def test_132(self):
+    world, onto = self.prepare1()
+    a11 = onto.A11()
+    q, r = self.sparql(world, """SELECT ?x { ?x a ?c . STATIC { ?c rdfs:subClassOf* ?a . ?a rdfs:label "Classe A" } }""", compare_with_rdflib = False)
+    assert not "WITH" in q.sql
+    assert set(i[0] for i in r) == { onto.a1, a11 }
+    
+  def test_133(self):
+    world, onto = self.prepare1()
+    a11 = onto.A11()
+    a1  = onto.A1(label = ["Classe A1"])
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x a ?c . ?x rdfs:label ?l . ?c rdfs:subClassOf* onto:A . ?c rdfs:label ?l }""", compare_with_rdflib = False)
+    assert set(i[0] for i in r) == { a1 }
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x a ?c . ?x rdfs:label ?l . STATIC { ?c rdfs:subClassOf* onto:A . ?c rdfs:label ?l } }""", compare_with_rdflib = False)
+    assert not "RECURSIVE" in q.sql
+    assert set(i[0] for i in r) == { a1 }
+    
+  def test_134(self):
+    world, onto = self.prepare1()
+    a11 = onto.A11()
+    onto.A11.label = ["LLL"]
+    q, r = self.sparql(world, """SELECT ?x ?l { ?x a ?c . STATIC { ?c rdfs:subClassOf* onto:A . ?c rdfs:label ?l } }""", compare_with_rdflib = False)
+    assert set(tuple(i) for i in r) == { (onto.a1, "Classe A"), (a11, "LLL") }
+    
+  def test_135(self):
+    world, onto = self.prepare1()
+    a11 = onto.A11()
+    q, r = self.sparql(world, """SELECT ?x { ?x a/rdfs:subClassOf*STATIC onto:A . }""", compare_with_rdflib = False)
+    assert not "WITH" in q.sql
+    assert set(i[0] for i in r) == { onto.a1, a11 }
+    
+    q, r = self.sparql(world, """SELECT ?x { ?x a/rdfs:subClassOf*STATIC/rdfs:label "Classe A" . }""", compare_with_rdflib = False)
+    assert not "WITH" in q.sql
+    assert set(i[0] for i in r) == { onto.a1, a11 }
 
-     
 
 
     

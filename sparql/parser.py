@@ -38,6 +38,7 @@ lg.add("DECIMAL",              r"""[+-]?[0-9]*\.[0-9]+""")
 lg.add("INTEGER",              r"""[+-]?[0-9]+""")
 lg.add("-",                    r"-")
 lg.add("+",                    r"\+")
+lg.add("*STATIC",              r"\*STATIC")
 lg.add("*",                    r"\*")
 lg.add("/",                    r"/")
 lg.add(",",                    r",")
@@ -106,6 +107,7 @@ lg.add("ASC",                  r"""ASC\b""", re.IGNORECASE)
 lg.add("DESC",                 r"""DESC\b""", re.IGNORECASE)
 lg.add("LIMIT",                r"""LIMIT\b""", re.IGNORECASE)
 lg.add("OFFSET",               r"""OFFSET\b""", re.IGNORECASE)
+lg.add("STATIC",               r"STATIC")
 #lg.add("DESCRIBE",             r"""DESCRIBE\b""", re.IGNORECASE)
 #lg.add("ASK",                  r"""ASK\b""", re.IGNORECASE)
 #lg.add("CONSTRUCT",            r"""CONSTRUCT\b""", re.IGNORECASE)
@@ -399,19 +401,39 @@ def f(p):
   return r
 
 @pg.production("group_graph_pattern : { group_graph_pattern_item* }")
-def f(p):
+def _create_simple_block(p, accept_static = True):
   r = SimpleTripleBlock()
   for i in p[1]:
     if   isinstance(i, Block) \
       or isinstance(i, Bind) \
       or isinstance(i, Filter):       r.append(i)
-    elif isinstance(i, list):         r.extend(i)
+    elif isinstance(i, list):
+      in_static = False
+      for j in i:
+        if in_static:
+          static_triples.append(j)
+          if j.end_sequence:
+            _finalize_static(r, static_triples)
+            in_static = False
+        else:
+          if accept_static and isinstance(j, Triple) and (j[1].modifier == "*STATIC"):
+            j[1].modifier = "*"
+            static_triples = [j]
+            in_static = True
+          else: r.append(j)
+      if in_static: _finalize_static(r, static_triples)
+          
     elif isinstance(i, StaticValues): r.static_valuess.append(i)
     else: raise ValueError
   if (len(r) == 1) and isinstance(r[0], Block): return r[0]
   return r
 pg.list("group_graph_pattern+", "UNION")
 
+def _finalize_static(r, static_triples):
+  s = _create_simple_block(["{", [static_triples], "}"], accept_static = False)
+  static_block = StaticBlock(s)
+  r.static_valuess.append(static_block)
+  
 #@pg.production("group_graph_pattern_item_triple_content : triples_same_subject_path+")
 #def f(p): return p[0]
 #@pg.production("group_graph_pattern_item_triple_content : FILTER constraint")
@@ -451,6 +473,9 @@ def f(p): return Bind(p[2], p[4])
 
 @pg.production("group_graph_pattern_item : inline_data")
 def f(p): return p[0]
+
+@pg.production("group_graph_pattern_item : STATIC group_graph_pattern")
+def f(p): return StaticBlock(p[1])
 
 pg.list("group_graph_pattern_item*", ".?")
 pg.optional(".?")
@@ -539,16 +564,14 @@ pg.list("property_list_not_empty_part+", ";")
 def f(p): return p
 #pg.optional("property_list_not_empty?")
 
-def _expand_blank(triples, x):
-  translator = CURRENT_TRANSLATOR.get()
-  v = rply.Token("VAR", translator.new_var())
-  assert x[0].name == "["
-  x = x[1]
-  _expand_triple(triples, v, x)
-  return v
-  
 def _expand_triple(triples, s, ps_os):
   for p, o in ps_os:
+    #if p.modifier == "*STATIC":
+    #  triples0 = triples
+    #  triples  = []
+    #  b = SimpleTripleBlock()
+    #  static_group = StaticGroup(b)
+    
     if   isinstance(p, rply.Token):
       if (p.name == "VAR") or (p.name == "PARAM"):
         p.inversed = False
@@ -582,15 +605,24 @@ def _expand_triple(triples, s, ps_os):
           #_add_triple(triples, s2, p2, o2)
           _expand_triple(triples, s2, [(p2, o2)])
           s2 = o2
-          
+        triples[-1].end_sequence = True
+        
     else: raise ValueError(p)
- 
+    
 def _add_triple(triples, s, pr, o):
   if isinstance(s, list): s = _expand_blank(triples, s)
   if isinstance(o, list): o = _expand_blank(triples, o)
   if getattr(pr, "inversed", False): triples.append(Triple([o, pr, s]))
   else:                              triples.append(Triple([s, pr, o]))
- 
+  
+def _expand_blank(triples, x):
+  translator = CURRENT_TRANSLATOR.get()
+  v = rply.Token("VAR", translator.new_var())
+  assert x[0].name == "["
+  x = x[1]
+  _expand_triple(triples, v, x)
+  return v
+  
   
 @pg.production("triples_same_subject_path : var_or_term property_list_path_not_empty")
 @pg.production("triples_same_subject_path : triples_node_path property_list_path_not_empty?")
@@ -648,6 +680,7 @@ def f(p):
   return p[0]
 
 @pg.production("path_mod : ?")
+@pg.production("path_mod : *STATIC")
 @pg.production("path_mod : *")
 @pg.production("path_mod : +")
 def f(p): return p[0]
@@ -1093,6 +1126,7 @@ class SimpleTripleBlock(TripleBlock):
     TripleBlock.__init__(self, l or [])
 
     self.static_valuess = []
+    #self.static_blocks  = []
     
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     for triple in self:
@@ -1119,6 +1153,7 @@ class SubQueryBlock(Block):
 
 
 class Triple(tuple):
+  end_sequence = False
   def __init__(self, l):
     self.optional     = False
     self.likelihood_p = None
@@ -1194,7 +1229,7 @@ class UnionPropPath(PropPath):
 def _get_vars(x):
   for i in x:
     if   isinstance(i, rply.Token) and i.name == "VAR": yield i.value
-    elif isinstance(i, list): yield from _get_vars(i)
+    elif isinstance(i, (list, tuple)): yield from _get_vars(i)
   
 class Bind(object):
   def __init__(self, expression, var):
@@ -1229,5 +1264,23 @@ class StaticValues(object):
   def __init__(self):
     self.vars    = []
     self.valuess = []
-  #def __repr__(self): return "VALUES (%s) { %s }" % (" ".join(repr(var) for var in self.vars), " ".join("( %s )" % " ".join(repr(value) for value in values) for values in self.valuess))
   def __repr__(self): return "VALUES (%s) %s" % (" ".join(repr(var) for var in self.vars), self.valuess)
+  
+  
+class StaticBlock(StaticValues):
+  def __init__(self, blocks):
+    StaticValues.__init__(self)
+    self.inner_blocks = blocks
+    self.all_vars     = set(_get_vars(blocks))
+    
+    self.old_translator = CURRENT_TRANSLATOR.get()
+    self.translator = self.old_translator.make_translator()
+    CURRENT_TRANSLATOR.set(self.translator)
+    
+    self.translator.main_query = self.translator.new_sql_query("main", self.inner_blocks, None, True)
+    
+    self.translator.main_query.type = "select"
+    CURRENT_TRANSLATOR.set(self.old_translator)
+    del self.old_translator
+    
+  def __repr__(self): return """<StaticGraph vars=%s>""" % ",".join(repr(var) for var in self.all_vars)

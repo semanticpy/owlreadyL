@@ -66,13 +66,21 @@ class Translator(object):
     if not getattr(world.graph, "_has_sparql_func", False):
       register_python_function(world)
       world.graph._has_sparql_func = True
-      
+
+  def make_translator(self):
+    translator = Translator(self.world, self.error_on_undefined_entities)
+    translator.prefixes = self.prefixes.copy()
+    translator.base_iri = self.base_iri
+    return translator
+  
   def parse(self, sparql):
     while self.escape_mark in sparql:
       self.escape_mark += "ç"
     CURRENT_TRANSLATOR.set(self)
     self.main_query = PARSER.parse(LEXER.lex(sparql))
+    return self.finalize()
     
+  def finalize(self):
     sql = ""
     if self.preliminary_selects:
       sql += "WITH "
@@ -254,7 +262,6 @@ class Translator(object):
       
     elif isinstance(block, UnionBlock):
       for alternative in block:
-        #print("   ", s.parent.vars)
         query = self.new_sql_query(None, alternative, selects, distinct, None, False, extra_binds, nested_inside = s, copy_vars = False)
         s.append(query, "UNION")
       s.finalize_compounds()
@@ -313,7 +320,7 @@ class PreparedQuery(object):
     self.column_types        = column_types
     self.nb_parameter        = nb_parameter
     self.parameter_datatypes = parameter_datatypes
-  
+    
   def execute(self, params = ()):
     self.world._nb_sparql_call += 1
     sql_params = [self.world._to_rdf(param)[0] for param in params]
@@ -336,6 +343,25 @@ class PreparedSelectQuery(PreparedQuery):
             else:            l2.append(self.world._to_python(l[i], None) or l[i])
           else:
             l2.append(self.world._to_python(l[i], l[i + 1]))
+          i += 2
+      yield l2
+      
+  def _execute_sql(self, params = ()):
+    for l in PreparedQuery.execute(self, params):
+      l2 = []
+      i = 0
+      while i < len(l):
+        if self.column_types[i] == "objs":
+          l2.append(l[i])
+          i += 1
+        else:
+          if l[i + 1] is None:
+            if l[i] is None: v = None
+            else:            v = self.world._to_python(l[i], None) or l[i]
+          else:
+            v = self.world._to_python(l[i], l[i + 1])
+          if isinstance(v, str): l2.append("'%s'" % v.replace("'", "\\'"))
+          else:                  l2.append(v)
           i += 2
       yield l2
       
@@ -458,6 +484,24 @@ class PreparedSelectQuery(PreparedQuery):
 """
     return xml
   
+  def execute_as_sql(self, params = ()):
+    for l in PreparedQuery.execute(self, params):
+      l2 = []
+      i = 0
+      while i < len(l):
+        if self.column_types[i] == "objs":
+          if l[i] is None: l2.append(None)
+          else: l2.append(self.world._to_python(l[i], None) or l[i])
+          i += 1
+        else:
+          if l[i + 1] is None:
+            if l[i] is None: l2.append(None)
+            else:            l2.append(self.world._to_python(l[i], None) or l[i])
+          else:
+            l2.append(self.world._to_python(l[i], l[i + 1]))
+          i += 2
+      yield l2
+      
   
 class PreparedModifyQuery(PreparedQuery):
   def __init__(self, world, sql, column_names, column_types, nb_parameter, parameter_datatypes, ontology, deletes, inserts, select_param_indexes):
@@ -579,7 +623,6 @@ class SQLQuery(FuncSupport):
     self.extra_sql                = ""
     self.select_simple_union      = False
     self.optional                 = False
-    #self.static_valuess           = []
     
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
   
@@ -836,21 +879,46 @@ class SQLQuery(FuncSupport):
       
       
     if isinstance(triples, SimpleTripleBlock):
-      for static_values in triples.static_valuess:
-        if len(static_values.vars) == 1:
-          var = self.parse_var(static_values.vars[0])
+      for static in triples.static_valuess:
+        if isinstance(static, StaticBlock):
+          if self.raw_selects == "*":
+            static.vars = sorted(static.all_vars)
+          else:
+            used_vars = set(self.vars)
+            used_vars.update(var.name for var in self.vars_needed_for_select)
+            static.vars = sorted(var for var in static.all_vars if (var in used_vars))
+          var_2_columns = defaultdict(list)
+          for column in static.translator.main_query.columns:
+              var_2_columns[column.var].append(column)
+
+          static.translator.main_query.raw_selects = static.vars
+          static.translator.main_query.columns = []
+          static.translator.main_query.finalize_columns()
+          
+          static.translator.solution_modifier = [None, None, None, None, None]
+          q = static.translator.finalize()
+          r = list(q._execute_sql())
+          if len(static.vars) == 1: static.valuess = [x[0] for x in r]
+          else:                     static.valuess = r
+          
+        if len(static.vars) == 1:
+          var = self.parse_var(static.vars[0])
           sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-          conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static_values.valuess)))
+          conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static.valuess)))
+          
         else:
-          prelim = SQLStaticValuesPreliminaryQuery("prelim%s" % (len(self.translator.preliminary_selects) + 1), static_values)
+          prelim = SQLStaticValuesPreliminaryQuery("static%s" % (len(self.translator.preliminary_selects) + 1), static)
           self.translator.preliminary_selects.append(prelim)
           table = Table(self, prelim.name, prelim.name)
-          for i, var in enumerate(static_values.vars):
+          for i, var in enumerate(static.vars):
             var = self.parse_var(var)
             sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-            conditions.append("%s=%s.col%s" % (sql, prelim.name, i + 1))
-            
-          
+            if sql is None:
+              var.bindings.append("%s.col%s" % (prelim.name, i + 1))
+            else:
+              conditions.append("%s=%s.col%s" % (sql, prelim.name, i + 1))
+              
+              
   def get_fix_levels(self, vars0, exclude_triple = None):
     vars0_names = { var.name for var in vars0 }
     fix_levels  = defaultdict(float)
@@ -1013,7 +1081,10 @@ class SQLQuery(FuncSupport):
           else:
             return binding, "datas", x.fixed_datatype, "datas"
         type = "datas" if x.type == "datas" else "quads"
-        return binding, type, "%sd" % binding[:-1], type
+        if binding.startswith("static"): # no 'd' for static yet
+          return binding, type, 0, type
+        else:
+          return binding, type, "%sd" % binding[:-1], type
     elif x.name == "IRI":   return x.storid, "objs", None, None
     elif x.name == "PARAM": return "?%s" % x.number, "objs", None, None # XXX data parameter
     else:
