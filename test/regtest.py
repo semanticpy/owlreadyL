@@ -8708,6 +8708,37 @@ WHERE {
       
     assert comment[C, label, "l1"] == ['Annotation sur une relation']
 
+  def test_137(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class p(Thing >> Thing): pass
+      
+      c1 = C()
+      c2 = C()
+      c1.p = [c2]
+      
+      nb = world.sparql("""
+INSERT {
+  [
+    rdf:type owl:Axiom ;
+    owl:annotatedSource ?a ; 
+    owl:annotatedProperty onto:p ; 
+    owl:annotatedTarget ?b ; 
+  ] rdfs:comment "Annotation sur une relation" .
+}
+WHERE {
+  ?a onto:p ?b .
+}
+""")
+      assert nb == 1
+      
+    assert comment[c1, p, c2] == ['Annotation sur une relation']
+
+
+
+      
     
 # Add test for Pellet
 
