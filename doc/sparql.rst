@@ -321,7 +321,7 @@ The following attributes are availble on the PreparedQuery object:
 Open a SPARQL endpoint
 ----------------------
 
-The owlready2.sparql.endpoint module can be used to open a SPARQL endpoint. It requires Flask. It contains the EndPoint
+The owlready2.sparql.endpoint module can be used to open a SPARQL endpoint. It requires Flask or WSGI. It contains the EndPoint
 class, that takes a World and can be used as a Flask page function.
 
 The following script creates a SPARQL endpoint with Flask:
