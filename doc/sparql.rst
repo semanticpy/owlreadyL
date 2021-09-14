@@ -259,15 +259,22 @@ multiple times in the query.
 Non-standard additions to SPARQL
 --------------------------------
 
-The SIMPLEREPLACE(a, b) function is a version of REPLACE() that does not support Regex. It works like Python or SQLite3 replace,
+The following functions are supported by Owlready, but not standard:
+
+ * The SIMPLEREPLACE(a, b) function is a version of REPLACE() that does not support Regex. It works like Python or SQLite3 replace,
 and has better performances.
 
-The NEWINSTANCEIRI() function create a new IRI for an instance of the class given as argument. This IRI is similar to those
-created by default by Owlready. Note that the function does not create any RDF triple, so you need to create triples for
-asserting the new individual parents (including OWL NamedIndividual and the desired class(es)).
+ * The NEWINSTANCEIRI() function create a new IRI for an instance of the class given as argument. This IRI is similar to those
+   created by default by Owlready. Note that the function does not create any RDF triple, so you need to create triples for
+   asserting the new individual parents (including OWL NamedIndividual and the desired class(es)).
 
-The LOADED(iri) function returns True if the given IRI is currently loaded in Python, and False otherwise.
+ * The LOADED(iri) function returns True if the given IRI is currently loaded in Python, and False otherwise.
 
+ * The STORID(iri) function returns the integer Store-ID used by Owlready in the quadstore for representing the entity.
+
+
+INSERT and DELETE queries can have a GROUP BY, HAVING and/or ORDER BY clauses. This is normally not allowed by the SPARQL
+specification.
 
 
 Prepare SPARQL queries
