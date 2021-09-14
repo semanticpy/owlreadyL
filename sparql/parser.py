@@ -59,7 +59,7 @@ lg.add("?",                    r"""\?""")
 lg.add(".",                    r"""\.""")
 lg.add("PREFIXED_NAME",        r"""[\w\.\-]*:([\w\.\-:]|%[0-9a-fA-F]{2}|\\[_~\.\-!$&"'()*+,;=/?#@%])*([\w\-:]|%[0-9a-fA-F]{2}|\\[_~\.\-!$&"'()*+,;=/?#@%])""")
 lg.add("PNAME_NS",             r"""[\w\.\-]*:""")
-lg.add("FUNC",                 r"""(?:STRLANG)|(?:STRDT)|(?:STRLEN)|(?:STRSTARTS)|(?:STRENDS)|(?:STRBEFORE)|(?:STRAFTER)|(?:LANGMATCHES)|(?:LANG)|(?:DATATYPE)|(?:BOUND)|(?:IRI)|(?:URI)|(?:BNODE)|(?:RAND)|(?:ABS)|(?:CEIL)|(?:FLOOR)|(?:ROUND)|(?:CONCAT)|(?:STR)|(?:UCASE)|(?:LCASE)|(?:ENCODE_FOR_URI)|(?:CONTAINS)|(?:YEAR)|(?:MONTH)|(?:DAY)|(?:HOURS)|(?:MINUTES)|(?:SECONDS)|(?:TIMEZONE)|(?:TZ)|(?:NOW)|(?:UUID)|(?:STRUUID)|(?:MD5)|(?:SHA1)|(?:SHA256)|(?:SHA384)|(?:SHA512)|(?:COALESCE)|(?:IF)|(?:sameTerm)|(?:isIRI)|(?:isURI)|(?:isBLANK)|(?:isLITERAL)|(?:isNUMERIC)|(?:REGEX)|(?:SUBSTR)|(?:REPLACE)|(?:SIMPLEREPLACE)|(?:NEWINSTANCEIRI)|(?:LOADED)\b""", re.IGNORECASE)
+lg.add("FUNC",                 r"""(?:STRLANG)|(?:STRDT)|(?:STRLEN)|(?:STRSTARTS)|(?:STRENDS)|(?:STRBEFORE)|(?:STRAFTER)|(?:LANGMATCHES)|(?:LANG)|(?:DATATYPE)|(?:BOUND)|(?:IRI)|(?:URI)|(?:BNODE)|(?:RAND)|(?:ABS)|(?:CEIL)|(?:FLOOR)|(?:ROUND)|(?:CONCAT)|(?:STR)|(?:UCASE)|(?:LCASE)|(?:ENCODE_FOR_URI)|(?:CONTAINS)|(?:YEAR)|(?:MONTH)|(?:DAY)|(?:HOURS)|(?:MINUTES)|(?:SECONDS)|(?:TIMEZONE)|(?:TZ)|(?:NOW)|(?:UUID)|(?:STRUUID)|(?:MD5)|(?:SHA1)|(?:SHA256)|(?:SHA384)|(?:SHA512)|(?:COALESCE)|(?:IF)|(?:sameTerm)|(?:isIRI)|(?:isURI)|(?:isBLANK)|(?:isLITERAL)|(?:isNUMERIC)|(?:REGEX)|(?:SUBSTR)|(?:REPLACE)|(?:SIMPLEREPLACE)|(?:NEWINSTANCEIRI)|(?:LOADED)|(?:STORID)\b""", re.IGNORECASE)
 #lg.add("FUNC",                 r"""(?:STRLANG)|(?:STRDT)|(?:STRLEN)|(?:STRSTARTS)|(?:STRENDS)|(?:STRBEFORE)|(?:STRAFTER)|(?:LANGMATCHES)|(?:LANG)|(?:DATATYPE)|(?:BOUND)|(?:IRI)|(?:URI)|(?:BNODE)|(?:RAND)|(?:ABS)|(?:CEIL)|(?:FLOOR)|(?:ROUND)|(?:CONCAT)|(?:STR)|(?:UCASE)|(?:LCASE)|(?:ENCODE_FOR_URI)|(?:CONTAINS)|(?:YEAR)|(?:MONTH)|(?:DAY)|(?:HOURS)|(?:MINUTES)|(?:SECONDS)|(?:TIMEZONE)|(?:TZ)|(?:NOW)|(?:UUID)|(?:STRUUID)|(?:MD5)|(?:SHA1)|(?:SHA256)|(?:SHA384)|(?:SHA512)|(?:COALESCE)|(?:IF)|(?:sameTerm)|(?:isIRI)|(?:isURI)|(?:isBLANK)|(?:isLITERAL)|(?:isNUMERIC)|(?:REGEX)|(?:SUBSTR)|(?:REPLACE)|(?:SIMPLEREPLACE)|(?:NEWINSTANCEIRI)|(?:XSD:DOUBLE)|(?:XSD:INTEGER)\b""", re.IGNORECASE)
 lg.add("MINUS",                r"""MINUS\b""", re.IGNORECASE)
 lg.add("AGGREGATE_FUNC",       r"""(?:COUNT)|(?:SUM)|(?:MIN)|(?:MAX)|(?:AVG)|(?:SAMPLE)|(?:GROUP_CONCAT)\b""", re.IGNORECASE)
@@ -320,7 +320,7 @@ def _rename_params(d, x):
   elif isinstance(x, rply.Token) and (x.name == "PARAM"):
     x.number = d[x.number]
     
-def _create_modify_query(ontology_iri, deletes, inserts, using, group_graph_pattern):
+def _create_modify_query(ontology_iri, deletes, inserts, using, group_graph_pattern, solution_modifier):
   translator = CURRENT_TRANSLATOR.get()
   selects = []
   vars    = set()
@@ -336,7 +336,7 @@ def _create_modify_query(ontology_iri, deletes, inserts, using, group_graph_patt
   old_2_new_param = { n : i+1 for i, n in enumerate(select_param_indexes) }
   _rename_params(old_2_new_param, group_graph_pattern)
   
-  main_query = translator.new_sql_query("main", group_graph_pattern, selects, None, [None, None, None, None, None])
+  main_query = translator.new_sql_query("main", group_graph_pattern, selects, None, solution_modifier)
   main_query.type                 = "modify"
   main_query.ontology_iri         = ontology_iri
   main_query.inserts              = inserts
@@ -344,12 +344,12 @@ def _create_modify_query(ontology_iri, deletes, inserts, using, group_graph_patt
   main_query.select_param_indexes = select_param_indexes
   return main_query
 
-@pg.production("modify : with_iri? insert_clause using_clause*  WHERE group_graph_pattern")
-def f(p): return _create_modify_query(p[0], [], p[1], p[2], p[4])
-@pg.production("modify : with_iri? delete_clause using_clause*  WHERE group_graph_pattern")
-def f(p): return _create_modify_query(p[0], p[1], [], p[2], p[4])
-@pg.production("modify : with_iri? delete_clause insert_clause using_clause*  WHERE group_graph_pattern")
-def f(p): return _create_modify_query(p[0], p[1], p[2], p[3], p[5])
+@pg.production("modify : with_iri? insert_clause using_clause*  WHERE group_graph_pattern solution_modifier")
+def f(p): return _create_modify_query(p[0], [], p[1], p[2], p[4], p[5])
+@pg.production("modify : with_iri? delete_clause using_clause*  WHERE group_graph_pattern solution_modifier")
+def f(p): return _create_modify_query(p[0], p[1], [], p[2], p[4], p[5])
+@pg.production("modify : with_iri? delete_clause insert_clause using_clause*  WHERE group_graph_pattern solution_modifier")
+def f(p): return _create_modify_query(p[0], p[1], p[2], p[3], p[5], p[6])
 
 #@pg.production("delete_clause : DELETE quad_pattern")
 #@pg.production("insert_clause : INSERT quad_pattern")

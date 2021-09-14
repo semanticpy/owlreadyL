@@ -17,7 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-import sys, os, re
+import sys, os, re, math
 from owlready2 import *
 
 """
@@ -518,7 +518,7 @@ class PreparedModifyQuery(PreparedQuery):
     nb_match = 0
     if self.sql: resultss = PreparedQuery.execute(self, [params[i] for i in self.select_param_indexes])
     else:        resultss = [[]]
-    for results in list(resultss):
+    for results in set(resultss):
       nb_match += 1
       
       for delete in self.deletes:
@@ -542,7 +542,6 @@ class PreparedModifyQuery(PreparedQuery):
           else:                         triple.append(value)
         #print("ADD", insert, triple)
         self.world._add_triple_with_update(self.ontology, *triple)
-        
     return nb_match
   
     
@@ -789,7 +788,7 @@ class SQLQuery(FuncSupport):
         
         prelim_triples = self.extract_triples(self.triples, vars, triple)
         
-        remnant_triples.remove(triple)
+        if triple in remnant_triples: remnant_triples.remove(triple)
         remnant_triples.difference_update(prelim_triples)
         prelim = self.translator.get_recursive_preliminary_select(triple, fixed, fixed_var, prelim_triples)
         triple.local_table_type = prelim.name
@@ -905,7 +904,9 @@ class SQLQuery(FuncSupport):
         if len(static.vars) == 1:
           var = self.parse_var(static.vars[0])
           sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-          conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static.valuess)))
+          #conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static.valuess)))
+          conditions.append("LIKELIHOOD(%s IN (%s), %s)" % (sql, ",".join(str(value) for value in static.valuess),
+                                                            1.0 - math.exp(-len(static.valuess) / 100.0))) # Favor statics with few elements
           
         else:
           prelim = SQLStaticValuesPreliminaryQuery("static%s" % (len(self.translator.preliminary_selects) + 1), static)

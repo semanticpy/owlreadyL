@@ -80,6 +80,7 @@ _FUNC_2_DATATYPE = {
   #"SIMPLEREPLACE" :  # ok
   "NEWINSTANCEIRI" : None, # ok
   "LOADED" : _universal_datatype_2_abbrev[bool], # ok
+  "STORID" : _universal_datatype_2_abbrev[int], # ok
 
   "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#INTEGER" : _universal_datatype_2_abbrev[int], # ok
   "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#DOUBLE" : _universal_datatype_2_abbrev[float], # ok
@@ -340,6 +341,8 @@ class FuncSupport(object):
             return self.parse_expression(expression[2][0])
           elif func == "SAMPLE":
             return "MIN(%s)" % self.parse_expression(expression[3])
+          elif func == "STORID":
+            return self.parse_expression(expression[2][0])
         elif isinstance(expression[0], rply.Token) and expression[0].name == "ASC":
           return "%s ASC" % self.parse_expression(expression[1][1])
         elif isinstance(expression[0], rply.Token) and expression[0].name == "DESC":

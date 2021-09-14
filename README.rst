@@ -604,6 +604,7 @@ version 2 - 0.35
 
 * Support for VALUES in SPARQL
 * Add STATIC optimization keyword extension to SPARQL
+* Add the STORID(iri) SPARQL function
 * Bugfixes:
   - Fix SPARQL INSERT query with data parameters in the INSERT clause
 

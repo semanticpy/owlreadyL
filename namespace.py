@@ -589,7 +589,7 @@ class World(_GraphManager):
       ontology = ontology0
       if not ontology:
         raise ValueError("Cannot add triples outside a 'with' block. Please start a 'with' block to indicate in which ontology the new triple is added, or include a 'WITH <onto_IRI>' statement in SPARQL.")
-      
+
     sub = None
     if   (s > 0) and (s in self.world._entities): sub = self._entities[s]
     elif (s < 0) and (s in ontology._bnodes):     sub = ontology._bnodes[s]
@@ -600,7 +600,7 @@ class World(_GraphManager):
         except: pass
         
       elif d is None:
-        if o > 0: obj = self._load_by_storid(o)
+        if o > 0: obj = self._get_by_storid(o)
         else:     obj = self._parse_bnode(o)
         
         if not obj is None:
