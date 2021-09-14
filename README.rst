@@ -602,8 +602,10 @@ version 2 - 0.34
 version 2 - 0.35
 ****************
 
+* SPARQL optimizations
 * Support for VALUES in SPARQL
 * Add STATIC optimization keyword extension to SPARQL
+* Accept GROUP BY, HAVING, LIMIT in INSERT and DELETE query
 * Add the STORID(iri) SPARQL function
 * Bugfixes:
   - Fix SPARQL INSERT query with data parameters in the INSERT clause
