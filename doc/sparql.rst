@@ -273,8 +273,8 @@ and has better performances.
  * The STORID(iri) function returns the integer Store-ID used by Owlready in the quadstore for representing the entity.
 
 
-INSERT and DELETE queries can have a GROUP BY, HAVING and/or ORDER BY clauses. This is normally not allowed by the SPARQL
-specification.
+In Owlready, INSERT and DELETE queries can have a GROUP BY, HAVING and/or ORDER BY clauses.
+This is normally not allowed by the SPARQL specification.
 
 
 Prepare SPARQL queries
