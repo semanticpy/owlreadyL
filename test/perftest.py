@@ -14,8 +14,9 @@ list(omop_cdm_world.sparql("""SELECT  ?x  { ?x rdfs:label "xxx" . }"""))
 list(go_world      .sparql("""SELECT  ?x  { ?x rdfs:label "xxx" . }"""))
 
 _ALREADYS = set()
-def do(world, sparql):
+def do(world, sparql, sql = ""):
   q = world.prepare_sparql(sparql)
+  if sql: q.sql = sql
   if ANALYSE and not sparql in _ALREADYS:
     print()
     print(q.sql)
@@ -29,6 +30,12 @@ def do(world, sparql):
 def bench_go_1():
   q, l = do(go_world, """
 SELECT ?l  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
+  assert len(l) == 4092
+
+LLL = list(go_world["http://purl.obolibrary.org/obo/GO_0005575"].descendants())
+def bench_go_1_static():
+  q, l = do(go_world, """
+SELECT ?l  { ?x rdfs:subClassOf*STATIC <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
   assert len(l) == 4092
 
 def bench_go_2():
@@ -97,12 +104,30 @@ PREFIX atc: <http://PYM/ATC/>
 PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
 SELECT ?gender ?age (COUNT(DISTINCT ?patient) as ?num_patients) {
-?patient a omop_cdm:Person .
-?patient omop_cdm:has_condition_era ?condition .
-?condition omop_cdm:has_concept/a/rdfs:subClassOf*/rdfs:label "Fracture of bone of hip region" .
-?patient omop_cdm:has_gender/a/rdfs:label ?gender .
-?patient omop_cdm:year_of_birth ?birth_year .
-?condition omop_cdm:start_date ?start .
+  ?patient a omop_cdm:Person .
+  ?patient omop_cdm:has_condition_era ?condition .
+  ?condition omop_cdm:has_concept/a/rdfs:subClassOf*/rdfs:label "Fracture of bone of hip region" .
+  ?patient omop_cdm:has_gender/a/rdfs:label ?gender .
+  ?patient omop_cdm:year_of_birth ?birth_year .
+  ?condition omop_cdm:start_date ?start .
+BIND(YEAR(?start) - ?birth_year AS ?age) . }
+GROUP BY ?gender ?age ORDER BY ?gender ?age
+""")
+  assert len(l) == 70
+
+def bench_omop_cdm_1_static():
+  q, l = do(omop_cdm_world, """
+PREFIX umls: <http://PYM/>
+PREFIX atc: <http://PYM/ATC/>
+PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+
+SELECT ?gender ?age (COUNT(DISTINCT ?patient) as ?num_patients) {
+  ?patient a omop_cdm:Person .
+  ?patient omop_cdm:has_condition_era ?condition .
+  ?condition omop_cdm:has_concept/a/rdfs:subClassOf*STATIC/rdfs:label "Fracture of bone of hip region" .
+  ?patient omop_cdm:has_gender/a/rdfs:label ?gender .
+  ?patient omop_cdm:year_of_birth ?birth_year .
+  ?condition omop_cdm:start_date ?start .
 BIND(YEAR(?start) - ?birth_year AS ?age) . }
 GROUP BY ?gender ?age ORDER BY ?gender ?age
 """)
@@ -115,11 +140,11 @@ PREFIX atc: <http://PYM/ATC/>
 PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
 SELECT ?gender ?age (COUNT(DISTINCT ?patient) as ?num_patients) {
-?patient omop_cdm:has_condition_era ?condition .
-?condition omop_cdm:has_concept/a/rdfs:subClassOf*/rdfs:label "Fracture of bone of hip region" .
-?patient omop_cdm:has_gender/a/rdfs:label ?gender .
-?patient omop_cdm:year_of_birth ?birth_year .
-?condition omop_cdm:start_date ?start .
+  ?patient omop_cdm:has_condition_era ?condition .
+  ?condition omop_cdm:has_concept/a/rdfs:subClassOf*/rdfs:label "Fracture of bone of hip region" .
+  ?patient omop_cdm:has_gender/a/rdfs:label ?gender .
+  ?patient omop_cdm:year_of_birth ?birth_year .
+  ?condition omop_cdm:start_date ?start .
 BIND(YEAR(?start) - ?birth_year AS ?age) . }
 GROUP BY ?gender ?age ORDER BY ?gender ?age
 """)
@@ -133,9 +158,22 @@ PREFIX atc: <http://PYM/ATC/>
 PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
 SELECT ?patient ?drug_era { # SPARQL query for STOPP B1
-?patient omop_cdm:has_drug_era ?drug_era .
-?drug_era omop_cdm:has_concept/a/rdfs:subClassOf* atc:C01AA05 .
-?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf* snomed:84114007.
+  ?patient omop_cdm:has_drug_era ?drug_era .
+  ?drug_era omop_cdm:has_concept/a/rdfs:subClassOf* atc:C01AA05 .
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf* snomed:84114007.
+}""")
+  assert len(l) == 726
+
+def bench_omop_cdm_3_static():
+  q, l = do(omop_cdm_world, """
+PREFIX umls: <http://PYM/>
+PREFIX atc: <http://PYM/ATC/>
+PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+
+SELECT ?patient ?drug_era { # SPARQL query for STOPP B1
+  ?patient omop_cdm:has_drug_era ?drug_era .
+  ?drug_era omop_cdm:has_concept/a/rdfs:subClassOf*STATIC atc:C01AA05 .
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*STATIC snomed:84114007.
 }""")
   assert len(l) == 726
 
@@ -151,7 +189,25 @@ SELECT ?patient {
 
   ?patient omop_cdm:has_drug_era ?drug_era1 .
   ?drug_era1 omop_cdm:has_concept/a ?aspirin .
-  { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
+        { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
+  UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
+  UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
+}""")
+  assert len(l) == 218
+
+def bench_omop_cdm_4_static():
+  q, l = do(omop_cdm_world, """
+PREFIX umls: <http://PYM/>
+PREFIX atc: <http://PYM/ATC/>
+PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+
+SELECT ?patient {
+  #?patient a omop_cdm:Person .
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*STATIC snomed:13200003.
+
+  ?patient omop_cdm:has_drug_era ?drug_era1 .
+  ?drug_era1 omop_cdm:has_concept/a ?aspirin .
+        { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
   UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
   UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
 }""")
@@ -169,7 +225,35 @@ SELECT ?patient { # SPARQL query for STOPP C2
 
   ?patient omop_cdm:has_drug_era ?drug_era1 .
   ?drug_era1 omop_cdm:has_concept/a ?aspirin .
-  { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
+        { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
+  UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
+  UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
+
+  FILTER NOT EXISTS {
+    ?patient omop_cdm:has_drug_era ?drug_era2 .
+    ?drug_era2 omop_cdm:has_concept/a/rdfs:subClassOf* atc:A02BC . # PPI
+    ?drug_era1 omop_cdm:start_date ?start1 .
+    ?drug_era1 omop_cdm:end_date ?end1 .
+    ?drug_era2 omop_cdm:start_date ?start2 .
+    ?drug_era2 omop_cdm:end_date ?end2 .
+    FILTER(?start1 < ?end2 && ?start2 < ?end1) .
+  }
+}""")
+  assert len(l) == 196
+
+def bench_omop_cdm_5_static():
+  q, l = do(omop_cdm_world, """
+PREFIX umls: <http://PYM/>
+PREFIX atc: <http://PYM/ATC/>
+PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+
+SELECT ?patient { # SPARQL query for STOPP C2
+  #?patient a omop_cdm:Person .
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*STATIC snomed:13200003.
+
+  ?patient omop_cdm:has_drug_era ?drug_era1 .
+  ?drug_era1 omop_cdm:has_concept/a ?aspirin .
+        { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
   UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
   UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
 
@@ -193,22 +277,24 @@ PREFIX atc: <http://PYM/ATC/>
 PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
 SELECT DISTINCT ?patient ?birth_year {
-?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*/rdfs:label "Fracture of bone of hip region" .
-?patient omop_cdm:year_of_birth ?birth_year .
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*/rdfs:label "Fracture of bone of hip region" .
+  ?patient omop_cdm:year_of_birth ?birth_year .
 }
 """)
-#   q.sql = """
-# WITH RECURSIVE prelim1_objs(s, o) AS (SELECT prelim1_objs_q1.s, prelim1_objs_q1.s FROM datas prelim1_objs_q1 WHERE prelim1_objs_q1.p=40 AND prelim1_objs_q1.o='Fracture of bone of hip region' 
-# UNION
-# SELECT q.s, rec.o FROM objs q, prelim1_objs rec WHERE q.p=9 AND q.o=rec.s)
-
-# SELECT q1.s, q5.o, q5.d FROM objs q1 , objs q2 , objs q3 , datas q5
-# WHERE q1.p=1330554 AND q2.s=q1.o AND q2.p=1330495 AND q3.s=q2.o AND q3.p=6 AND q3.o IN (SELECT s FROM prelim1_objs) AND q5.s=q1.s AND q5.p=1330602
-# """
-  
-  l = list(q.execute())
   assert len(l) == 127
   
+def bench_omop_cdm_6_static():
+  q, l = do(omop_cdm_world, """
+PREFIX umls: <http://PYM/>
+PREFIX atc: <http://PYM/ATC/>
+PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+
+SELECT DISTINCT ?patient ?birth_year {
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*STATIC/rdfs:label "Fracture of bone of hip region" .
+  ?patient omop_cdm:year_of_birth ?birth_year .
+}
+""")
+  assert len(l) == 127
 
 NB = 3
   

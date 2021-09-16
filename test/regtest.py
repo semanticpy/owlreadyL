@@ -8736,6 +8736,21 @@ WHERE {
       
     assert comment[c1, p, c2] == ['Annotation sur une relation']
 
+  def test_138(self):
+    world, onto = self.prepare1()
+    a11 = onto.A11()
+    q, r = self.sparql(world, """SELECT ?x { { ?x a/rdfs:subClassOf*STATIC onto:A . } UNION { ?x a/rdfs:subClassOf*STATIC onto:B . } }""", compare_with_rdflib = False)
+    assert not "WITH" in q.sql
+    assert set(i[0] for i in r) == { onto.a1, a11, onto.b1, onto.b2, onto.b3 }
+
+  # def test_139(self):
+  #   world, onto = self.prepare1()
+  #   q, r = self.sparql(world, """SELECT ?x { { ?x rdfs:subClassOf*STATIC onto:A . } UNION { ?x rdfs:subClassOf*STATIC onto:B . } }""", compare_with_rdflib = False)
+  #   print(q.sql)
+  #   print(r)
+  #   assert not "WITH" in q.sql
+  #   assert set(i[0] for i in r) == { onto.a1, a11, onto.b1, onto.b2, onto.b3 }
+
 
 
       

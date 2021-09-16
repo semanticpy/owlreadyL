@@ -36,8 +36,6 @@ SERVICE
 
 INSERT DATA, DELETE DATA, DELETE WHERE (use INSERT or DELETE instead)
 
-VALUES
-
 MINUS
 
 """
@@ -517,7 +515,7 @@ class PreparedModifyQuery(PreparedQuery):
   def execute(self, params = ()):
     nb_match = 0
     if self.sql: resultss = PreparedQuery.execute(self, [params[i] for i in self.select_param_indexes])
-    else:        resultss = [[]]
+    else:        resultss = [()]
     for results in set(resultss):
       nb_match += 1
       
@@ -904,9 +902,9 @@ class SQLQuery(FuncSupport):
         if len(static.vars) == 1:
           var = self.parse_var(static.vars[0])
           sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-          #conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static.valuess)))
-          conditions.append("LIKELIHOOD(%s IN (%s), %s)" % (sql, ",".join(str(value) for value in static.valuess),
-                                                            1.0 - math.exp(-len(static.valuess) / 100.0))) # Favor statics with few elements
+          conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static.valuess)))
+          #conditions.append("LIKELIHOOD(%s IN (%s), %s)" % (sql, ",".join(str(value) for value in static.valuess),
+          #                                                  0.35 + 0.1 * (1.0 - math.exp(-len(static.valuess) / 100.0)))) # Favor statics with few elements
           
         else:
           prelim = SQLStaticValuesPreliminaryQuery("static%s" % (len(self.translator.preliminary_selects) + 1), static)

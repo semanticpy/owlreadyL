@@ -27,7 +27,7 @@ PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 SELECT ?gender ?age (COUNT(DISTINCT ?patient) as ?num_patients) {
 #?patient a omop_cdm:Person .
 ?patient omop_cdm:has_condition_era ?condition .
-?condition omop_cdm:has_concept/a/rdfs:subClassOf*/rdfs:label "Fracture of bone of hip region" .
+?condition omop_cdm:has_concept/a/rdfs:subClassOf*STATIC/rdfs:label "Fracture of bone of hip region" .
 ?patient omop_cdm:has_gender/a/rdfs:label ?gender .
 ?patient omop_cdm:year_of_birth ?birth_year .
 ?condition omop_cdm:start_date ?start .
@@ -52,20 +52,20 @@ print()
 print(q.sql)
 
 
-q = default_world.prepare_sparql("""
-PREFIX umls: <http://PYM/>
-PREFIX atc: <http://PYM/ATC/>
-PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+# q = default_world.prepare_sparql("""
+# PREFIX umls: <http://PYM/>
+# PREFIX atc: <http://PYM/ATC/>
+# PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
-SELECT ?x {
-?x rdfs:subClassOf*/rdfs:label "Fracture of bone" .
-}
-""")
+# SELECT ?x {
+# ?x rdfs:subClassOf*/rdfs:label "Fracture of bone" .
+# }
+# """)
 
-l = list(q.execute())
-print(len(l))
-for i in range(len(l)):
-  pass
-  #print(l[i][0].storid, end = ", ")
-  #if i % 9 == 0: print()
+# l = list(q.execute())
+# print(len(l))
+# for i in range(len(l)):
+#   pass
+#   #print(l[i][0].storid, end = ", ")
+#   #if i % 9 == 0: print()
 
