@@ -609,6 +609,7 @@ version 2 - 0.35
 * Add the STORID(iri) SPARQL function
 * Bugfixes:
   - Fix SPARQL INSERT query with data parameters in the INSERT clause
+  - Fix RDF list parsing when the list includes the integer number 5
 
 
 Links

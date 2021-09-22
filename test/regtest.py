@@ -2988,6 +2988,23 @@ class Test(BaseTest, unittest.TestCase):
     
     assert o.p.range[0] == OneOf([1, "abc", locstr("texte", "fr")])
     
+  def test_one_of_3(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test.owl")
+    
+    with o:
+      class p(DataProperty): pass
+      p.range = [OneOf([1, 2, 3, 4, 5, 6, 7])]
+      
+    filename = self.new_tmp_file()
+    o.save(filename)
+    
+    w = self.new_world()
+    o = w.get_ontology(filename).load()
+    
+    assert set(o.p.range[0].instances) == { 1, 2, 3, 4, 5, 6, 7 }
+    assert set(w._parse_list_as_rdf(-2)) == {(7, 43), (2, 43), (3, 43), (5, 43), (6, 43), (1, 43), (4, 43)}
+
     
   def test_method_1(self):
     n = self.new_ontology()

@@ -499,6 +499,7 @@ class ThingClass(EntityClass):
       if Class is Thing: return world.individuals()
     else:
       world = Class.namespace.world
+      
     return world.prepare_sparql("""SELECT DISTINCT ?i { ?i a/(rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* ?? . }""").execute_flat((Class,))
   
   def direct_instances(Class, world = None):
