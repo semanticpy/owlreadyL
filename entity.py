@@ -500,7 +500,20 @@ class ThingClass(EntityClass):
     else:
       world = Class.namespace.world
       
-    return world.prepare_sparql("""SELECT DISTINCT ?i { ?i a/(rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* ?? . }""").execute_flat((Class,))
+    q = world.prepare_sparql("""SELECT DISTINCT ?i { ?i a/(rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* ?? . }""")
+    if int(sqlite3.sqlite_version.split(".")[1]) < 36: # Some SQLite3 versions have a bug on recursive queries with multiple unions
+      q.sql = """
+WITH RECURSIVE prelim1_objs(s) AS (VALUES (?1) 
+UNION 
+SELECT q.s FROM objs q, prelim1_objs rec WHERE q.p IN (9,33) AND q.o=rec.s),
+
+prelim2_objs(s) AS (VALUES (?1) 
+UNION
+SELECT q.o FROM objs q, prelim1_objs rec WHERE q.p=33 AND q.s=rec.s)
+
+SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) OR q1.o IN (SELECT s FROM prelim2_objs) ) ;
+"""
+    return q.execute_flat((Class,))
   
   def direct_instances(Class, world = None):
     if Class.namespace.world is owl_world:

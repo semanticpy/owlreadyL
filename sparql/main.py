@@ -95,9 +95,12 @@ class Translator(object):
             parameter_datatypes.append(number - 1)
         return "?%s" % r
       sql = re.sub("%s[^ ]*" % self.escape_mark, sub, sql)
-
-    #sql = self.optimize_sql(sql, nb_parameter, parameter_datatypes)
-    
+      
+    #if sql:
+    #  if   self.main_query.type == "select": nb_sql_parameter = nb_parameter + len(parameter_datatypes)
+    #  else:                                  nb_sql_parameter = len(self.main_query.select_param_indexes)
+    #  sql = self.optimize_sql(sql, nb_sql_parameter)
+      
     if   self.main_query.type == "select":
       return PreparedSelectQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes)
     
@@ -106,11 +109,9 @@ class Translator(object):
       return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns), select_param_indexes)
     
     
-  def optimize_sql(self, sql, nb_parameter, parameter_datatypes):
-    print(sql)
-    print(nb_parameter, self.current_parameter, parameter_datatypes)
-    plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql, (1,) * nb_parameter))
-    
+  def optimize_sql(self, sql, nb_sql_parameter):
+    plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql, (1,) * nb_sql_parameter))
+                
     has_automatic_index = False
     for l in plan:
       match = _RE_AUTOMATIC_INDEX.search(l[3])
@@ -127,7 +128,6 @@ class Translator(object):
           print("OPTIMIZE!!!", l, table_type, table_name, "=>", index_name)
           table_def = "%s %s" % (table_type, table_name)
           sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
-
     return sql
     
   # def optimize_sql(self, sql):

@@ -8059,11 +8059,13 @@ class TestSPARQL(BaseTest, unittest.TestCase):
   def test_77(self):
     world, onto = self.prepare1()
     q1, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { onto:a1 rdfs:label ?l }""", [locstr("test_", "fr")], compare_with_rdflib = False)
+    assert q1.nb_parameter == 1
     assert len(r) == 1
     assert { x[0] for x in r } == { "test_label_a" }
     assert isinstance(r[0][0], locstr)
     assert r[0][0].lang == "fr"
     q2, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { onto:a1 rdfs:label ?l }""", [locstr("test_", "en")], compare_with_rdflib = False)
+    assert q2.nb_parameter == 1
     assert len(r) == 1
     assert { x[0] for x in r } == { "test_label_a" }
     assert isinstance(r[0][0], locstr)
@@ -8772,6 +8774,14 @@ WHERE {
   #   assert not "WITH" in q.sql
   #   assert set(i[0] for i in r) == { onto.a1, a11, onto.b1, onto.b2, onto.b3 }
 
+  def test_140(self):
+    world, onto = self.prepare1()
+    q1, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { ?? rdfs:label ?l }""", [locstr("test_", "fr"), onto.a1], compare_with_rdflib = False)
+    assert q1.nb_parameter == 2
+    assert len(r) == 1
+    assert { x[0] for x in r } == { "test_label_a" }
+    assert isinstance(r[0][0], locstr)
+    assert r[0][0].lang == "fr"
 
 
       
