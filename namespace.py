@@ -250,16 +250,16 @@ WHERE q1.p=? AND q1.o=?
     l = []
     while bnode and (bnode != rdf_nil):
       first, d = self._get_triple_sp_od(bnode, rdf_first)
-      if (first == rdf_nil) and (d is None): return
-      l.append(self._to_python(first, d))
+      if not ((first == rdf_nil) and (d is None)): l.append(self._to_python(first, d))
       bnode = self._get_obj_triple_sp_o(bnode, rdf_rest)
     return l
   
   def _parse_list_as_rdf(self, bnode):
     while bnode and (bnode != rdf_nil):
       first, d = self._get_triple_sp_od(bnode, rdf_first)
-      if (first == rdf_nil) and (d is None): return
-      yield first, d
+      if not ((first == rdf_nil) and (d is None)): yield first, d
+      #if (first == rdf_nil) and (d is None): return
+      #yield first, d
       bnode = self._get_obj_triple_sp_o(bnode, rdf_rest)
       
   def _to_python(self, o, d = None, main_type = None, main_onto = None, default_to_none = False):
