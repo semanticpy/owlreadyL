@@ -8047,6 +8047,8 @@ class TestSPARQL(BaseTest, unittest.TestCase):
   def test_76(self):
     world, onto = self.prepare1()
     q1, r = self.sparql(world, """SELECT  ?l { ?? rdfs:label ?l }""", [onto.a1], compare_with_rdflib = False)
+    assert q1.nb_parameter == 1
+    assert len(q1.parameter_datatypes) == 0
     assert len(r) == 1
     assert { x[0] for x in r } == { "label_a" }
     q2, r = self.sparql(world, """SELECT  ?l { ?? rdfs:label ?l }""", [onto.b1], compare_with_rdflib = False)
@@ -8084,6 +8086,8 @@ class TestSPARQL(BaseTest, unittest.TestCase):
   def test_79(self):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?l { ??2 ??1 ?l }""", [label, onto.a1], compare_with_rdflib = False)
+    assert q.nb_parameter == 2
+    assert len(q.parameter_datatypes) == 0
     assert len(r) == 1
     assert { x[0] for x in r } == { "label_a" }
     

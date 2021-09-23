@@ -780,10 +780,11 @@ def f(p): return p[0]
 @pg.production("param : PARAM")
 def f(p):
   p = p[0]
+  translator = CURRENT_TRANSLATOR.get()
   if len(p.value) > 2:
     p.number = int(p.value[2:])
+    if p.number > translator.max_fixed_parameter: translator.max_fixed_parameter = p.number
   else:
-    translator = CURRENT_TRANSLATOR.get()
     p.number = translator.new_parameter()
   return p
 

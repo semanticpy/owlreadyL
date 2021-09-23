@@ -17,7 +17,7 @@ _ALREADYS = set()
 def do(world, sparql, sql = ""):
   q = world.prepare_sparql(sparql)
   if sql: q.sql = sql
-  if ANALYSE and not sparql in _ALREADYS:
+  if SHOW_SQL and not sparql in _ALREADYS:
     print()
     print(q.sql)
     print()
@@ -309,7 +309,7 @@ for func in BENCHS:
   
  
 if __name__ == "__main__":
-  ANALYSE = "--sql" in sys.argv
+  SHOW_SQL = "--sql" in sys.argv
   TESTS = []
   for arg in sys.argv[1:]:
     if arg.startswith("-"): continue

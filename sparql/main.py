@@ -19,32 +19,11 @@
 
 import sys, os, re, math
 from owlready2 import *
-
-"""
-
-Not supported:
-
-ASK
-DESCRIBE
-LOAD, ADD, MOVE, COPY, CLEAR, DROP
-
-GRAPH, FROM, FROM NAMED
-
-CONSTRUCT
-
-SERVICE
-
-INSERT DATA, DELETE DATA, DELETE WHERE (use INSERT or DELETE instead)
-
-MINUS
-
-"""
-
 from owlready2.sparql.parser import *
 from owlready2.sparql.func   import register_python_function, FuncSupport
 
-_RE_AUTOMATIC_INDEX = re.compile(r"TABLE (.*?) AS (.*?) USING AUTOMATIC.*\((.*?)\)")
-_RE_NORMAL_INDEX    = re.compile(r"TABLE (.*?) AS (.*?) USING (COVERING )?INDEX (.*?) ")
+_RE_AUTOMATIC_INDEX = re.compile(r"([^ ]*?) USING AUTOMATIC.*\((.*?)\)")
+#_RE_NORMAL_INDEX    = re.compile(r"(.*?) AS (.*?) USING (COVERING )?INDEX (.*?) ")
 
 _DEPRIORIZE_SUBQUERIES_OPT = True
 
@@ -56,10 +35,13 @@ class Translator(object):
     self.base_iri                      = ""
     self.current_anonynous_var         = 0
     self.current_parameter             = 0
+    self.max_fixed_parameter           = 0
     self.main_query                    = None
     self.preliminary_selects           = []
     self.recursive_preliminary_selects = {}
     self.escape_mark                   = "@@@ESCAPE@@@"
+    self.next_table_id                 = 1
+    self.table_name_2_type             = {}
     
     if not getattr(world.graph, "_has_sparql_func", False):
       register_python_function(world)
@@ -99,7 +81,7 @@ class Translator(object):
       if not self.solution_modifier[3]: sql += " LIMIT -1" # SQLite requires a LIMIT clause before the OFFSET clause
       sql += " OFFSET %s" % self._to_sql(self.solution_modifier[4])
       
-    nb_parameter = self.current_parameter
+    nb_parameter = max(self.current_parameter, self.max_fixed_parameter)
     parameter_2_parameter_datatypes = {}
     parameter_datatypes = []
     if self.escape_mark in sql:
@@ -114,7 +96,7 @@ class Translator(object):
         return "?%s" % r
       sql = re.sub("%s[^ ]*" % self.escape_mark, sub, sql)
 
-    #sql = self.optimize_sql(sql)
+    #sql = self.optimize_sql(sql, nb_parameter, parameter_datatypes)
     
     if   self.main_query.type == "select":
       return PreparedSelectQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes)
@@ -123,6 +105,30 @@ class Translator(object):
       select_param_indexes = [i - 1 for i in self.main_query.select_param_indexes]
       return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns), select_param_indexes)
     
+    
+  def optimize_sql(self, sql, nb_parameter, parameter_datatypes):
+    print(sql)
+    print(nb_parameter, self.current_parameter, parameter_datatypes)
+    plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql, (1,) * nb_parameter))
+    
+    has_automatic_index = False
+    for l in plan:
+      match = _RE_AUTOMATIC_INDEX.search(l[3])
+      if match:
+        table_name = match.group(1)
+        index_name = match.group(2)
+        table_type = self.table_name_2_type.get(table_name)
+        
+        if (table_type == "objs") or (table_type == "datas"):
+          if   index_name.startswith("s="): index_name = "index_%s_sp" % table_type
+          elif index_name.startswith("o="): index_name = "index_%s_op" % table_type
+          else: continue
+          
+          print("OPTIMIZE!!!", l, table_type, table_name, "=>", index_name)
+          table_def = "%s %s" % (table_type, table_name)
+          sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
+
+    return sql
     
   # def optimize_sql(self, sql):
   #   # Avoid Sqlite3 AUTOMATIC INDEX when a similar index can be used.
@@ -210,8 +216,7 @@ class Translator(object):
       #if isinstance(block, ExistsBlock): s.extra_sql = "IS NOT NULL"
       #else:                              s.extra_sql = "IS NULL"
       s.exists = isinstance(block, ExistsBlock)
-      s.next_table_id = nested_inside.next_table_id
-      s.vars = nested_inside.vars
+      s.vars   = nested_inside.vars
       preliminary = False
       
     elif isinstance(block, NotExistsBlock):
@@ -265,9 +270,6 @@ class Translator(object):
         s.append(query, "UNION")
       s.finalize_compounds()
       
-      
-    if isinstance(block, FilterBlock):
-      nested_inside.next_table_id = s.next_table_id
       
     if (not preliminary) and solution_modifier: self.solution_modifier = solution_modifier
     return s
@@ -570,9 +572,9 @@ class Variable(object):
   def get_binding(self, query):
     if not self.bindings:
       #print("* Owlready2 * WARNING: variable without binding in SPARQL, use a suboptimal option", file = sys.stderr)
-      table = Table(query, "any%s" % query.next_table_id, """(SELECT DISTINCT s AS o, NULL AS d FROM quads UNION SELECT DISTINCT o, d FROM quads)""")
+      table = Table(query, "any%s" % query.translator.next_table_id, """(SELECT DISTINCT s AS o, NULL AS d FROM quads UNION SELECT DISTINCT o, d FROM quads)""")
       table.subquery = query
-      query.next_table_id += 1
+      query.translator.next_table_id += 1
       self.bindings.append("%s.o" % table.name)
     i = 0
     for binding in self.bindings:
@@ -595,7 +597,8 @@ class Table(object):
     if query:
       query.tables.append(self)
       query.name_2_table[name] = self
-    
+      query.translator.table_name_2_type[name] = type
+      
   def __repr__(self): return "<Table '%s %s'>" % (self.type, self.name)
     
   def sql(self):
@@ -610,7 +613,6 @@ class SQLQuery(FuncSupport):
     self.translator               = CURRENT_TRANSLATOR.get()
     self.distinct                 = False
     self.raw_selects              = None
-    self.next_table_id            = 1
     self.tables                   = []
     self.name_2_table             = {}
     self.columns                  = []
@@ -705,9 +707,9 @@ class SQLQuery(FuncSupport):
       self.conditions.append(sub)
       if _DEPRIORIZE_SUBQUERIES_OPT and not ("one" in self.name_2_table): Table(self, "one", "one")
     else:
-      table = Table(self, "p%s" % self.next_table_id, sub.name)
+      table = Table(self, "p%s" % self.translator.next_table_id, sub.name)
       table.subquery = sub
-      self.next_table_id += 1
+      self.translator.next_table_id += 1
       if sub.optional:
         table.join = "LEFT JOIN"
         conditions = table.join_conditions
@@ -861,13 +863,13 @@ class SQLQuery(FuncSupport):
       
       if self.name == "main": select_name = ""
       else:                   select_name = "%s_" % self.name
-      table = Table(self, "%sq%s" % (select_name, self.next_table_id), triple.local_table_type)
+      table = Table(self, "%sq%s" % (select_name, self.translator.next_table_id), triple.local_table_type)
       if triple.optional:
         table.join = "LEFT JOIN"
         conditions = table.join_conditions
       else:
         conditions = self.conditions
-      self.next_table_id += 1
+      self.translator.next_table_id += 1
       
       if triple.consider_s: self.create_conditions(conditions, table, "s", s)
       if triple.consider_p: self.create_conditions(conditions, table, "p", p, triple.likelihood_p)
