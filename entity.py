@@ -501,7 +501,7 @@ class ThingClass(EntityClass):
       world = Class.namespace.world
       
     q = world.prepare_sparql("""SELECT DISTINCT ?i { ?i a/(rdfs:subClassOf|owl:equivalentClass|^owl:equivalentClass)* ?? . }""")
-    if int(sqlite3.sqlite_version.split(".")[1]) < 36: # Some SQLite3 versions have a bug on recursive queries with multiple unions
+    if sqlite3.sqlite_version_info[1] < 36: # Some SQLite3 versions have a bug on recursive queries with multiple unions
       q.sql = """
 WITH RECURSIVE prelim1_objs(s) AS (VALUES (?1) 
 UNION 
