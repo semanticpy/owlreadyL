@@ -100,7 +100,7 @@ class Translator(object):
     #  if   self.main_query.type == "select": nb_sql_parameter = nb_parameter + len(parameter_datatypes)
     #  else:                                  nb_sql_parameter = len(self.main_query.select_param_indexes)
     #  sql = self.optimize_sql(sql, nb_sql_parameter)
-      
+    
     if   self.main_query.type == "select":
       return PreparedSelectQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes)
     

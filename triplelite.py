@@ -135,6 +135,7 @@ class Graph(BaseMainGraph):
     #self.last_numbered_iri = {}
     self.world             = world
     self.c                 = None
+    self.nb_added_triples  = 0
     
     self.lock              = multiprocessing.RLock()
     self.lock_level        = 0
@@ -386,20 +387,24 @@ class Graph(BaseMainGraph):
     self.select_abbreviate_method()
     
   def analyze(self):
+    self.nb_added_triples = 0
+    
     if self.read_only: return
     if sqlite3.sqlite_version_info[1] < 33: return # ANALYZE sqlite_schema not supported
-    
+
     #self.db.execute("""PRAGMA cache_size = -100""") # The two following queries are * faster * with a small cache!
     #import time
     #t0 = time.perf_counter()
     #nb_datas = self.execute("""SELECT COUNT() FROM datas INDEXED BY index_datas_sp""").fetchone()[0]
-    nb_datas = self.execute("""SELECT MAX(rowid) FROM datas""").fetchone()[0]
+    nb_datas = self.execute("""SELECT MAX(rowid) FROM datas""").fetchone()[0] or 10
     #if nb_datas: print(nb_datas, time.perf_counter() - t0)
     #t0 = time.perf_counter()
     #nb_objs  = self.execute("""SELECT COUNT() FROM objs INDEXED BY index_objs_sp""" ).fetchone()[0]
-    nb_objs  = self.execute("""SELECT MAX(rowid) FROM objs""" ).fetchone()[0]
+    nb_objs  = self.execute("""SELECT MAX(rowid) FROM objs""" ).fetchone()[0] or 10
     #if nb_objs: print(nb_objs, time.perf_counter() - t0)
     #self.db.execute("""PRAGMA cache_size = -200000""")
+    
+    #print("ANALYZE", nb_datas, nb_objs)
     
     try:
       self.execute("""DELETE FROM sqlite_stat1""")
@@ -407,6 +412,7 @@ class Graph(BaseMainGraph):
       self.execute("""PRAGMA analysis_limit = 20""")
       self.execute("""ANALYZE""")
       self.execute("""DELETE FROM sqlite_stat1""")
+
     self.execute("""INSERT INTO sqlite_stat1 VALUES
 ('objs', 'index_objs_op', '%s 4 3 3 1'),
 ('objs', 'index_objs_sp', '%s 3 2'),
@@ -1222,10 +1228,14 @@ class SubGraph(BaseSubGraph):
     if (s is None) or (p is None) or (o is None): raise ValueError
     self.execute("DELETE FROM objs WHERE c=? AND s=? AND p=?", (self.c, s, p,))
     self.execute("INSERT INTO objs VALUES (?, ?, ?, ?)", (self.c, s, p, o))
+    self.parent.nb_added_triples += 1
+    if self.parent.nb_added_triples > 1000: self.parent.analyze()
     
   def _add_obj_triple_raw_spo(self, s, p, o):
     if (s is None) or (p is None) or (o is None): raise ValueError
     self.execute("INSERT OR IGNORE INTO objs VALUES (?, ?, ?, ?)", (self.c, s, p, o))
+    self.parent.nb_added_triples += 1
+    if self.parent.nb_added_triples > 1000: self.parent.analyze()
     
   def _del_obj_triple_raw_spo(self, s = None, p = None, o = None):
     if s is None:
@@ -1247,10 +1257,14 @@ class SubGraph(BaseSubGraph):
     if (s is None) or (p is None) or (o is None) or (d is None): raise ValueError
     self.execute("DELETE FROM datas WHERE c=? AND s=? AND p=?", (self.c, s, p,))
     self.execute("INSERT INTO datas VALUES (?, ?, ?, ?, ?)", (self.c, s, p, o, d))
-    
+    self.parent.nb_added_triples += 1
+    if self.parent.nb_added_triples > 1000: self.parent.analyze()
+
   def _add_data_triple_raw_spod(self, s, p, o, d):
     if (s is None) or (p is None) or (o is None) or (d is None): raise ValueError
     self.execute("INSERT OR IGNORE INTO datas VALUES (?, ?, ?, ?, ?)", (self.c, s, p, o, d))
+    self.parent.nb_added_triples += 1
+    if self.parent.nb_added_triples > 1000: self.parent.analyze()
     
   def _del_data_triple_raw_spod(self, s, p, o, d):
     if s is None:

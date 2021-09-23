@@ -316,6 +316,18 @@ class Test(BaseTest, unittest.TestCase):
     sql.execute("""SELECT * from ontologies;""")
     assert sql.fetchall() == []
     
+  def test_world_10(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://test.org/test.owl")
+    
+    before = world.graph.execute("SELECT * FROM sqlite_stat1").fetchall()
+    
+    with onto:
+      class C(Thing): pass
+      for i in range(2000):
+        C()
+        
+    assert before != world.graph.execute("SELECT * FROM sqlite_stat1").fetchall()
     
   def test_ontology_1(self):
     o1 = get_ontology("http://test/test_ontology_1_1.owl")
