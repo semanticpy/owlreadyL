@@ -1033,7 +1033,9 @@ def _prefix_vars(x, prefix):
     elif isinstance(i, rply.Token) and i.name == "VAR": i.value = "%s%s" % (prefix, i.value)
     
 class Block(list):
-  def __repr__(self): return "<%s %s>" % (self.__class__.__name__, list.__repr__(self))
+  def __repr__(self):
+    if getattr(self, "static_valuess"): return "<%s %s static=%s>" % (self.__class__.__name__, list.__repr__(self), self.static_valuess)
+    return "<%s %s>" % (self.__class__.__name__, list.__repr__(self))
 
   def get_ordered_vars(self):
     vars = set()
@@ -1057,11 +1059,12 @@ class UnionBlock(Block):
     if len(self[0]) == 2:
       r = self._to_simple_union2()
       if r: return r
-      
+
     for i in self:
       if not isinstance(i, SimpleTripleBlock): return None
       if len(i) > 1: return None
-      if not isinstance(i[0], Triple): return None
+      if (not i): return None
+      if (not isinstance(i[0], Triple)): return None
       
     ss = set()
     ps = set()
@@ -1125,9 +1128,8 @@ def _var_found(var, vars, ordered_vars):
 class SimpleTripleBlock(TripleBlock):
   def __init__(self, l = None):
     TripleBlock.__init__(self, l or [])
-
+    
     self.static_valuess = []
-    #self.static_blocks  = []
     
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     for triple in self:

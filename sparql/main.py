@@ -649,7 +649,15 @@ class SQLQuery(FuncSupport):
             else:      l[-1].append(column.binding)
         sql = """VALUES %s""" % ",".join("(%s)" % ",".join(str(k) for k in j) for j in l)
       else:
-        sql = """VALUES (%s)""" % (",".join(str(column.binding) for column in self.columns))
+        vars = []
+        for column in self.columns:
+          if isinstance(column.binding, str) and column.binding.startswith("IN "):
+            var = self.parse_var(column.var)
+            vars.append(var)
+        if vars:
+          sql = "VALUES %s" % ",".join("(%s)" % (",".join(str(value) for value in values)) for values in zip(*[var.static_values for var in vars]))
+        else:
+          sql = """VALUES (%s)""" % (",".join(str(column.binding) for column in self.columns))
         
     if self.extra_sql: sql += " %s" % self.extra_sql
     if self.preliminary: return """%s(%s) AS (%s)""" % (self.name, ", ".join(column.name for column in self.columns), sql)
@@ -838,7 +846,9 @@ class SQLQuery(FuncSupport):
         if o.name == "VAR":
           o = self.parse_var(o)
           o.bindings.insert(0, """IN (SELECT o FROM %s%s)""" % (triple.local_table_type, extra))
-          
+
+
+    conditions = self.conditions
     for triple in self.triples: # Pass 6: create triples tables and conditions
       if   isinstance(triple, Bind):
         self.parse_bind(triple)
@@ -862,7 +872,7 @@ class SQLQuery(FuncSupport):
       if (not p.modifier) and (not triple in selected_non_preliminary_triples): continue
       
       if self.name == "main": select_name = ""
-      else:                   select_name = "%s_" % self.name
+      else:                   select_name = "%s_" % (self.name or "")
       table = Table(self, "%sq%s" % (select_name, self.translator.next_table_id), triple.local_table_type)
       if triple.optional:
         table.join = "LEFT JOIN"
@@ -904,10 +914,14 @@ class SQLQuery(FuncSupport):
         if len(static.vars) == 1:
           var = self.parse_var(static.vars[0])
           sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-          conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static.valuess)))
-          #conditions.append("LIKELIHOOD(%s IN (%s), %s)" % (sql, ",".join(str(value) for value in static.valuess),
-          #                                                  0.35 + 0.1 * (1.0 - math.exp(-len(static.valuess) / 100.0)))) # Favor statics with few elements
-          
+          if sql is None:
+            var.bindings.append("IN (%s)" % ",".join(str(value) for value in static.valuess))
+            var.static_values = static.valuess
+            var.type = "objs"
+          else:
+            conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static.valuess)))
+            #conditions.append("LIKELIHOOD(%s IN (%s), %s)" % (sql, ",".join(str(value) for value in static.valuess),
+            #                                                  0.35 + 0.1 * (1.0 - math.exp(-len(static.valuess) / 100.0)))) # Favor statics with few elements
         else:
           prelim = SQLStaticValuesPreliminaryQuery("static%s" % (len(self.translator.preliminary_selects) + 1), static)
           self.translator.preliminary_selects.append(prelim)
@@ -1244,7 +1258,8 @@ SELECT q.%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
   self.name, " AND ".join(p_inversed_conditions),
   "AND rec.nb=0 " if p.modifier == "?" else "",
   self.non_fixed, self.non_fixed)
-      
+
+    
       
 class SQLStaticValuesPreliminaryQuery(object):
   recursive = False

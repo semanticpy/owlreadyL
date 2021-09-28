@@ -8778,14 +8778,17 @@ WHERE {
     assert not "WITH" in q.sql
     assert set(i[0] for i in r) == { onto.a1, a11, onto.b1, onto.b2, onto.b3 }
 
-  # def test_139(self):
-  #   world, onto = self.prepare1()
-  #   q, r = self.sparql(world, """SELECT ?x { { ?x rdfs:subClassOf*STATIC onto:A . } UNION { ?x rdfs:subClassOf*STATIC onto:B . } }""", compare_with_rdflib = False)
-  #   print(q.sql)
-  #   print(r)
-  #   assert not "WITH" in q.sql
-  #   assert set(i[0] for i in r) == { onto.a1, a11, onto.b1, onto.b2, onto.b3 }
+  def test_139(self):
+    world, onto = self.prepare1()
+    a11 = onto.A11()
+    q, r = self.sparql(world, """SELECT ?x { { ?x rdfs:subClassOf* onto:A . } UNION { ?x rdfs:subClassOf*STATIC onto:B . } }""", compare_with_rdflib = False)
+    assert set(i[0] for i in r) == { onto.A, onto.A1, onto.A11, onto.A2, onto.B }
 
+    q, r = self.sparql(world, """SELECT ?x { { ?x rdfs:subClassOf*STATIC onto:A . } UNION { ?x rdfs:subClassOf*STATIC onto:B . } }""", compare_with_rdflib = False)
+    assert not "WITH" in q.sql
+    assert set(i[0] for i in r) == { onto.A, onto.A1, onto.A11, onto.A2, onto.B }
+    
+    
   def test_140(self):
     world, onto = self.prepare1()
     q1, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { ?? rdfs:label ?l }""", [locstr("test_", "fr"), onto.a1], compare_with_rdflib = False)
