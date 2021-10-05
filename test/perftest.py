@@ -13,6 +13,7 @@ go_world       = World(filename = "/home/jiba/tmp/go.sqlite3")
 list(omop_cdm_world.sparql("""SELECT  ?x  { ?x rdfs:label "xxx" . }"""))
 list(go_world      .sparql("""SELECT  ?x  { ?x rdfs:label "xxx" . }"""))
 
+FIRST = True
 _ALREADYS = set()
 def do(world, sparql, sql = ""):
   q = world.prepare_sparql(sparql)
@@ -32,7 +33,6 @@ def bench_go_1():
 SELECT ?l  { ?x rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
   assert len(l) == 4092
 
-LLL = list(go_world["http://purl.obolibrary.org/obo/GO_0005575"].descendants())
 def bench_go_1_static():
   q, l = do(go_world, """
 SELECT ?l  { ?x rdfs:subClassOf*STATIC <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
@@ -41,6 +41,11 @@ SELECT ?l  { ?x rdfs:subClassOf*STATIC <http://purl.obolibrary.org/obo/GO_000557
 def bench_go_2():
   q, l = do(go_world, """
 SELECT ?l  { ?x a/rdfs:subClassOf* <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
+  assert len(l) == 0
+
+def bench_go_2_static():
+  q, l = do(go_world, """
+SELECT ?l  { ?x a/rdfs:subClassOf*STATIC <http://purl.obolibrary.org/obo/GO_0005575> . ?x rdfs:label ?l }""")
   assert len(l) == 0
 
 def bench_go_3():
@@ -183,17 +188,18 @@ PREFIX umls: <http://PYM/>
 PREFIX atc: <http://PYM/ATC/>
 PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
-SELECT ?patient {
+SELECT DISTINCT ?patient {
   #?patient a omop_cdm:Person .
-  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf* snomed:13200003.
-
   ?patient omop_cdm:has_drug_era ?drug_era1 .
   ?drug_era1 omop_cdm:has_concept/a ?aspirin .
         { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
   UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
   UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
+
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf* snomed:13200003.
 }""")
-  assert len(l) == 218
+  #if FIRST: print(q.sql)
+  assert len(l) == 52
 
 def bench_omop_cdm_4_static():
   q, l = do(omop_cdm_world, """
@@ -201,18 +207,54 @@ PREFIX umls: <http://PYM/>
 PREFIX atc: <http://PYM/ATC/>
 PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
-SELECT ?patient {
+SELECT DISTINCT ?patient {
   #?patient a omop_cdm:Person .
-  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*STATIC snomed:13200003.
-
   ?patient omop_cdm:has_drug_era ?drug_era1 .
   ?drug_era1 omop_cdm:has_concept/a ?aspirin .
-        { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
-  UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
-  UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
-}""")
-  assert len(l) == 218
+  STATIC {
+          { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
+    UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
+    UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
+  }
 
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*STATIC snomed:13200003.
+}""")
+  if FIRST: print(q.sql)
+  q.sql = """
+SELECT DISTINCT q1.s FROM objs q3 , objs q2 , objs q1 , objs q6 , objs q5 , objs q4
+WHERE q1.p=1330557 AND q2.s=q1.o AND q2.p=1330495 AND q3.s=q2.o AND q3.p=6 AND q4.s=q1.s AND q4.p=1330554 AND q5.s=q4.o AND q5.p=1330495 AND q6.s=q5.o AND q6.p=6 AND q3.o IN (4411,4413,210671) AND q6.o IN (34355,14034,14110,34364,34371,42048,66628,186679,440278,579011,600200,931375,1235602,186228,1208602,1244701,66621,186533,186535,186537,186539,186541,186543,186545,186547,278742,278759,278771,307276,542347,604948,913194,1235420,1235558,1235574,1243207,1244697,1244699,1244703,1244705,1272684,169258,186609,186641,186647,186649,278627,450633,450641,549654,186618,186653,186659,186661,278624,27315,47945,171226,186171,186252,186314,186685,278630,278643,278658,323284,662247,838315,1158366,1228539,1228761,1228763,1228767,1228769,1228771,1235560,1244683,1244687,1272686,5103,186226,278542,278544,278555,278557,955689,1229661,1235430,1244681,1270644,1270646,186681,186683,307280,307283,323276,186244,186635,323278,985258,186318,186572,186584,186605,186707,186718,186740,278747,278764,323291,323293,1244685,1244689,278552,278641,278654,911242,1167274,1228765,911192,1230115,66624,76907,186564,186570,76917,186531,186556,278753,186576,186598,307278,186582,1244695,76857,186613,186615,186627,186280,186643,186645,186663,186671,186257,186673,186255,278621,450638,76986,186699,186705,76867,186621,186623,186288,186655,186657,186261,186259,323288,186736,469343,469349,476898,555618,752914,186270,186302,186316,186240,278635,323272,278648,323286,186248,278656,186320,1274324,930627,186167,278546,278548,1260168,1271589,186130,186675,186637,186677,773628,11568,186246,186276,186307,76911,186568,186596,76920,186580,186560,186603,76990,186703,186729,76999,186714,186696,186734,1259823,1259801,76923,186586,186594,186549,186566,186551,186558,278755,278757,186578,186601,76861,76877,186263,551950,186630,186632,186282,186294,186669,186667,186284,186312,186310,186727,77004,186721,186687,186701,76871,76995,186265,186290,186292,186710,186716,186738,307285,186731,307288,186273,186305,1271587,1285503,278550,76930,186592,77008,186725,186554,186590,76879,186267,186298,186300,186691,186723,186689,186712,186693)
+
+"""
+  assert len(l) == 52
+
+
+
+
+def bench_omop_cdm_99p():
+  q, l = do(omop_cdm_world, """
+PREFIX umls: <http://PYM/>
+PREFIX atc: <http://PYM/ATC/>
+PREFIX snomed: <http://PYM/SNOMEDCT_US/>
+
+SELECT DISTINCT ?patient {
+  #?patient a omop_cdm:Person .
+  ?patient omop_cdm:has_condition_era/a ?c.
+  ?patient omop_cdm:has_drug_era/a ?d.
+}""")
+  if FIRST:
+    print(q.sql)
+    print(len(l))
+
+    q.sql = """
+SELECT DISTINCT q1.s FROM objs q1 , objs q2 WHERE q1.p=1330554 AND q2.s=q1.o AND q2.p=6
+
+INTERSECT
+
+SELECT DISTINCT q3.s FROM objs q3 , objs q4 WHERE q3.p=1330557 AND q4.s=q3.o AND q4.p=6
+
+"""
+
+  
 def bench_omop_cdm_5():
   q, l = do(omop_cdm_world, """
 PREFIX umls: <http://PYM/>
@@ -221,13 +263,14 @@ PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
 SELECT ?patient { # SPARQL query for STOPP C2
   #?patient a omop_cdm:Person .
-  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf* snomed:13200003.
 
   ?patient omop_cdm:has_drug_era ?drug_era1 .
   ?drug_era1 omop_cdm:has_concept/a ?aspirin .
         { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
   UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
   UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
+  
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf* snomed:13200003.
 
   FILTER NOT EXISTS {
     ?patient omop_cdm:has_drug_era ?drug_era2 .
@@ -249,13 +292,16 @@ PREFIX snomed: <http://PYM/SNOMEDCT_US/>
 
 SELECT ?patient { # SPARQL query for STOPP C2
   #?patient a omop_cdm:Person .
-  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*STATIC snomed:13200003.
 
   ?patient omop_cdm:has_drug_era ?drug_era1 .
   ?drug_era1 omop_cdm:has_concept/a ?aspirin .
-        { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
-  UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
-  UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
+  STATIC {
+          { ?aspirin rdfs:subClassOf* atc:B01AC06 . }
+    UNION { ?aspirin rdfs:subClassOf* atc:A01AD05 . }
+    UNION { ?aspirin rdfs:subClassOf* atc:N01BA01 . }
+  }
+
+  ?patient omop_cdm:has_condition_era/omop_cdm:has_concept/a/rdfs:subClassOf*STATIC snomed:13200003.
 
   FILTER NOT EXISTS {
     ?patient omop_cdm:has_drug_era ?drug_era2 .
@@ -324,10 +370,15 @@ if __name__ == "__main__":
     return r
 
   def run_test(filename):
+    global FIRST
+    
     s = ""
     total_t = 0.0
     for test in TESTS or ALL_TESTS:
       func = globals()[test]
+      FIRST = True
+      func()
+      FIRST = False
       t = time.perf_counter()
       for i in range(NB): func()
       t = (time.perf_counter() - t) / NB

@@ -42,11 +42,12 @@ class Translator(object):
     self.escape_mark                   = "@@@ESCAPE@@@"
     self.next_table_id                 = 1
     self.table_name_2_type             = {}
+    self.table_type_2_cols             = { "objs" : ["s", "p", "o"], "datas" : ["s", "p", "o", "d"], "quads" : ["s", "p", "o", "d"] , "one" : ["i"] }
     
     if not getattr(world.graph, "_has_sparql_func", False):
       register_python_function(world)
       world.graph._has_sparql_func = True
-
+      
   def make_translator(self):
     translator = Translator(self.world, self.error_on_undefined_entities)
     translator.prefixes = self.prefixes.copy()
@@ -209,7 +210,8 @@ class Translator(object):
       
     elif isinstance(block, UnionBlock):
       s = SQLCompoundQuery(name, nested_inside)
-      if selects is None: selects = block.get_ordered_vars()
+      if selects is None:
+        selects = block.get_ordered_vars()
         
     elif isinstance(block, FilterBlock):
       s = SQLNestedQuery(name)
@@ -352,7 +354,8 @@ class PreparedSelectQuery(PreparedQuery):
       l2 = []
       i = 0
       while i < len(l):
-        if self.column_types[i] == "objs":
+        #if self.column_types[i] == "objs":
+        if (self.column_types[i] == "objs") or (self.column_types[i] == "value"):
           l2.append(l[i])
           i += 1
         else:
@@ -600,7 +603,7 @@ class Table(object):
       query.translator.table_name_2_type[name] = type
       
   def __repr__(self): return "<Table '%s %s'>" % (self.type, self.name)
-    
+  
   def sql(self):
     return """%s %s%s%s""" % (self.type, self.name, self.index and (" INDEXED BY %s" % self.index) or "", self.join_conditions and (" ON (%s)" % " AND ". join(self.join_conditions)) or "")
   
@@ -655,22 +658,24 @@ class SQLQuery(FuncSupport):
             var = self.parse_var(column.var)
             vars.append(var)
         if vars:
-          sql = "VALUES %s" % ",".join("(%s)" % (",".join(str(value) for value in values)) for values in zip(*[var.static_values for var in vars]))
+          if hasattr(vars[0], "static"):
+            sql = """VALUES %s""" % ",".join("(%s)" % (",".join(str(value) for value in values)) for values in zip(*[[i[0] for i in var.static] for var in vars]))
+          else:
+            sql = """SELECT %s FROM %s""" % (",".join("%s.col1_o" % var.in_select.name for var in vars), ",".join(var.in_select.name for var in vars))
         else:
           sql = """VALUES (%s)""" % (",".join(str(column.binding) for column in self.columns))
         
     if self.extra_sql: sql += " %s" % self.extra_sql
-    if self.preliminary: return """%s(%s) AS (%s)""" % (self.name, ", ".join(column.name for column in self.columns), sql)
+    if self.preliminary:
+      return """%s(%s) AS (%s)""" % (self.name, ", ".join(column.name for column in self.columns), sql)
     return sql
-    
-  def set_column_names(self, names):
-    for column, name in zip(self.columns, names): column.name = name
     
   def parse_distinct(self, distinct):
     if isinstance(distinct, rply.Token): self.distinct = distinct and (distinct.value.upper() == "DISTINCT")
     else:                                self.distinct = distinct
     
   def parse_var(self, x):
+    if isinstance(x, Variable):   return x
     if isinstance(x, rply.Token): name = x.value
     else:                         name = x
     var = self.vars.get(name)
@@ -724,13 +729,35 @@ class SQLQuery(FuncSupport):
       else:
         conditions = self.conditions
 
-      for column in sub.columns:
+      for column in sub.columns:  
         var = self.parse_var(column.var)
         var.update_type(column.type)
         if not column.name.endswith("d"):
           self.create_conditions(conditions, table, column.name, var)
           
+  def add_subquery(self, sub):
+    if isinstance(sub, SQLNestedQuery):
+      self.conditions.append(sub)
+      if _DEPRIORIZE_SUBQUERIES_OPT and not ("one" in self.name_2_table): Table(self, "one", "one")
+    else:
+      if (not sub.optional) and (len(sub.columns) == 1): # Specific optimization with IN operator
+        self.create_in_conditions(self.conditions, sub.columns[0].var, sub)
+      else:
+        table = Table(self, "p%s" % self.translator.next_table_id, sub.name)
+        table.subquery = sub
+        self.translator.next_table_id += 1
+        if sub.optional:
+          table.join = "LEFT JOIN"
+          conditions = table.join_conditions
+        else:
+          conditions = self.conditions
           
+        for column in sub.columns:  
+          var = self.parse_var(column.var)
+          var.update_type(column.type)
+          if not column.name.endswith("d"):
+            self.create_conditions(conditions, table, column.name, var)
+              
   def parse_triples(self, triples):
     if self.triples: raise ValueError("Cannot parse triples twice!")
     self.block = triples
@@ -846,8 +873,7 @@ class SQLQuery(FuncSupport):
         if o.name == "VAR":
           o = self.parse_var(o)
           o.bindings.insert(0, """IN (SELECT o FROM %s%s)""" % (triple.local_table_type, extra))
-
-
+          
     conditions = self.conditions
     for triple in self.triples: # Pass 6: create triples tables and conditions
       if   isinstance(triple, Bind):
@@ -880,7 +906,7 @@ class SQLQuery(FuncSupport):
       else:
         conditions = self.conditions
       self.translator.next_table_id += 1
-      
+
       if triple.consider_s: self.create_conditions(conditions, table, "s", s)
       if triple.consider_p: self.create_conditions(conditions, table, "p", p, triple.likelihood_p)
       if triple.consider_o: self.create_conditions(conditions, table, "o", o, triple.likelihood_o)
@@ -900,39 +926,40 @@ class SQLQuery(FuncSupport):
           var_2_columns = defaultdict(list)
           for column in static.translator.main_query.columns:
               var_2_columns[column.var].append(column)
-
+              
           static.translator.main_query.raw_selects = static.vars
           static.translator.main_query.columns = []
           static.translator.main_query.finalize_columns()
-          
           static.translator.solution_modifier = [None, None, None, None, None]
           q = static.translator.finalize()
           r = list(q._execute_sql())
-          if len(static.vars) == 1: static.valuess = [x[0] for x in r]
-          else:                     static.valuess = r
+          static.valuess = r
+          #if len(static.vars) == 1: static.valuess = [x[0] for x in r]
+          #else:                     static.valuess = r
           
         if len(static.vars) == 1:
           var = self.parse_var(static.vars[0])
           sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
           if sql is None:
-            var.bindings.append("IN (%s)" % ",".join(str(value) for value in static.valuess))
-            var.static_values = static.valuess
+            var.bindings.append("IN (%s)" % ",".join(str(value[0]) for value in static.valuess))
+            var.static = static.valuess
             var.type = "objs"
           else:
-            conditions.append("%s IN (%s)" % (sql, ",".join(str(value) for value in static.valuess)))
+            conditions.append("%s IN (%s)" % (sql, ",".join(str(value[0]) for value in static.valuess)))
             #conditions.append("LIKELIHOOD(%s IN (%s), %s)" % (sql, ",".join(str(value) for value in static.valuess),
             #                                                  0.35 + 0.1 * (1.0 - math.exp(-len(static.valuess) / 100.0)))) # Favor statics with few elements
+            
         else:
-          prelim = SQLStaticValuesPreliminaryQuery("static%s" % (len(self.translator.preliminary_selects) + 1), static)
+          prelim = SQLStaticValuesPreliminaryQuery(self.translator, "static%s" % (len(self.translator.preliminary_selects) + 1), static)
           self.translator.preliminary_selects.append(prelim)
           table = Table(self, prelim.name, prelim.name)
           for i, var in enumerate(static.vars):
             var = self.parse_var(var)
             sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
             if sql is None:
-              var.bindings.append("%s.col%s" % (prelim.name, i + 1))
+              var.bindings.append("%s.col%s_o" % (prelim.name, i + 1))
             else:
-              conditions.append("%s=%s.col%s" % (sql, prelim.name, i + 1))
+              conditions.append("%s=%s.col%s_o" % (sql, prelim.name, i + 1))
               
               
   def get_fix_levels(self, vars0, exclude_triple = None):
@@ -988,13 +1015,11 @@ class SQLQuery(FuncSupport):
     return fix_levels
       
   def extract_triples(self, triples, vars, except_triple = None):
-    #print("   EXTRACT", triples, vars, except_triple)
     var_names = { var.name for var in vars }
     while True:
       r = [triple for triple in triples if (not triple == except_triple) and isinstance(triple, (Triple, Filter, Bind)) and (not triple.var_names.isdisjoint(var_names))]
       var_names2 = { var_name for triple in r for var_name in triple.var_names }
       if var_names2 == var_names:
-        #print("   EXTRACTED", r)
         return r
       var_names = var_names2
       
@@ -1012,6 +1037,7 @@ class SQLQuery(FuncSupport):
               conditions.append("%s.%sd IS NOT NULL" % (table.name, n[:-1])) # Datatype part
             break
           
+          
       if not sql is None:
         if isinstance(sql, str) and sql.startswith("IN "): operator = " "; sqls = self.parse_var(x).bindings
         else:                                              operator = "="; sqls = [sql]
@@ -1028,6 +1054,20 @@ class SQLQuery(FuncSupport):
         if not x.initial_query: x.initial_query = self
         x.bindings.append("%s.%s" % (table.name, n))
         
+  def create_in_conditions(self, conditions, x, prelim):
+    assert len(prelim.columns) == 1
+    if isinstance(x, rply.Token): assert x.name == "VAR"
+    column = prelim.columns[0]
+    var = self.parse_var(x)
+    sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
+    if sql is None:
+      var.bindings.append("IN (SELECT %s FROM %s)" % (column.name, prelim.name))
+      var.update_type(column.type)
+      var.in_select = prelim
+    else:
+      conditions.append("%s IN (SELECT %s FROM %s)" % (sql, column.name, prelim.name))
+      
+      
   def is_fixed(self, x):
     if x.name != "VAR": return True
     x = self.parse_var(x)
@@ -1038,16 +1078,20 @@ class SQLQuery(FuncSupport):
   def finalize_columns(self):
     selected_parameter_index = 0
     i = j = 0
+
     if   self.raw_selects == "*": selects = [self.vars[var] for var in self.block.get_ordered_vars() if not var.startswith("??")]      
     elif self.raw_selects:        selects = self.raw_selects
-    elif self.tables:             selects = ["%s.s" % self.tables[0].name]
+    elif self.tables:
+      if self.tables[0].type in { "objs", "datas", "quads" }:
+                                  selects = ["1"] # Nothing to select (see TestSPARQL.test_128)
+      else:                       selects = ["%s.%s" % (self.tables[0].name, col) for col in self.translator.table_type_2_cols[self.tables[0].type]]
     else:                         selects = []
     
     def do_select(select):
       nonlocal selected_parameter_index
       if isinstance(select, str) and select.startswith("?"): select = self.vars[select]
       sql, sql_type, sql_d, sql_d_type = self._to_sql(select)
-      
+
       if   isinstance(select, rply.Token) and (select.name == "VAR"): var_name = select.value
       elif isinstance(select, Variable):                              var_name = select.name
       else:                                                           var_name = None
@@ -1077,8 +1121,19 @@ class SQLQuery(FuncSupport):
           sql_type = "objs"
         else:
           raise ValueError("Cannot select '%s'!" % select)
-      self.columns.append(Column(var_name, sql_type,   sql,   "col%s_o" % i, j)); j += 1
-      if not sql_d is None: self.columns.append(Column(var_name, sql_d_type, sql_d, "col%s_d" % i, j)); j += 1
+        
+      self.columns.append(Column(var_name, sql_type, sql, "col%s_o" % i, j)); j += 1
+      if not sql_d is None:
+        self.columns.append(Column(var_name, sql_d_type, sql_d, "col%s_d" % i, j)); j += 1
+        
+    if self.preliminary:
+      self.translator.table_type_2_cols[self.name] = [column.name for column in self.columns]
+    
+  def set_column_names(self, names):
+    for column, name in zip(self.columns, names): column.name = name
+    
+    if self.preliminary:
+      self.translator.table_type_2_cols[self.name] = names
       
   def _to_sql(self, x):
     if isinstance(x, rply.Token) and (x.name == "VAR"): x = self.parse_var(x)
@@ -1130,6 +1185,7 @@ class SQLCompoundQuery(object):
     for i, query in enumerate(self.queries):
       if i != 0: sql += "\n%s\n" % query.operator
       sql += query.sql()
+      
     if self.preliminary: return """%s(%s) AS (%s)""" % (self.name, ", ".join(column.name for column in self.columns), sql)
     return sql
   
@@ -1149,7 +1205,7 @@ class SQLCompoundQuery(object):
       for i, column in enumerate(query.columns): # Re-index columns
         column.index = i
     self.columns = self.queries[0].columns
-    
+
     
 class SQLNestedQuery(SQLQuery):
   def __init__(self, name):
@@ -1263,12 +1319,14 @@ SELECT q.%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
       
 class SQLStaticValuesPreliminaryQuery(object):
   recursive = False
-  def __init__(self, name, static_values):
+  def __init__(self, translator, name, static_values):
+    self.translator    = translator
     self.name          = name
     self.static_values = static_values
+    self.translator.table_type_2_cols[self.name] = ["col%s_o" % (i+1) for i in range(len(self.static_values.valuess[0]))]
     
   def sql(self):
     return "%s(%s) AS (VALUES %s)" % (self.name,
-                                      ",".join("col%s" % (i+1) for i in range(len(self.static_values.vars))),
+                                      ",".join("col%s_o" % (i+1) for i in range(len(self.static_values.valuess[0]))),
                                       ",".join("(%s)" % ",".join(str(value) for value in values) for values in self.static_values.valuess) )
 

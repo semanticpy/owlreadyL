@@ -8788,7 +8788,6 @@ WHERE {
     assert not "WITH" in q.sql
     assert set(i[0] for i in r) == { onto.A, onto.A1, onto.A11, onto.A2, onto.B }
     
-    
   def test_140(self):
     world, onto = self.prepare1()
     q1, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { ?? rdfs:label ?l }""", [locstr("test_", "fr"), onto.a1], compare_with_rdflib = False)
@@ -8797,9 +8796,35 @@ WHERE {
     assert { x[0] for x in r } == { "test_label_a" }
     assert isinstance(r[0][0], locstr)
     assert r[0][0].lang == "fr"
+    
+  def test_141(self):
+    world, onto = self.prepare1()
+    a11 = onto.A1()
+    q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf* onto:A } UNION { ?c rdfs:subClassOf onto:B } }""", compare_with_rdflib = False)
+    assert { i[0] for i in r } == { a11, onto.a1 }
+    q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf onto:A } UNION { ?c rdfs:subClassOf* onto:B } }""", compare_with_rdflib = False)
+    assert { i[0] for i in r } == { a11, onto.b1, onto.b2, onto.b3 }
 
+  def test_142(self):
+    world, onto = self.prepare1()
+    q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf* onto:A } UNION { ?c rdfs:subClassOf* onto:B } }""", compare_with_rdflib = False)
+    assert { i[0] for i in r } == { onto.a1, onto.b1, onto.b2, onto.b3 }
+    
+  def test_143(self):
+    world, onto = self.prepare1()
+    #q = world.prepare_sparql("""SELECT  ?x { ?x a ?c . ?c rdfs:subClassOf*STATIC onto:A }""")
+    q = world.prepare_sparql("""SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf* onto:A } UNION { ?c rdfs:subClassOf onto:B } }""")
+    print(q.sql)
+    print()
+    print()
+    print()
+    q = world.prepare_sparql("""SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf*STATIC onto:A } UNION { ?c rdfs:subClassOf*STATIC onto:B } }""")
+    print(q.sql)
+    
+    q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf*STATIC onto:A } UNION { ?c rdfs:subClassOf*STATIC onto:B } }""", compare_with_rdflib = False)
+    #q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf*STATIC onto:A } }""", compare_with_rdflib = False)
+    #assert { i[0] for i in r } == { onto.a1, onto.b1, onto.b2, onto.b3 }
 
-      
     
 # Add test for Pellet
 

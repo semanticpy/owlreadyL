@@ -492,7 +492,7 @@ def f(p): return p[0]
 def f(p):
   static_values = StaticValues()
   static_values.vars.append(p[0])
-  static_values.valuess.extend(i.sql if hasattr(i, "sql") else i.value  for i in p[2])
+  static_values.valuess.extend([i.sql] if hasattr(i, "sql") else [i.value]  for i in p[2])
   return static_values
 
 #@pg.production("nil_or_var* : NIL")
@@ -1059,7 +1059,7 @@ class UnionBlock(Block):
     if len(self[0]) == 2:
       r = self._to_simple_union2()
       if r: return r
-
+      
     for i in self:
       if not isinstance(i, SimpleTripleBlock): return None
       if len(i) > 1: return None
@@ -1069,10 +1069,13 @@ class UnionBlock(Block):
     ss = set()
     ps = set()
     os = set()
+    mods = set()
     for i in self:
       ss.add(repr(i[0][0]))
       ps.add(repr(i[0][1]))
       os.add(repr(i[0][2]))
+      mods.add(i[0][1].modifier)
+    if len(mods) > 1: return None
     nb_many = 0
     if len(ss) > 1: nb_many += 1; n = 0
     if len(ps) > 1: nb_many += 1; n = 1
@@ -1134,6 +1137,9 @@ class SimpleTripleBlock(TripleBlock):
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     for triple in self:
       triple._get_ordered_vars(vars, ordered_vars)
+
+    for static in self.static_valuess:
+      static._get_ordered_vars(vars, ordered_vars)
       
 class OptionalBlock(TripleBlock):
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
@@ -1267,6 +1273,9 @@ class StaticValues(object):
   def __init__(self):
     self.vars    = []
     self.valuess = []
+    
+  def _get_ordered_vars(self, vars, ordered_vars, root_call = False): pass
+  
   def __repr__(self): return "VALUES (%s) %s" % (" ".join(repr(var) for var in self.vars), self.valuess)
   
   
@@ -1274,6 +1283,7 @@ class StaticBlock(StaticValues):
   def __init__(self, blocks):
     StaticValues.__init__(self)
     self.inner_blocks = blocks
+    self.ordered_vars = list(_get_vars(blocks))
     self.all_vars     = set(_get_vars(blocks))
     
     self.old_translator = CURRENT_TRANSLATOR.get()
@@ -1285,5 +1295,9 @@ class StaticBlock(StaticValues):
     self.translator.main_query.type = "select"
     CURRENT_TRANSLATOR.set(self.old_translator)
     del self.old_translator
+    
+  def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
+    for var in self.ordered_vars: _var_found(var, vars, ordered_vars)
+    
     
   def __repr__(self): return """<StaticGraph vars=%s>""" % ",".join(repr(var) for var in self.all_vars)

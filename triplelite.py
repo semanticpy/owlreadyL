@@ -403,6 +403,7 @@ class Graph(BaseMainGraph):
     nb_objs  = self.execute("""SELECT MAX(rowid) FROM objs""" ).fetchone()[0] or 10
     #if nb_objs: print(nb_objs, time.perf_counter() - t0)
     #self.db.execute("""PRAGMA cache_size = -200000""")
+    nb_iris  = self.execute("""SELECT MAX(storid) FROM resources""" ).fetchone()[0] or 300
     
     #print("ANALYZE", nb_datas, nb_objs)
     
@@ -417,7 +418,10 @@ class Graph(BaseMainGraph):
 ('objs', 'index_objs_op', '%s 4 3 3 1'),
 ('objs', 'index_objs_sp', '%s 3 2'),
 ('datas', 'index_datas_op', '%s 4 3 3 3 1'),
-('datas', 'index_datas_sp', '%s 3 2')""" % (nb_objs, nb_objs, nb_datas, nb_datas))
+('datas', 'index_datas_sp', '%s 3 2'),
+('resources', 'index_resources_iri', '%s 1'),
+('resources', 'resources', '%s 1')
+""" % (nb_objs, nb_objs, nb_datas, nb_datas, nb_iris, nb_iris))
     self.execute("""ANALYZE sqlite_schema""")
     
   def set_indexed(self, indexed): pass
