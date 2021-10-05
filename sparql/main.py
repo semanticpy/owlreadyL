@@ -714,27 +714,7 @@ class SQLQuery(FuncSupport):
   def parse_filter(self, filter):
     sql = self.parse_expression(filter.constraint)
     self.conditions.append(sql)
-    
-  def add_subquery(self, sub):
-    if isinstance(sub, SQLNestedQuery):
-      self.conditions.append(sub)
-      if _DEPRIORIZE_SUBQUERIES_OPT and not ("one" in self.name_2_table): Table(self, "one", "one")
-    else:
-      table = Table(self, "p%s" % self.translator.next_table_id, sub.name)
-      table.subquery = sub
-      self.translator.next_table_id += 1
-      if sub.optional:
-        table.join = "LEFT JOIN"
-        conditions = table.join_conditions
-      else:
-        conditions = self.conditions
-
-      for column in sub.columns:  
-        var = self.parse_var(column.var)
-        var.update_type(column.type)
-        if not column.name.endswith("d"):
-          self.create_conditions(conditions, table, column.name, var)
-          
+              
   def add_subquery(self, sub):
     if isinstance(sub, SQLNestedQuery):
       self.conditions.append(sub)
