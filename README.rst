@@ -614,7 +614,8 @@ version 2 - 0.35
   - Fix RDF list parsing when the list includes the integer number 5
   - Fix nb_parameter in SPARQL query when numbered parameters are used
   - Fix ObjectProperty.subclasses(), ObjectProperty.descendants(), Property.subclasses(), DataProperty.descendants(), AnnotationProperty.subclasses(), AnnotationProperty.descendants()
-    
+  - Fix declare_datatype() for datatype already used in Owlready, such as AnyURI
+
 Links
 -----
 

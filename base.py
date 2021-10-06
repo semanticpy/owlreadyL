@@ -186,7 +186,9 @@ def set_datatype_iri(datatype, iri):
 
   
 def declare_datatype(datatype, iri, parser, unparser):
-  storid = _universal_abbrev(iri)
+  if iri in _universal_iri_2_abbrev: storid = _universal_iri_2_abbrev[iri]
+  else:                              storid = _universal_abbrev(iri)
+  print("DECLARE", iri, storid)
   from owlready2 import WORLDS
   for world in WORLDS:
     if not world.graph.read_only:

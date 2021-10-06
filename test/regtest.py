@@ -6098,6 +6098,38 @@ ask where
     gc.collect(); gc.collect(); gc.collect()
     
     assert onto.c1.p[0].value == 14
+
+  def test_datatype_4(self):
+    class AnyURI(object):
+      def __init__(self, value):
+        self.value = value
+    
+    def parser  (s): return AnyURI(s)
+    def unparser(x): return x.value
+    
+    world1 = self.new_world()
+    world2 = self.new_world()
+    onto1  = world1.get_ontology("http://www.test.org/t.owl")
+    
+    anyuri_storid = declare_datatype(AnyURI, "http://www.w3.org/2001/XMLSchema#anyURI", parser, unparser)
+    
+    with onto1:
+      class p(Thing >> AnyURI): pass
+      
+      class C(Thing): pass
+
+      c1 = C()
+      c1.p.append(AnyURI("xxx"))
+      
+    self.assert_triple(c1.storid, p.storid, "xxx", anyuri_storid, world1)
+
+    f = self.new_tmp_file()
+    onto1.save(f)
+    
+    onto2 = world2.get_ontology(f).load()
+    x = onto2.c1.p[0]
+    assert isinstance(x, AnyURI)
+    assert x.value == "xxx"
     
     
   def test_inverse_1(self):
