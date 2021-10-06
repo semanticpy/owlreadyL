@@ -612,7 +612,7 @@ version 2 - 0.35
   - Fix RDF list parsing when the list includes the integer number 5
   - Fix nb_parameter in SPARQL query when numbered parameters are used
   - Fix 'sqlite3.OperationalError: circular reference: prelim1_objs' in .instances(), caused by a bug in old versions of SQLite3
-
+  - Fix ObjectProperty.subclasses(), ObjectProperty.descendants(), Property.subclasses(), DataProperty.descendants(), AnnotationProperty.subclasses(), AnnotationProperty.descendants()
     
 Links
 -----

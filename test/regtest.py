@@ -2543,6 +2543,35 @@ class Test(BaseTest, unittest.TestCase):
       c = C()
     assert p[c] == []
     assert p[C] == []
+        
+  def test_prop_51(self):
+    w = self.new_world()
+    o = w.get_ontology("http://test.org/o.owl")
+    with o:
+      class p (ObjectProperty): pass
+      class p2(p): pass
+      class q (ObjectProperty): pass
+      
+      class dp (DataProperty): pass
+      class dp2(dp): pass
+      class dq (DataProperty): pass
+      
+      class ap (AnnotationProperty): pass
+      class ap2(ap): pass
+      class aq (AnnotationProperty): pass
+      
+    assert set(ObjectProperty.descendants(world = w)) == { ObjectProperty, p, p2, q }
+    assert set(ObjectProperty.descendants(world = w, include_self = False)) == { p, p2, q }
+    
+    assert set(DataProperty.descendants(world = w)) == { DataProperty, dp, dp2, dq }
+    assert set(DataProperty.descendants(world = w, include_self = False)) == { dp, dp2, dq }
+    
+    assert set(AnnotationProperty.descendants(world = w)) == { AnnotationProperty, ap, ap2, aq, versionInfo, comment, priorVersion, seeAlso, backwardCompatibleWith, deprecated, label, incompatibleWith, isDefinedBy }
+    assert set(AnnotationProperty.descendants(world = w, include_self = False)) == { ap, ap2, aq, versionInfo, comment, priorVersion, seeAlso, backwardCompatibleWith, deprecated, label, incompatibleWith, isDefinedBy }
+    
+    assert set(ObjectProperty    .subclasses(world = w)) == { p , q  }
+    assert set(DataProperty      .subclasses(world = w)) == { dp, dq }
+    assert set(AnnotationProperty.subclasses(world = w)) == { ap, aq, versionInfo, comment, priorVersion, seeAlso, backwardCompatibleWith, deprecated, label, incompatibleWith, isDefinedBy }
     
     
   def test_prop_inverse_1(self):

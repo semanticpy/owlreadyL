@@ -912,10 +912,7 @@ class SQLQuery(FuncSupport):
           static.translator.main_query.finalize_columns()
           static.translator.solution_modifier = [None, None, None, None, None]
           q = static.translator.finalize()
-          r = list(q._execute_sql())
-          static.valuess = r
-          #if len(static.vars) == 1: static.valuess = [x[0] for x in r]
-          #else:                     static.valuess = r
+          static.valuess = list(q._execute_sql())
           
         if len(static.vars) == 1:
           var = self.parse_var(static.vars[0])
@@ -1304,6 +1301,10 @@ class SQLStaticValuesPreliminaryQuery(object):
     self.name          = name
     self.static_values = static_values
     self.translator.table_type_2_cols[self.name] = ["col%s_o" % (i+1) for i in range(len(self.static_values.valuess[0]))]
+    
+    self.columns = []
+    for i in range(len(self.static_values.valuess[0])):
+      self.columns.append(Column(static_values.vars[i], "objs", "xxx", "col%s_o" % (i+1), i))
     
   def sql(self):
     return "%s(%s) AS (VALUES %s)" % (self.name,

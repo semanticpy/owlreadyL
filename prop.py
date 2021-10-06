@@ -390,7 +390,36 @@ class PropertyClass(EntityClass):
     else:
       Prop._set_values_for_individual(entity, value)
       
+  def descendants(Prop, include_self = True, only_loaded = False, world = None):
+    if   Prop is ObjectProperty:
+      import owlready2
+      r = { prop for prop in (world or owlready2.default_world)._props.values() if issubclass(prop, ObjectProperty) and (prop.namespace.base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomObjectProperty) }
+      if include_self: r.add(ObjectProperty)
+      return r
+    elif Prop is DataProperty:
+      import owlready2
+      r = { prop for prop in (world or owlready2.default_world)._props.values() if issubclass(prop, DataProperty) and (prop.namespace.base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomDataProperty) }
+      if include_self: r.add(DataProperty)
+      return r
+    elif Prop is AnnotationProperty:
+      import owlready2
+      r = { prop for prop in (world or owlready2.default_world)._props.values() if issubclass(prop, AnnotationProperty) }
+      if include_self: r.add(AnnotationProperty)
+      return r
+    return EntityClass.descendants(Prop, include_self, only_loaded, world)
 
+  def subclasses(Prop, only_loaded = False, world = None):
+    if   Prop is ObjectProperty:
+      import owlready2
+      return { prop for prop in (world or owlready2.default_world)._props.values() if (ObjectProperty in prop.__bases__) and (prop.namespace.base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomObjectProperty) }
+    elif Prop is DataProperty:
+      import owlready2
+      return { prop for prop in (world or owlready2.default_world)._props.values() if (DataProperty in prop.__bases__) and (prop.namespace.base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomDataProperty) }
+    elif Prop is AnnotationProperty:
+      import owlready2
+      return { prop for prop in (world or owlready2.default_world)._props.values() if (AnnotationProperty in prop.__bases__) }
+      
+    return EntityClass.subclasses(Prop, only_loaded, world)
   
 _FUNCTIONAL_FOR_CACHE = weakref.WeakKeyDictionary()
 
