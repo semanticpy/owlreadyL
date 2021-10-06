@@ -114,8 +114,9 @@ def parse_mrconso(PYM, terminologies, langs, importer, f, remnant = ""):
       if not cui in importer.cui_2_origs:
         importer.objs.append((cui, rdf_type, owl_class))
         #importer.objs.append((cui, rdfs_subclassof, PYM.UnifiedConcept.storid))
-        importer.objs.append((cui, rdfs_subclassof, importer.CUI))
-        importer.objs.append((cui, PYM.terminology.storid, importer.CUI))
+        if not cui in importer.cuis_having_tui:
+          importer.objs.append((cui, rdfs_subclassof, importer.CUI))
+          importer.objs.append((cui, PYM.terminology.storid, importer.CUI))
         importer.cui_2_origs   [cui] = { orig }
         importer.cui_2_terms   [cui] = []
       else:
@@ -263,7 +264,6 @@ def parse_mrdef(PYM, terminologies, langs, importer, f, remnant = ""):
       
     importer.check_insert()
 
-
 def parse_mrsty(PYM, terminologies, langs, importer, f, remnant = ""):
   for line in f:
     if remnant: line = "%s%s" % (remnant, line); remnant = ""
@@ -273,13 +273,18 @@ def parse_mrsty(PYM, terminologies, langs, importer, f, remnant = ""):
     
     sem = importer.semantic_types.get(tui)
     if sem is None:
-      sem = importer._abbreviate("http://PYM/TUI/%s" % tui)
+      sem = importer._abbreviate("http://PYM/CUI/%s" % tui)
       importer.semantic_types[tui] = sem
       importer.datas.append((sem, label.storid, sty, 0))
+      importer.objs.append((sem, rdfs_subclassof, importer.CUI))
+      importer.objs.append((sem, PYM.terminology.storid, importer.CUI))
       
     cui = importer._abbreviate("http://PYM/CUI/%s" % cui)
     importer.objs.append((cui, rdfs_subclassof, sem))
-    
+    if not cui in importer.cuis_having_tui:
+      importer.objs.append((cui, PYM.terminology.storid, importer.CUI))
+      importer.cuis_having_tui.add(cui)
+      
     importer.check_insert()
     
 def parse_srdef(PYM, terminologies, langs, importer, f, remnant = ""):
@@ -289,7 +294,7 @@ def parse_srdef(PYM, terminologies, langs, importer, f, remnant = ""):
       rt, tui, term, stn, defin, ex, un, nh, abr, inv, _dropit = line.split("|")
     except: return line
     
-    sem = importer._abbreviate("http://PYM/TUI/%s" % tui)
+    sem = importer._abbreviate("http://PYM/CUI/%s" % tui)
     importer.semantic_types[tui] = sem
     importer.datas.append((sem, label.storid, term, "@en"))
     importer.datas.append((sem, PYM.synonyms.storid, abr, "@en"))
@@ -500,7 +505,8 @@ class _Importer(object):
     self.aui_2_orig  = {}
     self.props = set()
     self.terminology_2_parents = {}
-    self.cui_parents = {}
+    #self.cui_parents = {}
+    self.cuis_having_tui = set()
     self.next_arbitrary_code = 1
     
     
@@ -640,7 +646,7 @@ def import_umls(umls_zip_filename, terminologies = None, langs = None, fts_index
   if extract_definitions: parsers.append(("MRDEF", parse_mrdef))
   parsers.append(("MRREL", parse_mrrel))
   if extract_attributes: parsers.append(("MRSAT", parse_mrsat))
-  if (not terminologies) or ("CUI" in terminologies): parsers.append(("MRSTY", parse_mrsty))
+  if (not terminologies) or ("CUI" in terminologies): parsers.insert(0, ("MRSTY", parse_mrsty))
   
   remnants = defaultdict(str)
   
@@ -648,8 +654,8 @@ def import_umls(umls_zip_filename, terminologies = None, langs = None, fts_index
   
   previous_parser = None
   
+  print("Importing UMLS from %s with Python version %s and Owlready version 2-%s..." % (umls_zip_filename, sys.version.split()[0], VERSION))
   if os.path.isdir(umls_zip_filename):
-    print("Importing UMLS from directory %s with Python version %s.%s..." % (umls_zip_filename, sys.version_info.major, sys.version_info.minor))
     inner_filenames = sorted(os.listdir(umls_zip_filename))
     print("Files found in this directory: %s" % ", ".join(inner_filenames))
     if not "MRCONSO.RRF" in inner_filenames:
@@ -666,8 +672,6 @@ def import_umls(umls_zip_filename, terminologies = None, langs = None, fts_index
           default_world.save()
           previous_parser = table_name
   else:
-    print("Importing UMLS from Zip file %s with Python version %s.%s..." % (umls_zip_filename, sys.version_info.major, sys.version_info.minor))
-
     def parse_umls_zip(umls_inner_zip):
       nonlocal previous_parser
       inner_filenames = sorted(umls_inner_zip.namelist())

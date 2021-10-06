@@ -607,6 +607,7 @@ version 2 - 0.35
 * Add STATIC optimization keyword extension to SPARQL
 * Accept GROUP BY, HAVING, LIMIT in INSERT and DELETE query
 * Add the STORID(iri) SPARQL function
+* UMLS CUI are now hierarchized by Semnatic Types (TUI)
 * Bugfixes:
   - Fix SPARQL INSERT query with data parameters in the INSERT clause
   - Fix RDF list parsing when the list includes the integer number 5
