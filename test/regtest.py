@@ -3302,6 +3302,23 @@ I took a placebo
         return
       
     assert False
+    
+  def test_reasoning_11(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/test.owl")
+    
+    with onto:
+      class C(Thing): pass
+      class p1(C >> float, FunctionalProperty): pass
+      class p2(C >> float, FunctionalProperty): label = "p"
+      class p3(C >> float, FunctionalProperty): python_name = "py"
+      
+    sync_reasoner(world, debug = 0)
+    
+    assert p1.is_a == [DataProperty, FunctionalProperty]
+    assert p2.is_a == [DataProperty, FunctionalProperty]
+    assert p3.is_a == [DataProperty, FunctionalProperty]
+    
      
   def test_pellet_reasoning_1(self):
     world = self.new_world()
@@ -8875,13 +8892,7 @@ WHERE {
     world, onto = self.prepare1()
     #q = world.prepare_sparql("""SELECT  ?x { ?x a ?c . ?c rdfs:subClassOf*STATIC onto:A }""")
     q = world.prepare_sparql("""SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf* onto:A } UNION { ?c rdfs:subClassOf onto:B } }""")
-    print(q.sql)
-    print()
-    print()
-    print()
     q = world.prepare_sparql("""SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf*STATIC onto:A } UNION { ?c rdfs:subClassOf*STATIC onto:B } }""")
-    print(q.sql)
-    
     q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf*STATIC onto:A } UNION { ?c rdfs:subClassOf*STATIC onto:B } }""", compare_with_rdflib = False)
     #q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf*STATIC onto:A } }""", compare_with_rdflib = False)
     #assert { i[0] for i in r } == { onto.a1, onto.b1, onto.b2, onto.b3 }

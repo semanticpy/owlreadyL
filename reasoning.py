@@ -236,10 +236,12 @@ def sync_reasoner_pellet(x = None, infer_property_values = False, infer_data_pro
     else:                          ontology = world.get_ontology(_INFERRENCES_ONTOLOGY)
     
     tmp = tempfile.NamedTemporaryFile("wb", delete = False)
+    python_name_storid = world._abbreviate("http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#python_name")
+    def save_filter(graph, s, p, o, d): return p != python_name_storid
     if isinstance(x, list):
-      for o in x: o.save(tmp, format = "ntriples", commit = False)
+      for o in x: o.save(tmp, format = "ntriples", filter = save_filter, commit = False)
     else:
-      world.save(tmp, format = "ntriples")
+      world.save(tmp, format = "ntriples", filter = save_filter)
     tmp.close()
 
     # Use Jena for loading because OWLAPI is bugged with NTriples.
