@@ -23,21 +23,163 @@ from functools import reduce
 from owlready2 import *
 from owlready2.triplelite import _SearchList
 
-PYM          = get_ontology("http://PYM/")
-PYM._src     = PYM.get_namespace("http://PYM/SRC/")
 
-class PYMOntology(Ontology):
-  def get_terminology(self, name): return self._src["%s" % name]
-  __getitem__ = get_terminology
+
+class Concepts(set):
+  """A set of concepts. The set can contain each concept only once, and it
+inherits from Python's :class:`set` the methods for computing intersection, union, difference, ..., of two sets.
+
+.. automethod:: __rshift__
+"""
+  def __repr__   (self): return u"%s([\n  %s])" % (self.__class__.__name__, ", ".join([repr(t) for t in self]))
   
-  def search(self, keywords):
-    keywords = FTS(keywords)
-    return _SearchList(self.world, [(label.storid, keywords, '*'), (PYM.terminology.storid, '*', None)]) | _SearchList(self.world, [(PYM.synonyms.storid, keywords, '*'), (PYM.terminology.storid, '*', None)])
+  def __rshift__(self, destination):
+    """Maps the set of concepts to the destination_terminology. See :doc:`tuto_en` for more info."""
+    #terminology_2_concepts = defaultdict(list)
+    #for concept in self: terminology_2_concepts[concept.terminology].append(concept)
+    #r = Concepts()
+    #for terminology, concepts in terminology_2_concepts.items():
+    #  r.update((terminology >> destination).map_concepts(concepts))
+    #return r
+    r = Concepts( j for i in self for j in i >>  destination)
+    return r
   
-PYM.__class__ = PYMOntology
-
-def _sort_by_name(x): return x.name
-
+  def find(self, parent_concept):
+    """returns the first concept of the set that is a descendant of parent_concept (including parent_concept itself)."""
+    for c in self:
+      if issubclass(c, parent_concept): return c
+      
+  #def find_graphically(self, concept):
+  #  for c in self:
+  #    if hasattr(c, "is_graphically_a"):
+  #      if c.is_graphically_a(concept): return c
+  #    else:
+  #      if c.is_a(concept): return c
+  
+  def imply(self, other):
+    """returns true if all concepts in the OTHER set are descendants of (at least) one of the concepts in this set."""
+    for cb in other:
+      for ca in self:
+        if issubclass(ca, cb): break
+      else:
+        return False
+    return True
+  
+  def is_semantic_subset(self, other):
+    """returns true if all concepts in this set are descendants of (at least) one of the concept in the OTHER set."""
+    for c1 in self:
+      for c2 in other:
+        if issubclass(c1, c2): break
+      else:
+        return False
+    return True
+  
+  def is_semantic_superset(self, other):
+    """returns true if all concepts in this set are ancestors of (at least) one of the concept in the OTHER set."""
+    for c1 in self:
+      for c2 in other:
+        if issubclass(c2, c1): break
+      else:
+        return False
+    return True
+  
+  def is_semantic_disjoint(self, other):
+    """returns true if all concepts in this set are semantically disjoint from all concepts in the OTHER set."""
+    for c1 in self:
+      for c2 in other:
+        if issubclass(c1, c2) or issubclass(c2, c1): return False
+    return True
+  
+  def semantic_intersection(self, other):
+    r = Concepts()
+    for c1 in self:
+      for c2 in other:
+        if   issubclass(c1, c2): r.add(c1)
+        elif issubclass(c2, c1): r.add(c2)
+    return r
+  
+  def keep_most_specific(self, more_specific_than = None):
+    """keeps only the most specific concepts, i.e. remove all concepts that are more general that another concept in the set."""
+    clone = self.copy()
+    for t1 in clone:
+      for t2 in more_specific_than or clone:
+        if (not t1 is t2) and issubclass(t1, t2): # t2 is more generic than t1 => we keep t1
+          self.discard(t2)
+          
+  def keep_most_generic(self, more_generic_than = None):
+    """keeps only the most general concepts, i.e. remove all concepts that are more specific that another concept in the set."""
+    clone  = self.copy()
+    clone2 = (more_generic_than or self).copy()
+    for t1 in clone:
+      for t2 in clone2:
+        if (not t1 is t2) and issubclass(t1, t2): # t2 is more generic than t1 => we keep t2
+          self  .discard(t1)
+          clone2.discard(t1)
+          break
+          
+  def extract(self, parent_concept):
+    """returns all concepts of the set that are descendant of parent_concept (including parent_concept itself)."""
+    return Concepts([c for c in self if issubclass(c, parent_concept)])
+  
+  def subtract(self, parent_concept):
+    """returns a new set after removing all concepts that are descendant of parent_concept (including parent_concept itself)."""
+    return Concepts([c for c in self if not issubclass(c, parent_concept)])
+    
+  def subtract_update(self, parent_concept):
+    """same as `func`:subtract, but modify the set *in place*."""
+    for c in set(self):
+      if issubclass(c, parent_concept): self.discard(c)
+      
+  def remove_entire_families(self, only_family_with_more_than_one_child = True):
+    modified = 1
+    while modified:
+      modified = 0
+      clone = self.copy()
+      if only_family_with_more_than_one_child:
+        parents = set([p for i in self for p in i.parents if len(p.children) > 1])
+      else:
+        parents = set([p for i in self for p in i.parents])
+        
+      while parents:
+        t = parents.pop()
+        children = set(t.children)
+        if children.issubset(clone):
+          modified = 1
+          for i in self.copy():
+            if issubclass(i, t): self.remove(i)
+          for i in parents.copy():
+            if issubclass(i, t): parents.remove(i)
+          self.add(t)
+  
+          
+  def lowest_common_ancestors(self):
+    """returns the lowest common ancestors between this set of concepts."""
+    if len(self) == 0: return None
+    if len(self) == 1: return Concepts(self)
+    
+    ancestors = [set(concept.ancestor_concepts()) for concept in self]
+    common_ancestors = Concepts(reduce(operator.and_, ancestors))
+    r = Concepts()
+    common_ancestors.keep_most_specific()
+    return common_ancestors
+  
+  def all_subsets(self):
+    """returns all the subsets included in this set."""
+    l = [Concepts()]
+    for concept in self:
+      for concepts in l[:]:
+        l.append(concepts | set([concept]))
+    return l
+  
+  def __and__             (s1, s2): return s1.__class__(set.__and__(s1, s2))
+  def __or__              (s1, s2): return s1.__class__(set.__or__(s1, s2))
+  def __sub__             (s1, s2): return s1.__class__(set.__sub__(s1, s2))
+  def __xor__             (s1, s2): return s1.__class__(set.__xor__(s1, s2))
+  def difference          (s1, s2): return s1.__class__(set.difference(s1, s2))
+  def intersection        (s1, s2): return s1.__class__(set.intersection(s1, s2))
+  def symmetric_difference(s1, s2): return s1.__class__(set.symmetric_difference(s1, s2))
+  def union               (s1, s2): return s1.__class__(set.union(s1, s2))
+  def copy                (s1):     return s1.__class__(s1)
 
 
 class MetaConcept(ThingClass):
@@ -72,7 +214,7 @@ class MetaConcept(ThingClass):
       return r
     
     elif attr == "terminology":
-      r = Class.namespace.world._get_obj_triple_sp_o(Class.storid, PYM.terminology.storid)
+      r = Class.namespace.world._get_obj_triple_sp_o(Class.storid, Class.namespace.world["http://PYM/terminology"].storid)
       r = Class.namespace.world._get_by_storid(r)
       type.__setattr__(Class, "__terminology", r)
       return r
@@ -137,6 +279,49 @@ class MetaConcept(ThingClass):
     r = Concepts(mapper(Class))
     if r: return r
     return Concepts( i for parent in Class.parents for i in parent._map(mapper) )
+
+
+class MetaGroup(ThingClass):
+  def __new__(MetaClass, name, superclasses, obj_dict):
+    if superclasses == (Thing,): return ThingClass.__new__(MetaClass, name, superclasses, obj_dict)
+    else:                        return type.__new__(MetaClass, name, superclasses, obj_dict)
+    
+  def __repr__(Class):
+    return """<Group %s> # %s\n""" % (Class.name, " ; ".join("%s=%s" % (prop.label.first() or prop.name, ",".join(v.label.first() for v in prop[Class])) for prop in Class.get_class_properties()))
+
+  
+class PYMOntology(Ontology):
+  def __new__(Class, world):
+    self           = world.get_ontology("http://PYM/")
+    self._src      = self.get_namespace("http://PYM/SRC/")
+    self.__class__ = PYMOntology
+    self.Concepts  = Concepts
+    
+    with self:
+      class Concept(Thing, metaclass = MetaConcept): pass
+      type.__setattr__(Concept, "__terminology", None)
+      type.__setattr__(Concept, "__children", [])
+      type.__setattr__(Concept, "__parents" , [])
+      
+      class Group(Thing, metaclass = MetaGroup): pass
+      
+    return self
+
+  def __init__(self, world): pass
+  
+  def get_terminology(self, name): return self._src["%s" % name]
+  __getitem__ = get_terminology
+  
+  def search(self, keywords):
+    keywords = FTS(keywords)
+    return _SearchList(self.world, [(label.storid, keywords, '*'), (self.terminology.storid, '*', None)]) | _SearchList(self.world, [(self.synonyms.storid, keywords, '*'), (self.terminology.storid, '*', None)])
+
+PYM = PYMOntology(default_world)
+
+
+def _sort_by_name(x): return x.name
+
+
 
 
 
@@ -316,193 +501,9 @@ def _create_icd10_2_icd10_french_atih_mapper(dest):
       elif code == "O95-O99.9": yield dest["O94-O99"]
   return _icd10_2_icd10_french_atih_mapper
 
-
-class MetaGroup(ThingClass):
-  def __new__(MetaClass, name, superclasses, obj_dict):
-    if superclasses == (Thing,): return ThingClass.__new__(MetaClass, name, superclasses, obj_dict)
-    else:                        return type.__new__(MetaClass, name, superclasses, obj_dict)
-    
-  def __repr__(Class):
-    return """<Group %s> # %s\n""" % (Class.name, " ; ".join("%s=%s" % (prop.label.first() or prop.name, ",".join(v.label.first() for v in prop[Class])) for prop in Class.get_class_properties()))
     
     
-with PYM:
-  class Concept(Thing, metaclass = MetaConcept):
-    pass
-  type.__setattr__(Concept, "__terminology", None)
-  type.__setattr__(Concept, "__children", [])
-  type.__setattr__(Concept, "__parents" , [])
-
-  class Group(Thing, metaclass = MetaGroup):
-    pass
-
-#  class unifieds(ObjectProperty):
-#    @classmethod
-#    def is_functional_for(Prop, Class): return False
-    
-#  class originals(ObjectProperty):
-#    @classmethod
-#    def is_functional_for(Prop, Class): return False
       
 _CUI = PYM["CUI"]
 
-def Concepts(x): return set(x)
 
-
-class Concepts(set):
-  """A set of concepts. The set can contain each concept only once, and it
-inherits from Python's :class:`set` the methods for computing intersection, union, difference, ..., of two sets.
-
-.. automethod:: __rshift__
-"""
-  def __repr__   (self): return u"%s([\n  %s])" % (self.__class__.__name__, ", ".join([repr(t) for t in self]))
-  
-  def __rshift__(self, destination):
-    """Maps the set of concepts to the destination_terminology. See :doc:`tuto_en` for more info."""
-    #terminology_2_concepts = defaultdict(list)
-    #for concept in self: terminology_2_concepts[concept.terminology].append(concept)
-    #r = Concepts()
-    #for terminology, concepts in terminology_2_concepts.items():
-    #  r.update((terminology >> destination).map_concepts(concepts))
-    #return r
-    r = Concepts( j for i in self for j in i >>  destination)
-    return r
-  
-  def find(self, parent_concept):
-    """returns the first concept of the set that is a descendant of parent_concept (including parent_concept itself)."""
-    for c in self:
-      if issubclass(c, parent_concept): return c
-      
-  #def find_graphically(self, concept):
-  #  for c in self:
-  #    if hasattr(c, "is_graphically_a"):
-  #      if c.is_graphically_a(concept): return c
-  #    else:
-  #      if c.is_a(concept): return c
-  
-  def imply(self, other):
-    """returns true if all concepts in the OTHER set are descendants of (at least) one of the concepts in this set."""
-    for cb in other:
-      for ca in self:
-        if issubclass(ca, cb): break
-      else:
-        return False
-    return True
-  
-  def is_semantic_subset(self, other):
-    """returns true if all concepts in this set are descendants of (at least) one of the concept in the OTHER set."""
-    for c1 in self:
-      for c2 in other:
-        if issubclass(c1, c2): break
-      else:
-        return False
-    return True
-  
-  def is_semantic_superset(self, other):
-    """returns true if all concepts in this set are ancestors of (at least) one of the concept in the OTHER set."""
-    for c1 in self:
-      for c2 in other:
-        if issubclass(c2, c1): break
-      else:
-        return False
-    return True
-  
-  def is_semantic_disjoint(self, other):
-    """returns true if all concepts in this set are semantically disjoint from all concepts in the OTHER set."""
-    for c1 in self:
-      for c2 in other:
-        if issubclass(c1, c2) or issubclass(c2, c1): return False
-    return True
-  
-  def semantic_intersection(self, other):
-    r = Concepts()
-    for c1 in self:
-      for c2 in other:
-        if   issubclass(c1, c2): r.add(c1)
-        elif issubclass(c2, c1): r.add(c2)
-    return r
-  
-  def keep_most_specific(self, more_specific_than = None):
-    """keeps only the most specific concepts, i.e. remove all concepts that are more general that another concept in the set."""
-    clone = self.copy()
-    for t1 in clone:
-      for t2 in more_specific_than or clone:
-        if (not t1 is t2) and issubclass(t1, t2): # t2 is more generic than t1 => we keep t1
-          self.discard(t2)
-          
-  def keep_most_generic(self, more_generic_than = None):
-    """keeps only the most general concepts, i.e. remove all concepts that are more specific that another concept in the set."""
-    clone  = self.copy()
-    clone2 = (more_generic_than or self).copy()
-    for t1 in clone:
-      for t2 in clone2:
-        if (not t1 is t2) and issubclass(t1, t2): # t2 is more generic than t1 => we keep t2
-          self  .discard(t1)
-          clone2.discard(t1)
-          break
-          
-  def extract(self, parent_concept):
-    """returns all concepts of the set that are descendant of parent_concept (including parent_concept itself)."""
-    return Concepts([c for c in self if issubclass(c, parent_concept)])
-  
-  def subtract(self, parent_concept):
-    """returns a new set after removing all concepts that are descendant of parent_concept (including parent_concept itself)."""
-    return Concepts([c for c in self if not issubclass(c, parent_concept)])
-    
-  def subtract_update(self, parent_concept):
-    """same as `func`:subtract, but modify the set *in place*."""
-    for c in set(self):
-      if issubclass(c, parent_concept): self.discard(c)
-      
-  def remove_entire_families(self, only_family_with_more_than_one_child = True):
-    modified = 1
-    while modified:
-      modified = 0
-      clone = self.copy()
-      if only_family_with_more_than_one_child:
-        parents = set([p for i in self for p in i.parents if len(p.children) > 1])
-      else:
-        parents = set([p for i in self for p in i.parents])
-        
-      while parents:
-        t = parents.pop()
-        children = set(t.children)
-        if children.issubset(clone):
-          modified = 1
-          for i in self.copy():
-            if issubclass(i, t): self.remove(i)
-          for i in parents.copy():
-            if issubclass(i, t): parents.remove(i)
-          self.add(t)
-  
-          
-  def lowest_common_ancestors(self):
-    """returns the lowest common ancestors between this set of concepts."""
-    if len(self) == 0: return None
-    if len(self) == 1: return Concepts(self)
-    
-    ancestors = [set(concept.ancestor_concepts()) for concept in self]
-    common_ancestors = Concepts(reduce(operator.and_, ancestors))
-    r = Concepts()
-    common_ancestors.keep_most_specific()
-    return common_ancestors
-  
-  def all_subsets(self):
-    """returns all the subsets included in this set."""
-    l = [Concepts()]
-    for concept in self:
-      for concepts in l[:]:
-        l.append(concepts | set([concept]))
-    return l
-  
-  def __and__             (s1, s2): return s1.__class__(set.__and__(s1, s2))
-  def __or__              (s1, s2): return s1.__class__(set.__or__(s1, s2))
-  def __sub__             (s1, s2): return s1.__class__(set.__sub__(s1, s2))
-  def __xor__             (s1, s2): return s1.__class__(set.__xor__(s1, s2))
-  def difference          (s1, s2): return s1.__class__(set.difference(s1, s2))
-  def intersection        (s1, s2): return s1.__class__(set.intersection(s1, s2))
-  def symmetric_difference(s1, s2): return s1.__class__(set.symmetric_difference(s1, s2))
-  def union               (s1, s2): return s1.__class__(set.union(s1, s2))
-  def copy                (s1):     return s1.__class__(s1)
-
-PYM.Concepts = Concepts
