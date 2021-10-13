@@ -608,6 +608,7 @@ version 2 - 0.35
 * Accept GROUP BY, HAVING, LIMIT in INSERT and DELETE SPARQL query
 * Add the STORID(iri) SPARQL function
 * UMLS CUI are now hierarchized by Semnatic Types (TUI)
+* Improved parallelism
 * Bugfixes:
   - Fix 'sqlite3.OperationalError: circular reference: prelim1_objs' in .instances(), caused by a bug in old versions of SQLite3
   - Fix SPARQL INSERT query with data parameters in the INSERT clause
