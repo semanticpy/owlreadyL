@@ -493,6 +493,7 @@ class Graph(BaseMainGraph):
     if create_if_missing:
       self.current_resource.value += 1
       storid = self.current_resource.value
+      #storid = self.execute("SELECT MAX(storid)+1 FROM resources").fetchone()[0]
       self.execute("INSERT INTO resources VALUES (?,?)", (storid, iri))
       return storid
     

@@ -862,11 +862,6 @@ class Ontology(Namespace, _GraphManager):
     if not r is None: return r
     return Namespace(self, base_iri, name or base_iri[:-1].rsplit("/", 1)[-1])
   
-  #def __exit__(self, exc_type = None, exc_val = None, exc_tb = None):
-  #  Namespace.__exit__(self, exc_type, exc_val, exc_tb)
-  #  if not self.loaded:
-  #    self.loaded = True
-  #    if self.graph: self.graph.set_last_update_time(time.time())
   def __enter__(self): # Do this in __enter__ and not __exit__, because set_last_update_time() modify the database. Modifying the database in __exit__ prevents calling World.save() inside the 'with onto:' block. 
     Namespace.__enter__(self)
     if not self.loaded:
