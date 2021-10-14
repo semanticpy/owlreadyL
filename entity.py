@@ -513,7 +513,7 @@ SELECT q.o FROM objs q, prelim1_objs rec WHERE q.p=33 AND q.s=rec.s)
 
 SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) OR q1.o IN (SELECT s FROM prelim2_objs) ) ;
 """
-    return q.execute_flat((Class,))
+    return list(q.execute_flat((Class,)))
   
   def direct_instances(Class, world = None):
     if Class.namespace.world is owl_world:

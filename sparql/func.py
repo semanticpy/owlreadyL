@@ -81,6 +81,9 @@ _FUNC_2_DATATYPE = {
   "NEWINSTANCEIRI" : None, # ok
   "LOADED" : _universal_datatype_2_abbrev[bool], # ok
   "STORID" : _universal_datatype_2_abbrev[int], # ok
+  "DATE"    : _universal_datatype_2_abbrev[datetime.date], # ok
+  "TIME"    : _universal_datatype_2_abbrev[datetime.time], # ok
+  "DATETIME": _universal_datatype_2_abbrev[datetime.datetime], # ok
 
   "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#INTEGER" : _universal_datatype_2_abbrev[int], # ok
   "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#DOUBLE" : _universal_datatype_2_abbrev[float], # ok

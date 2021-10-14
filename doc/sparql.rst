@@ -272,6 +272,7 @@ and has better performances.
 
  * The STORID(iri) function returns the integer Store-ID used by Owlready in the quadstore for representing the entity.
 
+ * The DATE(), TIME() and DATETIME() functions can be used to handle date and time. They behave as in SQLite3 (see <returns the integer Store-ID used by Owlready in the quadstore for representing the entity.>_).
 
 In Owlready, INSERT and DELETE queries can have a GROUP BY, HAVING and/or ORDER BY clauses.
 This is normally not allowed by the SPARQL specification.

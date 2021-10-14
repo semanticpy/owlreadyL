@@ -240,7 +240,7 @@ class MetaConcept(ThingClass):
   
   def ancestor_concepts(Class, include_self = True, no_double = True):
     l = []
-    Class._fill_ancestor_concepts(l, { Concept }, include_self, no_double)
+    Class._fill_ancestor_concepts(l, { Class.namespace.world["http://PYM/Concept"] }, include_self, no_double)
     return l
   
   def _fill_ancestor_concepts(Class, l, s, include_self, no_double):
@@ -304,7 +304,7 @@ class PYMOntology(Ontology):
       type.__setattr__(Concept, "__parents" , [])
       
       class Group(Thing, metaclass = MetaGroup): pass
-      
+
     return self
 
   def __init__(self, world): pass
