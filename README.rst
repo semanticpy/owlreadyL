@@ -606,7 +606,7 @@ version 2 - 0.35
 * Support for VALUES in SPARQL
 * Add STATIC optimization keyword extension to SPARQL
 * Accept GROUP BY, HAVING, LIMIT in INSERT and DELETE SPARQL query
-* Add the STORID(iri) SPARQL function
+* Add the STORID(iri), DATE(), TIME() and DATETIME() SPARQL function
 * UMLS CUI are now hierarchized by Semnatic Types (TUI)
 * Improved parallelism
 * Bugfixes:
