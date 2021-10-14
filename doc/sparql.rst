@@ -262,7 +262,7 @@ Non-standard additions to SPARQL
 The following functions are supported by Owlready, but not standard:
 
  * The SIMPLEREPLACE(a, b) function is a version of REPLACE() that does not support Regex. It works like Python or SQLite3 replace,
-and has better performances.
+   and has better performances.
 
  * The NEWINSTANCEIRI() function create a new IRI for an instance of the class given as argument. This IRI is similar to those
    created by default by Owlready. Note that the function does not create any RDF triple, so you need to create triples for
@@ -272,7 +272,7 @@ and has better performances.
 
  * The STORID(iri) function returns the integer Store-ID used by Owlready in the quadstore for representing the entity.
 
- * The DATE(), TIME() and DATETIME() functions can be used to handle date and time. They behave as in SQLite3 (see <returns the integer Store-ID used by Owlready in the quadstore for representing the entity.>_).
+ * The DATE(), TIME() and DATETIME() functions can be used to handle date and time. They behave as in SQLite3 (see https://www.sqlite.org/lang_datefunc.html).
 
 In Owlready, INSERT and DELETE queries can have a GROUP BY, HAVING and/or ORDER BY clauses.
 This is normally not allowed by the SPARQL specification.
