@@ -163,13 +163,12 @@ of "membrane".
    >>> insertion = get_ontology("http://test.org/insertion.owl")
    >>> with insertion:
    ...     default_world.sparql("""
-              INSERT { ?n a owl:NamedIndividual .
-                       ?n a ?y . }
+              INSERT { ?n rdfs:label "New individual!" . }
               WHERE  { ?x rdfs:label "membrane" .
                        ?y rdfs:subClassOf ?x .
                        BIND(NEWINSTANCEIRI(?y) AS ?n) }
               """)
-   14
+   
 
 We use here a BIND statement in order to create a new IRI, using the NEWINSTANCEIRI() function that create a new IRI for
 an individual, similar to those created automatically by Owlready. You may also use the more standard UUID() SPARQL function,
@@ -265,8 +264,8 @@ The following functions are supported by Owlready, but not standard:
    and has better performances.
 
  * The NEWINSTANCEIRI() function create a new IRI for an instance of the class given as argument. This IRI is similar to those
-   created by default by Owlready. Note that the function does not create any RDF triple, so you need to create triples for
-   asserting the new individual parents (including OWL NamedIndividual and the desired class(es)).
+   created by default by Owlready. Note that the function creates 2 RDF triples, asserting that the new individual is an
+   OWL NamedIndividual and an instance of the desired class passed as argument.
 
  * The LOADED(iri) function returns True if the given IRI is currently loaded in Python, and False otherwise.
 

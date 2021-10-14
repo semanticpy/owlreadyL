@@ -8466,7 +8466,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     onto2 = world.get_ontology("http://test.org/insertions.owl")
     with onto2:
-      q, r = self.sparql(world, """INSERT  { ?a a owl:NamedIndividual . ?a a onto:A . ?b onto:rel ?a }  WHERE  { ?b a onto:B . BIND(NEWINSTANCEIRI(onto:A) AS ?a) }""", compare_with_rdflib = False)
+      q, r = self.sparql(world, """INSERT  { ?b onto:rel ?a }  WHERE  { ?b a onto:B . BIND(NEWINSTANCEIRI(onto:A) AS ?a) }""", compare_with_rdflib = False)
     assert r == [3]
     assert len(onto2.graph) == 10
     assert onto2.a1.is_a == [onto.A]

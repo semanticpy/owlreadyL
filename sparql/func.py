@@ -18,7 +18,7 @@
 
 
 import sys, os, re, urllib.parse, functools, datetime
-from owlready2.base import _universal_datatype_2_abbrev, _parse_datetime
+from owlready2.base import _universal_datatype_2_abbrev, _parse_datetime, rdf_type, owl_named_individual
 import owlready2, owlready2.rply as rply
 
 
@@ -193,15 +193,18 @@ class _Func(object):
     return bn
   
   def _newinstanceiri(self, x):
-    x = self.world._get_by_storid(x)
-    namespace = (owlready2.CURRENT_NAMESPACES.get() and owlready2.CURRENT_NAMESPACES.get()[-1]) or x.namespace
-    iri = self.world.graph._new_numbered_iri("%s%s" % (namespace.base_iri, x.name.lower()))
-    return self.world._abbreviate(iri)
-
+    Class = self.world._get_by_storid(x)
+    namespace = (owlready2.CURRENT_NAMESPACES.get() and owlready2.CURRENT_NAMESPACES.get()[-1]) or Class.namespace
+    iri = self.world.graph._new_numbered_iri("%s%s" % (namespace.base_iri, Class.name.lower()))
+    storid = self.world._abbreviate(iri)
+    namespace.ontology._add_obj_triple_spo(storid, rdf_type, owl_named_individual)
+    namespace.ontology._add_obj_triple_spo(storid, rdf_type, x)
+    return storid
+  
   def _loaded(self, x):
     return x in self.world._entities
   
-  
+
 def register_python_function(world):
   if (sys.version_info.major == 3) and (sys.version_info.minor < 8):
     def create_function(name, num_params, func, deterministic = False):
