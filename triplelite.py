@@ -136,9 +136,12 @@ class Graph(BaseMainGraph):
     self.world             = world
     self.c                 = None
     self.nb_added_triples  = 0
-    
-    #self.lock              = multiprocessing.RLock()
-    self.lock_level        = 0
+
+    if read_only:
+      self.lock     = multiprocessing.RLock()
+      self.acquire_write_lock = self._acquire_write_lock_read_only
+      self.release_write_lock = self._release_write_lock_read_only
+    self.lock_level = 0
     
     if initialize_db:
       #self.current_blank    = multiprocessing.Value("i", 0)
@@ -438,6 +441,10 @@ class Graph(BaseMainGraph):
   def release_write_lock(self):
     self.lock_level -= 1
     #self.lock.release()
+  def _acquire_write_lock_read_only(self):
+    self.lock.acquire()
+  def _release_write_lock_read_only(self):
+    self.lock.release()
   def has_write_lock(self): return self.lock_level
   
   def select_abbreviate_method(self):

@@ -796,6 +796,7 @@ class World(_GraphManager):
      
 class Ontology(Namespace, _GraphManager):
   def __init__(self, world, base_iri, name = None):
+    #need_write = False
     if world.graph: world.graph.acquire_write_lock()
     
     self.world       = world # Those 2 attributes are required before calling Namespace.__init__
@@ -804,9 +805,17 @@ class Ontology(Namespace, _GraphManager):
     self.loaded                = False
     self._bnodes               = weakref.WeakValueDictionary()
     self.storid                = world._abbreviate(base_iri[:-1])
+    #self.storid                = world._abbreviate(base_iri[:-1], False)
+    #if self.storid is None:
+    #  if world.graph and not need_write:
+    #    need_write = True
+    #    world.graph.acquire_write_lock()
+    #  self.storid              = world._abbreviate(base_iri[:-1], True)
+      
     self._imported_ontologies  = CallbackList([], self, Ontology._import_changed)
     self.metadata              = Metadata(self, self.storid)
-
+    
+    #if world.graph: world.graph.acquire_write_lock()
     
     if world.graph is None:
       self.graph = None
@@ -822,11 +831,15 @@ class Ontology(Namespace, _GraphManager):
     
     if (not LOADING) and (not self.graph is None):
       if not self._has_obj_triple_spo(self.storid, rdf_type, owl_ontology):
+        #if not need_write:
+        #  need_write = True
+        #  world.graph.acquire_write_lock()
         self._add_obj_triple_spo(self.storid, rdf_type, owl_ontology)
         
     if not self.world._rdflib_store is None: self.world._rdflib_store._add_onto(self)
     
     if world.graph: world.graph.release_write_lock()
+    #if need_write: world.graph.release_write_lock()
     
   def destroy(self):
     self.world.graph.acquire_write_lock()

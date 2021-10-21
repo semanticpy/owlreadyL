@@ -375,7 +375,7 @@ class FusionClass(ThingClass):
     key = frozenset(Classes0)
     Class = FusionClass._CACHES.get(key)
     if Class: return Class
-    
+
     Classes = _keep_most_specific(Classes0, consider_equivalence = False)
     try:
       fusion_class = FusionClass._create_fusion_class(key, Classes)
@@ -395,7 +395,7 @@ class FusionClass(ThingClass):
     Classes = tuple(sorted(Classes, key = lambda Class: Class.__name__))
     if Classes in FusionClass._FUSION_CLASSES: return FusionClass._FUSION_CLASSES[Classes]
     name = "_AND_".join(Class.__name__ for Class in Classes)
-    
+
     with anonymous: # Force triple insertion into anonymous
       try:
         fusion_class = FusionClass(name, Classes, { "namespace" : anonymous })

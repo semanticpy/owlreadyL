@@ -521,6 +521,7 @@ class PreparedModifyQuery(PreparedQuery):
     nb_match = 0
     if self.sql: resultss = PreparedQuery.execute(self, [params[i] for i in self.select_param_indexes])
     else:        resultss = [()]
+    
     for results in set(resultss):
       nb_match += 1
       
