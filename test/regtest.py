@@ -1215,7 +1215,7 @@ class Test(BaseTest, unittest.TestCase):
     
     self.assert_triple(i.storid, rdf_type, C1.storid)
     self.assert_triple(i.storid, rdf_type, C2.storid)
-    assert "_AND_" in i.__class__.__name__
+    assert "FusionClass" in i.__class__.__name__
     
   def test_individual_5(self):
     n = self.new_ontology()
@@ -1594,6 +1594,26 @@ class Test(BaseTest, unittest.TestCase):
       l = list(world.graph.execute("select o from objs where s=? and p=6", (i.storid,)))
       assert len(l) == 2
       
+  def test_individual_26(self):
+    world1 = self.new_world()
+    onto1  = world1.get_ontology("http://test.org/onto.owl")
+    
+    with onto1:
+      class C(Thing): pass
+      class D(Thing): pass
+      x1 = C()
+      x1.is_a.append(D)
+      
+    world2 = self.new_world()
+    onto2  = world2.get_ontology("http://test.org/onto.owl")
+    
+    with onto2:
+      class C(Thing): pass
+      class D(Thing): pass
+      x2 = C()
+      x2.is_a.append(D)
+      
+    assert not x1.__class__ is x2.__class__
       
   def test_prop_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")

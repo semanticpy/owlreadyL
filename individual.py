@@ -365,43 +365,47 @@ class Nothing(Thing): pass
 class FusionClass(ThingClass):
   ontology = anonymous
   
-  _CACHES         = {}
-  _FUSION_CLASSES = {}
-
   def __repr__(self): return "<FusionClass %s>" % ", ".join(repr(c) for c in self.__bases__)
   
   @staticmethod
   def _get_fusion_class(Classes0):
-    key = frozenset(Classes0)
-    Class = FusionClass._CACHES.get(key)
+    Classes0 = tuple(sorted(Classes0, key = lambda Class: Class.__name__))
+    Class = Classes0[0].namespace.world._fusion_class_cache.get(Classes0)
     if Class: return Class
-
-    Classes = _keep_most_specific(Classes0, consider_equivalence = False)
+    
+    Classes = _keep_most_specific(Classes0, consider_equivalence = True)
     try:
-      fusion_class = FusionClass._create_fusion_class(key, Classes)
+      fusion_class = FusionClass._create_fusion_class(Classes0, Classes)
       
     except: # Too complex hierarchy => do not consider equivalent classes
-      Classes = _keep_most_specific(Classes0, consider_equivalence = True)
-      fusion_class = FusionClass._create_fusion_class(key, Classes)
+      Classes = _keep_most_specific(Classes0, consider_equivalence = False)
+      fusion_class = FusionClass._create_fusion_class(Classes0, Classes)
       
     return fusion_class
   
   @staticmethod
-  def _create_fusion_class(key, Classes):
+  def _create_fusion_class(Classes0, Classes):
+    global _NEXT_FUSION_CLASS_ID
+    
     if len(Classes) == 1:
-      FusionClass._CACHES[key] = Class = tuple(Classes)[0]
+      Class = tuple(Classes)[0]
+      Class.namespace.world._fusion_class_cache[Classes0] = Class
       return Class
     
     Classes = tuple(sorted(Classes, key = lambda Class: Class.__name__))
-    if Classes in FusionClass._FUSION_CLASSES: return FusionClass._FUSION_CLASSES[Classes]
-    name = "_AND_".join(Class.__name__ for Class in Classes)
-
+    fusion_class = Classes0[0].namespace.world._fusion_class_cache.get(Classes)
+    if fusion_class: return fusion_class
+    #name = "_AND_".join(Class.__name__ for Class in Classes) # Causes name clashes if several world have Fusion Class with the same OWL classes and thus the same names
+    name = "FusionClass%s" % _NEXT_FUSION_CLASS_ID
+    _NEXT_FUSION_CLASS_ID += 1
+    
     with anonymous: # Force triple insertion into anonymous
       try:
         fusion_class = FusionClass(name, Classes, { "namespace" : anonymous })
       except TypeError:
         fusion_class = ThingClass(name, Classes, { "namespace" : anonymous })
         
-    FusionClass._FUSION_CLASSES[Classes] = FusionClass._CACHES[key] = fusion_class
+    Classes0[0].namespace.world._fusion_class_cache[Classes0] = Classes0[0].namespace.world._fusion_class_cache[Classes] = fusion_class
     return fusion_class
   
+_NEXT_FUSION_CLASS_ID = 1

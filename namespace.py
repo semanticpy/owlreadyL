@@ -428,15 +428,16 @@ class World(_GraphManager):
   def __init__(self, backend = "sqlite", filename = ":memory:", dbname = "owlready2_quadstore", **kargs):
     global owl_world
     
-    self.world            = self
-    self.filename         = filename
-    self.ontologies       = {}
-    self._props           = {}
-    self._reasoning_props = {}
-    self._entities        = weakref.WeakValueDictionary()
-    self._namespaces      = weakref.WeakValueDictionary()
-    self._rdflib_store    = None
-    self.graph            = None
+    self.world               = self
+    self.filename            = filename
+    self.ontologies          = {}
+    self._props              = {}
+    self._reasoning_props    = {}
+    self._entities           = weakref.WeakValueDictionary()
+    self._namespaces         = weakref.WeakValueDictionary()
+    self._fusion_class_cache = {}
+    self._rdflib_store       = None
+    self.graph               = None
     
     if not owl_world is None:
       self._entities.update(owl_world._entities) # add OWL entities in the world
@@ -472,8 +473,18 @@ class World(_GraphManager):
 
     self._full_text_search_properties = CallbackList([self._get_by_storid(storid, default_to_none = True) or storid for storid in self.graph.get_fts_prop_storid()], self, World._full_text_search_changed)
     
-  def close(self): self.graph.close()
-  
+  def close(self):
+    self._destroy_cached_entities()
+    self.graph.close()
+    
+  def _destroy_cached_entities(self):
+    _entities = self._entities
+    _fusion_classes = set(self._fusion_class_cache.values())
+    for i, cached in enumerate(_cache):
+      if (not cached is None) and ((cached.namespace.world is self) or (cached in _fusion_classes)):
+        if cached.storid in _entities: del _entities[cached.storid]
+        _cache[i] = None
+        
   def get_full_text_search_properties(self): return self._full_text_search_properties
   def set_full_text_search_properties(self, l):
     old = self._full_text_search_properties
@@ -585,7 +596,7 @@ class World(_GraphManager):
     if d is None: self._del_obj_triple_raw_spo  (s,p,o)
     else:         self._del_data_triple_raw_spod(s,p,o,d)
     
-  def _add_triple_with_update(self, ontology0, s, p, o, d = None):
+  def _add_triples_with_update(self, ontology0, triples):
     l = owlready2.namespace.CURRENT_NAMESPACES.get()
     if l:
       ontology = l[-1].ontology
@@ -593,46 +604,70 @@ class World(_GraphManager):
       ontology = ontology0
       if not ontology:
         raise ValueError("Cannot add triples outside a 'with' block. Please start a 'with' block to indicate in which ontology the new triple is added, or include a 'WITH <onto_IRI>' statement in SPARQL.")
-
-    sub = None
-    if   (s > 0) and (s in self.world._entities): sub = self._entities[s]
-    elif (s < 0) and (s in ontology._bnodes):     sub = ontology._bnodes[s]
-    if not sub is None:
-      prop = self._entities.get(p)
-      if   prop:
-        try: delattr(sub, prop.python_name)
-        except: pass
-        
-      elif d is None:
-        if o > 0: obj = self._get_by_storid(o)
-        else:     obj = self._parse_bnode(o)
-        
-        if not obj is None:
-          if   (p == rdf_type) or (p == rdfs_subclassof) or (p == rdfs_subpropertyof):
-            with DONT_COPY_BN:
-              with ontology: sub.is_a.append(obj)
-            return
+      
+    is_a_triples = defaultdict(list)
+    
+    for triple in triples:
+      if len(triple) == 3: s, p, o    = triple; d = None
+      else:                s, p, o, d = triple
+      
+      if (p == rdf_type) or (p == rdfs_subclassof):
+        is_a_triples[s, p].append(o)
+        continue
+      
+      if   (s > 0) and (s in self.world._entities): sub = self._entities[s]
+      elif (s < 0) and (s in ontology._bnodes):     sub = ontology._bnodes[s]
+      else:                                         sub = None
+      if not sub is None:
+        prop = self._entities.get(p)
+        if   prop:
+          try: delattr(sub, prop.python_name)
+          except: pass
           
-          elif (p == owl_equivalentindividual) or (p == owl_equivalentclass) or (p == owl_equivalentproperty):
-            with DONT_COPY_BN:
-              with ontology: sub.equivalent_to.append(obj)
-            return
-          
+        elif d is None:
+          if   (p == owl_equivalentindividual) or (p == owl_equivalentclass) or (p == owl_equivalentproperty):
+            obj = self._get_by_storid(o) if o > 0 else self._parse_bnode(o)
+            if not obj is None:
+              with DONT_COPY_BN:
+                with ontology: sub.equivalent_to.append(obj)
+              continue
+            
           elif (p == owl_inverse_property):
-            with ontology: sub.inverse_property = obj
-            return
+            obj = self._get_by_storid(o) if o > 0 else self._parse_bnode(o)
+            if not obj is None:
+              with ontology: sub.inverse_property = obj
+              continue
           
           elif (p == rdf_domain):
-            with ontology: sub.domain.append(obj)
-            return
-          
+            obj = self._get_by_storid(o) if o > 0 else self._parse_bnode(o)
+            if not obj is None:
+              with ontology: sub.domain.append(obj)
+              continue
+            
           elif (p == rdf_range):
-            with ontology: sub.range.append(obj)
-            return
-          
-    if d is None: ontology.graph._add_obj_triple_raw_spo  (s,p,o)
-    else:         ontology.graph._add_data_triple_raw_spod(s,p,o,d)
-    
+            obj = self._get_by_storid(o) if o > 0 else self._parse_bnode(o)
+            if not obj is None:
+              with ontology: sub.range.append(obj)
+              continue
+            
+      if d is None: ontology.graph._add_obj_triple_raw_spo  (s, p, o)
+      else:         ontology.graph._add_data_triple_raw_spod(s, p, o, d)
+
+    # Factorize is_a triples for better performance
+    for (s, p), os in is_a_triples.items():
+      if   (s > 0) and (s in self.world._entities): sub = self._entities[s]
+      elif (s < 0) and (s in ontology._bnodes):     sub = ontology._bnodes[s]
+      else:                                         sub = None
+      if not sub is None:
+        objs = [self._get_by_storid(o) if o > 0 else self._parse_bnode(o) for o in os]
+        objs = [obj for obj in objs if not obj is None]
+        
+        with DONT_COPY_BN:
+          with ontology: sub.is_a.extend(objs)
+            
+      else:
+        for o in os: ontology.graph._add_obj_triple_raw_spo(s, p, o)
+        
     
   def get(self, iri, default = None):
     storid = self._abbreviate(iri, False)

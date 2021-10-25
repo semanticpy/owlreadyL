@@ -118,12 +118,12 @@ class EntityClass(type):
         _is_a = superclasses = MetaClass._find_base_classes(superclasses) or (Thing,)
       else:
         _is_a = superclasses
-        
+
     if LOADING:
       Class = namespace.world._entities.get (storid)
     else:
       Class = namespace.world._get_by_storid(storid)
-        
+      
     equivalent_to = obj_dict.pop("equivalent_to", None)
     
     if Class is None:
@@ -131,7 +131,7 @@ class EntityClass(type):
         for base in _is_a:
           if isinstance(base, Construct):
             base = base._set_ontology_copy_if_needed(namespace.ontology, _is_a)
-              
+        
       _is_a = CallbackList(_is_a, None, MetaClass._class_is_a_changed)
       obj_dict.update(
         _name          = name,

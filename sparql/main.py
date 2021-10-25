@@ -522,6 +522,7 @@ class PreparedModifyQuery(PreparedQuery):
     if self.sql: resultss = PreparedQuery.execute(self, [params[i] for i in self.select_param_indexes])
     else:        resultss = [()]
     
+    added_triples = []
     for results in set(resultss):
       nb_match += 1
       
@@ -545,7 +546,9 @@ class PreparedModifyQuery(PreparedQuery):
           elif type == "paramdatatype": triple.append(self.world._to_rdf(params[value])[1])
           else:                         triple.append(value)
         #print("ADD", insert, triple)
-        self.world._add_triple_with_update(self.ontology, *triple)
+        added_triples.append(triple)
+
+    if added_triples: self.world._add_triples_with_update(self.ontology, added_triples)
     return nb_match
   
     
