@@ -260,7 +260,7 @@ class Translator(object):
       for bind in extra_binds: s.prepare_bind(bind)
       
       s.parse_selects(selects)
-      
+
       s.parse_triples(block)
       for bind in extra_binds: s.parse_bind(bind)
       
@@ -547,7 +547,7 @@ class PreparedModifyQuery(PreparedQuery):
           else:                         triple.append(value)
         #print("ADD", insert, triple)
         added_triples.append(triple)
-
+        
     if added_triples: self.world._add_triples_with_update(self.ontology, added_triples)
     return nb_match
   
@@ -590,8 +590,8 @@ class Variable(object):
   
   def update_type(self, type):
     if   self.type == "quads": self.type = type
-    elif (type != self.type) and (type != "quads") :
-      raise ValueError("Variable %s cannot be both %s and %s!" % (self.name, self.type, type))
+    elif (type != self.type) and (type != "quads"):
+      raise ValueError("Variable %s cannot be both %s and %s!\n\n(NB if you are querying entities that are objects of a rdfs:label or comment relations, please add the following code to prevent Owlready from assuming that label and comment are data and not entities:\n    import owlready2.sparql.parser\n    owlready2.sparql.parser._DATA_PROPS = set()\n)" % (self.name, self.type, type))
     
 class Table(object):
   def __init__(self, query, name, type = "quads", index = None, join = ",", join_conditions = None):
@@ -760,9 +760,10 @@ class SQLQuery(FuncSupport):
     
     for triple in list(self.triples): # Pass 1: Determine var type and prop type
       if isinstance(triple, (Bind, Filter, Block)): continue
-      s, p, o = triple
-      
       triple.local_table_type = triple.table_type
+      
+      if triple.optional: continue # Optional => cannot be used to restrict variable type
+      s, p, o = triple
       if s.name == "VAR":
         var = self.parse_var(s)
         var.update_type("objs")
@@ -1027,7 +1028,7 @@ class SQLQuery(FuncSupport):
           condition = "%s.%s%s%s"  % (table.name, n, operator, sql)
           if likelihood is None: conditions.append(condition)
           else:                  conditions.append("LIKELIHOOD(%s, %s)" % (condition, likelihood))
-      if not sql_d is None:
+      if (not sql_d is None) and (n != "s") and (n != "p") and (table.name != "objs"):
         conditions.append("%s.%sd=%s" % (table.name, n[:-1], sql_d)) # Datatype part
         
       if isinstance(x, rply.Token) and (x.name == "VAR"): x = self.vars[x.value]
