@@ -621,6 +621,7 @@ version 2 - 0.35
 version 2 - 0.36
 ****************
 
+* Faster ontology operation (e.g. deletion) on big quadstores
 * Bugfixes:
   - Fix FusionClasses (= individuals belonging to several classes, i.e. multiple instanciation) when using several worlds
   - Fix OPTIONAL SPARQL clause when guessing variable types
