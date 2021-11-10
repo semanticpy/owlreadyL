@@ -181,7 +181,7 @@ def parse_mrrel(PYM, terminologies, langs, importer, f, remnant_previous = ""):
     current = [current[i] or previous[i] for i in range(len(previous))]
     cui1, aui1, stype1, rel, cui2, aui2, stype2, rela, rui, srui, \
       terminology, sl, group_i, direct, suppress, cvf, _dropit = current
-    
+      
     if suppress in importer.remove_suppressed:
       previous = current
       continue

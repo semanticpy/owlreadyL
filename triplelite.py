@@ -138,18 +138,17 @@ class Graph(BaseMainGraph):
     self.nb_added_triples  = 0
 
     if read_only:
-      self.lock     = multiprocessing.RLock()
+      self.lock = multiprocessing.RLock()
       self.acquire_write_lock = self._acquire_write_lock_read_only
       self.release_write_lock = self._release_write_lock_read_only
+      
     self.lock_level = 0
     
     if initialize_db:
-      #self.current_blank    = multiprocessing.Value("i", 0)
-      #self.current_resource = multiprocessing.Value("i", 300) # 300 first values are reserved
-      self.prop_fts         = set()
+      self.prop_fts = set()
       
       self.execute("""CREATE TABLE store (version INTEGER, current_blank INTEGER, current_resource INTEGER)""")
-      self.execute("""INSERT INTO store VALUES (9, 0, 300)""")
+      self.execute("""INSERT INTO store VALUES (10, 0, 300)""")
       self.execute("""CREATE TABLE objs (c INTEGER, s INTEGER, p INTEGER, o INTEGER)""")
       self.execute("""CREATE TABLE datas (c INTEGER, s INTEGER, p INTEGER, o BLOB, d INTEGER)""")
       self.execute("""CREATE VIEW quads AS SELECT c,s,p,o,NULL AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""")
@@ -166,9 +165,11 @@ class Graph(BaseMainGraph):
 
       self.execute("""CREATE INDEX index_objs_sp ON objs(s,p)""")
       self.execute("""CREATE UNIQUE INDEX index_objs_op ON objs(o,p,c,s)""") # c is for onto.classes(), etc
+      self.execute("""CREATE INDEX index_objs_c ON objs(c)""")
       
       self.execute("""CREATE INDEX index_datas_sp ON datas(s,p)""")
       self.execute("""CREATE UNIQUE INDEX index_datas_op ON datas(o,p,c,d,s)""")
+      self.execute("""CREATE INDEX index_datas_c ON datas(c)""")
       self.indexed = True
       
       self.execute("""CREATE TABLE last_numbered_iri(prefix TEXT, i INTEGER)""")
@@ -384,6 +385,14 @@ class Graph(BaseMainGraph):
         self.db.commit()
         version += 1
         
+      if version == 9:
+        print("* Owlready2 * Converting quadstore to internal format 10...", file = sys.stderr)
+        self.execute("""CREATE INDEX index_objs_c ON objs(c)""")
+        self.execute("""CREATE INDEX index_datas_c ON datas(c)""")
+        self.execute("""UPDATE store SET version=10""")
+        self.db.commit()
+        version += 1
+        
       self.prop_fts = { storid for (storid,) in self.execute("""SELECT storid FROM prop_fts;""") }
       
       self.analyze()
@@ -435,12 +444,10 @@ class Graph(BaseMainGraph):
     self.db.close()
     
   def acquire_write_lock(self):
-    #self.lock.acquire()
     if not self.db.in_transaction: self.execute("BEGIN IMMEDIATE")
     self.lock_level += 1
   def release_write_lock(self):
     self.lock_level -= 1
-    #self.lock.release()
   def _acquire_write_lock_read_only(self):
     self.lock.acquire()
   def _release_write_lock_read_only(self):

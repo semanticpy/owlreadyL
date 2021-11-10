@@ -482,8 +482,8 @@ class World(_GraphManager):
     _fusion_classes = set(self._fusion_class_cache.values())
     for i, cached in enumerate(_cache):
       if (not cached is None) and ((cached.namespace.world is self) or (cached in _fusion_classes)):
-        if cached.storid in _entities: del _entities[cached.storid]
         _cache[i] = None
+    self._entities.clear()
         
   def get_full_text_search_properties(self): return self._full_text_search_properties
   def set_full_text_search_properties(self, l):
@@ -1289,7 +1289,7 @@ class Metadata(object):
   def __init__(self, namespace, storid):
     object.__setattr__(self, "namespace", namespace)
     object.__setattr__(self, "storid"   , storid)
-
+    
   def __iter__(self):
     for p in self.namespace.world._get_triples_s_p(self.storid):
       if p == rdf_type: continue
