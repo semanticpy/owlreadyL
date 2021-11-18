@@ -993,7 +993,7 @@ def destroy_entity(e, undoable = False):
       for c,s,p,o in undoer_objs:
         c_2_onto[c]._add_obj_triple_spo(s,p,o)
       for c,s,p,o,d in undoer_datas:
-        c_2_onto[c]._add_data_triple_spo(s,p,o,d)
+        c_2_onto[c]._add_data_triple_spod(s,p,o,d)
       #e.namespace.world.graph.db.executemany("INSERT INTO objs VALUES (?,?,?,?)",    undoer_objs)
       #e.namespace.world.graph.db.executemany("INSERT INTO datas VALUES (?,?,?,?,?)", undoer_datas)
       e.namespace.world._entities[e.storid] = e
