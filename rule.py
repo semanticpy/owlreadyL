@@ -167,11 +167,14 @@ def _find_entity(name, namespaces):
   if ":" in name:
     entity = namespaces[0].world[name]
     if not entity is None: return entity
+    entity = owl.world[name]
+    if not entity is None: return entity
+    
   for namespace in namespaces:
     entity = namespace[name]
     if not entity is None: return entity
+    
   raise ValueError("Cannot find entity '%s'!" % name)
-  
   
     
 class _FixedArguments(object):

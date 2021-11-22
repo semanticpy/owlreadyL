@@ -625,6 +625,9 @@ version 2 - 0.36
 * Bugfixes:
   - Fix FusionClasses (= individuals belonging to several classes, i.e. multiple instanciation) when using several worlds
   - Fix OPTIONAL SPARQL clause when guessing variable types
+  - Fix typo in undo entity destruction (thanks Lukas Westhofen)
+  - Fix IRI from OWL namespace in SWRL rules
+    
     
 Links
 -----
