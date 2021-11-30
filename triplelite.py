@@ -409,12 +409,12 @@ class Graph(BaseMainGraph):
     #self.db.execute("""PRAGMA cache_size = -100""") # The two following queries are * faster * with a small cache!
     #import time
     #t0 = time.perf_counter()
-    #nb_datas = self.execute("""SELECT COUNT() FROM datas INDEXED BY index_datas_sp""").fetchone()[0]
-    nb_datas = self.execute("""SELECT MAX(rowid) FROM datas""").fetchone()[0] or 10
+    nb_datas = self.execute("""SELECT COUNT() FROM datas INDEXED BY index_datas_c""").fetchone()[0]
+    #nb_datas = self.execute("""SELECT MAX(rowid) FROM datas""").fetchone()[0] or 10
     #if nb_datas: print(nb_datas, time.perf_counter() - t0)
     #t0 = time.perf_counter()
-    #nb_objs  = self.execute("""SELECT COUNT() FROM objs INDEXED BY index_objs_sp""" ).fetchone()[0]
-    nb_objs  = self.execute("""SELECT MAX(rowid) FROM objs""" ).fetchone()[0] or 10
+    nb_objs  = self.execute("""SELECT COUNT() FROM objs INDEXED BY index_objs_c""" ).fetchone()[0]
+    #nb_objs  = self.execute("""SELECT MAX(rowid) FROM objs""" ).fetchone()[0] or 10
     #if nb_objs: print(nb_objs, time.perf_counter() - t0)
     #self.db.execute("""PRAGMA cache_size = -200000""")
     nb_iris  = self.execute("""SELECT MAX(storid) FROM resources""" ).fetchone()[0] or 300
