@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import re, tempfile, sys
+import re, tempfile, sys, subprocess
 
 import owlready2
 from owlready2.base            import *
@@ -108,6 +108,7 @@ def _keep_most_specific(s, consider_equivalence = True):
   return r
 
 def _decode(s):
+  if not s: return ""
   try:
     return s.decode("utf8")
   except UnicodeDecodeError:
@@ -264,7 +265,7 @@ def sync_reasoner_pellet(x = None, infer_property_values = False, infer_data_pro
         if debug > 1:
           command_explain = [owlready2.JAVA_EXE, "-Xmx%sM" % JAVA_MEMORY, "-cp", _PELLET_CLASSPATH, "pellet.Pellet", "explain", "--ignore-imports", tmp.name]
           process = subprocess.run(command_explain, stdout = subprocess.PIPE, stderr = subprocess.PIPE, check = False, **_subprocess_kargs)
-          msg += "\nThis is the output of `pellet explain`: \n {}\n{}".format(_decode(process), _decode(process.stderr))
+          msg += "\nThis is the output of `pellet explain`: \n {}\n{}".format(_decode(process.stdout), _decode(process.stderr))
           
         raise OwlReadyInconsistentOntologyError("Java error message is: %s" % msg)
       

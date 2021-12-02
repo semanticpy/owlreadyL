@@ -3369,6 +3369,7 @@ I took a placebo
     
     i = [i for i in onto.e.data_prop if isinstance(i, str)][0]
     assert i.lang == "en"
+      
     
   def test_hermit_reasoning_1(self):
     world = self.new_world()

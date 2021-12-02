@@ -627,6 +627,7 @@ version 2 - 0.36
   - Fix OPTIONAL SPARQL clause when guessing variable types
   - Fix typo in undo entity destruction (thanks Lukas Westhofen)
   - Fix IRI from OWL namespace in SWRL rules
+  - Fix Pellet explanation on inconsistent ontology
     
     
 Links
