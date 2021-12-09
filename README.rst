@@ -628,6 +628,7 @@ version 2 - 0.36
   - Fix typo in undo entity destruction (thanks Lukas Westhofen)
   - Fix IRI from OWL namespace in SWRL rules
   - Fix Pellet explanation on inconsistent ontology
+  - Fix MEDDRA parent-child relation of LLT in PyMedTermino2
     
     
 Links

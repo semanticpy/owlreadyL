@@ -54,6 +54,8 @@ def create_model():
     
     class definitions(AnnotationProperty): pass
     
+    class term_type(AnnotationProperty): pass
+    
   return PYM
 
 
@@ -74,7 +76,6 @@ def parse_mrrank(PYM, terminologies, langs, importer, f, remnant = ""):
     
     importer.tty_2_priority[terminology, tty] = int(rank)
   
-    
 def parse_mrconso(PYM, terminologies, langs, importer, f, remnant = ""):
   for line in f:
     if remnant: line = "%s%s" % (remnant, line); remnant = ""
@@ -143,6 +144,9 @@ def parse_mrconso(PYM, terminologies, langs, importer, f, remnant = ""):
         importer.restrict(orig, SOME, PYM.unifieds.storid,  cui)
         importer.restrict(cui,  SOME, PYM.originals.storid, orig)
         
+    if tty:
+      importer.datas.append((orig, PYM.term_type.storid, tty, 0))
+      
     importer.check_insert()
 
   
@@ -189,12 +193,15 @@ def parse_mrrel(PYM, terminologies, langs, importer, f, remnant_previous = ""):
     cui1 = cui1 or previous[0]
     direct = direct == "Y"
     
-    if (rel == "PAR") or (rel == "CHD"):
-      if rel == "PAR": cui1, aui1, stype1 = cui2, aui2, stype2
+    if (rel == "RQ") and (rela == "classifies") and terminology.startswith("MDR"): rel = "PAR"
       
+    if (rel == "PAR") or (rel == "CHD"):
       if aui1 and aui2:
+        if rel == "PAR": cui1, aui1, stype1, cui2, aui2, stype2 = cui2, aui2, stype2, cui1, aui1, stype1
+        
         orig1 = importer.aui_2_orig.get(aui1)
         orig2 = importer.aui_2_orig.get(aui2)
+        
         if orig1 and (orig1 != orig2) and (orig2 in importer.orig_2_terminology):
           importer.terminology_2_parents[importer.orig_2_terminology[orig2]] [orig2].add(orig1)
           
