@@ -621,7 +621,8 @@ version 2 - 0.35
 version 2 - 0.36
 ****************
 
-* Faster ontology operation (e.g. deletion) on big quadstores
+* Faster ontology operation (e.g. ontology deletion) on big quadstores
+* Automatically add .owl, .rdf or .xml to ontology IRI if the IRI itself does not yield an OWL file
 * Bugfixes:
   - Fix FusionClasses (= individuals belonging to several classes, i.e. multiple instanciation) when using several worlds
   - Fix OPTIONAL SPARQL clause when guessing variable types

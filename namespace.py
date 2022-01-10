@@ -942,15 +942,33 @@ class Ontology(Namespace, _GraphManager):
     self.world.graph.acquire_write_lock()
     
     if reload: self._destroy_cached_entities()
-
+    
     new_base_iri = None
     if f.startswith("http:") or f.startswith("https:"):
       if  reload or (self.graph.get_last_update_time() == 0.0): # Never loaded
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
         try:     fileobj = urllib.request.urlopen(url or f)
-        except:  raise OwlReadyOntologyParsingError("Cannot download '%s'!" % f)
-        try:     new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
+        except:  raise OwlReadyOntologyParsingError("Cannot download '%s'!" % (url or f))
+        #try:     new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
+        #finally: fileobj.close()
+        try:
+          new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
+        except OwlReadyOntologyParsingError:
+          if f.endswith(".owl") or f.endswith(".rdf") or f.endswith(".xml") or url: raise
+          else:
+            fileobj2 = None
+            for ext in ["owl", "rdf", "xml"]:
+              f2 = "%s.%s" % (f, ext)
+              try:
+                fileobj2 = urllib.request.urlopen(f2)
+                break
+              except: pass
+            if not fileobj2: raise
+            
+            try:     new_base_iri = self.graph.parse(fileobj2, default_base = self.base_iri, **args)
+            finally: fileobj2.close()
         finally: fileobj.close()
+        
     elif fileobj:
       if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, getattr(fileobj, "name", "") or getattr(fileobj, "url", "???")), file = sys.stderr)
       try:     new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
@@ -1142,7 +1160,7 @@ class Ontology(Namespace, _GraphManager):
             self._del_obj_triple_spo  (bnode, None, None)
             self._del_data_triple_spod(bnode, None, None, None)
           return bnode
-
+        
         
   def _reload_bnode(self, bnode):
     if bnode in self._bnodes:
