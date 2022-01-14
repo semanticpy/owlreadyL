@@ -621,7 +621,7 @@ version 2 - 0.35
 version 2 - 0.36
 ****************
 
-* Support xsd:duration, including DATETIME_ADD(), DATETIME_SUB() SPARQL non-standard functions
+* Support xsd:duration, including DATETIME_DIFF(), DATETIME_ADD(), DATETIME_SUB() SPARQL non-standard functions
 * Faster ontology operation (e.g. ontology deletion) on big quadstores
 * Automatically add .owl, .rdf or .xml to ontology IRI if the IRI itself does not yield an OWL file
 * Bugfixes:

@@ -9125,7 +9125,7 @@ WHERE {
     q, r = self.sparql(world, """
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT (DATETIME_SUB("2022-01-14T13:36:14.538042", "P1Y"^^xsd:duration) AS ?year_ago)
+SELECT (DATETIME_SUB("2022-01-14T13:36:14.538042", "P1Y"^^xsd:duration) AS ?x)
 WHERE {}
     """, compare_with_rdflib = False)
     assert r[0][0] == datetime.datetime(2021, 1, 14, 13, 36, 14, 538042)
@@ -9133,7 +9133,7 @@ WHERE {}
     q, r = self.sparql(world, """
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT (DATETIME_ADD("2022-01-14T13:36:14.538042", "PT1S"^^xsd:duration) AS ?year_ago)
+SELECT (DATETIME_ADD("2022-01-14T13:36:14.538042", "PT1S"^^xsd:duration) AS ?x)
 WHERE {}
     """, compare_with_rdflib = False)
     assert r[0][0] == datetime.datetime(2022, 1, 14, 13, 36, 15, 538042)
@@ -9141,7 +9141,7 @@ WHERE {}
     q, r = self.sparql(world, """
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT (DATE_SUB("2022-01-14", "P2D"^^xsd:duration) AS ?year_ago)
+SELECT (DATE_SUB("2022-01-14", "P2D"^^xsd:duration) AS ?x)
 WHERE {}
     """, compare_with_rdflib = False)
     assert r[0][0] == datetime.date(2022, 1, 12)
@@ -9149,10 +9149,26 @@ WHERE {}
     q, r = self.sparql(world, """
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
-SELECT (DATE_ADD("2022-01-14", "P1D"^^xsd:duration) AS ?year_ago)
+SELECT (DATE_ADD("2022-01-14", "P1D"^^xsd:duration) AS ?x)
 WHERE {}
     """, compare_with_rdflib = False)
     assert r[0][0] == datetime.date(2022, 1, 15)
+    
+    q, r = self.sparql(world, """
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (DATE_DIFF("2022-01-14", "2022-01-28") AS ?x)
+WHERE {}
+    """, compare_with_rdflib = False)
+    assert r[0][0] == datetime.timedelta(days = 14)
+    
+    q, r = self.sparql(world, """
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+
+SELECT (DATETIME_DIFF("2022-01-14T13:36:14"^^xsd:dateTime, "2022-01-14T13:36:24") AS ?x)
+WHERE {}
+    """, compare_with_rdflib = False)
+    assert r[0][0] == datetime.timedelta(seconds = 10)
     
     
 # Add test for Pellet
