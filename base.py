@@ -178,6 +178,25 @@ _universal_abbrev_datatype(datetime.time,
                            lambda s: datetime.datetime.strptime(s, "%H:%M:%S").time(),
                            datetime.time.isoformat, "http://www.w3.org/2001/XMLSchema#time")
 
+def _parse_duration(s):
+  assert s.startswith("P")
+  days = seconds = 0
+  in_date = True
+  for number, letter in re.findall(r"([0-9.]+)([A-Z]+)", s):
+    number = float(number)
+    letter0 = letter[0]
+    if letter0 == "Y": days     +=  365.0 * number
+    if letter0 == "D": days     +=          number
+    if letter0 == "H": seconds  += 3600.0 * number
+    if letter0 == "S": seconds  +=          number
+    if letter0 == "M":
+      if in_date:      days     +=   30.0 * number
+      else:            seconds  +=   60.0 * number
+    if "T" in letter: in_date = False
+  return datetime.timedelta(days, seconds)
+
+def _format_duration(td):
+  return "P%sD%sS" % (td.days, td.seconds + td.microseconds / 1000000.0)
 
 def set_datatype_iri(datatype, iri):
   unparser = _universal_datatype_2_abbrev_unparser[datatype][1]
@@ -286,8 +305,14 @@ owl_disjointunion            = _universal_abbrev("http://www.w3.org/2002/07/owl#
 #owlready_context_is_a        = _universal_abbrev("http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#context_is_a")
 owlready_concrete            = _universal_abbrev("http://www.lesfleursdunormal.fr/static/_downloads/owlready_ontology.owl#concrete")
 
-rdf_langstring = _universal_abbrev("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString")
+rdf_langstring               = _universal_abbrev("http://www.w3.org/1999/02/22-rdf-syntax-ns#langString")
 _universal_abbrev_2_datatype[rdf_langstring] = locstr
+
+#xsd_duration                 = _universal_abbrev("http://www.w3.org/2001/XMLSchema#duration")
+_universal_abbrev_datatype(datetime.timedelta,
+                           _parse_duration,
+                           _format_duration,
+                           "http://www.w3.org/2001/XMLSchema#duration")
 
 issubclass_python = issubclass
 

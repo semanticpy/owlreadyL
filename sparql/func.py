@@ -84,6 +84,10 @@ _FUNC_2_DATATYPE = {
   "DATE"    : _universal_datatype_2_abbrev[datetime.date], # ok
   "TIME"    : _universal_datatype_2_abbrev[datetime.time], # ok
   "DATETIME": _universal_datatype_2_abbrev[datetime.datetime], # ok
+  "DATE_ADD": _universal_datatype_2_abbrev[datetime.date], # ok
+  "DATE_SUB": _universal_datatype_2_abbrev[datetime.date], # ok
+  "DATETIME_ADD": _universal_datatype_2_abbrev[datetime.datetime], # ok
+  "DATETIME_SUB": _universal_datatype_2_abbrev[datetime.datetime], # ok
 
   "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#INTEGER" : _universal_datatype_2_abbrev[int], # ok
   "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#DOUBLE" : _universal_datatype_2_abbrev[float], # ok
@@ -164,7 +168,32 @@ def _timezone(x):
     "%dM" % minutes if minutes else  "",
     "%dS" % delta.seconds if (not days and not hours and not minutes) else "",
   )
-  
+
+def _date_add(d, td):
+  d  = datetime.date.fromisoformat(d)
+  td = owlready2.base._parse_duration(td)
+  d  = d + td
+  return d.isoformat()
+
+def _date_sub(d, td):
+  d  = datetime.date.fromisoformat(d)
+  td = owlready2.base._parse_duration(td)
+  d  = d - td
+  return d.isoformat()
+
+def _datetime_add(d, td):
+  d  = datetime.datetime.fromisoformat(d)
+  td = owlready2.base._parse_duration(td)
+  d  = d + td
+  return d.isoformat()
+
+def _datetime_sub(d, td):
+  d  = datetime.datetime.fromisoformat(d)
+  td = owlready2.base._parse_duration(td)
+  d  = d - td
+  return d.isoformat()
+
+
 class _Func(object):
   def __init__(self, world):
     self.world        = world
@@ -219,6 +248,10 @@ def register_python_function(world):
   create_function("seconds",        1, _seconds,  deterministic = True)
   create_function("tz",             1, _tz,       deterministic = True)
   create_function("timezone",       1, _timezone, deterministic = True)
+  create_function("date_add",       2, _date_add, deterministic = True)
+  create_function("date_sub",       2, _date_sub, deterministic = True)
+  create_function("datetime_add",   2, _datetime_add, deterministic = True)
+  create_function("datetime_sub",   2, _datetime_sub, deterministic = True)
   create_function("encode_for_uri", 1, urllib.parse.quote, deterministic = True)
   create_function("uuid",           0, _uuid)
   create_function("struuid",        0, _struuid)

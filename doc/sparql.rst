@@ -273,6 +273,8 @@ The following functions are supported by Owlready, but not standard:
 
  * The DATE(), TIME() and DATETIME() functions can be used to handle date and time. They behave as in SQLite3 (see https://www.sqlite.org/lang_datefunc.html).
 
+ * The DATE_SUB(), DATE_ADD(), DATETIME_SUB and DATETIME_ADD() functions can be used to substract or add a time duration to a date or a datetime, for example : DATETIME_ADD(NOW(), "P1Y"^^xsd:duration)
+
 In Owlready, INSERT and DELETE queries can have a GROUP BY, HAVING and/or ORDER BY clauses.
 This is normally not allowed by the SPARQL specification.
 
