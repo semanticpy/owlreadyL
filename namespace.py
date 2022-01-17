@@ -1350,7 +1350,7 @@ def _get_onto_file(base_iri, name, mode = "r", only_local = False):
   
   for dir in onto_path:
     filename = os.path.join(dir, base_iri.rsplit("/", 1)[-1])
-    if os.path.exists(filename): return filename
+    if os.path.exists(filename) and os.path.isfile(filename): return filename
     for ext in ["", ".nt", ".ntriples", ".rdf", ".owl"]:
       filename = os.path.join(dir, "%s%s" % (name, ext))
       if os.path.exists(filename): return filename
