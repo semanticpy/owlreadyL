@@ -1339,7 +1339,7 @@ def _open_onto_file(base_iri, name, mode = "r", only_local = False):
   for dir in onto_path:
     for ext in ["", ".owl", ".rdf", ".n3"]:
       filename = os.path.join(dir, "%s%s" % (name, ext))
-      if os.path.exists(filename): return open(filename, mode)
+      if os.path.exists(filename) and os.path.isfile(filename): return open(filename, mode)
   if (mode.startswith("r")) and not only_local: return urllib.request.urlopen(base_iri)
   if (mode.startswith("w")): return open(os.path.join(onto_path[0], "%s.owl" % name), mode)
   raise FileNotFoundError
@@ -1350,10 +1350,10 @@ def _get_onto_file(base_iri, name, mode = "r", only_local = False):
   
   for dir in onto_path:
     filename = os.path.join(dir, base_iri.rsplit("/", 1)[-1])
-    if os.path.exists(filename): return filename
+    if os.path.exists(filename) and os.path.isfile(filename): return filename
     for ext in ["", ".nt", ".ntriples", ".rdf", ".owl"]:
       filename = os.path.join(dir, "%s%s" % (name, ext))
-      if os.path.exists(filename): return filename
+      if os.path.exists(filename) and os.path.isfile(filename): return filename
   if (mode.startswith("r")) and not only_local: return base_iri
   if (mode.startswith("w")): return os.path.join(onto_path[0], "%s.owl" % name)
   raise FileNotFoundError
