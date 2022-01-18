@@ -631,7 +631,7 @@ version 2 - 0.36
   - Fix IRI from OWL namespace in SWRL rules
   - Fix Pellet explanation on inconsistent ontology
   - Fix MEDDRA parent-child relation of LLT in PyMedTermino2
-    
+  - Make sure the filename is a file before returning (Thanks Nicolas Rouquette)
     
 Links
 -----
