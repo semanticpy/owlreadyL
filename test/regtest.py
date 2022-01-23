@@ -9169,7 +9169,62 @@ SELECT (DATETIME_DIFF("2022-01-14T13:36:14"^^xsd:dateTime, "2022-01-14T13:36:24"
 WHERE {}
     """, compare_with_rdflib = False)
     assert r[0][0] == datetime.timedelta(seconds = 10)
+
     
+  def test_146(self):
+    world, onto = self.prepare1()
+    
+    q, r = self.sparql(world, """
+SELECT (<http://test.org/onto.owl#A> AS ?a)
+WHERE { 
+    <http://test.org/onto.owl#A> a ?class .
+    <http://test.org/onto.owl#A> onto:rel ?x .
+ }
+    """, compare_with_rdflib = False)
+    assert r == []
+
+    q, r = self.sparql(world, """
+SELECT (<http://test.org/onto.owl#A> AS ?a)
+WHERE { 
+    <http://test.org/onto.owl#A> a ?class .
+          { <http://test.org/onto.owl#A> onto:rel ?x . }
+    UNION { <http://test.org/onto.owl#A> onto:rel ?x . }
+ }
+    """, compare_with_rdflib = False)
+    assert r == []
+    
+    q, r = self.sparql(world, """
+SELECT (<http://test.org/onto.owl#A> AS ?a)
+WHERE { 
+    <http://test.org/onto.owl#A> a ?class .
+          { <http://test.org/onto.owl#A> onto:rel ?x . }
+    UNION { <http://test.org/onto.owl#A> onto:rel ?y . }
+ }
+    """, compare_with_rdflib = False)
+    assert r == []
+
+    q, r = self.sparql(world, """
+SELECT (<http://test.org/onto.owl#A> AS ?a)
+WHERE { 
+    <http://test.org/onto.owl#A> a ?class .
+    ?x a ?class .
+          { <http://test.org/onto.owl#A> onto:rel ?x . }
+    UNION { <http://test.org/onto.owl#A> onto:rel ?x . }
+ }
+    """, compare_with_rdflib = False)
+    assert r == []
+    assert " IN (SELECT" in q.sql
+    
+    q, r = self.sparql(world, """
+SELECT ?a
+WHERE { 
+    ?a a onto:A .
+          { ?a onto:rel ?x . }
+    UNION { ?a onto:price ?y . }
+ }
+    """, compare_with_rdflib = False)
+    assert r == [[onto.a1]]
+    assert " IN (SELECT" in q.sql
     
 # Add test for Pellet
 

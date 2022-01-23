@@ -633,6 +633,13 @@ version 2 - 0.36
   - Fix MEDDRA parent-child relation of LLT in PyMedTermino2
   - Make sure the filename is a file before returning (Thanks Nicolas Rouquette)
     
+version 2 - 0.37
+****************
+
+* Bugfixes:
+  - Fix SPARQL queries having a UNION but using no variable from the UNION
+
+
 Links
 -----
 

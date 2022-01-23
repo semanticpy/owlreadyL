@@ -631,6 +631,7 @@ class SQLQuery(FuncSupport):
     self.select_simple_union      = False
     self.optional                 = False
     
+    
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
   
   def sql(self):
@@ -724,9 +725,8 @@ class SQLQuery(FuncSupport):
       self.conditions.append(sub)
       if _DEPRIORIZE_SUBQUERIES_OPT and not ("one" in self.name_2_table): Table(self, "one", "one")
     else:
-      if (not sub.optional) and (len(sub.columns) == 1): # Specific optimization with IN operator
-        self.create_in_conditions(self.conditions, sub.columns[0].var, sub)
-      else:
+      ok = self.try_create_in_conditions(self.conditions, sub.columns[0].var, sub) # Try specific optimization with IN operator
+      if not ok:
         table = Table(self, "p%s" % self.translator.next_table_id, sub.name)
         table.subquery = sub
         self.translator.next_table_id += 1
@@ -1036,9 +1036,24 @@ class SQLQuery(FuncSupport):
         if not x.initial_query: x.initial_query = self
         x.bindings.append("%s.%s" % (table.name, n))
         
-  def create_in_conditions(self, conditions, x, prelim):
+  def try_create_in_conditions(self, conditions, x, prelim):
+    if prelim.optional or (len(prelim.columns) != 1) or (x is None): return False
+
     assert len(prelim.columns) == 1
-    if isinstance(x, rply.Token): assert x.name == "VAR"
+    if isinstance(x, rply.Token):
+      assert x.name == "VAR"
+      x_varname = x.value
+    else:
+      x_varname = x
+      
+    for triple in self.triples: # Verify if the variable is used outside the prelim query -- otherwise, the IN optimization cannot be used
+      if isinstance(triple, Triple):
+        if isinstance(triple[0], rply.Token) and (triple[0].name == "VAR") and (triple[0].value == x_varname): break
+        if isinstance(triple[1], rply.Token) and (triple[1].name == "VAR") and (triple[1].value == x_varname): break
+        if isinstance(triple[2], rply.Token) and (triple[2].name == "VAR") and (triple[2].value == x_varname): break
+    else:
+      return False
+    
     column = prelim.columns[0]
     var = self.parse_var(x)
     sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
@@ -1048,7 +1063,7 @@ class SQLQuery(FuncSupport):
       var.in_select = prelim
     else:
       conditions.append("%s IN (SELECT %s FROM %s)" % (sql, column.name, prelim.name))
-      
+    return True  
       
   def is_fixed(self, x):
     if x.name != "VAR": return True
