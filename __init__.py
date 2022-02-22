@@ -109,22 +109,22 @@ owlready2.class_construct.EntityClass = EntityClass
 
 del owlready2
 
-from owlready2.rule            import *
+from owlready2.rule import *
 
 LOADING.__exit__()
 
 # Not real property
-del owl_world._props["Property"]
-del owl_world._props["ObjectProperty"]
-del owl_world._props["DatatypeProperty"]
-del owl_world._props["FunctionalProperty"]
-del owl_world._props["InverseFunctionalProperty"]
-del owl_world._props["TransitiveProperty"]
-del owl_world._props["SymmetricProperty"]
-del owl_world._props["AsymmetricProperty"]
-del owl_world._props["ReflexiveProperty"]
-del owl_world._props["IrreflexiveProperty"]
-del owl_world._props["AnnotationProperty"]
+owl_world._props.pop("Property", None)
+owl_world._props.pop("ObjectProperty", None)
+owl_world._props.pop("DatatypeProperty", None)
+owl_world._props.pop("FunctionalProperty", None)
+owl_world._props.pop("InverseFunctionalProperty", None)
+owl_world._props.pop("TransitiveProperty", None)
+owl_world._props.pop("SymmetricProperty", None)
+owl_world._props.pop("AsymmetricProperty", None)
+owl_world._props.pop("ReflexiveProperty", None)
+owl_world._props.pop("IrreflexiveProperty", None)
+owl_world._props.pop("AnnotationProperty", None)
 
 default_world = IRIS = World()
 get_ontology  = default_world.get_ontology
