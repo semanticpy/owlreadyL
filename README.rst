@@ -636,9 +636,11 @@ version 2 - 0.36
 version 2 - 0.37
 ****************
 
+* Add World.forget_reference(entity)
 * Bugfixes:
   - Fix SPARQL queries having a UNION but using no variable from the UNION
-
+  - Fix property defined as a subproperty of TransitiveProperty and the like, but not of type ObjectProperty
+    
 
 Links
 -----

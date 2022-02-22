@@ -484,7 +484,10 @@ class World(_GraphManager):
       if (not cached is None) and ((cached.namespace.world is self) or (cached in _fusion_classes)):
         _cache[i] = None
     self._entities.clear()
-        
+
+  def forget_reference(self, python_entity):
+    self._entities.pop(python_entity.storid, None)
+    
   def get_full_text_search_properties(self): return self._full_text_search_properties
   def set_full_text_search_properties(self, l):
     old = self._full_text_search_properties
@@ -698,12 +701,13 @@ class World(_GraphManager):
 
       for graph, obj in self._get_obj_triples_sp_co(storid, rdf_type):
         if main_onto is None: main_onto = self.graph.context_2_user_context(graph)
-        if   obj == owl_class: main_type = ThingClass
+        if   obj == owl_class:               main_type = ThingClass
         elif obj == owl_object_property:     main_type = ObjectPropertyClass;     types.append(ObjectProperty)
         elif obj == owl_data_property:       main_type = DataPropertyClass;       types.append(DataProperty)
         elif obj == owl_annotation_property: main_type = AnnotationPropertyClass; types.append(AnnotationProperty)
         elif (obj == owl_named_individual) or (obj == owl_thing):
           if main_type is None: main_type = Thing
+        elif 105 <= obj <= 109:              main_type = ObjectPropertyClass;     types.append(ObjectProperty) # TransitiveProperty, SymmetricProperty, AsymmetricProperty, ReflexiveProperty, IrreflexiveProperty
         else:
           if not main_type: main_type = Thing
           if obj < 0: is_a_bnodes.append((self.graph.context_2_user_context(graph), obj))
