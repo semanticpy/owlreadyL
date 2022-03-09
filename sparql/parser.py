@@ -425,7 +425,7 @@ def _create_simple_block(p, accept_static = True):
           
     elif isinstance(i, StaticValues): r.static_valuess.append(i)
     else: raise ValueError
-  if (len(r) == 1) and isinstance(r[0], Block): return r[0]
+  if (len(r) == 1) and isinstance(r[0], Block) and (not r.static_valuess): return r[0]
   return r
 pg.list("group_graph_pattern+", "UNION")
 
@@ -493,6 +493,9 @@ def f(p):
   static_values = StaticValues()
   static_values.vars.append(p[0])
   static_values.valuess.extend([i.sql] if hasattr(i, "sql") else [i.value]  for i in p[2])
+  
+  if p[2][0].name == "IRI": static_values.types.append("objs")
+  else:                     static_values.types.append("datas")
   return static_values
 
 #@pg.production("nil_or_var* : NIL")
@@ -513,6 +516,10 @@ def f(p):
   static_values = StaticValues()
   for var in p[1]: static_values.vars.append(var)
   static_values.valuess.extend([i.sql if hasattr(i, "sql") else i.value for i in l] for l in p[4])
+  
+  for i in p[4][0]:
+    if i.name == "IRI": static_values.types.append("objs")
+    else:               static_values.types.append("datas")
   return static_values
 
 @pg.production("data_block_value : iri")
@@ -1038,9 +1045,9 @@ def _prefix_vars(x, prefix):
     
 class Block(list):
   def __repr__(self):
-    if getattr(self, "static_valuess"): return "<%s %s static=%s>" % (self.__class__.__name__, list.__repr__(self), self.static_valuess)
+    if getattr(self, "static_valuess", None): return "<%s %s static=%s>" % (self.__class__.__name__, list.__repr__(self), self.static_valuess)
     return "<%s %s>" % (self.__class__.__name__, list.__repr__(self))
-
+  
   def get_ordered_vars(self):
     vars = set()
     ordered_vars = []
@@ -1132,11 +1139,14 @@ def _var_found(var, vars, ordered_vars):
     vars.add(var)
     ordered_vars.append(var)
     
-class SimpleTripleBlock(TripleBlock):
+class TripleBlockWithStatic(TripleBlock):
   def __init__(self, l = None):
     TripleBlock.__init__(self, l or [])
-    
-    self.static_valuess = []
+
+    if hasattr(l, "static_valuess"):
+      self.static_valuess = l.static_valuess
+    else:
+      self.static_valuess = []
     
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     for triple in self:
@@ -1144,17 +1154,22 @@ class SimpleTripleBlock(TripleBlock):
 
     for static in self.static_valuess:
       static._get_ordered_vars(vars, ordered_vars)
+          
+class SimpleTripleBlock(TripleBlockWithStatic): pass
       
 class OptionalBlock(TripleBlock):
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     for triple in self:
       triple._get_ordered_vars(vars, ordered_vars)
       
-class FilterBlock(TripleBlock):
+class FilterBlock(TripleBlockWithStatic):
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     if root_call: # Otherwise, defines no bindings
       for triple in self:
         triple._get_ordered_vars(vars, ordered_vars)
+        
+      for static in self.static_valuess:
+        static._get_ordered_vars(vars, ordered_vars)
         
 class ExistsBlock   (FilterBlock): pass
 class NotExistsBlock(FilterBlock): pass
@@ -1277,6 +1292,7 @@ class StaticValues(object):
   def __init__(self):
     self.vars    = []
     self.valuess = []
+    self.types   = []
     
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False): pass
   
@@ -1304,4 +1320,4 @@ class StaticBlock(StaticValues):
     for var in self.ordered_vars: _var_found(var, vars, ordered_vars)
     
     
-  def __repr__(self): return """<StaticGraph vars=%s>""" % ",".join(repr(var) for var in self.all_vars)
+  def __repr__(self): return """<StaticBlock vars=%s>""" % ",".join(repr(var) for var in self.all_vars)

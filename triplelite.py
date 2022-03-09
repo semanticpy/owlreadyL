@@ -60,12 +60,12 @@ class Graph(BaseMainGraph):
         #self.db = sqlite3.connect("file:%s?mode=ro" % filename, isolation_level = "EXCLUSIVE", check_same_thread = False, uri = True)
         self.db = sqlite3.connect("file:%s?mode=ro&cache=shared%s" % (filename, extra_options), isolation_level = "EXCLUSIVE", check_same_thread = False, uri = True)
         self.db.execute("""PRAGMA locking_mode = EXCLUSIVE""")
-        self.db.execute("""PRAGMA query_only = 1""")
+        #self.db.execute("""PRAGMA query_only = 1""") # No, because we may need to create TEMP tables (SPARQL module does that)
         self.db.execute("""PRAGMA read_uncommitted = True""") # Exclusive + no write => no need for read lock
       else:
         self.db = sqlite3.connect("file:%s?mode=ro&cache=shared%s" % (filename, extra_options), check_same_thread = False, uri = True)
         self.db.execute("""PRAGMA locking_mode = NORMAL""")
-        self.db.execute("""PRAGMA query_only = 1""")
+        #self.db.execute("""PRAGMA query_only = 1""") # No, because we may need to create TEMP tables (SPARQL module does that)
     else:
       if exclusive:
         #self.db = sqlite3.connect(filename, isolation_level = "EXCLUSIVE", check_same_thread = False)

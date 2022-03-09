@@ -8933,7 +8933,7 @@ http://test.org/onto.owl#A\tClasse A
     onto.b3.label = ["b3"]
     q, r = self.sparql(world, """SELECT ?x { ?x rdfs:label ?l . VALUES ?l { "b1" "b2" } }""", compare_with_rdflib = False)
     assert set(i[0] for i in r) == { onto.b1, onto.b2 }
-    
+
     q, r = self.sparql(world, """SELECT ?x { ?x ?p ?l . VALUES (?p ?l) { (rdfs:label "b1") (rdfs:label "b3") } }""", compare_with_rdflib = False)
     assert set(i[0] for i in r) == { onto.b1, onto.b3 }
     
@@ -9089,6 +9089,7 @@ WHERE {
       C()
       a111 = onto.A11()
       
+    q = world.prepare_sparql("""SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf*STATIC onto:A } UNION { ?c rdfs:subClassOf onto:B } }""")
     q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf*STATIC onto:A } UNION { ?c rdfs:subClassOf onto:B } }""", compare_with_rdflib = False)
     assert { i[0] for i in r } == { onto.a1, a111 }
     q, r = self.sparql(world, """SELECT  ?x { ?x a ?c . { ?c rdfs:subClassOf* onto:A } UNION { ?c rdfs:subClassOf* onto:B } }""", compare_with_rdflib = False)
@@ -9225,6 +9226,164 @@ WHERE {
     """, compare_with_rdflib = False)
     assert r == [[onto.a1]]
     assert " IN (SELECT" in q.sql
+    
+  def test_147(self):
+    world, onto = self.prepare1()
+    onto.a1.price = [12]
+    
+    q, r = self.sparql(world, """
+SELECT ?price WHERE {
+  STATIC { onto:a1 onto:price ?price. }
+}
+""", compare_with_rdflib = False)
+    assert r == [[12]]
+    
+    q, r = self.sparql(world, """
+SELECT ?price ?x WHERE {
+  STATIC { onto:a1 onto:price ?price. onto:a1 onto:rel ?x. }
+}
+""", compare_with_rdflib = False)
+    assert r == [[12, onto.b2]]
+    
+  def test_148(self):
+    world, onto = self.prepare1()
+    
+    q, r = self.sparql(world, """
+SELECT ?x ?price WHERE {
+VALUES ?x { <http://test.org/onto.owl#a1> } .
+?x onto:price ?price .
+}
+""")
+    assert r == [[onto.a1, 10.0]]
+    
+    q, r = self.sparql(world, """
+SELECT ?x ?price WHERE {
+VALUES ?x { <http://test.org/onto.owl#a1> } .
+<http://test.org/onto.owl#a1> onto:price ?price .
+}
+""")
+    assert r == [[onto.a1, 10.0]]
+
+    q, r = self.sparql(world, """
+SELECT ?a ?b ?price WHERE {
+VALUES (?a ?b) { (<http://test.org/onto.owl#a1> <http://test.org/onto.owl#b1>) } .
+?a onto:price ?price .
+}
+""")
+    assert r == [[onto.a1, onto.b1, 10.0]]
+
+    q, r = self.sparql(world, """
+SELECT ?a ?b ?price WHERE {
+VALUES (?a ?b) { (<http://test.org/onto.owl#a1> <http://test.org/onto.owl#b1>) } .
+OPTIONAL { ?a onto:price ?price . }
+}
+""", compare_with_rdflib = False)
+    assert r == [[onto.a1, onto.b1, 10.0]]
+
+    q, r = self.sparql(world, """
+SELECT ?a ?b ?price WHERE {
+VALUES (?a ?b) { (<http://test.org/onto.owl#a1> <http://test.org/onto.owl#b1>) } .
+OPTIONAL { ?b onto:price ?price . }
+}
+""", compare_with_rdflib = False)
+    assert r == [[onto.a1, onto.b1, None]]
+
+  def test_149(self):
+    world, onto = self.prepare1()
+    
+    q, r = self.sparql(world, """
+SELECT ?a ?b ?l WHERE {
+VALUES (?a ?c) { (<http://test.org/onto.owl#a1> <http://test.org/onto.owl#b1>) } .
+OPTIONAL { ?a onto:rel ?b . } OPTIONAL { ?b rdfs:label ?l . } .
+}
+""", compare_with_rdflib = False)
+    
+    assert "JOIN" in q.sql
+    assert r == [[onto.a1, onto.b2, "label_b"]]
+
+  def test_150(self):
+    world, onto = self.prepare1()
+    #a2 = onto.A(label = [locstr("label_a2", "en")], rel = [onto.a1])
+    
+    q, r = self.sparql(world, """
+SELECT ?n WHERE {
+    FILTER NOT EXISTS {
+    onto:b1 a ?c .
+    ?c rdfs:subClassOf* onto:A .
+    }
+    BIND(NEWINSTANCEIRI(onto:A) AS ?n).
+}
+""", compare_with_rdflib = False)
+
+    assert len(r) == 1
+
+    q, r = self.sparql(world, """
+SELECT ?n WHERE {
+    FILTER NOT EXISTS {
+    onto:a1 a ?c .
+    ?c rdfs:subClassOf* onto:A .
+    }
+    BIND(NEWINSTANCEIRI(onto:A) AS ?n).
+}
+""", compare_with_rdflib = False)
+
+    assert len(r) == 0
+    
+    q, r = self.sparql(world, """
+SELECT ?n WHERE {
+    FILTER NOT EXISTS {
+    onto:b1 a ?c .
+    ?c rdfs:subClassOf*STATIC onto:A .
+    }
+    BIND(NEWINSTANCEIRI(onto:A) AS ?n).
+}
+""", compare_with_rdflib = False)
+
+    assert len(r) == 1
+    
+    q, r = self.sparql(world, """
+SELECT ?n WHERE {
+    FILTER NOT EXISTS {
+    onto:a1 a ?c .
+    ?c rdfs:subClassOf*STATIC onto:A .
+    }
+    BIND(NEWINSTANCEIRI(onto:A) AS ?n).
+}
+""", compare_with_rdflib = False)
+
+    assert len(r) == 0
+
+
+  def test_151(self):
+    world = self.new_world()
+    
+    onto = world.get_ontology("http://test.org/onto.owl#")
+    
+    with onto:
+      class phone(DataProperty): pass
+      class postcode(DataProperty): pass
+      
+      class C(Thing): pass
+      c = C("obj_a", postcode = ["75019"], phone = ["06"])
+      c = C("obj_b", postcode = ["75020"])
+    
+    q, r = self.sparql(world, """
+SELECT * WHERE {
+    VALUES ?name { onto:obj_a }.
+    OPTIONAL { ?name onto:postcode ?postcode . }
+    OPTIONAL { ?name onto:phone    ?phone . }
+}""", compare_with_rdflib = False)
+    assert r == [[onto.obj_a, "75019", "06"]]
+
+    q, r = self.sparql(world, """
+SELECT * WHERE {
+    VALUES ?name { onto:obj_b }.
+    OPTIONAL { ?name onto:postcode ?postcode . }
+    OPTIONAL { ?name onto:phone    ?phone . }
+}""", compare_with_rdflib = False)
+    assert r == [[onto.obj_b, "75020", None]]
+    
+    
     
 # Add test for Pellet
 

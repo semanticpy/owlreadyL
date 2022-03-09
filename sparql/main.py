@@ -197,7 +197,7 @@ class Translator(object):
   
   def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None, copy_vars = False):
     if preliminary and not name: name = "prelim%s" % (len(self.preliminary_selects) + 1)
-    
+
     if isinstance(block, UnionBlock) and block.simple_union_triples:
       block = SimpleTripleBlock(block.simple_union_triples)
       
@@ -633,12 +633,40 @@ class SQLQuery(FuncSupport):
     
     
   def __repr__(self): return "<%s '%s'>" % (self.__class__.__name__, self.sql())
-  
+
+  def _find_join_preceding_table(self, table):
+    if table.join == ",": return None
+    for condition in table.join_conditions:
+      parts = condition.split("=", 1)
+      if len(parts) == 2:
+        preceding = self.name_2_table.get(parts[1].split(".", 1)[0])
+        if preceding: return preceding
+        
   def sql(self):
     if self.tables:
       sql = """SELECT """
       if self.distinct: sql += "DISTINCT "
       sql += """%s FROM """ % (", ".join(str(column.binding) for column in self.columns))
+      
+      table_2_preceding = {}
+      for table in self.tables:
+        preceding = self._find_join_preceding_table(table)
+        if preceding: table_2_preceding[table] = preceding
+        
+      if table_2_preceding:
+        tables = list(self.tables)
+        for table, preceding in table_2_preceding.items():
+          tables.remove(table)
+          tables.insert(tables.index(preceding) + 1, table)
+        self.tables = tables
+
+      if self.tables[0].join != ",": # Cannot JOIN on the first table
+        for table in self.tables:
+          if table.join == ",":
+            self.tables.remove(table)
+            self.tables.insert(0, table)
+            break
+          
       for table in self.tables:
         if not table is self.tables[0]: sql += " %s " % table.join
         sql += table.sql()
@@ -741,7 +769,7 @@ class SQLQuery(FuncSupport):
           var.update_type(column.type)
           if not column.name.endswith("d"):
             self.create_conditions(conditions, table, column.name, var)
-              
+
   def parse_triples(self, triples):
     if self.triples: raise ValueError("Cannot parse triples twice!")
     self.block = triples
@@ -858,8 +886,65 @@ class SQLQuery(FuncSupport):
         if o.name == "VAR":
           o = self.parse_var(o)
           o.bindings.insert(0, """IN (SELECT o FROM %s%s)""" % (triple.local_table_type, extra))
-          
+
+    has_optional_triple = False
+    for triple in self.triples:
+      if getattr(triple, "optional", False):
+        has_optional_triple = True
+        break
+        
     conditions = self.conditions
+    if isinstance(triples, TripleBlockWithStatic):
+      for static in triples.static_valuess:
+        if isinstance(static, StaticBlock):
+          if self.raw_selects == "*":
+            static.vars = sorted(static.all_vars)
+          else:
+            used_vars = set(self.vars)
+            used_vars.update(var.name for var in self.vars_needed_for_select)
+            static.vars = sorted(var for var in static.all_vars if (var in used_vars))
+            
+          for var in static.vars:
+            var = static.translator.main_query.vars.get(var)
+            if var: static.types.append(var.type)
+            else:   static.types.append("quads")
+              
+          var_2_columns = defaultdict(list)
+          for column in static.translator.main_query.columns:
+            var_2_columns[column.var].append(column)
+            
+          static.translator.main_query.raw_selects = static.vars
+          static.translator.main_query.columns = []
+          static.translator.main_query.finalize_columns()
+          static.translator.solution_modifier = [None, None, None, None, None]
+          q = static.translator.finalize()
+          static.valuess = list(q._execute_sql())
+          
+        if (not has_optional_triple) and len(static.vars) == 1: # This optimization is not supported with optional blocks
+          var = self.parse_var(static.vars[0])
+          var.update_type(static.types[0])
+          sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
+          if sql is None:
+            var.bindings.append("IN (%s)" % ",".join(str(value[0]) for value in static.valuess))
+            var.static = static.valuess
+            var.type = "objs"
+          else:
+            conditions.append("%s IN (%s)" % (sql, ",".join(str(value[0]) for value in static.valuess)))
+            
+        else:
+          prelim = SQLStaticValuesPreliminaryQuery(self.translator, "static%s" % (len(self.translator.preliminary_selects) + 1), static)
+          self.translator.preliminary_selects.append(prelim)
+          table = Table(self, prelim.name, prelim.name)
+          for i, (var, type) in enumerate(zip(static.vars, static.types)):
+            var = self.parse_var(var)
+            var.update_type(type)
+            sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
+            if sql is None:
+              var.bindings.append("%s.col%s_o" % (prelim.name, i + 1))
+            else:
+              var.bindings.insert(0, "%s.col%s_o" % (prelim.name, i + 1)) # Favor static binding, because it is never optional
+              conditions.append("%s=%s.col%s_o" % (sql, prelim.name, i + 1))
+    
     for triple in self.triples: # Pass 6: create triples tables and conditions
       if   isinstance(triple, Bind):
         self.parse_bind(triple)
@@ -891,57 +976,63 @@ class SQLQuery(FuncSupport):
       else:
         conditions = self.conditions
       self.translator.next_table_id += 1
-
+      
       if triple.consider_s: self.create_conditions(conditions, table, "s", s)
       if triple.consider_p: self.create_conditions(conditions, table, "p", p, triple.likelihood_p)
       if triple.consider_o: self.create_conditions(conditions, table, "o", o, triple.likelihood_o)
       
       if p.modifier == "+": conditions.append("%s.nb>0"  % table.name)
       
-      
-    if isinstance(triples, SimpleTripleBlock):
-      for static in triples.static_valuess:
-        if isinstance(static, StaticBlock):
-          if self.raw_selects == "*":
-            static.vars = sorted(static.all_vars)
-          else:
-            used_vars = set(self.vars)
-            used_vars.update(var.name for var in self.vars_needed_for_select)
-            static.vars = sorted(var for var in static.all_vars if (var in used_vars))
-          var_2_columns = defaultdict(list)
-          for column in static.translator.main_query.columns:
-              var_2_columns[column.var].append(column)
-              
-          static.translator.main_query.raw_selects = static.vars
-          static.translator.main_query.columns = []
-          static.translator.main_query.finalize_columns()
-          static.translator.solution_modifier = [None, None, None, None, None]
-          q = static.translator.finalize()
-          static.valuess = list(q._execute_sql())
-          
-        if len(static.vars) == 1:
-          var = self.parse_var(static.vars[0])
-          sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-          if sql is None:
-            var.bindings.append("IN (%s)" % ",".join(str(value[0]) for value in static.valuess))
-            var.static = static.valuess
-            var.type = "objs"
-          else:
-            conditions.append("%s IN (%s)" % (sql, ",".join(str(value[0]) for value in static.valuess)))
-            #conditions.append("LIKELIHOOD(%s IN (%s), %s)" % (sql, ",".join(str(value) for value in static.valuess),
-            #                                                  0.35 + 0.1 * (1.0 - math.exp(-len(static.valuess) / 100.0)))) # Favor statics with few elements
+    # if isinstance(triples, TripleBlockWithStatic):
+    #   for static in triples.static_valuess:
+    #     if isinstance(static, StaticBlock):
+    #       if self.raw_selects == "*":
+    #         static.vars = sorted(static.all_vars)
+    #       else:
+    #         used_vars = set(self.vars)
+    #         used_vars.update(var.name for var in self.vars_needed_for_select)
+    #         static.vars = sorted(var for var in static.all_vars if (var in used_vars))
             
-        else:
-          prelim = SQLStaticValuesPreliminaryQuery(self.translator, "static%s" % (len(self.translator.preliminary_selects) + 1), static)
-          self.translator.preliminary_selects.append(prelim)
-          table = Table(self, prelim.name, prelim.name)
-          for i, var in enumerate(static.vars):
-            var = self.parse_var(var)
-            sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-            if sql is None:
-              var.bindings.append("%s.col%s_o" % (prelim.name, i + 1))
-            else:
-              conditions.append("%s=%s.col%s_o" % (sql, prelim.name, i + 1))
+    #       for var in static.vars:
+    #         var = static.translator.main_query.vars.get(var)
+    #         if var: static.types.append(var.type)
+    #         else:   static.types.append("quads")
+              
+    #       var_2_columns = defaultdict(list)
+    #       for column in static.translator.main_query.columns:
+    #         var_2_columns[column.var].append(column)
+            
+    #       static.translator.main_query.raw_selects = static.vars
+    #       static.translator.main_query.columns = []
+    #       static.translator.main_query.finalize_columns()
+    #       static.translator.solution_modifier = [None, None, None, None, None]
+    #       q = static.translator.finalize()
+    #       static.valuess = list(q._execute_sql())
+          
+    #     if (not [table for table in self.tables if table.join != ","]) and len(static.vars) == 1: # This optimization is not supported with optional blocks
+    #       var = self.parse_var(static.vars[0])
+    #       var.update_type(static.types[0])
+    #       sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
+    #       if sql is None:
+    #         var.bindings.append("IN (%s)" % ",".join(str(value[0]) for value in static.valuess))
+    #         var.static = static.valuess
+    #         var.type = "objs"
+    #       else:
+    #         conditions.append("%s IN (%s)" % (sql, ",".join(str(value[0]) for value in static.valuess)))
+            
+    #     else:
+    #       prelim = SQLStaticValuesPreliminaryQuery(self.translator, "static%s" % (len(self.translator.preliminary_selects) + 1), static)
+    #       self.translator.preliminary_selects.append(prelim)
+    #       table = Table(self, prelim.name, prelim.name)
+    #       for i, (var, type) in enumerate(zip(static.vars, static.types)):
+    #         var = self.parse_var(var)
+    #         var.update_type(type)
+    #         sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
+    #         if sql is None:
+    #           var.bindings.append("%s.col%s_o" % (prelim.name, i + 1))
+    #         else:
+    #           var.bindings.insert(0, "%s.col%s_o" % (prelim.name, i + 1)) # Favor static binding, because it is never optional
+    #           conditions.append("%s=%s.col%s_o" % (sql, prelim.name, i + 1))
               
               
   def get_fix_levels(self, vars0, exclude_triple = None):
@@ -1028,14 +1119,15 @@ class SQLQuery(FuncSupport):
           condition = "%s.%s%s%s"  % (table.name, n, operator, sql)
           if likelihood is None: conditions.append(condition)
           else:                  conditions.append("LIKELIHOOD(%s, %s)" % (condition, likelihood))
-      if (not sql_d is None) and (n != "s") and (n != "p") and (table.name != "objs"):
+          
+      if (not sql_d is None) and (sql_d != 0) and (n != "s") and (n != "p") and (table.name != "objs"):
         conditions.append("%s.%sd=%s" % (table.name, n[:-1], sql_d)) # Datatype part
         
       if isinstance(x, rply.Token) and (x.name == "VAR"): x = self.vars[x.value]
       if isinstance(x, Variable):
         if not x.initial_query: x.initial_query = self
         x.bindings.append("%s.%s" % (table.name, n))
-        
+    
   def try_create_in_conditions(self, conditions, x, prelim):
     if prelim.optional or (len(prelim.columns) != 1) or (x is None): return False
 
@@ -1119,12 +1211,19 @@ class SQLQuery(FuncSupport):
         else:
           raise ValueError("Cannot select '%s'!" % select)
         
+      if isinstance(sql, str) and sql.startswith("IN "):
+        if   not "," in sql: sql = sql[4 : -1]
+        elif len(selects) == 1: pass # Ok
+        else:
+          raise ValueError("Cannot SELECT a variable that appears only in a VALUES clause with multiple values (not yet supported).")
+        
       self.columns.append(Column(var_name, sql_type, sql, "col%s_o" % i, j)); j += 1
       if not sql_d is None:
         self.columns.append(Column(var_name, sql_d_type, sql_d, "col%s_d" % i, j)); j += 1
         
     if self.preliminary:
       self.translator.table_type_2_cols[self.name] = [column.name for column in self.columns]
+
     
   def set_column_names(self, names):
     for column, name in zip(self.columns, names): column.name = name
@@ -1139,7 +1238,6 @@ class SQLQuery(FuncSupport):
     elif isinstance(x, Variable):
       if not x.bindings: return None, None, None, None
       binding = x.get_binding(self)
-      
       if   x.type == "objs":  return binding, "objs", None, None
       else:
         if not x.fixed_datatype is None:
@@ -1320,14 +1418,19 @@ class SQLStaticValuesPreliminaryQuery(object):
     self.translator    = translator
     self.name          = name
     self.static_values = static_values
-    self.translator.table_type_2_cols[self.name] = ["col%s_o" % (i+1) for i in range(len(self.static_values.valuess[0]))]
+    
+    if self.static_values.valuess:
+      self.nb_value = len(self.static_values.valuess[0])
+    else:
+      raise ValueError("VALUES clause cannot be empty (this also applies to STATIC block returning no results)!")
+    self.translator.table_type_2_cols[self.name] = ["col%s_o" % (i+1) for i in range(self.nb_value)]
     
     self.columns = []
-    for i in range(len(self.static_values.valuess[0])):
+    for i in range(self.nb_value):
       self.columns.append(Column(static_values.vars[i], "objs", "xxx", "col%s_o" % (i+1), i))
-    
+      
   def sql(self):
     return "%s(%s) AS (VALUES %s)" % (self.name,
-                                      ",".join("col%s_o" % (i+1) for i in range(len(self.static_values.valuess[0]))),
+                                      ",".join("col%s_o" % (i+1) for i in range(self.nb_value)),
                                       ",".join("(%s)" % ",".join(str(value) for value in values) for values in self.static_values.valuess) )
 

@@ -655,7 +655,7 @@ class World(_GraphManager):
             
       if d is None: ontology.graph._add_obj_triple_raw_spo  (s, p, o)
       else:         ontology.graph._add_data_triple_raw_spod(s, p, o, d)
-
+      
     # Factorize is_a triples for better performance
     for (s, p), os in is_a_triples.items():
       if   (s > 0) and (s in self.world._entities): sub = self._entities[s]
@@ -667,7 +667,7 @@ class World(_GraphManager):
         
         with DONT_COPY_BN:
           with ontology: sub.is_a.extend(objs)
-            
+          
       else:
         for o in os: ontology.graph._add_obj_triple_raw_spo(s, p, o)
         
