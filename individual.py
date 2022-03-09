@@ -362,6 +362,9 @@ class Thing(metaclass = ThingClass):
 
 class Nothing(Thing): pass
 
+class NamedIndividual(Thing): pass
+
+
 class FusionClass(ThingClass):
   ontology = anonymous
   

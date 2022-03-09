@@ -87,11 +87,12 @@ owlready2.prop.AnnotationProperty      = AnnotationProperty
 owlready2.prop.Thing                   = Thing
 owlready2.prop.PropertyChain           = PropertyChain
 owlready2.prop._check_superclasses     = True
-
 owlready2.prop.ThingClass              = ThingClass
 owlready2.prop.And                     = And
 owlready2.prop.Or                      = Or
 owlready2.prop.OneOf                   = OneOf
+owlready2.prop.NamedIndividual         = NamedIndividual
+
 owlready2.annotation.Construct         = Construct
 
 owlready2.individual._keep_most_specific = _keep_most_specific

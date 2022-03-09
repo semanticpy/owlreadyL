@@ -6344,7 +6344,7 @@ ask where
       class C(Thing): pass
 
     c = C()
-
+    
     assert len(w.graph) == 5 + nb
     
     undestroy = destroy_entity(C, undoable = True)
@@ -8106,13 +8106,13 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?p ?x  { onto:a1 ?p ?x . }""")
     assert len(r) == 7
-    assert { tuple(x) for x in r } == { (rdf_type, owl_named_individual), (rdf_type, onto.A), (onto.rel, onto.b2), (onto.subrel, onto.b3), (label, "label_a"), (onto.price, 10.0), (onto.price_vat_free, 8.0) }
+    assert { tuple(x) for x in r } == { (rdf_type, NamedIndividual), (rdf_type, onto.A), (onto.rel, onto.b2), (onto.subrel, onto.b3), (label, "label_a"), (onto.price, 10.0), (onto.price_vat_free, 8.0) }
   
   def test_52(self):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?x  { onto:a1 !rdfs:label ?x . }""")
     assert len(r) == 6
-    assert { tuple(x)[0] for x in r } == { owl_named_individual, onto.A, onto.b2, onto.b3, 10.0, 8.0 }
+    assert { tuple(x)[0] for x in r } == { NamedIndividual, onto.A, onto.b2, onto.b3, 10.0, 8.0 }
     
   def test_53(self):
     world, onto = self.prepare1()
@@ -9116,7 +9116,7 @@ WHERE {
     assert r == [[onto.a1]]
     
     q, r = self.sparql(world, """SELECT  ?l ?c { onto:A rdfs:label ?l . OPTIONAL { ?l a ?c . } }""", compare_with_rdflib = False)
-    assert set(tuple(i) for i in r) == { ("xxx", None), (onto.a1, onto.A), (onto.a1, 12) }
+    assert set(tuple(i) for i in r) == { ("xxx", None), (onto.a1, onto.A), (onto.a1, NamedIndividual) }
     
     owlready2.sparql.parser._DATA_PROPS = save
     
@@ -9229,21 +9229,21 @@ WHERE {
     
   def test_147(self):
     world, onto = self.prepare1()
-    onto.a1.price = [12]
+    onto.a1.price = [19]
     
     q, r = self.sparql(world, """
 SELECT ?price WHERE {
   STATIC { onto:a1 onto:price ?price. }
 }
 """, compare_with_rdflib = False)
-    assert r == [[12]]
+    assert r == [[19]]
     
     q, r = self.sparql(world, """
 SELECT ?price ?x WHERE {
   STATIC { onto:a1 onto:price ?price. onto:a1 onto:rel ?x. }
 }
 """, compare_with_rdflib = False)
-    assert r == [[12, onto.b2]]
+    assert r == [[19, onto.b2]]
     
   def test_148(self):
     world, onto = self.prepare1()
@@ -9353,7 +9353,6 @@ SELECT ?n WHERE {
 
     assert len(r) == 0
 
-
   def test_151(self):
     world = self.new_world()
     
@@ -9382,6 +9381,15 @@ SELECT * WHERE {
     OPTIONAL { ?name onto:phone    ?phone . }
 }""", compare_with_rdflib = False)
     assert r == [[onto.obj_b, "75020", None]]
+    
+  def test_152(self):
+    world, onto = self.prepare1()
+    
+    q, r = self.sparql(world, """
+SELECT ?x WHERE { onto:a1 a ?x }
+""", compare_with_rdflib = False)
+    print(r)
+
     
     
     

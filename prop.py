@@ -902,7 +902,6 @@ def destroy_entity(e, undoable = False):
   if undoable: undoer_objs = []; undoer_datas = []; undoer_bnodes = []; undoer_relations = []
   else:        undoer_objs = undoer_datas = None; undoer_bnodes = None; undoer_relations = None
   
-  
   if   hasattr(e, "__destroy__"): e.__destroy__(undoer_objs, undoer_datas)
   
   elif isinstance(e, PropertyClass):
@@ -952,9 +951,8 @@ def destroy_entity(e, undoable = False):
     if o:
       for r in relations:
         if  (r == rdf_type) or (r == rdfs_subpropertyof) or (r == rdfs_subclassof):
-          #o.is_a.reinit([i for i in o.is_a if not i.storid in destroyed_storids])
           parents = [e.namespace.world._to_python(i) for i in e.namespace.world._get_obj_triples_sp_o(storid, r)]
-          o.is_a.reinit([i for i in parents if not i is None])
+          o.is_a.reinit([i for i in parents if not i is None and not i is NamedIndividual])
           if r == rdfs_subclassof:
             for Subclass in o.descendants(True, True): _FUNCTIONAL_FOR_CACHE.pop(Subclass, None)
             
