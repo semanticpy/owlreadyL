@@ -638,6 +638,7 @@ version 2 - 0.37
 
 * Add World.forget_reference(entity)
 * Add NamedIndividual (for SPARQL results on rdf:type)
+* Add 'update_relation' optional args to Ontology.destroy()
 * Bugfixes:
   - Fix SPARQL queries having a UNION but using no variable from the UNION
   - Fix SPARQL queries on read only quadstores

@@ -6609,6 +6609,30 @@ ask where
     destroy_entity(C)
     assert w.graph.execute("SELECT COUNT() FROM quads WHERE s<0").fetchone()[0] == 0
     
+  def test_destroy_25(self):
+    w  = self.new_world()
+    o1 = w.get_ontology("http://www.test.org/test1.owl")
+    o2 = w.get_ontology("http://www.test.org/test2.owl")
+    
+    with o1:
+      class r(Thing >> Thing): pass
+      class p(Thing >> int): pass
+      class C(Thing): pass
+      c1 = C(p = [1])
+      c2 = C()
+      
+    with o2:
+      c1.p.append(2)
+      c2.p.append(2)
+      c3 = C("c3", p = [3])
+      
+    del c2
+    assert c1.p == [1, 2]
+    
+    o2.destroy(True)
+    
+    assert c1.p == [1]
+    
     
   def test_observe_1(self):
     import owlready2.observe

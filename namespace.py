@@ -880,8 +880,19 @@ class Ontology(Namespace, _GraphManager):
     if world.graph: world.graph.release_write_lock()
     #if need_write: world.graph.release_write_lock()
     
-  def destroy(self):
+  def destroy(self, update_relation = False):
     self.world.graph.acquire_write_lock()
+    
+    if update_relation:
+      for s, p in self.graph.execute("""SELECT DISTINCT s, p FROM quads WHERE c=?""", (self.graph.c,)):
+        entity = self.world._entities.get(s)
+        if (not entity is None) and (not entity.namespace.ontology is self):
+          prop = self.world._entities.get(p)
+          if not prop is None:
+            #print("del %s.%s" % (entity, prop.python_name))
+            try: delattr(entity, prop.python_name)
+            except AttributeError: pass
+            
     del self.world.ontologies[self.base_iri]
     self.graph.destroy()
     for entity in list(self.world._entities.values()):

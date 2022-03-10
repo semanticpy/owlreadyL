@@ -19,7 +19,8 @@ SPARQL elements supported
 -------------------------
 
 * SELECT, INSERT and DELETE queries
-* UNION, OPTIONAL
+* UNION
+* OPTIONAL (with a single triple)
 * FILTER, BIND, FILTER EXISTS, FILTER NOT EXISTS
 * SELECT sub queries
 * VALUES in SELECT queries
@@ -33,6 +34,7 @@ SPARQL elements not supported
 
 * ASK, DESCRIBE, LOAD, ADD, MOVE, COPY, CLEAR, DROP, CONSTRUCT queries
 * INSERT DATA, DELETE DATA, DELETE WHERE queries (you may use INSERT or DELETE instead)
+* OPTIONAL (with more than one triple)
 * SERVICE (Federated queries)
 * GRAPH, FROM, FROM NAMED keywords
 * MINUS
