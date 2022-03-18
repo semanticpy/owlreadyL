@@ -5137,6 +5137,23 @@ multiple lines with " and ’ and \ and & and < and > and é."""
     c = list(onto.individuals())[0]
     assert c.__class__.iri == "https://test.org/o#TEST:C"
     
+  def test_format_28(self):
+    world = self.new_world()
+    onto = get_ontology("https://test.org/o#")
+    
+    with onto:
+      class C(Thing): pass
+      C.name = "123"
+      c = C("1")
+      
+    tmp = self.new_tmp_file()
+    onto.save(tmp)
+    
+    world = self.new_world()
+    onto = get_ontology(tmp).load()
+    
+    assert onto["1"].is_a == [onto["123"]]
+    assert isinstance(onto["1"], onto["123"])
     
   def test_search_1(self):
     world = self.new_world()
@@ -9412,7 +9429,6 @@ SELECT * WHERE {
     q, r = self.sparql(world, """
 SELECT ?x WHERE { onto:a1 a ?x }
 """, compare_with_rdflib = False)
-    print(r)
 
     
     

@@ -396,7 +396,6 @@ def _save(f, format, graph, filter = None):
         l = bn_2_inner_list[current_s]
         current_s = 0
       else:
-        #l = liness.get(type) or l = lines[-1]
         l = liness.get(type)
         if l is None: l = lines[-1]
         
@@ -443,10 +442,13 @@ def _save(f, format, graph, filter = None):
       if (p == rdf_type) and (type == "rdf:Description") and (not o < 0):
         t = abbrev(o)
         if not t in bad_types:
-          type = t
-          if type.startswith("#"): type = type[1:]
-          continue
-        
+          if t.startswith("#"): t = t[1:]
+          if t[0] in "abcdefghijklmnokprstuvwxyzABCDEFGHIJKLMNOKPRSTUVWXYZ":
+            type = t
+            continue
+          else:
+            pass
+          
       p = abbrev(p)
       if p.startswith("#"): p = p[1:]
       
