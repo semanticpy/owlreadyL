@@ -5137,23 +5137,31 @@ multiple lines with " and ’ and \ and & and < and > and é."""
     c = list(onto.individuals())[0]
     assert c.__class__.iri == "https://test.org/o#TEST:C"
     
-  def test_format_28(self):
+  def test_format_29(self):
     world = self.new_world()
-    onto = get_ontology("https://test.org/o#")
+    onto  = get_ontology("https://test.org/o#")
+    onto2 = get_ontology("https://test.org/o2#")
     
+    with onto2:
+      class D(Thing): pass
+      D.name = "456"
+      
     with onto:
       class C(Thing): pass
       C.name = "123"
       c = C("1")
+      d = D("2")
       
     tmp = self.new_tmp_file()
     onto.save(tmp)
     
+    #print(open(tmp).read())
     world = self.new_world()
     onto = get_ontology(tmp).load()
     
     assert onto["1"].is_a == [onto["123"]]
     assert isinstance(onto["1"], onto["123"])
+    
     
   def test_search_1(self):
     world = self.new_world()

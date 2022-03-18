@@ -330,14 +330,17 @@ def _save(f, format, graph, filter = None):
           xmln0 = left[:4].replace("#", "").replace(":", "")
           
         if not xmln0[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ": xmln0 = "x_" + xmln0
-        xmln  = xmln0 + ":"
+        xmln  = "%s:" % xmln0
         i = 2
         while xmln in xmlns_abbbrevs: xmln = "%s%s:" % (xmln0, i) ; i += 1
         
         xmlns[left] = xmln = xmln
         xmlns_abbbrevs.add(xmln)
-        
-      return xmln + x[splitat + 1:]
+
+      x = x[splitat + 1:]
+      r = "%s%s" % (xmln, x)
+      if not x[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ": bad_types.add(r)
+      return r
     
     lines  = []
     liness = {}
@@ -443,7 +446,7 @@ def _save(f, format, graph, filter = None):
         t = abbrev(o)
         if not t in bad_types:
           if t.startswith("#"): t = t[1:]
-          if t[0] in "abcdefghijklmnokprstuvwxyzABCDEFGHIJKLMNOKPRSTUVWXYZ":
+          if t[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ":
             type = t
             continue
           else:
