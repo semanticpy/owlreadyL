@@ -45,7 +45,7 @@ class BaseGraph(object):
   #                 "get_triple_sp", "_get_data_triple_triple_sp", "get_triple_po", "_get_obj_triples_transitive_sp", "_get_obj_triples_transitive_po", "_get_obj_triples_transitive_sym", "_get_obj_triples_transitive_sp_indirect", "get_triples", "_get_data_triple_triples", "get_triples_s", "get_triples_sp", "_get_data_triple_triples_sp", "get_triples_po", "get_pred", "get_quads", "_get_triple_data_triples_sp", "_get_triple_data_triple_sp", "_get_triples_sp", "has_triple", "_has_data_triple_triple", "_del_triple", "_del_data_triple"]
   #WRITE_METHODS = ["_add_triple", "_set_triple", "_add_data_triple", "_set_data_triple"]
   
-  BASE_METHODS  = ["_refactor", "_new_numbered_iri", "_abbreviate", "_unabbreviate",
+  BASE_METHODS  = ["_refactor", "_refactor_onto", "_new_numbered_iri", "_abbreviate", "_unabbreviate",
                    
                    "_get_obj_triples_cspo_cspo", "_get_obj_triples_spo_spo", "_get_obj_triples_sp_co", "_get_obj_triples_s_po",
                    "_get_obj_triples_po_s", "_get_obj_triples_sp_o", "_get_obj_triple_sp_o", "_get_obj_triple_po_s", "_has_obj_triple_spo", "_del_obj_triple_raw_spo",

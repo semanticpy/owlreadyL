@@ -282,3 +282,20 @@ and 'format', the file format (default is RDF/XML).
    RDF/XML is the most common format; it is also natively supported by Owlready2 (since version 0.2).
    
    OWL/XML is not yet supported for writing.
+
+
+Changing the ontology base IRI
+------------------------------
+
+You can change the ontology base IRI as follows:
+
+::
+
+   >>> onto.base_iri = "http://test.org/new_base_iri.owl#"
+
+This will also change the IRI or all entities in the ontology.
+If you don't want to change IRI entities, you can use the set_base_iri() method:
+
+::
+
+   >>> onto.set_base_iri("http://test.org/new_base_iri.owl#", rename_entities = False)

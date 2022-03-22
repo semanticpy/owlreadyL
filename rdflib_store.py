@@ -41,13 +41,13 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
     
     self.context_graphs = {}
     for onto, triplelite in self.triplelite.onto_2_subgraph.items():
-      graph            = TripleLiteRDFlibGraph(store = self, identifier = URIRef(onto.base_iri))
+      graph            = TripleLiteRDFlibGraph(store = self, identifier = URIRef(onto._base_iri))
       graph.onto       = onto
       graph.triplelite = triplelite
       self.context_graphs[onto] = graph
       
   def _add_onto(self, onto):
-    graph            = TripleLiteRDFlibGraph(store = self, identifier = URIRef(onto.base_iri))
+    graph            = TripleLiteRDFlibGraph(store = self, identifier = URIRef(onto._base_iri))
     graph.onto       = onto
     graph.triplelite = onto.graph
     self.context_graphs[onto] = graph
@@ -171,10 +171,10 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
     if isinstance(identifier_or_ontology, URIRef):
       identifier_or_ontology = str(identifier_or_ontology)
       for onto, graph in self.context_graphs.items():
-        if identifier_or_ontology == onto.base_iri:
+        if identifier_or_ontology == onto._base_iri:
           return graph
       for onto, graph in self.context_graphs.items():
-        if identifier_or_ontology == onto.base_iri[:-1]:
+        if identifier_or_ontology == onto._base_iri[:-1]:
           return graph
       raise ValueError
     else:

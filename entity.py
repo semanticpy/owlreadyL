@@ -66,10 +66,10 @@ class EntityClass(type):
   def get_name(Class): return Class._name
   def set_name(Class, name):
     Class._name = name
-    Class.namespace.world._refactor(Class.storid, "%s%s" % (Class.namespace.base_iri, name))
+    Class.namespace.world._refactor(Class.storid, "%s%s" % (Class.namespace._base_iri, name))
   name = property(get_name, set_name)
   
-  def get_iri(Class): return "%s%s" % (Class.namespace.base_iri, Class._name)
+  def get_iri(Class): return "%s%s" % (Class.namespace._base_iri, Class._name)
   def set_iri(Class, new_iri):
     splitted = new_iri.rsplit("#", 1)
     if len(splitted) == 2:
@@ -108,7 +108,7 @@ class EntityClass(type):
     
   def __new__(MetaClass, name, superclasses, obj_dict):
     namespace = obj_dict.get("namespace") or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or superclasses[0].namespace
-    storid    = obj_dict.get("storid")    or namespace.world._abbreviate("%s%s" % (namespace.base_iri, name))
+    storid    = obj_dict.get("storid")    or namespace.world._abbreviate("%s%s" % (namespace._base_iri, name))
     
     if "is_a" in obj_dict:
       _is_a = [*superclasses, *obj_dict["is_a"]]

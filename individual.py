@@ -54,12 +54,12 @@ class Thing(metaclass = ThingClass):
   def get_name(self): return self._name
   def set_name(self, name):
     self._name = name
-    self.namespace.world._refactor(self.storid, "%s%s" % (self.namespace.base_iri, name))
+    self.namespace.world._refactor(self.storid, "%s%s" % (self.namespace._base_iri, name))
   name = property(get_name, set_name)
   
   def get_iri(self):
     if self.storid < 0: return ""
-    return "%s%s" % (self.namespace.base_iri, self._name)
+    return "%s%s" % (self.namespace._base_iri, self._name)
   def set_iri(self, new_iri):
     splitted = new_iri.rsplit("#", 1)
     if len(splitted) == 2:
@@ -81,7 +81,7 @@ class Thing(metaclass = ThingClass):
       if LOADING or (name == ""):
         already_existing = None
       else:
-        already_existing = namespace.world["%s%s" % (namespace.base_iri, name)]
+        already_existing = namespace.world["%s%s" % (namespace._base_iri, name)]
         
       if not already_existing is None:
         if not isinstance(already_existing, Class):
@@ -115,13 +115,13 @@ class Thing(metaclass = ThingClass):
     elif name:
       is_new = not "storid" in self.__dict__
       if is_new: self.namespace = namespace or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or self.__class__.namespace
-      iri = "%s%s" % (self.namespace.base_iri, name)
+      iri = "%s%s" % (self.namespace._base_iri, name)
       self._name = name
     else:
       is_new = True
       self.namespace = namespace or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or self.__class__.namespace
-      iri = self.namespace.world._new_numbered_iri("%s%s" % (self.namespace.base_iri, self.generate_default_name()))
-      self._name = iri[len(self.namespace.base_iri):]
+      iri = self.namespace.world._new_numbered_iri("%s%s" % (self.namespace._base_iri, self.generate_default_name()))
+      self._name = iri[len(self.namespace._base_iri):]
     
     if is_new:
       self.__dict__["_equivalent_to"] = None

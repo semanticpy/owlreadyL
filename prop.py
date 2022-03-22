@@ -47,7 +47,7 @@ class PropertyClass(EntityClass):
   #     if DataProperty       in superclasses: nb_base += 1
   #     if AnnotationProperty in superclasses: nb_base += 1
   #     if nb_base > 1:
-  #       iri = "%s%s" % (obj_dict["namespace"].base_iri, name)
+  #       iri = "%s%s" % (obj_dict["namespace"]._base_iri, name)
   #       if (ObjectProperty in superclasses) and (DataProperty in superclasses):
   #         raise TypeError("Property '%s' is both an ObjectProperty and a DataProperty!" % iri)
   #       if (ObjectProperty in superclasses) and (AnnotationProperty in superclasses):
@@ -393,12 +393,12 @@ class PropertyClass(EntityClass):
   def descendants(Prop, include_self = True, only_loaded = False, world = None):
     if   Prop is ObjectProperty:
       import owlready2
-      r = { prop for prop in (world or owlready2.default_world)._props.values() if issubclass(prop, ObjectProperty) and (prop.namespace.base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomObjectProperty) }
+      r = { prop for prop in (world or owlready2.default_world)._props.values() if issubclass(prop, ObjectProperty) and (prop.namespace._base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomObjectProperty) }
       if include_self: r.add(ObjectProperty)
       return r
     elif Prop is DataProperty:
       import owlready2
-      r = { prop for prop in (world or owlready2.default_world)._props.values() if issubclass(prop, DataProperty) and (prop.namespace.base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomDataProperty) }
+      r = { prop for prop in (world or owlready2.default_world)._props.values() if issubclass(prop, DataProperty) and (prop.namespace._base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomDataProperty) }
       if include_self: r.add(DataProperty)
       return r
     elif Prop is AnnotationProperty:
@@ -411,10 +411,10 @@ class PropertyClass(EntityClass):
   def subclasses(Prop, only_loaded = False, world = None):
     if   Prop is ObjectProperty:
       import owlready2
-      return { prop for prop in (world or owlready2.default_world)._props.values() if (ObjectProperty in prop.__bases__) and (prop.namespace.base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomObjectProperty) }
+      return { prop for prop in (world or owlready2.default_world)._props.values() if (ObjectProperty in prop.__bases__) and (prop.namespace._base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomObjectProperty) }
     elif Prop is DataProperty:
       import owlready2
-      return { prop for prop in (world or owlready2.default_world)._props.values() if (DataProperty in prop.__bases__) and (prop.namespace.base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomDataProperty) }
+      return { prop for prop in (world or owlready2.default_world)._props.values() if (DataProperty in prop.__bases__) and (prop.namespace._base_iri != "http://www.w3.org/2003/11/swrl#") and (not prop is bottomDataProperty) }
     elif Prop is AnnotationProperty:
       import owlready2
       return { prop for prop in (world or owlready2.default_world)._props.values() if (AnnotationProperty in prop.__bases__) }

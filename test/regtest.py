@@ -766,6 +766,130 @@ class Test(BaseTest, unittest.TestCase):
     assert len(list(o.metadata)) == 2
     assert set(o.metadata) == { label, comment }
     
+  def test_ontology_33(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/o.owl#")
+
+    with o:
+      class C(Thing): pass
+      c = C()
+      
+    assert C.iri == "http://www.test.org/o.owl#C"
+    
+    o.base_iri = "http://www.test2.org/onto2.owl/"
+    
+    assert C.iri == "http://www.test2.org/onto2.owl/C"
+    
+    w.forget_reference(C)
+    assert o.C.iri == "http://www.test2.org/onto2.owl/C"
+    
+    
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/o/")
+    q = w.get_ontology("http://www.test.org/o/q/")
+    p = w.get_ontology("http://www.test.org/o/p#")
+    
+    with o:
+      class C(Thing): pass
+      c = C()
+      
+    with q:
+      class D(Thing): pass
+      
+    with p:
+      class E(Thing): pass
+      
+    assert C.iri == "http://www.test.org/o/C"
+    assert D.iri == "http://www.test.org/o/q/D"
+    assert E.iri == "http://www.test.org/o/p#E"
+    
+    o.base_iri = "http://www.test2.org/onto2.owl#"
+    
+    assert C.iri == "http://www.test2.org/onto2.owl#C"
+    assert D.iri == "http://www.test.org/o/q/D"
+    assert E.iri == "http://www.test.org/o/p#E"
+    
+    w.forget_reference(C)
+    w.forget_reference(D)
+    w.forget_reference(E)
+    assert o.C.iri == "http://www.test2.org/onto2.owl#C"
+    assert q.D.iri == "http://www.test.org/o/q/D"
+    assert p.E.iri == "http://www.test.org/o/p#E"
+    
+  def test_ontology_34(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/o.owl#")
+
+    with o:
+      class C(Thing): pass
+      c = C()
+      
+    assert C.iri == "http://www.test.org/o.owl#C"
+    assert C.namespace is o
+    
+    o.set_base_iri("http://www.test2.org/onto2.owl/", rename_entities = False)
+    
+    assert C.iri == "http://www.test.org/o.owl#C"
+    assert not C.namespace is o
+    
+    w.forget_reference(C)
+    assert o.C is None
+    assert o.get_namespace("http://www.test.org/o.owl#").C.iri == "http://www.test.org/o.owl#C"
+    
+
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/o/")
+    q = w.get_ontology("http://www.test.org/o/q/")
+    p = w.get_ontology("http://www.test.org/o/p#")
+    
+    with o:
+      class C(Thing): pass
+      c = C()
+      
+    with q:
+      class D(Thing): pass
+      
+    with p:
+      class E(Thing): pass
+      
+    assert C.iri == "http://www.test.org/o/C"
+    assert C.namespace is o
+    assert D.iri == "http://www.test.org/o/q/D"
+    assert E.iri == "http://www.test.org/o/p#E"
+    
+    o.set_base_iri("http://www.test2.org/onto2.owl#", rename_entities = False)
+    
+    assert C.iri == "http://www.test.org/o/C"
+    assert not C.namespace is o
+    assert D.iri == "http://www.test.org/o/q/D"
+    assert E.iri == "http://www.test.org/o/p#E"
+    
+    w.forget_reference(C)
+    w.forget_reference(D)
+    w.forget_reference(E)
+    assert o.get_namespace("http://www.test.org/o/").C.iri == "http://www.test.org/o/C"
+    assert q.get_namespace("http://www.test.org/o/q/").D.iri == "http://www.test.org/o/q/D"
+    assert p.get_namespace("http://www.test.org/o/p#").E.iri == "http://www.test.org/o/p#E"
+    
+  def test_ontology_35(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/o.owl#")
+    n = o.get_namespace("http://www.test.org/namespace/")
+    
+    with n:
+      class C(Thing): pass
+      c = C()
+      
+    assert C.iri == "http://www.test.org/namespace/C"
+    assert C.namespace is n
+    
+    o2 = w.get_ontology("http://www.test.org/namespace/")
+    o2.base_iri = "http://www.test.org/namespace2/"
+    
+    assert C.iri == "http://www.test.org/namespace2/C"
+    assert C.namespace is n
+    assert n.C is C
+    
     
   def test_class_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")

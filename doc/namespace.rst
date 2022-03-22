@@ -123,3 +123,12 @@ and then asserts that Drug is a subclass of Substance in a second ontology.
    
    ...     Drug.is_a.append(Substance)
 
+
+   
+Renaming entities defined in a namespace
+----------------------------------------
+
+Owlready has no direct support for renaming entities defined in a namespace that do not correspond to an ontology.
+However, a simple workaround is to create an ontology with the same base IRI as the namespace, change this ontology
+base iri (with Ontoloy.base_iri = ...), and then destroy the ontology.
+

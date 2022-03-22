@@ -59,9 +59,26 @@ class Namespace(object):
       self.ontology = None
       self.world    = None
       
-    self.base_iri = base_iri
-    self.name     = name
+    self._base_iri = base_iri
+    self.name      = name
     
+  def get_base_iri(self): return self._base_iri
+  # def set_base_iri(self, new_base_iri, rename_entities = True):
+  #   if rename_entities == False: raise ValueError("set_base_iri() with rename_entity=False is ontly supported on Ontology, not on Namespace. Please create a new Namespace.")
+  #   if self.world.graph: self.world.graph.acquire_write_lock()
+    
+  #   if self.ontology: del self.ontology._namespaces[self._base_iri]
+  #   else:             del self.world   ._namespaces[self._base_iri]
+    
+  #   self.world._refactor_onto(self.storid, self._base_iri, new_base_iri)
+      
+  #   self._base_iri = new_base_iri
+  #   if self.ontology: self.ontology._namespaces[new_base_iri] = self
+  #   else:             self.world   ._namespaces[new_base_iri] = self
+    
+  #   if self.world.graph: self.world.graph.release_write_lock()
+  base_iri = property(get_base_iri)#, set_base_iri)
+  
   def __enter__(self):
     if self.ontology is None: raise ValueError("Cannot assert facts in this namespace: it is not linked to an ontology! (it is probably a global namespace created by get_namespace(); please use your_ontology.get_namespace() instead)")
     if self.world.graph:
@@ -76,10 +93,10 @@ class Namespace(object):
     if self.world.graph:
       self.world.graph.release_write_lock()
       
-  def __repr__(self): return """%s.get_namespace("%s")""" % (self.ontology, self.base_iri)
+  def __repr__(self): return """%s.get_namespace("%s")""" % (self.ontology, self._base_iri)
   
-  def __getattr__(self, attr): return self.world["%s%s" % (self.base_iri, attr)] #return self[attr]
-  def __getitem__(self, name): return self.world["%s%s" % (self.base_iri, name)]
+  def __getattr__(self, attr): return self.world["%s%s" % (self._base_iri, attr)] #return self[attr]
+  def __getitem__(self, name): return self.world["%s%s" % (self._base_iri, name)]
 
 class _GraphManager(object):
   def _abbreviate  (self, iri, create_if_missing = True):
@@ -742,7 +759,7 @@ class World(_GraphManager):
       if main_onto is None:
         main_onto = self.get_ontology("http://anonymous/")
         full_iri = full_iri or self._unabbreviate(storid)
-        if full_iri.startswith(owl.base_iri) or full_iri.startswith(rdfs.base_iri) or full_iri.startswith("http://www.w3.org/1999/02/22-rdf-syntax-ns#"): return None
+        if full_iri.startswith(owl._base_iri) or full_iri.startswith(rdfs._base_iri) or full_iri.startswith("http://www.w3.org/1999/02/22-rdf-syntax-ns#"): return None
         
       if main_onto:
         if isinstance(storid, int) and (storid < 0):
@@ -865,8 +882,8 @@ class Ontology(Namespace, _GraphManager):
       if not new_in_quadstore:
         self._load_properties()
         
-    world.ontologies[self.base_iri] = self
-    if _LOG_LEVEL: print("* Owlready2 * Creating new ontology %s <%s>." % (self.name, self.base_iri), file = sys.stderr)
+    world.ontologies[self._base_iri] = self
+    if _LOG_LEVEL: print("* Owlready2 * Creating new ontology %s <%s>." % (self.name, self._base_iri), file = sys.stderr)
     
     if (not LOADING) and (not self.graph is None):
       if not self._has_obj_triple_spo(self.storid, rdf_type, owl_ontology):
@@ -879,7 +896,39 @@ class Ontology(Namespace, _GraphManager):
     
     if world.graph: world.graph.release_write_lock()
     #if need_write: world.graph.release_write_lock()
+
+  def get_base_iri(self): return self._base_iri
+  def set_base_iri(self, new_base_iri, rename_entities = True):
+    if self.world.graph: self.world.graph.acquire_write_lock()
+
+    del self.world.ontologies[self._base_iri]
+    del self._namespaces[self._base_iri]
     
+    old_base_iri = self._base_iri
+    if rename_entities:
+      self.world._refactor_onto(self.storid, old_base_iri, new_base_iri)
+    else:
+      self.world._refactor(self.storid, new_base_iri)
+      
+    self._base_iri = new_base_iri
+    self.world.ontologies[new_base_iri] = self._namespaces[new_base_iri] = self
+    
+    if rename_entities: # Update Namespaces with the same base IRI
+      for d, namespace in [(self.world._namespaces, v) for v in self.world._namespaces.values()] + [(ontology._namespaces, v) for ontology in self.world.ontologies.values() for v in ontology._namespaces.values()]:
+        if (not isinstance(namespace, Ontology)) and (namespace._base_iri == old_base_iri):
+          del d[old_base_iri]
+          namespace._base_iri = new_base_iri
+          d[new_base_iri] = namespace
+          
+    else: # Create a Namespace for replacing the ontology
+      self._base_iri = new_base_iri
+      namespace = self.get_namespace(old_base_iri)
+      for entity in self.world._entities.values():
+        if entity.namespace is self: entity.namespace = namespace
+        
+    if self.world.graph: self.world.graph.release_write_lock()
+  base_iri = property(get_base_iri, set_base_iri)
+  
   def destroy(self, update_relation = False):
     self.world.graph.acquire_write_lock()
     
@@ -893,7 +942,7 @@ class Ontology(Namespace, _GraphManager):
             try: delattr(entity, prop.python_name)
             except AttributeError: pass
             
-    del self.world.ontologies[self.base_iri]
+    del self.world.ontologies[self._base_iri]
     self.graph.destroy()
     for entity in list(self.world._entities.values()):
       if entity.namespace.ontology is self: del self.world._entities[entity.storid]
@@ -947,10 +996,10 @@ class Ontology(Namespace, _GraphManager):
     if self.loaded and (not reload): return self
     
     
-    if   self.base_iri in PREDEFINED_ONTOLOGIES:
-      f = os.path.join(os.path.dirname(__file__), "ontos", PREDEFINED_ONTOLOGIES[self.base_iri])
+    if   self._base_iri in PREDEFINED_ONTOLOGIES:
+      f = os.path.join(os.path.dirname(__file__), "ontos", PREDEFINED_ONTOLOGIES[self._base_iri])
     elif not fileobj:
-      f = fileobj or _get_onto_file(self.base_iri, self.name, "r", only_local)
+      f = fileobj or _get_onto_file(self._base_iri, self.name, "r", only_local)
     else:
       f = ""
       
@@ -964,10 +1013,10 @@ class Ontology(Namespace, _GraphManager):
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
         try:     fileobj = urllib.request.urlopen(url or f)
         except:  raise OwlReadyOntologyParsingError("Cannot download '%s'!" % (url or f))
-        #try:     new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
+        #try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
         #finally: fileobj.close()
         try:
-          new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
+          new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
         except OwlReadyOntologyParsingError:
           if f.endswith(".owl") or f.endswith(".rdf") or f.endswith(".xml") or url: raise
           else:
@@ -980,29 +1029,29 @@ class Ontology(Namespace, _GraphManager):
               except: pass
             if not fileobj2: raise
             
-            try:     new_base_iri = self.graph.parse(fileobj2, default_base = self.base_iri, **args)
+            try:     new_base_iri = self.graph.parse(fileobj2, default_base = self._base_iri, **args)
             finally: fileobj2.close()
         finally: fileobj.close()
         
     elif fileobj:
       if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, getattr(fileobj, "name", "") or getattr(fileobj, "url", "???")), file = sys.stderr)
-      try:     new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
+      try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
       finally: fileobj.close()
     else:
       if reload or (reload_if_newer and (os.path.getmtime(f) > self.graph.get_last_update_time())) or (self.graph.get_last_update_time() == 0.0):
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
         fileobj = open(f, "rb")
-        try:     new_base_iri = self.graph.parse(fileobj, default_base = self.base_iri, **args)
+        try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
         finally: fileobj.close()
       else:
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s (cached)..." % self.name, file = sys.stderr)
         
     self.loaded = True
 
-    if new_base_iri and (new_base_iri != self.base_iri):
-      self.graph.add_ontology_alias(new_base_iri, self.base_iri)
-      self.base_iri = new_base_iri
-      self._namespaces[self.base_iri] = self.world.ontologies[self.base_iri] = self
+    if new_base_iri and (new_base_iri != self._base_iri):
+      self.graph.add_ontology_alias(new_base_iri, self._base_iri)
+      self._base_iri = new_base_iri
+      self._namespaces[self._base_iri] = self.world.ontologies[self._base_iri] = self
       #if new_base_iri.endswith("#"):
       if new_base_iri.endswith("#") or new_base_iri.endswith("/"):
         self.storid = self.world._abbreviate(new_base_iri[:-1])
@@ -1077,7 +1126,7 @@ class Ontology(Namespace, _GraphManager):
       
   def save(self, file = None, format = "rdfxml", **kargs):
     if   file is None:
-      file = _open_onto_file(self.base_iri, self.name, "wb")
+      file = _open_onto_file(self._base_iri, self.name, "wb")
       if _LOG_LEVEL: print("* Owlready2 * Saving ontology %s to %s..." % (self.name, getattr(file, "name", "???")), file = sys.stderr)
       self.graph.save(file, format, **kargs)
       file.close()
@@ -1297,7 +1346,7 @@ class Ontology(Namespace, _GraphManager):
       else:
         self._add_obj_triple_spo(bnode, rdf_rest, rdf_nil)
         
-  def __repr__(self): return """get_ontology("%s")""" % (self.base_iri)
+  def __repr__(self): return """get_ontology("%s")""" % (self._base_iri)
   
   def get_parents_of(self, entity):
     if isinstance(entity, Thing):

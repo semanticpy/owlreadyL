@@ -474,13 +474,13 @@ class Graph(BaseMainGraph):
     
   def sub_graph(self, onto):
     new_in_quadstore = False
-    c = self.execute("SELECT c FROM ontologies WHERE iri=?", (onto.base_iri,)).fetchone()
+    c = self.execute("SELECT c FROM ontologies WHERE iri=?", (onto._base_iri,)).fetchone()
     if c is None:
-      c = self.execute("SELECT ontologies.c FROM ontologies, ontology_alias WHERE ontology_alias.alias=? AND ontologies.iri=ontology_alias.iri", (onto.base_iri,)).fetchone()
+      c = self.execute("SELECT ontologies.c FROM ontologies, ontology_alias WHERE ontology_alias.alias=? AND ontologies.iri=ontology_alias.iri", (onto._base_iri,)).fetchone()
       if c is None:
         new_in_quadstore = True
-        self.execute("INSERT INTO ontologies VALUES (NULL, ?, 0)", (onto.base_iri,))
-        c = self.execute("SELECT c FROM ontologies WHERE iri=?", (onto.base_iri,)).fetchone()
+        self.execute("INSERT INTO ontologies VALUES (NULL, ?, 0)", (onto._base_iri,))
+        c = self.execute("SELECT c FROM ontologies WHERE iri=?", (onto._base_iri,)).fetchone()
     c = c[0]
     self.c_2_onto[c] = onto
     
@@ -535,6 +535,15 @@ class Graph(BaseMainGraph):
   
   def _refactor(self, storid, new_iri):
     self.execute("UPDATE resources SET iri=? WHERE storid=?", (new_iri, storid,))
+    
+  def _refactor_onto(self, storid, old_base_iri, new_base_iri):
+    self._refactor(storid, new_base_iri)
+
+    if old_base_iri.endswith("#"):
+      self.execute("UPDATE resources SET iri=?||SUBSTR(iri,?) WHERE SUBSTR(iri,1,?)=?", (new_base_iri, len(old_base_iri) + 1, len(old_base_iri), old_base_iri))
+    else:
+      self.execute("UPDATE resources SET iri=?||SUBSTR(iri,?) WHERE SUBSTR(iri,1,?)=? AND (NOT INSTR(SUBSTR(iri,?), '/')) AND (NOT INSTR(SUBSTR(iri,?), '#'))", (new_base_iri, len(old_base_iri) + 1, len(old_base_iri), old_base_iri, len(old_base_iri) + 1, len(old_base_iri) + 1))
+      
     
   def commit(self):
     if self.current_changes != self.db.total_changes:
@@ -1096,7 +1105,7 @@ class SubGraph(BaseSubGraph):
       
     def insert_objs():
       nonlocal objs, new_abbrevs
-      if owlready2.namespace._LOG_LEVEL: print("* OwlReady2 * Importing %s object triples from ontology %s ..." % (len(objs), self.onto.base_iri), file = sys.stderr)
+      if owlready2.namespace._LOG_LEVEL: print("* OwlReady2 * Importing %s object triples from ontology %s ..." % (len(objs), self.onto._base_iri), file = sys.stderr)
       cur.executemany("INSERT INTO resources VALUES (?,?)", new_abbrevs)
       cur.executemany("INSERT OR IGNORE INTO objs VALUES (%s,?,?,?)" % self.c, objs)
       objs        .clear()
@@ -1104,7 +1113,7 @@ class SubGraph(BaseSubGraph):
       
     def insert_datas():
       nonlocal datas, new_abbrevs
-      if owlready2.namespace._LOG_LEVEL: print("* OwlReady2 * Importing %s data triples from ontology %s ..." % (len(datas), self.onto.base_iri), file = sys.stderr)
+      if owlready2.namespace._LOG_LEVEL: print("* OwlReady2 * Importing %s data triples from ontology %s ..." % (len(datas), self.onto._base_iri), file = sys.stderr)
       cur.executemany("INSERT OR IGNORE INTO datas VALUES (%s,?,?,?,?)" % self.c, datas)
       datas.clear()
       
@@ -1422,6 +1431,8 @@ class SubGraph(BaseSubGraph):
     return self.parent._iter_triples(quads, sort_by_s, self.c)
   
   def _refactor(self, storid, new_iri): return self.parent._refactor(storid, new_iri)
+    
+  def _refactor_onto(self, storid, old_base_iri, new_base_iri): return self.parent._refactor_onto(storid, old_base_iri, new_base_iri)
     
   def _get_obj_triples_transitive_sp(self, s, p):
     for (x,) in self.execute("""
