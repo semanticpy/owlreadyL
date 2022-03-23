@@ -20,7 +20,7 @@
 import sys, os, re, math
 from owlready2 import *
 from owlready2.sparql.parser import *
-from owlready2.sparql.func   import register_python_function, FuncSupport
+from owlready2.sparql.func   import register_python_builtin_functions, FuncSupport
 
 _RE_AUTOMATIC_INDEX = re.compile(r"([^ ]*?) USING AUTOMATIC.*\((.*?)\)")
 #_RE_NORMAL_INDEX    = re.compile(r"(.*?) AS (.*?) USING (COVERING )?INDEX (.*?) ")
@@ -45,7 +45,7 @@ class Translator(object):
     self.table_type_2_cols             = { "objs" : ["s", "p", "o"], "datas" : ["s", "p", "o", "d"], "quads" : ["s", "p", "o", "d"] , "one" : ["i"] }
     
     if not getattr(world.graph, "_has_sparql_func", False):
-      register_python_function(world)
+      register_python_builtin_functions(world)
       world.graph._has_sparql_func = True
       
   def make_translator(self):

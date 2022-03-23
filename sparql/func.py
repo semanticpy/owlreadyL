@@ -230,7 +230,7 @@ class _Func(object):
     return x in self.world._entities
   
 
-def register_python_function(world):
+def register_python_builtin_functions(world):
   if (sys.version_info.major == 3) and (sys.version_info.minor < 8):
     def create_function(name, num_params, func, deterministic = False):
       world.graph.db.create_function(name, num_params, func)
@@ -264,10 +264,9 @@ def register_python_function(world):
   create_function("loaded",          1, func._loaded)
   
   # Unindexed table for deprioritizing subqueries
-  world.graph.execute("""CREATE TEMP TABLE one (i INTEGER)""") # CREATE TEMP TABLE one (i INTEGER); INSERT INTO one VALUES (1);
+  world.graph.execute("""CREATE TEMP TABLE one (i INTEGER)""")
   world.graph.execute("""INSERT INTO one VALUES (1)""")
-  
-  
+
 class FuncSupport(object):
   def parse_expression(self, expression):
     if   hasattr(expression, "sql"):   return " %s" % expression.sql
@@ -278,7 +277,12 @@ class FuncSupport(object):
           if   func == "CONTAINS":
             return "(INSTR(%s)!=0)" % self.parse_expression(expression[2])
           elif func == "STRSTARTS":
-            return "(INSTR(%s)=1)" % self.parse_expression(expression[2])
+            x     = self.parse_expression(expression[2][0])
+            start = self.parse_expression(expression[2][2]).strip()
+            if start.startswith("'") and start.endswith("'") and not "'" in start[1:-1]:
+              return "(SUBSTR(%s,1,%s)=%s)" % (x, len(start) - 2, start)
+            else:
+              return "(INSTR(%s,%s)=1)" % (x, start)
           elif func == "STRENDS":
             eo1 = self.parse_expression(expression[2][0])
             eo2 = self.parse_expression(expression[2][2])
