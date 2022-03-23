@@ -5286,6 +5286,22 @@ multiple lines with " and ’ and \ and & and < and > and é."""
     assert onto["1"].is_a == [onto["123"]]
     assert isinstance(onto["1"], onto["123"])
     
+  def test_format_30(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://knowledge.graph/wind/")
+    
+    with onto:
+      class DO(Thing): pass
+      d = DO("d")
+      
+    tmp = self.new_tmp_file()
+    onto.save(tmp)
+    
+    world = self.new_world()
+    onto = get_ontology(tmp).load()
+    
+    assert onto.DO.iri == "http://knowledge.graph/wind/DO"
+    assert onto.d .iri == "http://knowledge.graph/wind/d"
     
   def test_search_1(self):
     world = self.new_world()

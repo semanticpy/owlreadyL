@@ -647,7 +647,7 @@ version 2 - 0.37
   - Fix property defined as a subproperty of TransitiveProperty (and the like), but not of type ObjectProperty
   - Fix importlib.reload(owlready2)
   - Fix RDF/XML serialization of individuals whose class name start by a digit
- 
+  - Fix RDF/XML serialization when ontology base IRI ends with /
 
 
 Links

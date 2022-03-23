@@ -322,7 +322,7 @@ def _save(f, format, graph, filter = None):
       left = x[:splitat + 1]
       
       xmln = xmlns.get(left)
-      if not xmln:
+      if xmln is None:
         splitted = left[:-1].rsplit("/", 1)
         if len(splitted) == 2:
           xmln0 = left[:-1].rsplit("/", 1)[1][:4].replace("#", "").replace(":", "")
@@ -333,7 +333,7 @@ def _save(f, format, graph, filter = None):
         xmln  = "%s:" % xmln0
         i = 2
         while xmln in xmlns_abbbrevs: xmln = "%s%s:" % (xmln0, i) ; i += 1
-        
+
         xmlns[left] = xmln = xmln
         xmlns_abbbrevs.add(xmln)
 
