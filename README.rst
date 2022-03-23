@@ -648,6 +648,8 @@ version 2 - 0.37
   - Fix importlib.reload(owlready2)
   - Fix RDF/XML serialization of individuals whose class name start by a digit
   - Fix RDF/XML serialization when ontology base IRI ends with /
+  - Fix Or.Classes = ... and And.Classes = ...
+  - Fix ONLY class properties with more than two values
 
 
 Links

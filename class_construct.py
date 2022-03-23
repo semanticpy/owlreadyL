@@ -181,9 +181,10 @@ class LogicalClassConstruct(ClassConstruct):
   def __init__(self, Classes, ontology = None, bnode = None):
     if isinstance(Classes, int):
       self._list_bnode = Classes
+      self._Classes = None
     else:
       self._list_bnode = None
-      self.Classes = CallbackList(Classes, self, LogicalClassConstruct._callback)
+      self._Classes = CallbackList(Classes, self, LogicalClassConstruct._callback)
     ClassConstruct.__init__(self, ontology, bnode)
     
   def __deepcopy__(self):
@@ -209,20 +210,27 @@ class LogicalClassConstruct(ClassConstruct):
       if isinstance(Class, Construct): Class._set_ontology(ontology)
     super()._set_ontology(ontology)
       
-  def __getattr__(self, attr):
-    if attr == "Classes":
-      self.Classes = CallbackList(self.ontology._parse_list(self._list_bnode), self, LogicalClassConstruct._callback)
-      return self.Classes
-    return super().__getattribute__(attr)
+  #def __getattr__(self, attr):
+  #  if attr == "Classes":
+  #    self.Classes = CallbackList(self.ontology._parse_list(self._list_bnode), self, LogicalClassConstruct._callback)
+  #    return self.Classes
+  #  return super().__getattribute__(attr)
+  
+  def get_Classes(self):
+    if self._Classes is None: self._Classes = CallbackList(self.ontology._parse_list(self._list_bnode), self, LogicalClassConstruct._callback)
+    return self._Classes
+  def set_Classes(self, value):
+    self.Classes.reinit(value)
+  Classes = property(get_Classes, set_Classes)
   
   def _invalidate_list(self):
-    try: del self.Classes
+    try: del self._Classes
     except: pass
     
   def _callback(self, old):
     if self.ontology:
       self._destroy_triples(self.ontology)
-      for i in self.Classes:
+      for i in self._Classes:
         if isinstance(i, Construct) and (i.ontology is None): i._set_ontology(self.ontology)
       self._create_triples (self.ontology)
       
@@ -232,12 +240,13 @@ class LogicalClassConstruct(ClassConstruct):
     
   def _create_triples(self, ontology):
     ClassConstruct._create_triples(self, ontology)
-    if self.Classes and (self.Classes[0] in _universal_datatype_2_abbrev):
+    Classes = self.Classes
+    if Classes and (Classes[0] in _universal_datatype_2_abbrev):
       ontology._add_obj_triple_spo(self.storid, rdf_type, rdfs_datatype)
     else:
       ontology._add_obj_triple_spo(self.storid, rdf_type, owl_class)
     ontology._add_obj_triple_spo(self.storid, self._owl_op, self._list_bnode)
-    ontology._set_list(self._list_bnode, self.Classes)
+    ontology._set_list(self._list_bnode, Classes)
     
   def __repr__(self):
     s = []

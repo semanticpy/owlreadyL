@@ -4859,6 +4859,34 @@ I took a placebo
     assert Staph.INDIRECT_has_form == [Round]
     assert Staph.INDIRECT_has_color == [Color]
     
+  def test_class_prop_25(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl#")
+    
+    with onto:
+      class A(Thing): pass
+      class B(Thing): pass
+      class p(A >> B): class_property_type = ["only"]
+      class B1(B): pass
+      class B2(B): pass
+      class B3(B): pass
+
+      A.p.append(B1)
+      A.p.append(B2)
+      A.p.append(B3)
+
+    assert len(A.p) == 3
+    assert len(world.graph) == 28
+      
+    tmp = self.new_tmp_file()
+    onto.save(tmp)
+    
+    world = self.new_world()
+    onto  = world.get_ontology(tmp).load()
+
+    assert len(onto.A.p) == 3
+    
+    
   def test_format_1(self):
     from owlready2.triplelite import _guess_format
     

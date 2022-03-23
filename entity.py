@@ -752,7 +752,7 @@ SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) 
             else:
               r = Prop.only(Or(only_classes))
               Class.is_a.append(r)
-            
+              
       if Prop._class_property_relation:
         if Prop._owl_type == owl_object_property:
           for v in removed:
