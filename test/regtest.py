@@ -9605,7 +9605,7 @@ SELECT * WHERE {
     q, r = self.sparql(world, """
 SELECT ?x WHERE { onto:a1 a ?x }
 """, compare_with_rdflib = False)
-
+    
     
     
     
