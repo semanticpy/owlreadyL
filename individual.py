@@ -257,16 +257,13 @@ class Thing(metaclass = ThingClass):
       if Prop:
         if Prop.is_functional_for(self.__class__):
           if   Prop._owl_type == owl_object_property:
+            if Prop.inverse_property: inverse_python_name = Prop.inverse_property.python_name
+            else:                     inverse_python_name = "INVERSE_%s" % Prop.python_name
             old_value = self.__dict__.get(attr, None)
-            #if Prop.inverse_property and (not old_value is None):
-            #  old_value.__dict__.pop(Prop.inverse_property.python_name, None) # Remove => force reloading; XXX optimizable
-            #  self.namespace.ontology._del_obj_triple_spo(old_value.storid, Prop.inverse_property.storid, self.storid) # Also remove inverse
             if not old_value is None:
+              old_value.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
               if Prop.inverse_property:
-                old_value.__dict__.pop(Prop.inverse_property.python_name, None) # Remove => force reloading; XXX optimizable
                 self.namespace.ontology._del_obj_triple_spo(old_value.storid, Prop.inverse_property.storid, self.storid) # Also remove inverse
-              else:
-                old_value.__dict__.pop("INVERSE_%s" % Prop.python_name, None) # Remove => force reloading; XXX optimizable
                 
             super().__setattr__(attr, value)
             
@@ -274,7 +271,10 @@ class Thing(metaclass = ThingClass):
               self.namespace.ontology._del_obj_triple_spo(self.storid, Prop.storid, None)
             else:
               self.namespace.ontology._set_obj_triple_spo(self.storid, Prop.storid, value.storid)
-              if Prop.inverse_property: value.__dict__.pop(Prop.inverse_property.python_name, None) # Remove => force reloading; XXX optimizable
+              #if Prop.inverse_property: value.__dict__.pop(Prop.inverse_property.python_name, None) # Remove => force reloading; XXX optimizable
+              #value.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
+              try: del value.__dict__[inverse_python_name]
+              except (TypeError, KeyError): pass
               
           elif Prop._owl_type == owl_data_property:
             old_value = self.__dict__.get(attr, None)
@@ -316,7 +316,7 @@ class Thing(metaclass = ThingClass):
           raise ValueError("Property '%s' do not exist, cannot use its INVERSE." % attr[8:])
         
       else: super().__setattr__(attr, value)
-        
+      
   def _get_instance_possible_relations(self, ignore_domainless_properties = False):
     for Prop in self.namespace.world._reasoning_props.values():
       all_domains = set(Prop.domains_indirect())

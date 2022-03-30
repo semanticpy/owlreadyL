@@ -651,6 +651,12 @@ version 2 - 0.37
   - Fix Or.Classes = ... and And.Classes = ...
   - Fix ONLY class properties with more than two values
 
+version 2 - 0.38
+****************
+
+* Bugfixes:
+  - Fix individual.INVERSE_prop update when prop is functional
+
 
 Links
 -----

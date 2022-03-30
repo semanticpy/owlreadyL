@@ -6399,6 +6399,63 @@ ask where
     assert Inverse(P2) is IP2
     assert Inverse(IP2) is P2
     
+  def test_inverse_4(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://www.test.org/test.owl")
+    
+    with onto:
+      class prop(ObjectProperty):
+        python_name = "p"
+      class C(Thing): pass
+
+      c1 = C()
+      c2 = C()
+      c3 = C()
+      c4 = C()
+      
+    c2.p = [c1]
+    c3.p = [c1]
+
+    assert set(c1.INVERSE_p) == { c2, c3 }
+    
+    c4.p = [c1]
+    assert set(c1.INVERSE_p) == { c2, c3, c4 }
+
+    with onto:
+      c5 = C(p = [c1])
+    assert set(c1.INVERSE_p) == { c2, c3, c4, c5 }
+    
+  def test_inverse_5(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://www.test.org/test.owl")
+    
+    with onto:
+      class p(ObjectProperty, FunctionalProperty): pass
+      class C(Thing): pass
+      
+      c1 = C()
+      c2 = C()
+      c3 = C()
+      c4 = C()
+      
+    c2.p = c1
+    c3.p = c1
+
+    print(c1.__dict__)
+    print(c1.INVERSE_p)
+    assert set(c1.INVERSE_p) == { c2, c3 }
+    
+    c4.p = c1
+    print(c1.__dict__)
+    print(c1.INVERSE_p)
+    assert set(c1.INVERSE_p) == { c2, c3, c4 }
+
+    with onto:
+      c5 = C(p = c1)
+    print(c1.__dict__)
+    print(c1.INVERSE_p)
+    assert set(c1.INVERSE_p) == { c2, c3, c4, c5 }
+    
     
   def test_propchain_1(self):
     w = self.new_world()
