@@ -351,10 +351,6 @@ class Restriction(ClassConstruct):
           ontology._add_obj_triple_spo(self.storid, owl_ondatarange, o)
         else:
           ontology._add_obj_triple_spo(self.storid, owl_onclass, o)
-          
-  #def _destroy_triples(self, ontology):
-  #  print("DESTROY TRIPLE", self, self.storid)
-  #  ClassConstruct._destroy_triples(self, ontology)
     
   def __getattr__(self, attr):
     if   attr == "value":

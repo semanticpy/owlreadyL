@@ -654,6 +654,7 @@ version 2 - 0.37
 version 2 - 0.38
 ****************
 
+* Accepts localized language codes, such as fr_FR or fr_BE, and wildcard fr_any
 * Bugfixes:
   - Fix individual.INVERSE_prop update when prop is functional
 

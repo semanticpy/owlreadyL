@@ -90,15 +90,25 @@ class CallbackList(FirstList):
 class LanguageSublist(CallbackList):
   __slots__ = ["_l", "_lang"]
   def __init__(self, l, lang):
-    list.__init__(self, (str(x) for x in l if isinstance(x, locstr) and x.lang == lang))
     self._l    = l
     self._lang = lang
     self._obj  = None
+    if lang.endswith("_any"):
+      shorter = lang[:-4]
+      list.__init__(self, (str(x) for x in l if isinstance(x, locstr) and ((x.lang == shorter) or x.lang.startswith("%s_" % shorter) or x.lang.startswith("%s-" % shorter))))
+    elif len(lang) > 3:
+      lang  = lang.casefold()
+      lang2 = lang.replace("_", "-").casefold()
+      list.__init__(self, (str(x) for x in l if isinstance(x, locstr) and (x.lang.casefold() == lang) or (x.lang.casefold() == lang2)))
+    else:
+      list.__init__(self, (str(x) for x in l if isinstance(x, locstr) and x.lang == lang))
     
   def _callback(self, obj, old):
     new = set(self)
-    l = [x for x in self._l if not(isinstance(x, locstr) and x.lang == self._lang)]
-    l.extend(locstr(x, self._lang) for x in new)
+    if self._lang.endswith("_any"): lang = self._lang[:-4]
+    else:                           lang = self._lang
+    l = [x for x in self._l if not(isinstance(x, locstr) and x.lang == lang)]
+    l.extend(locstr(x, lang) for x in new)
     self._l.reinit(l)
     
   def reinit(self, l):
@@ -107,10 +117,18 @@ class LanguageSublist(CallbackList):
     CallbackList.reinit(self, l)
 
 
+
+def _is_valid_language_code(s):
+  if  len(s) == 2: return True
+  if  len(s) == 3: return True
+  if (len(s) == 6) and s.endswith("_any"): return True
+  if (len(s) == 5) and s[2] == "_": return True
+  return False
+
 class CallbackListWithLanguage(CallbackList):
   __slots__ = []
   def __getattr__(self, attr):
-    if len(attr) != 2: raise AttributeError("'%s' is not a language code (must be 2-char string)!" % attr)
+    if not _is_valid_language_code(attr): raise AttributeError("'%s' is not a valid language code (e.g. fr, fr_FR or fr_any)!" % attr)
     return LanguageSublist(self, attr)
   get_lang = __getattr__
   
@@ -118,7 +136,7 @@ class CallbackListWithLanguage(CallbackList):
     if attr.startswith("_") or (len(attr) > 2):
       super.__setattr__(self, attr, values)
     else:
-      if len(attr) != 2: raise AttributeError("'%s' is not a language code (must be 2-char string)!" % attr)
+      if not _is_valid_language_code(attr): raise AttributeError("'%s' is not a valid language code (e.g. fr, fr_FR or fr_any)!" % attr)
       if isinstance(values, str): values = { locstr(values, attr) }
       else:                       values = { locstr(value , attr) for value in values }
       l = [x for x in self if not(isinstance(x, locstr) and (x.lang == attr))]

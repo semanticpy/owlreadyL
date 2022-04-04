@@ -2717,6 +2717,20 @@ class Test(BaseTest, unittest.TestCase):
     assert set(DataProperty      .subclasses(world = w)) == { dp, dq }
     assert set(AnnotationProperty.subclasses(world = w)) == { ap, aq, versionInfo, comment, priorVersion, seeAlso, backwardCompatibleWith, deprecated, label, incompatibleWith, isDefinedBy }
     
+  def test_prop_52(self):
+    n = self.new_ontology()
+    with n:
+      class C(Thing): pass
+      class prop(DataProperty):
+        range = [str]
+        
+    c1 = C()
+    c1.prop = [locstr("Français 1", "fr"), locstr("Français 2", "fr-FR"), locstr("Français 3", "fr_be"), locstr("Anglais", "en")]
+    assert c1.prop.fr    == ["Français 1"]
+    assert c1.prop.fr_FR == ["Français 2"]
+    assert c1.prop.fr_BE == ["Français 3"]
+    assert set(c1.prop.fr_any) == { "Français 1", "Français 2", "Français 3" }
+    
     
   def test_prop_inverse_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
@@ -6441,19 +6455,13 @@ ask where
     c2.p = c1
     c3.p = c1
 
-    print(c1.__dict__)
-    print(c1.INVERSE_p)
     assert set(c1.INVERSE_p) == { c2, c3 }
     
     c4.p = c1
-    print(c1.__dict__)
-    print(c1.INVERSE_p)
     assert set(c1.INVERSE_p) == { c2, c3, c4 }
 
     with onto:
       c5 = C(p = c1)
-    print(c1.__dict__)
-    print(c1.INVERSE_p)
     assert set(c1.INVERSE_p) == { c2, c3, c4, c5 }
     
     
