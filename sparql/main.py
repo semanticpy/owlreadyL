@@ -656,10 +656,13 @@ class SQLQuery(FuncSupport):
       if table_2_preceding:
         tables = list(self.tables)
         for table, preceding in table_2_preceding.items():
-          tables.remove(table)
-          tables.insert(tables.index(preceding) + 1, table)
+          table_i     = tables.index(table)
+          preceding_i = tables.index(preceding)
+          if table_i < preceding_i:
+            tables.remove(table)
+            tables.insert(tables.index(preceding) + 1, table)
         self.tables = tables
-
+        
       if self.tables[0].join != ",": # Cannot JOIN on the first table
         for table in self.tables:
           if table.join == ",":
