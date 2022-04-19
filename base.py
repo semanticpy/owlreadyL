@@ -205,15 +205,16 @@ def set_datatype_iri(datatype, iri):
 
   
 def declare_datatype(datatype, iri, parser, unparser):
+  import sqlite3
   if iri in _universal_iri_2_abbrev: storid = _universal_iri_2_abbrev[iri]
   else:                              storid = _universal_abbrev(iri)
   from owlready2 import WORLDS
   for world in WORLDS:
-    if not world.graph.read_only:
-      world.graph.execute("INSERT OR IGNORE INTO resources VALUES (?,?)", (storid, iri))
-      #if world.graph._abbreviate_d:
-      #  world.graph._abbreviate_d  [iri]    = storid
-      #  world.graph._unabbreviate_d[storid] = iri
+    if (not world.graph.read_only):
+      try:
+        world.graph.execute("INSERT OR IGNORE INTO resources VALUES (?,?)", (storid, iri))
+      except sqlite3.ProgrammingError: # World has been closed
+        pass
       
   _universal_datatype_2_abbrev         [datatype] =  storid
   _universal_datatype_2_abbrev_unparser[datatype] = (storid, unparser)
