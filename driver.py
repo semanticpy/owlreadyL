@@ -145,7 +145,7 @@ class BaseSubGraph(BaseGraph):
         else:
           splitter = re.compile("\s")
           bn_src_2_sql = {}
-          
+
           line = f.readline().decode("utf8")
           while line:
             current_line += 1
@@ -238,7 +238,7 @@ def _guess_format(f):
   
   if not s.lstrip().startswith(b"<"): return "ntriples"
   if s[s.find(b"\n") -1] == b".": return "ntriples"
-  if s.split(b"\n", 1)[0].endswith(b"."): return "ntriples"
+  if s.strip().split(b"\n", 1)[0].endswith(b"."): return "ntriples"
   
   if (b"<!DOCTYPE Ontology" in s) or (b"<!DOCTYPE owl:Ontology" in s) or (b"<Ontology xmlns=" in s): return "owlxml"
   
