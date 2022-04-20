@@ -3232,7 +3232,7 @@ class Test(BaseTest, unittest.TestCase):
     world   = self.new_world()
     onto    = world.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/2/test_reasoning.owl").load()
     results = world.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/2/test_reasoning_reasoning.owl")
-
+    
     with results:
       sync_reasoner(world, debug = 0)
       
@@ -3507,7 +3507,27 @@ I took a placebo
     
     i = [i for i in onto.e.data_prop if isinstance(i, str)][0]
     assert i.lang == "en"
-      
+    
+  def test_pellet_reasoning_3(self):
+    world = self.new_world()
+    onto  = world.get_ontology("test.owl")
+    
+    with onto:
+      class C(Thing): pass
+      class D(Thing):
+        equivalent_to = [C]
+
+      c1 = C()
+      ca = C(0)
+
+    sync_reasoner_pellet(world, debug = 0)
+    
+    assert isinstance(c1, D)
+    assert isinstance(ca, D)
+
+    print(C.instances())
+    assert set(C.instances()) == { c1, ca }
+    
     
   def test_hermit_reasoning_1(self):
     world = self.new_world()

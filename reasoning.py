@@ -244,7 +244,7 @@ def sync_reasoner_pellet(x = None, infer_property_values = False, infer_data_pro
     else:
       world.save(tmp, format = "ntriples", filter = save_filter)
     tmp.close()
-
+    
     # Use Jena for loading because OWLAPI is bugged with NTriples.
     command = [owlready2.JAVA_EXE, "-Xmx%sM" % JAVA_MEMORY, "-cp", _PELLET_CLASSPATH, "pellet.Pellet", "realize", "--loader", "Jena", "--input-format", "N-Triples", "--ignore-imports", tmp.name]
     if infer_property_values:      command.insert(-2, "--infer-prop-values")
@@ -307,10 +307,13 @@ def sync_reasoner_pellet(x = None, infer_property_values = False, infer_data_pro
         for class_storid in class_storids:
           entity_2_type[class_storid] = "class"
       stack.append((depth, class_storids))
-    
+      
       if len(splitted) == 2:
         ind_iris = splitted[1][1:-1].split(", ")
         for ind_iri in ind_iris:
+          if ind_iri.endswith("Anonymous Individual") or ind_iri.endswith("Anonymous Individuals"): continue # Ignore blank node -- cannot classify them because Jena does not keep the node label, and does not accept replacing blank nodes by entities!
+          #if ind_iri.startswith("__bnode__:"): ind_storid = - int(ind_iri[10:])
+          #else:                                ind_storid = ontology._abbreviate(ind_iri)
           ind_storid = ontology._abbreviate(ind_iri)
           entity_2_type[ind_storid] = "individual"
           new_parents[ind_storid].extend(class_storids)

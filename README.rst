@@ -659,6 +659,7 @@ version 2 - 0.38
   - Fix individual.INVERSE_prop update when prop is functional
   - Fix performance regression on complex SPARQL queries with OPTIONAL
   - Fix declare_datatype after a World has been closed
+  - Fix Pellet reasoning on blank nodes (ignoring them)
   - Accept empty lines at the beginning of NTriple files
 
 
