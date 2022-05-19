@@ -3524,8 +3524,6 @@ I took a placebo
     
     assert isinstance(c1, D)
     assert isinstance(ca, D)
-
-    print(C.instances())
     assert set(C.instances()) == { c1, ca }
     
     
@@ -7467,6 +7465,23 @@ http://test.org/t.owl#c1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type
     destroy_entity(r2)
     
     assert len(list(world.variables())) == 0
+
+  def test_swrl_8(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://test.org/t.owl#")
+    
+    with onto:
+      class Cé(Thing): pass
+      class D(Thing): pass
+
+      c = Cé()
+      
+      r1 = Imp()
+      r1.set_as_rule("""Cé(?x) -> D(?x)""")
+
+    sync_reasoner_pellet(world, debug = 0)
+    
+    assert set(c.is_a) == { Cé, D }
     
     
   def test_dl_render_1(self):
@@ -9690,6 +9705,19 @@ SELECT * WHERE {
     q, r = self.sparql(world, """
 SELECT ?x WHERE { onto:a1 a ?x }
 """, compare_with_rdflib = False)
+    
+  def test_153(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class Cé(Thing): pass
+      c = Cé()
+      
+    q, r = self.sparql(world, """
+SELECT ?x WHERE { ?x a onto:Cé }
+""", compare_with_rdflib = True)
+
+    print(r)
     
     
     

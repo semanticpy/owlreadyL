@@ -995,7 +995,9 @@ class Ontology(Namespace, _GraphManager):
   def load(self, only_local = False, fileobj = None, reload = False, reload_if_newer = False, url = None, **args):
     if self.loaded and (not reload): return self
     
-    
+    if reload_if_newer and not(f.startswith("http:") or f.startswith("https:")):
+      reload = os.path.getmtime(f) > self.graph.get_last_update_time()
+      
     if   self._base_iri in PREDEFINED_ONTOLOGIES:
       f = os.path.join(os.path.dirname(__file__), "ontos", PREDEFINED_ONTOLOGIES[self._base_iri])
     elif not fileobj:
@@ -1038,7 +1040,8 @@ class Ontology(Namespace, _GraphManager):
       try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
       finally: fileobj.close()
     else:
-      if reload or (reload_if_newer and (os.path.getmtime(f) > self.graph.get_last_update_time())) or (self.graph.get_last_update_time() == 0.0):
+      #if reload or (reload_if_newer and (os.path.getmtime(f) > self.graph.get_last_update_time())) or (self.graph.get_last_update_time() == 0.0):
+      if reload or (self.graph.get_last_update_time() == 0.0):
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
         fileobj = open(f, "rb")
         try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
@@ -1052,7 +1055,6 @@ class Ontology(Namespace, _GraphManager):
       self.graph.add_ontology_alias(new_base_iri, self._base_iri)
       self._base_iri = new_base_iri
       self._namespaces[self._base_iri] = self.world.ontologies[self._base_iri] = self
-      #if new_base_iri.endswith("#"):
       if new_base_iri.endswith("#") or new_base_iri.endswith("/"):
         self.storid = self.world._abbreviate(new_base_iri[:-1])
       else:
