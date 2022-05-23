@@ -3525,6 +3525,27 @@ I took a placebo
     assert isinstance(c1, D)
     assert isinstance(ca, D)
     assert set(C.instances()) == { c1, ca }
+
+
+  def test_pellet_reasoning_4(self):
+    world = self.new_world()
+    onto  = world.get_ontology("test.owl")
+    
+    with onto:
+      class C(Thing): pass
+      class p(Thing >> str): pass
+  
+      c1 = C()
+      c1.p.append("a,b")
+      
+      c2 = C()
+      c2.p.append("a")
+      c2.p.append("b")
+      
+      sync_reasoner_pellet(world, infer_property_values = True, infer_data_property_values = True, debug = 0)
+      
+      assert len(c1.p) == 1
+      assert len(c2.p) == 2
     
     
   def test_hermit_reasoning_1(self):

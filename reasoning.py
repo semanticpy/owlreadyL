@@ -31,7 +31,7 @@ _HERMIT_RESULT_REGEXP = re.compile("^([A-Za-z]+)\\( ((?:<(?:[^>]+)>\s*)+) \\)$",
 _HERMIT_PROP_REGEXP   = re.compile("^<([^>]+)> \\(known instances:\s*(.*?)(?:\s*\\|\s*)possible instances:\s*(.*?)\s*\\)", re.MULTILINE)
 
 _PELLET_PROP_REGEXP      = re.compile("^PROPINST: ([^ ]+) ([^ ]+) ([^ ]+)$", re.MULTILINE)
-_PELLET_DATA_PROP_REGEXP = re.compile("^DATAPROPVAL: ([^ ]+) ([^ ]+) literal\((.*?),(.*?),(.*?)\)$", re.MULTILINE)
+_PELLET_DATA_PROP_REGEXP = re.compile("^DATAPROPVAL: ([^ ]+) ([^ ]+) literal\((.*),(.*?),(.*?)\)$", re.MULTILINE)
 
 
 _HERE = os.path.dirname(__file__)
