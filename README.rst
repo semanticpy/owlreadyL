@@ -661,6 +661,7 @@ version 2 - 0.38
   - Fix declare_datatype after a World has been closed
   - Fix Pellet reasoning on blank nodes (ignoring them)
   - Fix Pellet reasoning on strings data property that include comma ","
+  - Fix boolean constant 'true' and 'false' in SPARQL engine
   - Accept empty lines at the beginning of NTriple files
   - Support non-ASCII characters when parsing SWRL rules
 

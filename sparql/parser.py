@@ -525,9 +525,12 @@ def f(p):
 @pg.production("data_block_value : iri")
 @pg.production("data_block_value : rdf_literal")
 @pg.production("data_block_value : numeric_literal")
-@pg.production("data_block_value : BOOL")
 @pg.production("data_block_value : undef")
 def f(p): return p[0]
+@pg.production("data_block_value : BOOL")
+def f(p):
+  p[0].value = "'%s'" % p[0].value
+  return p[0]
 pg.list("data_block_value*", "")
 
 
@@ -778,11 +781,14 @@ pg.list("var*", "")
 @pg.production("graph_term : iri")
 @pg.production("graph_term : rdf_literal")
 @pg.production("graph_term : numeric_literal")
-@pg.production("graph_term : BOOL")
 @pg.production("graph_term : blank_node")
 @pg.production("graph_term : NIL")
 @pg.production("graph_term : param")
 def f(p): return p[0]
+@pg.production("graph_term : BOOL")
+def f(p):
+  p[0].value = "'%s'" % p[0].value
+  return p[0]
 
 @pg.production("param : PARAM")
 def f(p):
@@ -861,10 +867,13 @@ def f(p): return p
 @pg.production("primary_expression : iri_or_function")
 @pg.production("primary_expression : rdf_literal")
 @pg.production("primary_expression : numeric_literal")
-@pg.production("primary_expression : BOOL")
 @pg.production("primary_expression : var")
 @pg.production("primary_expression : param")
 def f(p): return p[0]
+@pg.production("primary_expression : BOOL")
+def f(p):
+  p[0].value = "'%s'" % p[0].value
+  return p[0]
 
 @pg.production("bracketted_expression : ( expression )")
 def f(p): return p

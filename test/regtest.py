@@ -9737,9 +9737,20 @@ SELECT ?x WHERE { onto:a1 a ?x }
     q, r = self.sparql(world, """
 SELECT ?x WHERE { ?x a onto:Cé }
 """, compare_with_rdflib = True)
-
-    print(r)
     
+  def test_154(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      c1 = C(label = True)
+      c2 = C(label = False)
+      
+    q, r = self.sparql(world, """SELECT ?x WHERE { ?x rdfs:label true }""", compare_with_rdflib = True)
+    assert r == [[c1]]
+    
+    q, r = self.sparql(world, """SELECT ?x WHERE { ?x rdfs:label false }""", compare_with_rdflib = True)
+    assert r == [[c2]]
     
     
     
