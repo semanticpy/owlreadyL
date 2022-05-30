@@ -9778,6 +9778,21 @@ SELECT ?x WHERE { ?x a onto:Cé }
     with onto: q.execute()
     assert D.label == ["ok2"]
 
+  def test_156(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      
+      c1 = C()
+      
+    q, r = self.sparql(world, """SELECT (1 AS ?r) { FILTER NOT EXISTS { onto:c1 rdfs:label ?x } }""", compare_with_rdflib = True)
+    assert r == [[1]]
+    
+    with onto:
+      q, r = self.sparql(world, """INSERT { onto:C rdfs:label "ok" } WHERE { FILTER NOT EXISTS { onto:c1 rdfs:label ?x } }""", compare_with_rdflib = True)
+    assert C.label == ["ok"]
+    
     
     
     

@@ -663,6 +663,7 @@ version 2 - 0.38
   - Fix Pellet reasoning on strings data property that include comma ","
   - Fix boolean constant 'true' and 'false' in SPARQL engine
   - Fix INSERT SPARQL queries with UNION that insert RDF triples without variables
+  - Fix SPARQL queries with only a FILTER NOT EXISTS in the WHERE part
   - Accept empty lines at the beginning of NTriple files
   - Support non-ASCII characters when parsing SWRL rules
 

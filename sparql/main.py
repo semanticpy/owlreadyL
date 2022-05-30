@@ -68,6 +68,7 @@ class Translator(object):
       if max(prelim.recursive for prelim in self.preliminary_selects): sql += "RECURSIVE "
       sql += ",\n\n".join(prelim.sql() for prelim in self.preliminary_selects)
       sql += "\n\n"
+
     sql += self.main_query.sql()
     
     if self.solution_modifier[0]:
@@ -197,7 +198,7 @@ class Translator(object):
   
   def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None, copy_vars = False):
     if preliminary and not name: name = "prelim%s" % (len(self.preliminary_selects) + 1)
-
+    
     if isinstance(block, UnionBlock) and block.simple_union_triples:
       block = SimpleTripleBlock(block.simple_union_triples)
       
@@ -1315,17 +1316,12 @@ class SQLNestedQuery(SQLQuery):
   def finalize_columns(self):
     self.columns = [Column(None, "datas", "1", "col1_o", 1)]
     
-  def sql(self):
-    #extra_sql = self.extra_sql
-    #self.extra_sql = ""
-    
-    #sql = "(%s)" % SQLQuery.sql(self)
-    
-    #if extra_sql: sql += " %s" % extra_sql
-    #self.extra_sql = extra_sql
-    
+  #def sql(self):
+  #  return "SELECT WHERE %s" % self.nested_sql()
+  
+  def nested_sql(self):
     sql = SQLQuery.sql(self)
-
+    
     if _DEPRIORIZE_SUBQUERIES_OPT:
       if   self.exists == True:  sql =     "one.i= EXISTS(%s)" % sql
       elif self.exists == False: sql = "NOT one.i= EXISTS(%s)" % sql
@@ -1334,10 +1330,10 @@ class SQLNestedQuery(SQLQuery):
       if   self.exists == True:  sql =     "EXISTS(%s)" % sql
       elif self.exists == False: sql = "NOT EXISTS(%s)" % sql
       else:                      sql = "(%s)" % sql
-      
+
     return sql
   
-  def __str__(self): return self.sql()
+  def __str__(self): return self.nested_sql()
   
 
 class SQLRecursivePreliminaryQuery(SQLQuery):

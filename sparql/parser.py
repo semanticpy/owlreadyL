@@ -137,6 +137,8 @@ def _parse_select_query(p):
   if isinstance(p[2], rply.Token) and (p[2].value == "*"): p[2] = None
   if isinstance(p[4], UnionBlock) and (p[5][0] or p[5][1] or p[5][2] or p[5][3] or p[5][4]): # UNION with some solution modifier
     p[4] = SimpleTripleBlock([p[4]])
+  if isinstance(p[4], NotExistsBlock): # FILTER NOT EXISTS alone; not supported as the main query.
+    p[4] = SimpleTripleBlock([p[4]])
   main_query = translator.new_sql_query("main", p[4], p[2], p[1], p[5])
   main_query.type = "select"
   return main_query
@@ -336,6 +338,8 @@ def _create_modify_query(ontology_iri, deletes, inserts, using, group_graph_patt
   old_2_new_param = { n : i+1 for i, n in enumerate(select_param_indexes) }
   _rename_params(old_2_new_param, group_graph_pattern)
   
+  if isinstance(group_graph_pattern, NotExistsBlock): # FILTER NOT EXISTS alone; not supported as the main query.
+    group_graph_pattern = SimpleTripleBlock([group_graph_pattern])
   main_query = translator.new_sql_query("main", group_graph_pattern, selects, None, solution_modifier)
   main_query.type                 = "modify"
   main_query.ontology_iri         = ontology_iri
