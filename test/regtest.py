@@ -9752,6 +9752,30 @@ SELECT ?x WHERE { ?x a onto:Cé }
     q, r = self.sparql(world, """SELECT ?x WHERE { ?x rdfs:label false }""", compare_with_rdflib = True)
     assert r == [[c2]]
     
+  def test_155(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class D(Thing): pass
+      class p(C >> D): pass
+      
+      d1 = D()
+      d2 = D()
+      d3 = D()
+      
+      c1 = C(p = [d1, d2])
+      c2 = C(p = [d1, d3])
+      c3 = C(p = [d2, d3])
+      
+    q, r = self.sparql(world, """SELECT DISTINCT ?x WHERE { { ?x onto:p onto:d1 } UNION { ?x onto:p onto:d2 } FILTER NOT EXISTS { ?x onto:p onto:d3 } }""", compare_with_rdflib = True)
+    assert r == [[c1]]
+    
+    q = world.prepare_sparql("""INSERT { ?x rdfs:label "ok" } WHERE { { ?x onto:p onto:d1 } UNION { ?x onto:p onto:d2 } FILTER NOT EXISTS { ?x onto:p onto:d3 } }""")
+    with onto: q.execute()
+    assert c1.label == ["ok"]
+
+    
     
     
 # Add test for Pellet

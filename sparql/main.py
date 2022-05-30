@@ -218,7 +218,7 @@ class Translator(object):
       #if isinstance(block, ExistsBlock): s.extra_sql = "IS NOT NULL"
       #else:                              s.extra_sql = "IS NULL"
       s.exists = isinstance(block, ExistsBlock)
-      s.vars   = nested_inside.vars
+      if nested_inside: s.vars = nested_inside.vars
       preliminary = False
       
     elif isinstance(block, NotExistsBlock):
