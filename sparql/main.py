@@ -1170,7 +1170,7 @@ class SQLQuery(FuncSupport):
   def finalize_columns(self):
     selected_parameter_index = 0
     i = j = 0
-
+    
     if   self.raw_selects == "*": selects = [self.vars[var] for var in self.block.get_ordered_vars() if not var.startswith("??")]      
     elif self.raw_selects:        selects = self.raw_selects
     elif self.tables:
@@ -1223,7 +1223,7 @@ class SQLQuery(FuncSupport):
       self.columns.append(Column(var_name, sql_type, sql, "col%s_o" % i, j)); j += 1
       if not sql_d is None:
         self.columns.append(Column(var_name, sql_d_type, sql_d, "col%s_d" % i, j)); j += 1
-        
+
     if self.preliminary:
       self.translator.table_type_2_cols[self.name] = [column.name for column in self.columns]
 
@@ -1303,7 +1303,9 @@ class SQLCompoundQuery(object):
       for i, column in enumerate(query.columns): # Re-index columns
         column.index = i
     self.columns = self.queries[0].columns
-
+    
+    self.translator.table_type_2_cols[self.name] = [column.name for column in self.columns]
+    
     
 class SQLNestedQuery(SQLQuery):
   def __init__(self, name):

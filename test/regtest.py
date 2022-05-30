@@ -9759,21 +9759,24 @@ SELECT ?x WHERE { ?x a onto:Cé }
       class C(Thing): pass
       class D(Thing): pass
       class p(C >> D): pass
+      class p1(C >> D): pass
+      class p2(C >> D): pass
+      class p3(C >> D): pass
       
       d1 = D()
       d2 = D()
       d3 = D()
       
-      c1 = C(p = [d1, d2])
-      c2 = C(p = [d1, d3])
-      c3 = C(p = [d2, d3])
+      c1 = C(p = [d1, d2], p1 = [d1, d2], p2 = [d1, d2], p3 = [d1, d2])
+      c2 = C(p = [d1, d3], p1 = [d1, d3], p2 = [d1, d3], p3 = [d1, d3])
+      c3 = C(p = [d2, d3], p1 = [d2, d3], p2 = [d2, d3], p3 = [d2, d3])
       
     q, r = self.sparql(world, """SELECT DISTINCT ?x WHERE { { ?x onto:p onto:d1 } UNION { ?x onto:p onto:d2 } FILTER NOT EXISTS { ?x onto:p onto:d3 } }""", compare_with_rdflib = True)
     assert r == [[c1]]
     
-    q = world.prepare_sparql("""INSERT { ?x rdfs:label "ok" } WHERE { { ?x onto:p onto:d1 } UNION { ?x onto:p onto:d2 } FILTER NOT EXISTS { ?x onto:p onto:d3 } }""")
+    q = world.prepare_sparql("""INSERT { onto:D rdfs:label "ok2" } WHERE { { ?x onto:p1 onto:d1 } UNION { ?x onto:p2 onto:d2 } FILTER NOT EXISTS { ?x onto:p3 onto:d3 } }""")
     with onto: q.execute()
-    assert c1.label == ["ok"]
+    assert D.label == ["ok2"]
 
     
     
