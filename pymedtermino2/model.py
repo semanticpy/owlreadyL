@@ -191,7 +191,7 @@ class MetaConcept(ThingClass):
     else:
       return ThingClass.__new__(MetaClass, name, superclasses, obj_dict)
     
-  def __iter__(Class): raise ValueError # Avoid some suprizing behavior when calling list(concept)
+  def __iter__(Class): raise ValueError # Avoid some surprizing behavior when calling list(concept)
   
   def __repr__(Class):
     terminology = Class.terminology

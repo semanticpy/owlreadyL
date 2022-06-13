@@ -929,7 +929,7 @@ class Ontology(Namespace, _GraphManager):
     if self.world.graph: self.world.graph.release_write_lock()
   base_iri = property(get_base_iri, set_base_iri)
   
-  def destroy(self, update_relation = False):
+  def destroy(self, update_relation = False, update_is_a = False):
     self.world.graph.acquire_write_lock()
     
     if update_relation:
@@ -938,14 +938,25 @@ class Ontology(Namespace, _GraphManager):
         if (not entity is None) and (not entity.namespace.ontology is self):
           prop = self.world._entities.get(p)
           if not prop is None:
-            #print("del %s.%s" % (entity, prop.python_name))
             try: delattr(entity, prop.python_name)
             except AttributeError: pass
             
+    if update_is_a:
+      entities_needing_update = set()
+      for s, p in self.graph.execute("""SELECT DISTINCT s, o FROM objs WHERE c=? AND p=?""", (self.graph.c, rdf_type)):
+        entity = self.world._entities.get(s)
+        if (not entity is None) and (not entity.namespace.ontology is self): entities_needing_update.add(entity)
+        
     del self.world.ontologies[self._base_iri]
     self.graph.destroy()
     for entity in list(self.world._entities.values()):
       if entity.namespace.ontology is self: del self.world._entities[entity.storid]
+      
+    if update_is_a:
+      for entity in entities_needing_update:
+        with LOADING:
+          entity.is_a = [self.world._get_by_storid(o) for o in self.world.graph._get_obj_triples_sp_o(entity.storid, rdf_type)]
+          
     self.world.graph.release_write_lock()
 
   def _entity_destroyed(self, entity): pass

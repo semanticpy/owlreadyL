@@ -655,6 +655,7 @@ version 2 - 0.38
 ****************
 
 * Accepts localized language codes, such as fr_FR or fr_BE, and wildcard fr_any
+* Add 'update_is_a' optional args to Ontology.destroy()
 * Bugfixes:
   - Fix individual.INVERSE_prop update when prop is functional
   - Fix performance regression on complex SPARQL queries with OPTIONAL
