@@ -134,8 +134,8 @@ class PropertyClass(EntityClass):
     
   def _del_is_a_triple(Prop, base):
     if   base in _CLASS_PROPS: pass
-    elif base in _TYPE_PROPS:  Prop.namespace.ontology._del_obj_triple_spo(Prop.storid, rdf_type       , base.storid)
-    else:                      Prop.namespace.ontology._del_obj_triple_spo(Prop.storid, Prop._rdfs_is_a, base.storid)
+    elif base in _TYPE_PROPS:  Prop.namespace.world._del_obj_triple_spo(Prop.storid, rdf_type       , base.storid)
+    else:                      Prop.namespace.world._del_obj_triple_spo(Prop.storid, Prop._rdfs_is_a, base.storid)
     
     
   def get_domain(Prop):
@@ -152,7 +152,7 @@ class PropertyClass(EntityClass):
     new = frozenset(Prop.domain)
     old = frozenset(old)
     for x in old - new:
-      Prop.namespace.ontology._del_obj_triple_spo(Prop.storid, rdf_domain, x.storid)
+      Prop.namespace.world._del_obj_triple_spo(Prop.storid, rdf_domain, x.storid)
       if isinstance(x, Construct): x._set_ontology(None)
     for x in new - old:
       if isinstance(x, Construct): x = x._set_ontology_copy_if_needed(Prop.namespace.ontology, Prop.domain)
@@ -181,7 +181,7 @@ class PropertyClass(EntityClass):
     old = frozenset(old)
     for x in old - new:
       x2 = _universal_datatype_2_abbrev.get(x) or x.storid
-      Prop.namespace.ontology._del_obj_triple_spo(Prop.storid, rdf_range, x2)
+      Prop.namespace.world._del_obj_triple_spo(Prop.storid, rdf_range, x2)
       if isinstance(x, Construct): x._set_ontology(None)
     for x in new - old:
       if isinstance(x, Construct): x = x._set_ontology_copy_if_needed(Prop.namespace.ontology, Prop.range)
@@ -210,7 +210,7 @@ class PropertyClass(EntityClass):
     for x in old - new:
       if x.startswith("_"): x2 = -int(x[2:])
       else:                 x2 = Prop.namespace.world._abbreviate(x)
-      Prop.namespace.ontology._del_obj_triple_spo(Prop.storid, rdf_range, x2)        
+      Prop.namespace.world._del_obj_triple_spo(Prop.storid, rdf_range, x2)        
     for x in new - old:
       if x.startswith("_"): x2 = -int(x[2:])
       else:                 x2 = Prop.namespace.world._abbreviate(x)
@@ -228,7 +228,7 @@ class PropertyClass(EntityClass):
     type.__setattr__(Prop, "_class_property_some",     "some"     in types)
     type.__setattr__(Prop, "_class_property_only",     "only"     in types)
     type.__setattr__(Prop, "_class_property_relation", "relation" in types)
-    Prop.namespace.ontology._del_data_triple_spod(Prop.storid, owlready_class_property_type, None, None)
+    Prop.namespace.world._del_data_triple_spod(Prop.storid, owlready_class_property_type, None, None)
     for x in Prop._class_property_type:
       Prop.namespace.ontology._add_data_triple_spod(Prop.storid, owlready_class_property_type, x, 0)
       
@@ -249,7 +249,7 @@ class PropertyClass(EntityClass):
     new = frozenset(Prop._property_chain)
     old = frozenset(old)
     for x in old - new:
-      Prop.namespace.ontology._del_obj_triple_spo(Prop.storid, owl_propertychain, x.storid)
+      Prop.namespace.world._del_obj_triple_spo(Prop.storid, owl_propertychain, x.storid)
       x._set_ontology(None)
     for x in new - old:
       x = x._set_ontology_copy_if_needed(Prop.namespace.ontology, Prop._property_chain)
@@ -359,7 +359,7 @@ class PropertyClass(EntityClass):
   _get_indirect_values_for_class = _get_indirect_values_for_individual
   
   def _set_value_for_individual(Prop, entity, value):
-    if value is None: entity.namespace.ontology._del_triple_spod(entity.storid, Prop.storid, None, None)
+    if value is None: entity.namespace.world   ._del_triple_spod(entity.storid, Prop.storid, None, None)
     else:             entity.namespace.ontology._set_triple_spod(entity.storid, Prop.storid, *entity.namespace.ontology._to_rdf(value))
     if (not isinstance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
       entity.__dict__[Prop.python_name] = [value]
@@ -520,7 +520,7 @@ class ObjectPropertyClass(ReasoningPropertyClass):
     else:
       inverse = Prop._inverse_property
       type.__setattr__(Prop, "_inverse_property", value)
-      Prop.namespace.ontology._del_obj_triple_spo(Prop.storid, owl_inverse_property, None)
+      Prop.namespace.world._del_obj_triple_spo(Prop.storid, owl_inverse_property, None)
       type.__setattr__(Prop, "_inverse_storid", 0)
       if inverse._inverse_property: inverse.inverse_property = None
       
@@ -767,7 +767,7 @@ class ObjectPropertyClass(ReasoningPropertyClass):
     return list(values)
   
   def _set_value_for_individual(Prop, entity, value):
-    if value is None: entity.namespace.ontology._del_obj_triple_spo(entity.storid, Prop.storid, None)
+    if value is None: entity.namespace.world   ._del_obj_triple_spo(entity.storid, Prop.storid, None)
     else:             entity.namespace.ontology._set_obj_triple_spo(entity.storid, Prop.storid, value.storid)
     if (not isinstance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
       entity.__dict__[Prop.python_name] = value
@@ -866,7 +866,7 @@ class DataPropertyClass(ReasoningPropertyClass):
                       for x in _flatten_only(r) ))
     
   def _set_value_for_individual(Prop, entity, value):
-    if value is None: entity.namespace.ontology._del_data_triple_spod(entity.storid, Prop.storid, None, None)
+    if value is None: entity.namespace.world   ._del_data_triple_spod(entity.storid, Prop.storid, None, None)
     else:             entity.namespace.ontology._set_data_triple_spod(entity.storid, Prop.storid, *entity.namespace.ontology._to_rdf(value))
     if (not isinstance(entity, EntityClass)) and (Prop is entity.namespace.world._props.get(Prop._python_name)):
       entity.__dict__[Prop.python_name] = value
@@ -1105,9 +1105,9 @@ class IndividualValueList(CallbackListWithLanguage):
         inverse_python_name = "INVERSE_%s" % self._Prop.python_name
         
       for removed in old - new:
-        obj.namespace.ontology._del_obj_triple_spo(obj.storid, self._Prop.storid, removed.storid)
+        obj.namespace.world._del_obj_triple_spo(obj.storid, self._Prop.storid, removed.storid)
         if inverse:
-          obj.namespace.ontology._del_obj_triple_spo(removed.storid, inverse.storid, obj.storid) # Also remove inverse
+          obj.namespace.world._del_obj_triple_spo(removed.storid, inverse.storid, obj.storid) # Also remove inverse
         if hasattr(removed.__dict__, "pop"): removed.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
         
       for added in new - old:
@@ -1116,7 +1116,7 @@ class IndividualValueList(CallbackListWithLanguage):
         
     elif self._Prop._owl_type == owl_data_property:
       for removed in old - new:
-        obj.namespace.ontology._del_data_triple_spod(obj.storid, self._Prop.storid, obj.namespace.ontology._to_rdf(removed)[0], None)
+        obj.namespace.world._del_data_triple_spod(obj.storid, self._Prop.storid, obj.namespace.world._to_rdf(removed)[0], None)
         
       for added in new - old:
         obj.namespace.ontology._add_data_triple_spod(obj.storid, self._Prop.storid, *obj.namespace.ontology._to_rdf(added))
@@ -1124,9 +1124,9 @@ class IndividualValueList(CallbackListWithLanguage):
     else: #self._Prop._owl_type == owl_annotation_property:
       for removed in old - new:
         if hasattr(removed, "storid"):
-          obj.namespace.ontology._del_obj_triple_spo(obj.storid, self._Prop.storid, removed.storid)
+          obj.namespace.world._del_obj_triple_spo(obj.storid, self._Prop.storid, removed.storid)
         else:
-          obj.namespace.ontology._del_data_triple_spod(obj.storid, self._Prop.storid, obj.namespace.ontology._to_rdf(removed)[0], None)
+          obj.namespace.world._del_data_triple_spod(obj.storid, self._Prop.storid, obj.namespace.world._to_rdf(removed)[0], None)
           
       for added in new - old:
         if hasattr(added, "storid"):

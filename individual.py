@@ -151,7 +151,7 @@ class Thing(metaclass = ThingClass):
     old = set(old)
     
     for base in old - new:
-      if not LOADING: self.namespace.ontology._del_obj_triple_spo(self.storid, rdf_type, base.storid)
+      if not LOADING: self.namespace.world._del_obj_triple_spo(self.storid, rdf_type, base.storid)
       if isinstance(base, Construct): base._set_ontology(None)
     bases = ThingClass._find_base_classes(self.is_a)
     if len(bases) == 1:
@@ -186,7 +186,7 @@ class Thing(metaclass = ThingClass):
     old = frozenset(old)
     
     for x in old - new:
-      self.namespace.ontology._del_obj_triple_spo(self.storid, owl_equivalentindividual, x.storid)
+      self.namespace.world._del_obj_triple_spo(self.storid, owl_equivalentindividual, x.storid)
       if isinstance(x, Construct): x._set_ontology(None)
       else: # Invalidate it
         if x.equivalent_to._indirect:
@@ -263,12 +263,12 @@ class Thing(metaclass = ThingClass):
             if not old_value is None:
               old_value.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
               if Prop.inverse_property:
-                self.namespace.ontology._del_obj_triple_spo(old_value.storid, Prop.inverse_property.storid, self.storid) # Also remove inverse
+                self.namespace.world._del_obj_triple_spo(old_value.storid, Prop.inverse_property.storid, self.storid) # Also remove inverse
                 
             super().__setattr__(attr, value)
             
             if value is None:
-              self.namespace.ontology._del_obj_triple_spo(self.storid, Prop.storid, None)
+              self.namespace.world._del_obj_triple_spo(self.storid, Prop.storid, None)
             else:
               self.namespace.ontology._set_obj_triple_spo(self.storid, Prop.storid, value.storid)
               #if Prop.inverse_property: value.__dict__.pop(Prop.inverse_property.python_name, None) # Remove => force reloading; XXX optimizable
@@ -282,7 +282,7 @@ class Thing(metaclass = ThingClass):
             super().__setattr__(attr, value)
             
             if value is None:
-              self.namespace.ontology._del_data_triple_spod(self.storid, Prop.storid, None, None)
+              self.namespace.world._del_data_triple_spod(self.storid, Prop.storid, None, None)
             else:
               self.namespace.ontology._set_data_triple_spod(self.storid, Prop.storid, *self.namespace.ontology._to_rdf(value))
               

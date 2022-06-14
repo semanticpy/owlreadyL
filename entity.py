@@ -162,7 +162,7 @@ class EntityClass(type):
     Class.namespace.ontology._add_obj_triple_spo(Class.storid, Class._rdfs_is_a, base.storid)
     
   def _del_is_a_triple(Class, base):
-    Class.namespace.ontology._del_obj_triple_spo(Class.storid, Class._rdfs_is_a, base.storid)
+    Class.namespace.world._del_obj_triple_spo(Class.storid, Class._rdfs_is_a, base.storid)
     
   def __init__(Class, name, bases, obj_dict):
     if "defined_class" in obj_dict:
@@ -203,7 +203,7 @@ class EntityClass(type):
     old = frozenset(old)
     
     for x in old - new:
-      Class.namespace.ontology._del_obj_triple_spo(Class.storid, Class._owl_equivalent, x.storid)
+      Class.namespace.world._del_obj_triple_spo(Class.storid, Class._owl_equivalent, x.storid)
       if isinstance(x, Construct): x._set_ontology(None)
       else: # Invalidate it
         if not x.equivalent_to._indirect is None:
@@ -470,7 +470,7 @@ class ThingClass(EntityClass):
     for removed in old:
       if not removed in new:
         Class.namespace.ontology._del_list(removed._bn)
-        Class.namespace.ontology._del_obj_triple_spo(Class.storid, owl_disjointunion, removed._bn)
+        Class.namespace.world._del_obj_triple_spo(Class.storid, owl_disjointunion, removed._bn)
     new2 = []
     for added in new:
       if not added in old:
@@ -575,7 +575,7 @@ SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) 
     if defined_class:
       Class.namespace.ontology._set_data_triple_spod(Class.storid, owlready_defined_class, *to_literal(True))
     else:
-      Class.namespace.ontology._del_data_triple_spod(Class.storid, owlready_defined_class, "true", None)
+      Class.namespace.world._del_data_triple_spod(Class.storid, owlready_defined_class, "true", None)
   defined_class = property(get_defined_class, set_defined_class)
   
   def __getattr__(Class, attr):
@@ -756,9 +756,9 @@ SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) 
       if Prop._class_property_relation:
         if Prop._owl_type == owl_object_property:
           for v in removed:
-            Class.namespace.ontology._del_obj_triple_spo(Class.storid, Prop.storid, v.storid)
+            Class.namespace.world._del_obj_triple_spo(Class.storid, Prop.storid, v.storid)
             if inverse:
-              Class.namespace.ontology._del_obj_triple_spo(v.storid, inverse.storid, Class.storid) # Also remove inverse
+              Class.namespace.world._del_obj_triple_spo(v.storid, inverse.storid, Class.storid) # Also remove inverse
               #if isinstance(v, EntityClass): v.__dict__.pop("__%s" % inverse.python_name, None) # Remove => force reloading; XXX optimizable
               #else:                          v.__dict__.pop(inverse.python_name, None) # Remove => force reloading; XXX optimizable
               
@@ -770,7 +770,7 @@ SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) 
             
         else: # Data prop
           for v in removed:
-            Class.namespace.ontology._del_data_triple_spod(Class.storid, Prop.storid, Class.namespace.ontology._to_rdf(v)[0], None)
+            Class.namespace.world._del_data_triple_spod(Class.storid, Prop.storid, Class.namespace.ontology._to_rdf(v)[0], None)
             
           for v in new - old:
             Class.namespace.ontology._add_data_triple_spod(Class.storid, Prop.storid, *Class.namespace.ontology._to_rdf(v))

@@ -668,6 +668,12 @@ version 2 - 0.38
   - Accept empty lines at the beginning of NTriple files
   - Support non-ASCII characters when parsing SWRL rules
 
+version 2 - 0.39
+****************
+
+* Bugfixes:
+  - Fix entity.prop.remove(x) and entity.prop = x when existing values are defined in another ontology than the entity
+
 
 Links
 -----

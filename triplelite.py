@@ -792,20 +792,20 @@ class Graph(BaseMainGraph):
   def _del_data_triple_raw_spod(self, s, p, o, d):
     if s is None:
       if p is None:
-        if o is None:   self.execute("DELETE FROM datas")
+        if   o is None: self.execute("DELETE FROM datas")
         elif d is None: self.execute("DELETE FROM datas WHERE o=?", (o,))
         else:           self.execute("DELETE FROM datas WHERE o=? AND d=?", (o, d,))
       else:
-        if o is None:   self.execute("DELETE FROM datas WHERE p=?", (p,))
+        if   o is None: self.execute("DELETE FROM datas WHERE p=?", (p,))
         elif d is None: self.execute("DELETE FROM datas WHERE p=? AND o=?", (p, o,))
         else:           self.execute("DELETE FROM datas WHERE p=? AND o=? AND d=?", (p, o, d,))
     else:
       if p is None:
-        if o is None:   self.execute("DELETE FROM datas WHERE s=?", (s,))
+        if   o is None: self.execute("DELETE FROM datas WHERE s=?", (s,))
         elif d is None: self.execute("DELETE FROM datas INDEXED BY index_datas_sp WHERE s=? AND o=?", (s, o,))
         else:           self.execute("DELETE FROM datas INDEXED BY index_datas_sp WHERE s=? AND o=? AND d=?", (s, o, d,))
       else:
-        if o is None:   self.execute("DELETE FROM datas WHERE s=? AND p=?", (s, p,))
+        if   o is None: self.execute("DELETE FROM datas WHERE s=? AND p=?", (s, p,))
         elif d is None: self.execute("DELETE FROM datas INDEXED BY index_datas_sp WHERE s=? AND p=? AND o=?", (s, p, o,))
         else:           self.execute("DELETE FROM datas INDEXED BY index_datas_sp WHERE s=? AND p=? AND o=? AND d=?", (s, p, o, d,))
         
@@ -1176,7 +1176,8 @@ class SubGraph(BaseSubGraph):
     
   def _set_obj_triple_raw_spo(self, s, p, o):
     if (s is None) or (p is None) or (o is None): raise ValueError
-    self.execute("DELETE FROM objs WHERE c=? AND s=? AND p=?", (self.c, s, p,))
+    #self.execute("DELETE FROM objs WHERE c=? AND s=? AND p=?", (self.c, s, p,))
+    self.execute("DELETE FROM objs WHERE s=? AND p=?", (s, p,))
     self.execute("INSERT INTO objs VALUES (?, ?, ?, ?)", (self.c, s, p, o))
     self.parent.nb_added_triples += 1
     if self.parent.nb_added_triples > 1000: self.parent.analyze()
@@ -1205,7 +1206,8 @@ class SubGraph(BaseSubGraph):
         
   def _set_data_triple_raw_spod(self, s, p, o, d):
     if (s is None) or (p is None) or (o is None) or (d is None): raise ValueError
-    self.execute("DELETE FROM datas WHERE c=? AND s=? AND p=?", (self.c, s, p,))
+    #self.execute("DELETE FROM datas WHERE c=? AND s=? AND p=?", (self.c, s, p,))
+    self.execute("DELETE FROM datas WHERE s=? AND p=?", (s, p,))
     self.execute("INSERT INTO datas VALUES (?, ?, ?, ?, ?)", (self.c, s, p, o, d))
     self.parent.nb_added_triples += 1
     if self.parent.nb_added_triples > 1000: self.parent.analyze()

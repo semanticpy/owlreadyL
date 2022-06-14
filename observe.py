@@ -101,7 +101,68 @@ class ObservedOntology(Ontology):
     
   
 def start_observing(onto):
-  if not hasattr(onto.world, "_observations"): onto.world._observations = {}
+  if not hasattr(onto.world, "_observations"):
+    world = onto.world
+    world._observations = {}
+    
+    triple_obj_method = world._del_obj_triple_spo
+    def _del_obj_triple_spo_observed(s = None, p = None, o = None):
+      if s is None:
+        if p is None:
+          if o is None: observations_ps = [(world._observations.get(s), p) for (s, p) in world.graph.execute("SELECT DISTINCT s, p FROM objs")]
+          else:         observations_ps = [(world._observations.get(s), p) for (s, p) in world.graph.execute("SELECT DISTINCT s, p FROM objs WHERE o=?", (o,))]
+          triple_obj_method(s, p, o)
+          for observation, p in observations_ps:
+            if observation: observation.call(p)
+            
+        else:
+          if o is None: observations = [world._observations.get(s) for (s,) in world.graph.execute("SELECT DISTINCT s FROM objs WHERE p=?", (p,))]
+          else:         observations = [world._observations.get(s) for (s,) in world.graph.execute("SELECT DISTINCT s FROM objs WHERE p=? AND o=?", (p, o,))]
+          triple_obj_method(s, p, o)
+          for observation in observations:
+            if observation: observation.call(p)
+            
+      else:
+        observation = world._observations.get(s)
+        if observation:
+          triple_obj_method(s, p, o)
+          observation.call(p)
+        else:
+          triple_obj_method(s, p, o)
+          
+    world._del_obj_triple_spo = _del_obj_triple_spo_observed
+    
+    
+    triple_data_method = world._del_data_triple_spod
+    def _del_data_triple_spod_observed(s = None, p = None, o = None, d = None):
+      if s is None:
+        if p is None:
+          if   o is None: observations_ps = [(world._observations.get(s), p) for (s, p) in world.graph.execute("SELECT DISTINCT s, p FROM objs")]
+          elif d is None: observations_ps = [(world._observations.get(s), p) for (s, p) in world.graph.execute("SELECT DISTINCT s, p FROM objs WHERE o=?", (o,))]
+          else:           observations_ps = [(world._observations.get(s), p) for (s, p) in world.graph.execute("SELECT DISTINCT s, p FROM objs WHERE o=? AND d=?", (o, d,))]
+          triple_data_method(s, p, o, d)
+          for observation, p in observations_ps:
+            if observation: observation.call(p)
+            
+        else:
+          if   o is None: observations = [world._observations.get(s) for (s,) in world.graph.execute("SELECT DISTINCT s FROM datas WHERE p=?", (p,))]
+          elif d is None: observations = [world._observations.get(s) for (s,) in world.graph.execute("SELECT DISTINCT s FROM datas WHERE p=? AND o=?", (p, o,))]
+          else:           observations = [world._observations.get(s) for (s,) in world.graph.execute("SELECT DISTINCT s FROM datas WHERE p=? AND o=? AND d=?", (p, o, d,))]
+          triple_data_method(s, p, o, d)
+          for observation in observations:
+            if observation: observation.call(p)
+            
+      else:
+        observation = world._observations.get(s)
+        if observation:
+          triple_data_method(s, p, o, d)
+          observation.call(p)
+        else:
+          triple_data_method(s, p, o, d)
+          
+    world._del_data_triple_spod = _del_data_triple_spod_observed
+    
+    
   if not onto.__class__ is ObservedOntology:
     onto.__class__ = ObservedOntology
     onto._add_obj_triple_raw_spo   = onto._gen_triple_method_obj(onto.graph._add_obj_triple_raw_spo)

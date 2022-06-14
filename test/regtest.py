@@ -2731,6 +2731,50 @@ class Test(BaseTest, unittest.TestCase):
     assert c1.prop.fr_BE == ["Français 3"]
     assert set(c1.prop.fr_any) == { "Français 1", "Français 2", "Français 3" }
     
+  def test_prop_53(self):
+    w  = self.new_world()
+    o1 = w.get_ontology("http://test.org/o1.owl")
+    o2 = w.get_ontology("http://test.org/o2.owl")
+    
+    with o1:
+      class C(Thing): pass
+      class p(Thing >> Thing): pass
+      
+      c1 = C()
+      c2 = C()
+      c3 = C(p = [c1])
+      
+    with o2:
+      c3.p.append(c2)
+      
+    c3.p.remove(c1)
+    c3.p.remove(c2)
+    
+    assert len(c3.p) == 0
+    del c3.p
+    assert len(c3.p) == 0
+    
+  def test_prop_54(self):
+    w  = self.new_world()
+    o1 = w.get_ontology("http://test.org/o1.owl")
+    o2 = w.get_ontology("http://test.org/o2.owl")
+    
+    with o1:
+      class C(Thing): pass
+      class p(Thing >> Thing, FunctionalProperty): pass
+      
+      c1 = C()
+      c2 = C()
+      
+    with o2:
+      c2.p = c1
+      
+    c2.p = None
+    
+    assert c2.p is None
+    del c2.p
+    assert c2.p is None
+    
     
   def test_prop_inverse_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
@@ -6949,9 +6993,10 @@ ask where
     def listener(o, p):
       nonlocal listened
       listened += "%s %s\n" % (w._unabbreviate(o), w._unabbreviate(p))
+      #print("%s %s %s\n" % (w._unabbreviate(o), w._unabbreviate(p), c.ps))
     owlready2.observe.start_observing(onto)
     owlready2.observe.observe(c, listener)
-    
+
     c.ps = [1, 2, 3]
     
     c.ps.remove(2)
@@ -6964,7 +7009,7 @@ ask where
     owlready2.observe.unobserve(c, listener)
     
     c.ps = [0]
-    
+
     assert listened == """
 http://test.org/t.owl#c1 http://test.org/t.owl#ps
 http://test.org/t.owl#c1 http://test.org/t.owl#ps

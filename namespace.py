@@ -241,13 +241,14 @@ WHERE q1.p=? AND q1.o=?
       #       if o != target: break
       #   else:
       #     yield bnode
-          
+      
   def _del_obj_triple_spo(self, s = None, p = None, o = None):
     #onto = CURRENT_NAMESPACES.get() or self
     #if CURRENT_NAMESPACES[-1] is None: self._del_obj_triple_raw_spo(s, p, o)
     #else:   CURRENT_NAMESPACES[-1].ontology._del_obj_triple_raw_spo(s, p, o)
     l = CURRENT_NAMESPACES.get()
     ((l and l[-1].ontology) or self)._del_obj_triple_raw_spo(s, p, o)
+    
     if _LOG_LEVEL > 1:
       if not s < 0: s = self._unabbreviate(s)
       if p: p = self._unabbreviate(p)
@@ -259,6 +260,7 @@ WHERE q1.p=? AND q1.o=?
     #else:   CURRENT_NAMESPACES[-1].ontology._del_data_triple_raw_spod(s, p, o, d)
     l = CURRENT_NAMESPACES.get()
     ((l and l[-1].ontology) or self)._del_data_triple_raw_spod(s, p, o, d)
+    
     if _LOG_LEVEL > 1:
       if not s < 0: s = self._unabbreviate(s)
       if p: p = self._unabbreviate(p)
@@ -848,6 +850,38 @@ class World(_GraphManager):
       c = c[0]
       for onto in self.ontologies.values():
         if onto.graph.c == c: return onto._parse_bnode(bnode)
+      
+  # def _del_obj_triple_spo(self, s = None, p = None, o = None, ensure_change = False):
+  #   l = CURRENT_NAMESPACES.get()
+  #   if l and ensure_change:
+  #     total_changes = self.graph.db.total_changes
+  #     ((l and l[-1].ontology) or self)._del_obj_triple_raw_spo(s, p, o)
+  #     if total_changes == self.graph.db.total_changes: raise RuntimeError("Cannot remove RDF triple because the triple is defined in an ontology and another ontology has been select via a 'with ontology:...' statement!")
+      
+  #   else:
+  #     ((l and l[-1].ontology) or self)._del_obj_triple_raw_spo(s, p, o)
+        
+  #   if _LOG_LEVEL > 1:
+  #     if not s < 0: s = self._unabbreviate(s)
+  #     if p: p = self._unabbreviate(p)
+  #     if o and not ((isinstance(o, int) and (o < 0)) or (isinstance(o, str) and o.startswith('"'))): o = self._unabbreviate(o)
+  #     print("* Owlready2 * DEL TRIPLE", s, p, o, file = sys.stderr)
+      
+  # def _del_data_triple_spod(self, s = None, p = None, o = None, d = None, ensure_change = False):
+  #   l = CURRENT_NAMESPACES.get()
+  #   if l and ensure_change:
+  #     total_changes = self.graph.db.total_changes
+  #     ((l and l[-1].ontology) or self)._del_data_triple_raw_spod(s, p, o, d)
+  #     if total_changes == self.graph.db.total_changes: raise RuntimeError("Cannot remove RDF triple because the triple is defined in an ontology and another ontology has been select via a 'with ontology:...' statement!")
+      
+  #   else:
+  #     ((l and l[-1].ontology) or self)._del_data_triple_raw_spod(s, p, o, d)
+      
+  #   if _LOG_LEVEL > 1:
+  #     if not s < 0: s = self._unabbreviate(s)
+  #     if p: p = self._unabbreviate(p)
+  #     if d and (not d.startswith("@")): d = self._unabbreviate(d)
+  #     print("* Owlready2 * DEL TRIPLE", s, p, o, d, file = sys.stderr)
       
      
 class Ontology(Namespace, _GraphManager):
