@@ -975,7 +975,12 @@ def destroy_entity(e, undoable = False):
           r = e.namespace.world._entities.get(r)
           if r:
             try: del o.__dict__[r.python_name]
-            except: pass
+            except:
+              inverse_r = r._inverse_property
+              if inverse_r:
+                try:
+                  del o.__dict__[inverse_r.python_name]
+                except: pass
 
   e.namespace.world.graph.destroy_entity(e.storid, destroyer, relation_updater, undoer_objs, undoer_datas)
   

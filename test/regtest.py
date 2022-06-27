@@ -7044,6 +7044,28 @@ ask where
     
     assert c1.p == [1]
     
+  def test_destroy_26(self):
+    w  = self.new_world()
+    o1 = w.get_ontology("http://test.org/test")
+
+    with o1:
+      class B(Thing): pass
+      class C(Thing): pass
+
+      class b_to_c(ObjectProperty): pass
+      class c_to_b(ObjectProperty): inverse_property = b_to_c
+      
+      b = B()
+      c = C()
+      
+    b.b_to_c = [c]
+    assert c.c_to_b == [b]
+    
+    destroy_entity(b)
+    
+    assert c.c_to_b == []  # asserts to False
+    
+    
     
   def test_observe_1(self):
     import owlready2.observe

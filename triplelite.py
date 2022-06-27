@@ -950,6 +950,10 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
       if not s in destroyed_storids:
         modified_relations[s].add(p)
         
+    for p,o in self.execute("SELECT DISTINCT p,o FROM objs WHERE s IN (%s)" % ",".join(["?" for i in destroyed_storids]), tuple(destroyed_storids)):
+      if (o > 300) and (p > 300) and (not o in destroyed_storids):
+        modified_relations[o].add(p)
+        
     # Two separate loops because high level destruction must be ended before removing from the quadstore (high level may need the quadstore)
     for storid in destroyed_storids:
       destroyer(storid)
