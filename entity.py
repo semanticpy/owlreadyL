@@ -656,7 +656,7 @@ SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) 
     new     = set(new)
     removed = old - new
     inverse = Prop.inverse_property
-    
+
     if Class.defined_class:
       parents, r = Class._get_defined_construct()
       

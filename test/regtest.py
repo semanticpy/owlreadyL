@@ -2775,6 +2775,31 @@ class Test(BaseTest, unittest.TestCase):
     del c2.p
     assert c2.p is None
     
+  def test_prop_55(self):
+    w  = self.new_world()
+    o1 = w.get_ontology("http://test.org/o1.owl")
+    o2 = w.get_ontology("http://test.org/o2.owl")
+    
+    with o1:
+      class C(Thing): pass
+      class p(Thing >> Thing): pass
+      
+      c1 = C()
+      c2 = C()
+      c3 = C()
+      c4 = C()
+      
+      c1.p = [c2, c3]
+      
+    with o2:
+      c1.p = [c2, c4]
+      
+    assert c1.p == [c2, c4]
+    
+    self.assert_triple    (c1.storid, p.storid, c2.storid, world = w)
+    self.assert_not_triple(c1.storid, p.storid, c3.storid, world = w)
+    self.assert_triple    (c1.storid, p.storid, c4.storid, world = w)
+    
     
   def test_prop_inverse_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
@@ -4983,6 +5008,51 @@ I took a placebo
 
     assert len(onto.A.p) == 3
     
+  def test_class_prop_26(self):
+    w  = self.new_world()
+    o1 = w.get_ontology("http://test.org/o1.owl")
+    o2 = w.get_ontology("http://test.org/o2.owl")
+    
+    with o1:
+      class A(Thing): pass
+      class C(Thing): pass
+      class p(Thing >> Thing): pass
+      
+      c1 = C()
+      c2 = C()
+      c3 = C()
+      c4 = C()
+      
+      A.p = [c2, c3]
+      
+    with o2:
+      A.p = [c2, c4]
+
+    assert set(A.p) == { c2, c4 }
+    
+  def test_class_prop_27(self):
+    w  = self.new_world()
+    o1 = w.get_ontology("http://test.org/o1.owl")
+    o2 = w.get_ontology("http://test.org/o2.owl")
+    
+    with o1:
+      class A(Thing): pass
+      class C(Thing): pass
+      class p(Thing >> Thing): pass
+      class i(Thing >> Thing): inverse = p
+      
+      c1 = C()
+      c2 = C()
+      c3 = C()
+      c4 = C()
+      
+      A.p = [c2, c3]
+      
+    with o2:
+      A.p = [c2, c4]
+
+    assert set(A.p) == { c2, c4 }
+        
     
   def test_format_1(self):
     from owlready2.triplelite import _guess_format

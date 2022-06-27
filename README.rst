@@ -671,6 +671,7 @@ version 2 - 0.38
 version 2 - 0.39
 ****************
 
+* Make RDF triple deletion non-ontology-specific
 * Bugfixes:
   - Fix entity.prop.remove(x) and entity.prop = x when existing values are defined in another ontology than the entity
 

@@ -1096,7 +1096,7 @@ class IndividualValueList(CallbackListWithLanguage):
   def _callback(self, obj, old):
     old = set(old)
     new = set(self)
-
+    
     if   self._Prop._owl_type == owl_object_property:
       inverse = self._Prop.inverse_property
       if inverse:

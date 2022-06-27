@@ -231,23 +231,10 @@ WHERE q1.p=? AND q1.o=?
                           owl_annotatedtarget, target))
       for l in r.fetchall(): yield l[0]
       
-      # for bnode in self._get_obj_triples_po_s(rdf_type, owl_axiom):
-      #   for p, o, d in self._get_triples_s_pod(bnode):
-      #     if   p == owl_annotatedsource: # SIC! If on a single if, elif are not appropriate.
-      #       if o != source: break
-      #     elif p == owl_annotatedproperty:
-      #       if o != property: break
-      #     elif p == owl_annotatedtarget:
-      #       if o != target: break
-      #   else:
-      #     yield bnode
-      
   def _del_obj_triple_spo(self, s = None, p = None, o = None):
-    #onto = CURRENT_NAMESPACES.get() or self
-    #if CURRENT_NAMESPACES[-1] is None: self._del_obj_triple_raw_spo(s, p, o)
-    #else:   CURRENT_NAMESPACES[-1].ontology._del_obj_triple_raw_spo(s, p, o)
-    l = CURRENT_NAMESPACES.get()
-    ((l and l[-1].ontology) or self)._del_obj_triple_raw_spo(s, p, o)
+    #l = CURRENT_NAMESPACES.get()
+    #((l and l[-1].ontology) or self)._del_obj_triple_raw_spo(s, p, o)
+    self._del_obj_triple_raw_spo(s, p, o)
     
     if _LOG_LEVEL > 1:
       if not s < 0: s = self._unabbreviate(s)
@@ -256,10 +243,9 @@ WHERE q1.p=? AND q1.o=?
       print("* Owlready2 * DEL TRIPLE", s, p, o, file = sys.stderr)
       
   def _del_data_triple_spod(self, s = None, p = None, o = None, d = None):
-    #if CURRENT_NAMESPACES[-1] is None: self._del_data_triple_raw_spod(s, p, o, d)
-    #else:   CURRENT_NAMESPACES[-1].ontology._del_data_triple_raw_spod(s, p, o, d)
-    l = CURRENT_NAMESPACES.get()
-    ((l and l[-1].ontology) or self)._del_data_triple_raw_spod(s, p, o, d)
+    #l = CURRENT_NAMESPACES.get()
+    #((l and l[-1].ontology) or self)._del_data_triple_raw_spod(s, p, o, d)
+    self._del_data_triple_raw_spod(s, p, o, d)
     
     if _LOG_LEVEL > 1:
       if not s < 0: s = self._unabbreviate(s)
