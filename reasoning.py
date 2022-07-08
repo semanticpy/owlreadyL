@@ -365,6 +365,7 @@ def _apply_reasoning_results(world, ontology, debug, new_parents, new_equivs, en
   new_equivs_loaded  = defaultdict(list)
 
   for child_storid, parent_storids in new_parents.items():
+    if child_storid <= 300: continue # Do not reparent OWL base entities such as Thing
     for parent_storid in parent_storids:
       owl_relation = _TYPE_2_IS_A[entity_2_type[child_storid]]
       if not ontology.world._has_obj_triple_spo(child_storid, owl_relation, parent_storid):

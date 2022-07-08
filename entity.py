@@ -507,7 +507,7 @@ WITH RECURSIVE prelim1_objs(s) AS (VALUES (?1)
 UNION 
 SELECT q.s FROM objs q, prelim1_objs rec WHERE q.p IN (9,33) AND q.o=rec.s),
 
-prelim2_objs(s) AS (VALUES (?1) 
+prelim2_objs(s) AS (VALUES (?1)
 UNION
 SELECT q.o FROM objs q, prelim1_objs rec WHERE q.p=33 AND q.s=rec.s)
 
