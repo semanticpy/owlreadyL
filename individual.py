@@ -138,8 +138,58 @@ class Thing(metaclass = ThingClass):
         for parent in self.is_a:
           self.namespace.ontology._add_obj_triple_spo(self.storid, rdf_type, parent.storid)
           
-        for attr, value in kargs.items(): setattr(self, attr, value)
-    
+        #for attr, value in kargs.items(): setattr(self, attr, value)
+        #return
+        
+        for attr, value in kargs.items():
+          if value is None: continue
+          if attr in SPECIAL_ATTRS:
+            if   attr == "is_a":          self.is_a.reinit(value)
+            elif attr == "equivalent_to": self.set_equivalent_to(value) # Needed
+            else:                         super().__setattr__(attr, value)
+          else:
+            Prop = self.namespace.world._props.get(attr)
+            if Prop:
+              if Prop.is_functional_for(self.__class__):
+                super().__setattr__(attr, value)
+                if   Prop._owl_type == owl_object_property:
+                  try: del value.__dict__[Prop.inverse_property.python_name if Prop.inverse_property else "INVERSE_%s" % Prop.python_name]
+                  except (TypeError, KeyError): pass
+                  
+                  self.namespace.ontology._add_obj_triple_spo(self.storid, Prop.storid, value.storid)
+                  
+                elif Prop._owl_type == owl_data_property:
+                  self.namespace.ontology._add_data_triple_spod(self.storid, Prop.storid, *self.namespace.ontology._to_rdf(value))
+                  
+              else:
+                if not isinstance(value, list):
+                  if isinstance(Prop, AnnotationPropertyClass):
+                    if value is None: value = []
+                    else:             value = [value]
+                  else:
+                    raise ValueError("Property '%s' is not functional, cannot assign directly (use .append() or assign a list)." % attr)
+                  
+                if   Prop._owl_type == owl_object_property:
+                  for v in value:
+                    try: del v.__dict__[Prop.inverse_property.python_name if Prop.inverse_property else "INVERSE_%s" % Prop.python_name]
+                    except (TypeError, KeyError): pass
+                    self.namespace.ontology._add_obj_triple_spo(self.storid, Prop.storid, v.storid)
+
+                elif Prop._owl_type == owl_data_property:
+                  for v in value:
+                    self.namespace.ontology._add_data_triple_spod(self.storid, Prop.storid, *self.namespace.ontology._to_rdf(v))
+
+                else:
+                  for v in value:
+                    if hasattr(v, "storid"): self.namespace.ontology._add_obj_triple_spo(self.storid, Prop.storid, v.storid)
+                    else:                    self.namespace.ontology._add_data_triple_spod(self.storid, Prop.storid, *self.namespace.ontology._to_rdf(v))
+                      
+            elif attr.startswith("INVERSE_"): setattr(self, attr, value) # Not yet optimized
+              
+            else: super().__setattr__(attr, value)
+          
+          
+          
   def generate_default_name(self): return self.__class__.name.lower()
   
   def _get_is_instance_of(self):    return self.is_a
@@ -271,8 +321,6 @@ class Thing(metaclass = ThingClass):
               self.namespace.world._del_obj_triple_spo(self.storid, Prop.storid, None)
             else:
               self.namespace.ontology._set_obj_triple_spo(self.storid, Prop.storid, value.storid)
-              #if Prop.inverse_property: value.__dict__.pop(Prop.inverse_property.python_name, None) # Remove => force reloading; XXX optimizable
-              #value.__dict__.pop(inverse_python_name, None) # Remove => force reloading; XXX optimizable
               try: del value.__dict__[inverse_python_name]
               except (TypeError, KeyError): pass
               

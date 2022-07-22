@@ -1739,6 +1739,35 @@ class Test(BaseTest, unittest.TestCase):
       
     assert not x1.__class__ is x2.__class__
       
+  def test_individual_27(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    
+    with onto:
+      class C(Thing): pass
+      class p(ObjectProperty, FunctionalProperty): pass
+      class i(ObjectProperty): inverse = p
+      c1 = C()
+      c2 = C(i = [c1])
+
+    assert c2.i == [c1]
+    
+    with onto:
+      c3 = C("c3", p = c2)
+
+    assert c2.i == [c1, c3]
+    del c2.i
+    assert c2.i == [c1, c3]
+    
+    with onto:
+      c3_2 = C("c3", p = None)
+      assert c3_2 is c3
+      
+    assert c2.i == [c1]
+    del c2.i
+    assert c2.i == [c1]
+    
+    
   def test_prop_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
     assert "has_topping" in default_world._props
