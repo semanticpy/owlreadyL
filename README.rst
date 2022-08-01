@@ -677,6 +677,8 @@ version 2 - 0.39
   - Fix entity.prop.remove(x) and entity.prop = x when existing values are defined in another ontology than the entity
   - Fix inverse property update when referenced entity is destroyed (thanks Franzlst)
   - Prevent reasoners from reparenting OWL base entities such as Thing
+  - Fix the reloading of an ontology that has been destroyed, when a local filename is provided as the ontology base IRI
+
 
 Links
 -----

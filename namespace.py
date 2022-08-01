@@ -878,6 +878,7 @@ class Ontology(Namespace, _GraphManager):
     self.world       = world # Those 2 attributes are required before calling Namespace.__init__
     self._namespaces = weakref.WeakValueDictionary()
     Namespace.__init__(self, self, base_iri, name)
+    self._orig_base_iri        = base_iri
     self.loaded                = False
     self._bnodes               = weakref.WeakValueDictionary()
     self.storid                = world._abbreviate(base_iri[:-1])
@@ -968,6 +969,8 @@ class Ontology(Namespace, _GraphManager):
         if (not entity is None) and (not entity.namespace.ontology is self): entities_needing_update.add(entity)
         
     del self.world.ontologies[self._base_iri]
+    if self._orig_base_iri != self._base_iri: del self.world.ontologies[self._orig_base_iri]
+    
     self.graph.destroy()
     for entity in list(self.world._entities.values()):
       if entity.namespace.ontology is self: del self.world._entities[entity.storid]
