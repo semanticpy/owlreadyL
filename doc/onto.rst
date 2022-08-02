@@ -299,3 +299,25 @@ If you don't want to change IRI entities, you can use the set_base_iri() method:
 ::
 
    >>> onto.set_base_iri("http://test.org/new_base_iri.owl#", rename_entities = False)
+
+
+Destroying an ontology
+----------------------
+
+You can destroy an ontology as follows:
+
+::
+
+   >>> onto.destroy()
+
+By default, Owlready does not update the Python object in memory. This may cause problem in some situations,
+e.g. if you continue using a class from another ontology that inherits from a class in the destroyed ontology.
+
+You can destroy the ontology and update the Python objet as follows:
+
+::
+
+   >>> onto.destroy(update_relation = True, update_is_a = True)
+
+The update_is_a optional argument updates is-a relation (subClassOf, subPropertyOf and RDF type), while update_relation
+updates other relations.
