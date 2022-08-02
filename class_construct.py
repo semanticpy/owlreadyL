@@ -496,6 +496,9 @@ class PropertyChain(Construct):
   def _create_triples(self, ontology):
     ontology._set_list(self.storid, self.properties)
     
+  def subclasses(self, only_loaded = False, include_equivalent = True):
+    return []
+  
   def __repr__(self):
     return "PropertyChain([%s])" % (", ".join(repr(x) for x in self.properties))
   

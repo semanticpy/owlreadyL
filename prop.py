@@ -919,13 +919,12 @@ def destroy_entity(e, undoable = False):
     else: #e._owl_type == owl_annotation_property:
       for s,p,o,d in e.namespace.world._get_triples_spod_spod(None, e.storid, None, None):
         modified_entities.add(s)
-      e.namespace.world._del_obj_triple_spo (None, e.storid, None)
+      e.namespace.world._del_obj_triple_spo  (None, e.storid, None)
       e.namespace.world._del_data_triple_spod(None, e.storid, None, None)
       
     for s in modified_entities:
       s = e.namespace.world._entities.get(s)
-      if s:
-        delattr(s, e._python_name)
+      if s: delattr(s, e._python_name)
         
     e.namespace.world._props          .pop(e._python_name, None)
     e.namespace.world._reasoning_props.pop(e._python_name, None)

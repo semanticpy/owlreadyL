@@ -6689,6 +6689,43 @@ ask where
     assert len(bns) == 1
     assert o._parse_list(bns[0]) == [P3, P4]
     
+  def test_propchain_3(self):
+    w = self.new_world()
+    o = w.get_ontology("http://test/test_propchain.owl")
+    
+    with o:
+      class p1(ObjectProperty): pass
+      class p2(ObjectProperty): pass
+      class p (ObjectProperty): pass
+      
+    p.property_chain.append(PropertyChain([p1, p2]))
+    
+    destroy_entity(p1)
+    o.graph.dump()
+    self.assert_not_triple(p1.storid, rdf_type, ObjectProperty.storid, world = w)
+    self.assert_triple    (p2.storid, rdf_type, ObjectProperty.storid, world = w)
+    self.assert_triple    (p .storid, rdf_type, ObjectProperty.storid, world = w)
+    assert len(o.graph) == 3
+    
+  def test_propchain_4(self):
+    w = self.new_world()
+    o = w.get_ontology("http://test/test_propchain.owl")
+    
+    with o:
+      class p1(ObjectProperty): pass
+      class p2(ObjectProperty): pass
+      class p (ObjectProperty): pass
+      
+    p.property_chain.append(PropertyChain([p1, p2]))
+    
+    destroy_entity(p)
+    o.graph.dump()
+    self.assert_triple    (p1.storid, rdf_type, ObjectProperty.storid, world = w)
+    self.assert_triple    (p2.storid, rdf_type, ObjectProperty.storid, world = w)
+    self.assert_not_triple(p .storid, rdf_type, ObjectProperty.storid, world = w)
+    assert len(o.graph) == 3
+    
+    
   def test_destroy_1(self):
     w = self.new_world()
     nb = len(w.graph)

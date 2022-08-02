@@ -897,11 +897,11 @@ SELECT x FROM transit""", (p, o, p)).fetchall(): yield x
         self._destroy_collect_storids(destroyed_storids, modified_relations, blank_using)
         
     for (c, blank_using) in list(self.execute("""SELECT c, s FROM objs WHERE o=? AND p=%s AND s < 0""" % (rdf_first,), (storid,))):
-      list_user, root, previouss, nexts, length = self._rdf_list_analyze(blank_using)
+      list_user, prop_user, root, previouss, nexts, length = self._rdf_list_analyze(blank_using)
       destroyed_storids.update(previouss)
       destroyed_storids.add   (blank_using)
       destroyed_storids.update(nexts)
-      if not list_user in destroyed_storids:
+      if (not list_user in destroyed_storids) and (prop_user != owl_propertychain):
         destroyed_storids.add(list_user)
         self._destroy_collect_storids(destroyed_storids, modified_relations, list_user)
         
@@ -932,9 +932,9 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
     else:
       root = blank
       
-    list_user = self.execute("SELECT s FROM objs WHERE o=? LIMIT 1", (root,)).fetchone()
-    if list_user: list_user = list_user[0]
-    return list_user, root, previouss, nexts, length
+    list_user, prop_user = self.execute("SELECT s, p FROM objs WHERE o=? LIMIT 1", (root,)).fetchone() or (None, None)
+    #if list_user: list_user = list_user[0]
+    return list_user, prop_user, root, previouss, nexts, length
   
   def restore_iri(self, storid, iri):
     self.execute("INSERT INTO resources VALUES (?,?)", (storid, iri))
