@@ -969,6 +969,8 @@ def destroy_entity(e, undoable = False):
           o._domain = None
         elif r == rdf_range:
           o._range = None
+        elif r == owl_propertychain:
+          o._property_chain = None
           
         else:
           r = e.namespace.world._entities.get(r)

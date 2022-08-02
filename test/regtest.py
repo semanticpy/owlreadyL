@@ -6706,6 +6706,7 @@ ask where
     self.assert_triple    (p2.storid, rdf_type, ObjectProperty.storid, world = w)
     self.assert_triple    (p .storid, rdf_type, ObjectProperty.storid, world = w)
     assert len(o.graph) == 3
+    assert p.property_chain == []
     
   def test_propchain_4(self):
     w = self.new_world()

@@ -901,9 +901,13 @@ SELECT x FROM transit""", (p, o, p)).fetchall(): yield x
       destroyed_storids.update(previouss)
       destroyed_storids.add   (blank_using)
       destroyed_storids.update(nexts)
-      if (not list_user in destroyed_storids) and (prop_user != owl_propertychain):
-        destroyed_storids.add(list_user)
-        self._destroy_collect_storids(destroyed_storids, modified_relations, list_user)
+      if prop_user == owl_propertychain:
+        modified_relations[list_user].add(prop_user)
+        
+      else:
+        if (not list_user in destroyed_storids): # and (prop_user != owl_propertychain):
+          destroyed_storids.add(list_user)
+          self._destroy_collect_storids(destroyed_storids, modified_relations, list_user)
         
     for (c, blank_used) in list(self.execute("""
 SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WHERE q2.o=q1.o) = 1;
@@ -965,7 +969,7 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
         undoer_datas.extend(self.execute("SELECT c,s,p,o,d FROM datas WHERE s=?", (storid,)))
       self.execute("DELETE FROM objs  WHERE s=? OR o=?", (storid, storid))
       self.execute("DELETE FROM datas WHERE s=?", (storid,))
-      
+
     for s, ps in modified_relations.items():
       relation_updater(destroyed_storids, s, ps)
       
