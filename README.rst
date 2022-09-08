@@ -681,7 +681,9 @@ version 2 - 0.39
   - Fix destroying object property involved in a property chain
   - Fix reloading of ontologies when the IRI of the ontology was a local filename
   - Fix SELECT * in SPARQL coumpound queries
-
+  - Fix Class.get_class_properties() when some properties are defined as restriction on an Inverse property
+    
+    
 Links
 -----
 

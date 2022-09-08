@@ -525,9 +525,11 @@ SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) 
   def get_class_properties(Class):
     l = set()
     for r in _property_value_restrictions(Class, None):
-      if   r.property._class_property_some and ((r.type == VALUE) or (r.type == SOME) or ((r.type == EXACTLY) and r.cardinality >= 1) or ((r.type == MIN) and r.cardinality >= 1)):
+      if isinstance(r.property, owlready2.class_construct.Inverse): prop = r.property.property
+      else:                                                         prop = r.property
+      if   prop._class_property_some and ((r.type == VALUE) or (r.type == SOME) or ((r.type == EXACTLY) and r.cardinality >= 1) or ((r.type == MIN) and r.cardinality >= 1)):
         l.add(r.property)
-      elif r.property._class_property_only and  (r.type == ONLY):
+      elif prop._class_property_only and  (r.type == ONLY):
         l.add(r.property)
         
     for storid in Class.namespace.world._get_triples_s_p(Class.storid):
