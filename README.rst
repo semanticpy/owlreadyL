@@ -680,7 +680,7 @@ version 2 - 0.39
   - Fix the reloading of an ontology that has been destroyed, when a local filename is provided as the ontology base IRI
   - Fix destroying object property involved in a property chain
   - Fix reloading of ontologies when the IRI of the ontology was a local filename
-    
+  - Fix SELECT * in SPARQL coumpound queries
 
 Links
 -----

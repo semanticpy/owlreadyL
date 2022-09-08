@@ -1167,6 +1167,7 @@ class TripleBlockWithStatic(TripleBlock):
 
     for static in self.static_valuess:
       static._get_ordered_vars(vars, ordered_vars)
+
           
 class SimpleTripleBlock(TripleBlockWithStatic): pass
       
@@ -1191,8 +1192,11 @@ class MinusBlock(TripleBlock): pass
 
 class SubQueryBlock(Block):
   def parse(self): return _parse_select_query(self)
+  
+  def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
+    for v in self[2]: _var_found(v.value, vars, ordered_vars)
 
-
+      
 class Triple(tuple):
   end_sequence = False
   def __init__(self, l):
