@@ -1230,7 +1230,7 @@ class SpecialCondition(object): pass
 class SimpleUnion(SpecialCondition):
   name     = "SIMPLE_UNION"
   modifier = None
-  inverted = False
+  inversed = False
   def __init__(self, items):
     self.items = items
 
