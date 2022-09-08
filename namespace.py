@@ -1032,7 +1032,8 @@ class Ontology(Namespace, _GraphManager):
     if   self._base_iri in PREDEFINED_ONTOLOGIES:
       f = os.path.join(os.path.dirname(__file__), "ontos", PREDEFINED_ONTOLOGIES[self._base_iri])
     elif not fileobj:
-      f = fileobj or _get_onto_file(self._base_iri, self.name, "r", only_local)
+      #f = fileobj or _get_onto_file(self._base_iri, self.name, "r", only_local)
+      f = fileobj or _get_onto_file(self._orig_base_iri, self.name, "r", only_local)
     else:
       f = ""
       
@@ -1052,7 +1053,8 @@ class Ontology(Namespace, _GraphManager):
         #try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
         #finally: fileobj.close()
         try:
-          new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
+          #new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
+          new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
         except OwlReadyOntologyParsingError:
           if f.endswith(".owl") or f.endswith(".rdf") or f.endswith(".xml") or url: raise
           else:
@@ -1065,20 +1067,23 @@ class Ontology(Namespace, _GraphManager):
               except: pass
             if not fileobj2: raise
             
-            try:     new_base_iri = self.graph.parse(fileobj2, default_base = self._base_iri, **args)
+            #try:     new_base_iri = self.graph.parse(fileobj2, default_base = self._base_iri, **args)
+            try:     new_base_iri = self.graph.parse(fileobj2, default_base = self._orig_base_iri, **args)
             finally: fileobj2.close()
         finally: fileobj.close()
         
     elif fileobj:
       if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, getattr(fileobj, "name", "") or getattr(fileobj, "url", "???")), file = sys.stderr)
-      try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
+      #try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
+      try:     new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
       finally: fileobj.close()
     else:
       #if reload or (reload_if_newer and (os.path.getmtime(f) > self.graph.get_last_update_time())) or (self.graph.get_last_update_time() == 0.0):
       if reload or (self.graph.get_last_update_time() == 0.0):
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
         fileobj = open(f, "rb")
-        try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
+        #try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
+        try:     new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
         finally: fileobj.close()
       else:
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s (cached)..." % self.name, file = sys.stderr)
