@@ -151,12 +151,13 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
       triple = self._rdflib_2_owlready(triple)
       for graph in self.context_graphs.values():
         if graph.triplelite.has_triple(*triple): yield graph
-
         
-  def bind(self, prefix, namespace):
+        
+  def bind(self, prefix, namespace, override = True):
+    if (not override) and (namespace in self.__prefix): return
     self.__prefix[namespace] = prefix
     self.__namespace[prefix] = namespace
-
+    
   def namespace(self, prefix):
     return self.__namespace.get(prefix, None)
 

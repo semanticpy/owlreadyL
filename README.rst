@@ -682,7 +682,7 @@ version 2 - 0.39
   - Fix reloading of ontologies when the IRI of the ontology was a local filename
   - Fix SELECT * in SPARQL coumpound queries
   - Fix Class.get_class_properties() when some properties are defined as restriction on an Inverse property
-    
+  - Fix for RDFlib 0.6.2 (supports bind() override optional argument)
     
 Links
 -----

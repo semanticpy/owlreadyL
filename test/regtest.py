@@ -6701,7 +6701,6 @@ ask where
     p.property_chain.append(PropertyChain([p1, p2]))
     
     destroy_entity(p1)
-    o.graph.dump()
     self.assert_not_triple(p1.storid, rdf_type, ObjectProperty.storid, world = w)
     self.assert_triple    (p2.storid, rdf_type, ObjectProperty.storid, world = w)
     self.assert_triple    (p .storid, rdf_type, ObjectProperty.storid, world = w)
@@ -6720,7 +6719,6 @@ ask where
     p.property_chain.append(PropertyChain([p1, p2]))
     
     destroy_entity(p)
-    o.graph.dump()
     self.assert_triple    (p1.storid, rdf_type, ObjectProperty.storid, world = w)
     self.assert_triple    (p2.storid, rdf_type, ObjectProperty.storid, world = w)
     self.assert_not_triple(p .storid, rdf_type, ObjectProperty.storid, world = w)
