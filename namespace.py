@@ -816,10 +816,14 @@ class World(_GraphManager):
             entity = AnnotationPropertyClass(name, (AnnotationProperty,), { "namespace" : namespace, "is_a" : is_a_entities, "storid" : storid } )
           
       elif main_type is Thing:
-        if   len(types) == 1: Class = types[0]
-        elif len(types) >  1: Class = FusionClass._get_fusion_class(types)
-        else:                 Class = Thing
-        entity = Class(name, namespace = namespace)
+        #if   len(types) == 1: Class = types[0]
+        #elif len(types) >  1: Class = FusionClass._get_fusion_class(types)
+        #else:                 Class = Thing
+        #entity = Class(name, namespace = namespace)
+        if   len(types) == 1: entity = types[0](name, namespace = namespace)
+        elif len(types) >  1: entity = FusionClass._get_fusion_class(types)(name, namespace = namespace, is_a = types)
+        else:                 entity = Thing(name, namespace = namespace)
+        
         
       else:
         if default_to_none: return None

@@ -71,7 +71,7 @@ class Thing(metaclass = ThingClass):
     self.namespace.world._refactor(self.storid, new_iri)
   iri = property(get_iri, set_iri)
   
-  def __new__(Class, name = None, namespace = None, **kargs):
+  def __new__(Class, name = None, namespace = None, is_a = None, **kargs):
     if name:
       if isinstance(name, Thing):
         namespace = name.namespace
@@ -106,7 +106,7 @@ class Thing(metaclass = ThingClass):
       
     return _cache_entity(object.__new__(Class))
   
-  def __init__(self, name = None, namespace = None, **kargs):
+  def __init__(self, name = None, namespace = None, is_a = None, **kargs):
     if   isinstance(name, int):
       is_new = True
       self.namespace = namespace or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or self.__class__.namespace
@@ -129,9 +129,9 @@ class Thing(metaclass = ThingClass):
       else:                     self.storid = self.namespace.world._abbreviate(iri)
       self.namespace.world._entities[self.storid] = self
       if isinstance(self.__class__, FusionClass):
-        self.__dict__["is_a"] = CallbackList(self.__class__.__bases__, self, Thing._instance_is_a_changed)
+        self.__dict__["is_a"] = CallbackList(is_a or self.__class__.__bases__, self, Thing._instance_is_a_changed)
       else:
-        self.__dict__["is_a"] = CallbackList([self.__class__], self, Thing._instance_is_a_changed)
+        self.__dict__["is_a"] = CallbackList(is_a or [self.__class__], self, Thing._instance_is_a_changed)
         
       if not LOADING:
         if self.storid > 0: self.namespace.ontology._add_obj_triple_spo(self.storid, rdf_type, owl_named_individual)

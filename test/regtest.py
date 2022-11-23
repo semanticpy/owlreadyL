@@ -1767,6 +1767,11 @@ class Test(BaseTest, unittest.TestCase):
     del c2.i
     assert c2.i == [c1]
     
+  def test_individual_28(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://dl-learner.org/benchmark/dataset/animals").load()
+    assert set(onto.croco01.is_a) == { onto.Animal, onto.HasEggs }
+    
     
   def test_prop_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")

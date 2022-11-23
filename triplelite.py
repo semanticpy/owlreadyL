@@ -184,16 +184,8 @@ class Graph(BaseMainGraph):
         s = "\n".join(clone.db.iterdump())
         self.db.cursor().executescript(s)
         
-      #version, self.current_blank, self.current_resource = self.execute("SELECT version, current_blank, current_resource FROM store").fetchone()
-      #version, self.current_blank, drop_it = self.execute("SELECT version, current_blank, current_resource FROM store").fetchone()
       version = self.execute("SELECT version FROM store").fetchone()[0]
-      #self.current_blank    = multiprocessing.Value("i", self.current_blank)
-      #self.current_resource = multiprocessing.Value("i", self.execute("SELECT MAX(storid) FROM resources").fetchone()[0])
-      
-      #if clone:
-        #self.current_blank    = multiprocessing.Value("i", clone.current_blank.value)
-        #self.current_resource = multiprocessing.Value("i", clone.current_resource.value)
-        
+
       if version == 1:
         print("* Owlready2 * Converting quadstore to internal format 2...", file = sys.stderr)
         self.execute("""CREATE TABLE ontology_alias (iri TEXT, alias TEXT)""")
@@ -493,11 +485,7 @@ class Graph(BaseMainGraph):
     r = self.execute("SELECT storid FROM resources WHERE iri=? LIMIT 1", (iri,)).fetchone()
     if r: return r[0]
     if create_if_missing:
-      #self.current_resource.value += 1
-      #storid = self.current_resource.value
       storid = max(self.execute("SELECT MAX(storid)+1 FROM resources").fetchone()[0], 301) # First 300 values are reserved
-      #storid = self.execute("SELECT current_resource+1 FROM store").fetchone()[0]
-      #self.execute("UPDATE store SET current_resource=?", (storid,))
       self.execute("INSERT INTO resources VALUES (?,?)", (storid, iri))
       return storid
     
@@ -548,8 +536,6 @@ class Graph(BaseMainGraph):
   def commit(self):
     if self.current_changes != self.db.total_changes:
       self.current_changes = self.db.total_changes
-      #self.execute("UPDATE store SET current_blank=?, current_resource=?", (self.current_blank.value, self.current_resource.value))
-      #self.execute("UPDATE store SET current_blank=?", (self.current_blank.value,))
       self.db.commit()
 
   def context_2_user_context(self, c):
@@ -563,8 +549,6 @@ class Graph(BaseMainGraph):
     blank = self.execute("SELECT current_blank+1 FROM store").fetchone()[0]
     self.execute("UPDATE store SET current_blank=?", (blank,))
     return -blank
-    #self.current_blank.value += 1
-    #return -self.current_blank.value
     
   def _get_obj_triples_spo_spo(self, s, p, o):
     if s is None:
@@ -821,31 +805,6 @@ class Graph(BaseMainGraph):
     return self.execute("SELECT COUNT() FROM objs").fetchone()[0] + self.execute("SELECT COUNT() FROM datas").fetchone()[0]
 
   
-#  def get_equivs_s_o(self, s):
-#    for (x,) in self.execute("""
-#WITH RECURSIVE transit(x)
-#AS (  SELECT o FROM equivs WHERE s=?
-#UNION SELECT equivs.o FROM equivs, transit WHERE equivs.s=transit.x)
-#SELECT DISTINCT x FROM transit""", (s,)).fetchall(): yield x
-    
-    
-#   def _get_obj_triples_transitive_sp(self, s, p):
-#     for (x,) in self.execute("""
-# WITH RECURSIVE transit(x)
-# AS (      SELECT o FROM objs WHERE s=? AND p=?
-# UNION ALL SELECT objs.o FROM objs, transit WHERE objs.s=transit.x AND objs.p=?)
-# SELECT DISTINCT x FROM transit""", (s, p, p)).fetchall(): yield x
-
-
-    
-#   def _get_obj_triples_transitive_po(self, p, o):
-#     for (x,) in self.execute("""
-# WITH RECURSIVE transit(x)
-# AS (      SELECT s FROM objs WHERE p=? AND o=?
-# UNION ALL SELECT objs.s FROM objs, transit WHERE objs.p=? AND objs.o=transit.x)
-# SELECT DISTINCT x FROM transit""", (p, o, p)).fetchall(): yield x
-
-
 
 
   def _get_obj_triples_transitive_sp(self, s, p):
@@ -981,26 +940,6 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
     else:
       return self.execute("SELECT c, iri FROM ontologies").fetchall()
     
-  # def _iter_triples(self, quads = False, sort_by_s = False, c = None):
-  #   quad_cursor = self.db.cursor() # Use a new cursor => can iterate without loading all data in a big list, while still being able to query the default cursor
-  #   data_cursor = self.db.cursor() # Use a new cursor => can iterate without loading all data in a big list, while still being able to query the default cursor
-  #   sql = ""
-  #   if c:         sql += " WHERE c=%s" % c
-  #   if sort_by_s: sql += " ORDER BY s"
-
-  #   if quads:
-  #     quad_cursor.execute("SELECT s,p,o,NULL,c FROM quads %s" % sql)
-  #     data_cursor.execute("SELECT s,p,o,d,c FROM datas %s" % sql)
-  #   else:
-  #     quad_cursor.execute("SELECT s,p,o,NULL FROM quads %s" % sql)
-  #     data_cursor.execute("SELECT s,p,o,d FROM datas %s" % sql)
-      
-  #   if sort_by_s:
-  #     yield from group_iters(quad_cursor, data_cursor)
-  #   else:
-  #     yield from quad_cursor
-  #     yield from data_cursor
-      
   def _iter_triples(self, quads = False, sort_by_s = False, c = None):
     cursor = self.db.cursor() # Use a new cursor => can iterate without loading all data in a big list, while still being able to query the default cursor
     sql = ""
@@ -1016,26 +955,6 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
       
   def get_fts_prop_storid(self): return self.prop_fts
 
-#   def enable_full_text_search(self, prop_storid):
-#     self.prop_fts.add(prop_storid)
-    
-#     self.execute("""INSERT INTO prop_fts VALUES (?)""", (prop_storid,));
-    
-#     self.execute("""CREATE VIRTUAL TABLE fts_%s USING fts5(o, d, content=datas, content_rowid=rowid)""" % prop_storid)
-#     self.execute("""INSERT INTO fts_%s(rowid, o) SELECT rowid, o FROM datas WHERE p=%s""" % (prop_storid, prop_storid))
-    
-#     self.db.cursor().executescript("""
-# CREATE TRIGGER fts_%s_after_insert AFTER INSERT ON datas WHEN new.p=%s BEGIN
-#   INSERT INTO fts_%s(rowid, o) VALUES (new.rowid, new.o);
-# END;
-# CREATE TRIGGER fts_%s_after_delete AFTER DELETE ON datas WHEN old.p=%s BEGIN
-#   INSERT INTO fts_%s(fts_%s, rowid, o) VALUES('delete', old.rowid, old.o);
-# END;
-# CREATE TRIGGER fts_%s_after_update AFTER UPDATE ON datas WHEN new.p=%s BEGIN
-#   INSERT INTO fts_%s(fts_%s, rowid, o) VALUES('delete', new.rowid, new.o);
-#   INSERT INTO fts_%s(rowid, o) VALUES (new.rowid, new.o);
-# END;""" % (prop_storid, prop_storid, prop_storid,   prop_storid, prop_storid, prop_storid, prop_storid,   prop_storid, prop_storid, prop_storid, prop_storid, prop_storid))
-  
   def enable_full_text_search(self, prop_storid):
     self.prop_fts.add(prop_storid)
     
@@ -1478,10 +1397,6 @@ class _SearchMixin(list):
     if transits: sql = "WITH RECURSIVE %s %s" % (", ".join(transits), sql)
     return sql, params
     
-  # def _do_search(self):
-  #   sql, params = self.sql_request()
-  #   return (self.world._get_by_storid(o) for (o,) in self.world.graph.execute(sql, params).fetchall())
-  # _get_content = _do_search
   def _do_search(self):
     if self.has_bm25():
       sql, params = self.sql_request()
