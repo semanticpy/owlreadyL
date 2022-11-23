@@ -687,7 +687,9 @@ version 2 - 0.39
 version 2 - 0.40
 ****************
 * Update Log4J in Pellet for security purpose
-
+* Bugfixes:
+  - Add trailing / to ontology URL if missing
+    
     
 Links
 -----
