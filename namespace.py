@@ -1048,12 +1048,17 @@ class Ontology(Namespace, _GraphManager):
     if f.startswith("http:") or f.startswith("https:"):
       if  reload or (self.graph.get_last_update_time() == 0.0): # Never loaded
         if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
-        try:     fileobj = urllib.request.urlopen(url or f)
-        except:  raise OwlReadyOntologyParsingError("Cannot download '%s'!" % (url or f))
-        #try:     new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
-        #finally: fileobj.close()
         try:
-          #new_base_iri = self.graph.parse(fileobj, default_base = self._base_iri, **args)
+          fileobj = urllib.request.urlopen(url or f)
+        except:
+          if not ((url or f).endswith(".owl") or (url or f).endswith(".rdf") or (url or f).endswith("/")):
+            try:
+              fileobj = urllib.request.urlopen("%s/" % (url or f)) # Add missing trailing /, e.g. for https://spec.edmcouncil.org/fibo/ontology/master/latest/BE/LegalEntities/LegalPersons
+            except:
+              raise OwlReadyOntologyParsingError("Cannot download '%s/'!" % (url or f))
+          else:
+            raise OwlReadyOntologyParsingError("Cannot download '%s'!" % (url or f))
+        try:
           new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
         except OwlReadyOntologyParsingError:
           if f.endswith(".owl") or f.endswith(".rdf") or f.endswith(".xml") or url: raise
