@@ -61,7 +61,7 @@ class Namespace(object):
       
     self._base_iri = base_iri
     self.name      = name
-    
+
   def get_base_iri(self): return self._base_iri
   # def set_base_iri(self, new_base_iri, rename_entities = True):
   #   if rename_entities == False: raise ValueError("set_base_iri() with rename_entity=False is ontly supported on Ontology, not on Namespace. Please create a new Namespace.")
@@ -95,7 +95,7 @@ class Namespace(object):
       
   def __repr__(self): return """%s.get_namespace("%s")""" % (self.ontology, self._base_iri)
   
-  def __getattr__(self, attr): return self.world["%s%s" % (self._base_iri, attr)] #return self[attr]
+  def __getattr__(self, attr): return self.world["%s%s" % (self._base_iri, attr)]
   def __getitem__(self, name): return self.world["%s%s" % (self._base_iri, name)]
 
 class _GraphManager(object):
@@ -956,7 +956,7 @@ class Ontology(Namespace, _GraphManager):
   
   def destroy(self, update_relation = False, update_is_a = False):
     self.world.graph.acquire_write_lock()
-    
+        
     if update_relation:
       for s, p in self.graph.execute("""SELECT DISTINCT s, p FROM quads WHERE c=?""", (self.graph.c,)):
         entity = self.world._entities.get(s)

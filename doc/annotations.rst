@@ -174,6 +174,22 @@ These sublists contain normal string (not locstr), and they can be modified.
    
    >>> Drug.comment.en.append("A second English comment")
 
+The get_lang() method does the same (but is easier to call if the lang is in a variable):
+
+::
+
+   >>> lang = "fr"
+   >>> Drug.comment.get_lang(lang)
+   ['Un commentaire en Français']
+
+The get_lang_first() method return only the first language-specific string found (it is equivalent to get_lang().first()):
+
+::
+
+   >>> lang = "fr"
+   >>> Drug.comment.get_lang_first(lang)
+   'Un commentaire en Français'
+
 .. warning::
    
    Modifying the language-specific sublist will automatically update the list of values (and the quad store).

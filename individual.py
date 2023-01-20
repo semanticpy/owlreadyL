@@ -122,7 +122,7 @@ class Thing(metaclass = ThingClass):
       self.namespace = namespace or (CURRENT_NAMESPACES.get() and CURRENT_NAMESPACES.get()[-1]) or self.__class__.namespace
       iri = self.namespace.world._new_numbered_iri("%s%s" % (self.namespace._base_iri, self.generate_default_name()))
       self._name = iri[len(self.namespace._base_iri):]
-    
+
     if is_new:
       self.__dict__["_equivalent_to"] = None
       if isinstance(name, int): self.storid = name or self.namespace.world.graph.new_blank_node()
@@ -227,7 +227,7 @@ class Thing(metaclass = ThingClass):
     return self._equivalent_to
   
   def set_equivalent_to(self, value): self.equivalent_to.reinit(value)
-
+  
   # Cannot use property because it name-clashes with the Class similar property
   #equivalent_to = property(get_equivalent_to, set_equivalent_to)
   

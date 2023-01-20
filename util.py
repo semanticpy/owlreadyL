@@ -132,6 +132,21 @@ class CallbackListWithLanguage(CallbackList):
     return LanguageSublist(self, attr)
   get_lang = __getattr__
   
+  def get_lang_first(self, lang):
+    if lang.endswith("_any"):
+      shorter = lang[:-4]
+      for x in self:
+        if isinstance(x, locstr) and ((x.lang == shorter) or x.lang.startswith("%s_" % shorter) or x.lang.startswith("%s-" % shorter)): return str(x)
+    elif len(lang) > 3:
+      lang  = lang.casefold()
+      lang2 = lang.replace("_", "-").casefold()
+      for x in self:
+        if isinstance(x, locstr) and ((x.lang.casefold() == lang) or (x.lang.casefold() == lang2)): return str(x)
+    else:
+      for x in self:
+        if isinstance(x, locstr) and (x.lang == lang): return str(x)
+    return ""
+  
   def __setattr__(self, attr, values):
     if attr.startswith("_") or (len(attr) > 2):
       super.__setattr__(self, attr, values)

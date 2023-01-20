@@ -687,6 +687,7 @@ version 2 - 0.39
 version 2 - 0.40
 ****************
 * Update Log4J in Pellet for security purpose
+* Add get_lang_first() for annotations.
 * Bugfixes:
   - Add trailing / to ontology URL if missing
   - Fix Individual.is_a when loading ontologies with individuals belonging to two classes, one being the decsendant of the other
