@@ -169,7 +169,7 @@ _universal_abbrev_datatype(normstr, None, None, "http://www.w3.org/2001/XMLSchem
 _universal_abbrev_datatype(locstr, None, None, "http://www.w3.org/1999/02/22-rdf-syntax-ns#PlainLiteral")
 _universal_abbrev_datatype(datetime.datetime,
                            _parse_datetime,
-                           datetime.datetime.isoformat,
+                           lambda dt: datetime.datetime.isoformat(dt, timespec='seconds'),
                            "http://www.w3.org/2001/XMLSchema#dateTime")
 _universal_abbrev_datatype(datetime.date,
                            _parse_date,
