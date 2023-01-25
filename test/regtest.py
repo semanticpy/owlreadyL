@@ -602,30 +602,20 @@ class Test(BaseTest, unittest.TestCase):
     assert o.graph.get_last_update_time() != 0.0
     
   def test_ontology_23(self):
-    w = self.new_world()
-    o = w.get_ontology("http://test.org/test.owl")
+    world = self.new_world()
+    filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "test_gca.owl"))
+    onto = world.get_ontology("file://" + filename).load()
 
-    assert set(w.general_axioms()) == set()
-    assert set(o.general_axioms()) == set()
+    gcas = list(onto.general_class_axioms())
+    assert len(gcas) == 1
+    assert gcas[0].is_a == [onto.CriticalDisorder]
     
-    with o:
-      class C(Thing): pass
-      class p(ObjectProperty): pass
-      class D(Thing):
-        is_a = [p.some(C)]
-      class E(Thing): pass
+    with onto:
+      gca = GeneralClassAxiom(onto.Disorder & onto.has_location.some(onto.Heart)).is_a = [onto.CardiacDisorder]
       
-    assert set(w.general_axioms()) == set()
-    assert set(o.general_axioms()) == set()
-    
-    o._add_obj_triple_spo(-2, rdf_type, owl_restriction)
-    o._add_obj_triple_spo(-2, owl_onproperty, p.storid)
-    o._add_obj_triple_spo(-2, SOME, D.storid)
-    o._add_obj_triple_spo(-2, rdfs_subclassof, E.storid)
-
-    assert set(w.general_axioms()) == set([o._parse_bnode(-2)])
-    assert set(o.general_axioms()) == set([o._parse_bnode(-2)])
-    
+    gcas = list(onto.general_class_axioms())
+    assert len(gcas) == 2
+      
   def test_ontology_24(self):
     world = self.new_world()
     filename = os.path.abspath(os.path.join(os.path.dirname(__file__), "test.owl"))

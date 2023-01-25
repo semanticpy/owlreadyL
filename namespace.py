@@ -341,14 +341,6 @@ WHERE q1.p=? AND q1.o=?
       
   def disjoints(self): return itertools.chain(self.disjoint_classes(), self.disjoint_properties(), self.different_individuals())
   
-  def general_axioms(self):
-    for s in itertools.chain(self._get_obj_triples_po_s(rdf_type, owl_restriction),
-                             self._get_obj_triples_po_s(rdf_type, owl_class),
-                             ):
-      if s < 0:
-        sub = self._get_obj_triple_po_s(rdfs_subclassof, s)
-        if sub is None: yield self._parse_bnode(s)
-        
   def search(self, _use_str_as_loc_str = True, _case_sensitive = True, _bm25 = False, **kargs):
     from owlready2.triplelite import _SearchList, _SearchMixin
     
@@ -753,7 +745,8 @@ class World(_GraphManager):
         if isinstance(storid, int) and (storid < 0):
           full_iri = ""
           namespace = main_onto
-          name = storid
+          if main_type is ThingClass: name = str(storid)
+          else:                       name = storid
         else:
           full_iri = full_iri or self._unabbreviate(storid)
           splitted = full_iri.rsplit("#", 1)
@@ -832,6 +825,10 @@ class World(_GraphManager):
       if is_a_bnodes:
         list.extend(entity.is_a, (onto._parse_bnode(bnode) for onto, bnode in is_a_bnodes))
         
+      # print(storid, storid.__class__)
+      # if isinstance(storid, int) and (storid < 0) and (main_type is ThingClass):
+      #   list.append(entity.is_a, main_onto._parse_bnode(storid))
+        
     return entity
   
   def _parse_bnode(self, bnode):
@@ -840,7 +837,7 @@ class World(_GraphManager):
       c = c[0]
       for onto in self.ontologies.values():
         if onto.graph.c == c: return onto._parse_bnode(bnode)
-      
+        
   # def _del_obj_triple_spo(self, s = None, p = None, o = None, ensure_change = False):
   #   l = CURRENT_NAMESPACES.get()
   #   if l and ensure_change:
@@ -1166,7 +1163,10 @@ class Ontology(Namespace, _GraphManager):
     if _LOG_LEVEL:
       print("* Owlready2 *     ...%s properties found: %s" % (len(props), ", ".join(props)), file = sys.stderr)
       
-  
+  def general_class_axioms(self):
+    for s, in self.world.graph.execute("SELECT s FROM objs WHERE c=? and p=? and s<0", (self.graph.c, rdfs_subclassof,)):
+      yield owlready2.class_construct.GeneralClassAxiom(None, self, s)
+      
   def indirectly_imported_ontologies(self, already = None):
     already = already or set()
     if not self in already:
@@ -1354,7 +1354,7 @@ class Ontology(Namespace, _GraphManager):
             
           else: # Not a blank
             r = self.world._get_by_storid(bnode, main_onto = self)
-
+            
     self._bnodes[bnode] = r
     return r
 

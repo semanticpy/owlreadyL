@@ -209,13 +209,7 @@ class LogicalClassConstruct(ClassConstruct):
     for Class in self.Classes:
       if isinstance(Class, Construct): Class._set_ontology(ontology)
     super()._set_ontology(ontology)
-      
-  #def __getattr__(self, attr):
-  #  if attr == "Classes":
-  #    self.Classes = CallbackList(self.ontology._parse_list(self._list_bnode), self, LogicalClassConstruct._callback)
-  #    return self.Classes
-  #  return super().__getattribute__(attr)
-  
+    
   def get_Classes(self):
     if self._Classes is None: self._Classes = CallbackList(self.ontology._parse_list(self._list_bnode), self, LogicalClassConstruct._callback)
     return self._Classes
@@ -582,4 +576,49 @@ class ConstrainedDatatype(ClassConstruct):
       ontology._del_obj_triple_spo(bn, None, None)
       ontology._del_data_triple_spod(bn, None, None, None)
     ontology._del_list(self._list_bnode)
+    
+
+
+
+class GeneralClassAxiom(object):
+  def __init__(self, left_side, namespace = None, storid = None):
+    self.ontology = self.namespace = namespace or CURRENT_NAMESPACES.get()[-1]
+    if storid:
+      self.left_side = self.ontology._parse_bnode(storid)
+      _is_a = []
+      for c in self.ontology._get_obj_triples_sp_o(storid, rdfs_subclassof):
+        if c < 0: _is_a.append(self.ontology._parse_bnode(c))
+        else:     _is_a.append(self.ontology.world._get_by_storid(c, None, ThingClass, self.ontology))
+      object.__setattr__(self, "is_a", CallbackList(_is_a, self, self.__class__._is_a_changed))
+      
+    else:
+      self.left_side = left_side
+      object.__setattr__(self, "is_a", CallbackList([], self, self.__class__._is_a_changed))
+      
+  def __repr__(self): return "GeneralClassAxiom(%s)" % self.left_side
+  
+  def __setattr__(self, attr, value):
+    if attr == "is_a":
+      old = self.is_a
+      object.__setattr__(self, "is_a", CallbackList(value, self, self.__class__._is_a_changed))
+      self._is_a_changed(old)
+      return
+    
+    object.__setattr__(self, attr, value)
+    
+  def _is_a_changed(self, old):
+    new = set(self.is_a)
+    old = set(old)
+    
+    if   old and (not new): self.left_side._set_ontology(None)
+    elif (not old) and new: self.left_side._set_ontology(self.ontology)
+    
+    for c in old - new:
+      self.ontology._del_obj_triple_spo(self.left_side.storid, rdfs_subclassof, c.storid)
+      if isinstance(c, Construct): c._set_ontology(None)
+      
+    for c in new - old:
+      if isinstance(c, Construct): c = c._set_ontology_copy_if_needed(self.ontology, self.is_a)
+      if not LOADING: self.ontology._add_obj_triple_spo(self.left_side.storid, rdfs_subclassof, c.storid)
+      
     

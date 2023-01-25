@@ -686,6 +686,7 @@ version 2 - 0.39
     
 version 2 - 0.40
 ****************
+* General class axiom support
 * Update Log4J in Pellet for security purpose
 * Add get_lang_first() for annotations.
 * Bugfixes:
