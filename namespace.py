@@ -813,9 +813,9 @@ class World(_GraphManager):
         #elif len(types) >  1: Class = FusionClass._get_fusion_class(types)
         #else:                 Class = Thing
         #entity = Class(name, namespace = namespace)
-        if   len(types) == 1: entity = types[0](name, namespace = namespace)
-        elif len(types) >  1: entity = FusionClass._get_fusion_class(types)(name, namespace = namespace, is_a = types)
-        else:                 entity = Thing(name, namespace = namespace)
+        if   len(types) == 1: entity = types[0](name = name, namespace = namespace)
+        elif len(types) >  1: entity = FusionClass._get_fusion_class(types)(name = name, namespace = namespace, is_a = types)
+        else:                 entity = Thing(name = name, namespace = namespace)
         
         
       else:
