@@ -896,7 +896,6 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
       root = blank
       
     list_user, prop_user = self.execute("SELECT s, p FROM objs WHERE o=? LIMIT 1", (root,)).fetchone() or (None, None)
-    #if list_user: list_user = list_user[0]
     return list_user, prop_user, root, previouss, nexts, length
   
   def restore_iri(self, storid, iri):
@@ -908,19 +907,19 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
     destroyed_storids   = { storid }
     modified_relations  = defaultdict(set)
     self._destroy_collect_storids(destroyed_storids, modified_relations, storid)
-    
-    for s,p in self.execute("SELECT DISTINCT s,p FROM objs WHERE o IN (%s)" % ",".join(["?" for i in destroyed_storids]), tuple(destroyed_storids)):
+
+    args = ",".join(["?" for i in destroyed_storids])
+    for s,p in self.execute("SELECT DISTINCT s,p FROM objs WHERE o IN (%s)" % args, tuple(destroyed_storids)):
       if not s in destroyed_storids:
         modified_relations[s].add(p)
         
-    for p,o in self.execute("SELECT DISTINCT p,o FROM objs WHERE s IN (%s)" % ",".join(["?" for i in destroyed_storids]), tuple(destroyed_storids)):
+    for p,o in self.execute("SELECT DISTINCT p,o FROM objs WHERE s IN (%s)" % args, tuple(destroyed_storids)):
       if (o > 300) and (p > 300) and (not o in destroyed_storids):
         modified_relations[o].add(p)
-        
+
     # Two separate loops because high level destruction must be ended before removing from the quadstore (high level may need the quadstore)
     for storid in destroyed_storids:
       destroyer(storid)
-      
       
     for storid in destroyed_storids:
       if undoer_objs is not None:

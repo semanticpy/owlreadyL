@@ -960,8 +960,8 @@ def destroy_entity(e, undoable = False):
             for o2 in o.equivalent_to._indirect: o2._equivalent_to._indirect = None
             o._equivalent_to._indirect = None
         elif r == owl_equivalentclass:
-          if o._equivalent_to._indirect:
-            for o2 in o.equivalent_to._indirect: o2._equivalent_to._indirect = None
+          if o.equivalent_to._indirect:
+            for o2 in o._equivalent_to._indirect: o2._equivalent_to._indirect = None
             o._equivalent_to._indirect = None
           for Subclass in o.descendants(True, True): _FUNCTIONAL_FOR_CACHE.pop(Subclass, None)
           
@@ -1007,7 +1007,7 @@ def destroy_entity(e, undoable = False):
         for subclass in class_construct.subclasses(True):
           if   isinstance(subclass, EntityClass) or isinstance(subclass, Thing):
             subclass.is_a._append(class_construct)
-
+            
       for destroyed_storids, storid, relations in undoer_relations:  
         update_relation(destroyed_storids, storid, relations)
         

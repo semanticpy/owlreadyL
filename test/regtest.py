@@ -6387,7 +6387,8 @@ ask where
     c = C()
     d = datetime.datetime(2017, 4, 19, 11, 28, 0)
     c.has_datetime = d
-    self.assert_triple(c.storid, has_datetime.storid, "2017-04-19T11:28:00",  _universal_datatype_2_abbrev[datetime.datetime])
+
+    self.assert_triple(c.storid, has_datetime.storid, "2017-04-19T11:28:00.000",  _universal_datatype_2_abbrev[datetime.datetime])
     
     del c.has_datetime
     assert c.has_datetime == d
@@ -8524,10 +8525,10 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     
   def test_39(self):
     world, onto = self.prepare1()
-    onto.a1.annot = [datetime.datetime(2021, 2, 19, 10, 41, 3, 123456), datetime.date(2020, 9, 2)]
+    onto.a1.annot = [datetime.datetime(2021, 2, 19, 10, 41, 3, 123000), datetime.date(2020, 9, 2)]
     q, r = self.sparql(world, """SELECT  ?x (YEAR(?x) AS ?l1) (MONTH(?x) AS ?l2) (DAY(?x) AS ?l3) (HOURS(?x) AS ?l4) (MINUTES(?x) AS ?l5) (SECONDS(?x) AS ?l6) { onto:a1 onto:annot ?x . }""", compare_with_rdflib = False)
     assert len(r) == 2
-    assert { tuple(x) for x in r } == { (datetime.datetime(2021, 2, 19, 10, 41, 3, 123456), 2021, 2, 19, 10, 41, 3.123456), (datetime.date(2020, 9, 2), 2020, 9, 2, 0, 0, 0) }
+    assert { tuple(x) for x in r } == { (datetime.datetime(2021, 2, 19, 10, 41, 3, 123000), 2021, 2, 19, 10, 41, 3.123), (datetime.date(2020, 9, 2), 2020, 9, 2, 0, 0, 0.0) }
 
   def test_40(self):
     world, onto = self.prepare1()

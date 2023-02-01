@@ -350,10 +350,16 @@ class Restriction(ClassConstruct):
     if   attr == "value":
       if (self.type == SOME) or (self.type == ONLY) or (self.type == HAS_SELF):
         v = self.ontology._get_obj_triple_sp_o(self.storid, self.type)
-        v = self.__dict__["value"] = self.ontology.world._to_python(v, None, default_to_none = True)
+        if v is None:
+          v = self.__dict__["value"] = Thing
+        else:
+          v = self.__dict__["value"] = self.ontology.world._to_python(v, None, default_to_none = True)
       elif self.type == VALUE:
         v, d = self.ontology._get_triple_sp_od(self.storid, self.type)
-        v = self.__dict__["value"] = self.ontology.world._to_python(v, d, default_to_none = True)
+        if v is None:
+          v = self.__dict__["value"] = Thing
+        else:
+          v = self.__dict__["value"] = self.ontology.world._to_python(v, d, default_to_none = True)
       else:
         v = self.ontology._get_obj_triple_sp_o(self.storid, owl_onclass) or self.ontology._get_obj_triple_sp_o(self.storid, owl_ondatarange)
         if v is None:
