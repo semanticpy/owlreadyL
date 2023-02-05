@@ -47,6 +47,7 @@ Table of content
    world.rst
    sync.rst
    rule.rst
+   general_class_axioms.rst
    pymedtermino2.rst
    porting1.rst
    contact.rst

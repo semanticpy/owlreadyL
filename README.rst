@@ -686,13 +686,17 @@ version 2 - 0.39
     
 version 2 - 0.40
 ****************
+
 * General class axiom support
 * Update Log4J in Pellet for security purpose
 * Add get_lang_first() for annotations.
 * Bugfixes:
   - Add trailing / to ontology URL if missing
-  - Fix Individual.is_a when loading ontologies with individuals belonging to two classes, one being the decsendant of the other
-    
+  - Fix Individual.is_a when loading ontologies with individuals belonging to two classes, one being the descendant of the other
+  - Fix datetime to make them XSD-compatible (thanks Lukas Müller)
+  - Ensure that Things are properly initialized so that the __init__ method can be safely overwritten (thanks Lukas Müller)
+  - Fix destroy_entity()
+
     
 Links
 -----

@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="http://dl-learner.org/benchmark/dataset/animals#"
+    xml:base="http://dl-learner.org/benchmark/dataset/animals"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:xml="http://www.w3.org/XML/1998/namespace"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xmlns:animalsnew="http://dl-learner.org/benchmark/dataset/animals#">
+<owl:Ontology rdf:about="http://dl-learner.org/benchmark/dataset/animals"/>
+
+
+<!-- http://dl-learner.org/benchmark/dataset/animals#Animal -->
+
+<owl:Class rdf:about="http://dl-learner.org/benchmark/dataset/animals#Animal"/>
+
+
+<!-- http://dl-learner.org/benchmark/dataset/animals#HasEggs -->
+
+<owl:Class rdf:about="http://dl-learner.org/benchmark/dataset/animals#HasEggs">
+    <rdfs:subClassOf rdf:resource="http://dl-learner.org/benchmark/dataset/animals#Animal"/>
+</owl:Class>
+
+
+<!-- http://dl-learner.org/benchmark/dataset/animals#croco01 -->
+
+<owl:NamedIndividual rdf:about="http://dl-learner.org/benchmark/dataset/animals#croco01">
+    <rdf:type rdf:resource="http://dl-learner.org/benchmark/dataset/animals#Animal"/>
+    <rdf:type rdf:resource="http://dl-learner.org/benchmark/dataset/animals#HasEggs"/>
+</owl:NamedIndividual>
+
+</rdf:RDF>
