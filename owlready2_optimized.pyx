@@ -739,7 +739,6 @@ def parse_owlxml(object f, list objs, list datas, object insert_objs, object ins
       objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), stack[-1]))
       datas.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#hasSelf"), "true", _abbreviate("http://www.w3.org/2001/XMLSchema#boolean")))
       stack[-1] = iri
-      print("!!!", stack)
       
     elif (tag in card_restrs):
       iri = new_blank()
