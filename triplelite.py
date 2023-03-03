@@ -130,6 +130,27 @@ class Graph(BaseMainGraph):
     else:
       self.execute  = self.db.execute
       
+      
+      # import time
+      # def f(s, *args):
+      #   if "CREATE" in s: return self.db.execute(s, *args)
+      #   if "BEGIN" in s: return self.db.execute(s, *args)
+      #   if "END" in s: return self.db.execute(s, *args)
+      #   if "INSERT" in s: return self.db.execute(s, *args)
+        
+      #   t = time.perf_counter()
+      #   r = list(self.db.execute(s, *args))
+      #   t = time.perf_counter() - t
+      #   plan = "\n".join(d for a, b, c, d in list(self.db.execute("""EXPLAIN QUERY PLAN %s""" % s, *args)))
+      #   if ("BLOOM" in plan) and (t > 0.03):
+      #     print(s, t, args)
+      #     print(plan)
+      #     print()
+      #   return self.db.execute(s, *args)
+      # self.execute = f
+
+
+      
     self.c_2_onto          = {}
     self.onto_2_subgraph   = {}
     #self.last_numbered_iri = {}
@@ -394,7 +415,7 @@ class Graph(BaseMainGraph):
     
   def analyze(self):
     self.nb_added_triples = 0
-    
+
     if self.read_only: return
     if sqlite3.sqlite_version_info[1] < 33: return # ANALYZE sqlite_schema not supported
 
@@ -411,7 +432,13 @@ class Graph(BaseMainGraph):
     #self.db.execute("""PRAGMA cache_size = -200000""")
     nb_iris  = self.execute("""SELECT MAX(storid) FROM resources""" ).fetchone()[0] or 300
     
-    #print("ANALYZE", nb_datas, nb_objs)
+    #nb_datas, nb_objs, nb_iris = 1889602, 1469278, 457914
+    #nb_datas, nb_objs, nb_iris = 506257, 520138, 172489
+    #nb_datas, nb_objs, nb_iris = 1889602, 1069278, 172489
+
+    #print("ANALYZE", nb_datas, nb_objs, nb_iris)
+    #nb_p  = self.execute("""SELECT COUNT() FROM objs WHERE p=6 AND o IN (13,14,15)""" ).fetchone()[0] or 1
+    #print("NB p", nb_p)
     
     try:
       self.execute("""DELETE FROM sqlite_stat1""")
@@ -428,7 +455,20 @@ class Graph(BaseMainGraph):
 ('resources', 'index_resources_iri', '%s 1'),
 ('resources', 'resources', '%s 1')
 """ % (nb_objs, nb_objs, nb_datas, nb_datas, nb_iris, nb_iris))
+
+
+    
+    #self.execute(S)
+
+    
+    #self.execute("""PRAGMA analysis_limit = 100""")
+    #self.execute("""ANALYZE""")
     self.execute("""ANALYZE sqlite_schema""")
+    
+    #self.execute(""".testctrl optimizations 0x80000""")
+    
+    #for i in list(self.execute("SELECT * FROM sqlite_stat1")): print(i)
+    
     
   def set_indexed(self, indexed): pass
   
@@ -916,7 +956,7 @@ SELECT c, o FROM objs q1 WHERE s=? AND o < 0 AND (SELECT COUNT() FROM objs q2 WH
     for p,o in self.execute("SELECT DISTINCT p,o FROM objs WHERE s IN (%s)" % args, tuple(destroyed_storids)):
       if (o > 300) and (p > 300) and (not o in destroyed_storids):
         modified_relations[o].add(p)
-
+        
     # Two separate loops because high level destruction must be ended before removing from the quadstore (high level may need the quadstore)
     for storid in destroyed_storids:
       destroyer(storid)

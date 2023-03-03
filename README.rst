@@ -697,6 +697,12 @@ version 2 - 0.40
   - Ensure that Things are properly initialized so that the __init__ method can be safely overwritten (thanks Lukas Müller)
   - Fix destroy_entity()
 
+version 2 - 0.41
+****************
+
+* Bugfixes:
+  - Fix Class.INDIRECT_get_class_properties() with restriction on Inverse(Prop)
+    
     
 Links
 -----

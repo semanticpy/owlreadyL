@@ -5076,7 +5076,26 @@ I took a placebo
       A.p = [c2, c4]
 
     assert set(A.p) == { c2, c4 }
-        
+    
+  def test_class_prop_28(self):
+    w  = self.new_world()
+    o = w.get_ontology("http://test.org/o.owl")
+    
+    with o:
+      class A(Thing): pass
+      class C(Thing): pass
+      class C2(C): pass
+      class p(Thing >> Thing): pass
+      class p2(Thing >> Thing): pass
+      
+      C .is_a.append(Inverse(p ).some(A))
+      C2.is_a.append(Inverse(p2).some(A))
+
+    assert C.         get_class_properties() == { Inverse(p) }
+    assert C.INDIRECT_get_class_properties() == { Inverse(p) }
+    
+    assert C2.         get_class_properties() == { Inverse(p2) }
+    assert C2.INDIRECT_get_class_properties() == { Inverse(p ), Inverse(p2) }
     
   def test_format_1(self):
     from owlready2.triplelite import _guess_format
