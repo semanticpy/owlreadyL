@@ -357,6 +357,13 @@ def parse(f, on_prepare_obj = None, on_prepare_data = None, new_blank = None, de
       on_prepare_triple(iri, restrs[tag], objs[-1])
       objs[-1] = iri
       
+    elif (tag == "http://www.w3.org/2002/07/owl#ObjectHasSelf"):
+      iri = new_blank()
+      on_prepare_obj(iri, rdf_type, "http://www.w3.org/2002/07/owl#Restriction")
+      on_prepare_obj(iri, "http://www.w3.org/2002/07/owl#onProperty", objs[-1])
+      on_prepare_data(iri, "http://www.w3.org/2002/07/owl#hasSelf", "true", "http://www.w3.org/2001/XMLSchema#boolean")
+      objs[-1] = iri
+      
     elif (tag in card_restrs):
       iri = new_blank()
       on_prepare_obj(iri, rdf_type, "http://www.w3.org/2002/07/owl#Restriction")

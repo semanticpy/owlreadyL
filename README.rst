@@ -702,6 +702,7 @@ version 2 - 0.41
 
 * Bugfixes:
   - Fix Class.INDIRECT_get_class_properties() with restriction on Inverse(Prop)
+  - Fix Restriction of type HasSelf
     
     
 Links

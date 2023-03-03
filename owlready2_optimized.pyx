@@ -733,6 +733,14 @@ def parse_owlxml(object f, list objs, list datas, object insert_objs, object ins
       else:                            objs.append ((iri, _abbreviate(restrs[tag]), stack[-1]))
       stack[-1] = iri
       
+    elif (tag == "http://www.w3.org/2002/07/owl#ObjectHasSelf"):
+      iri = new_blank()
+      objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))
+      objs.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#onProperty"), stack[-1]))
+      datas.append((iri, _abbreviate("http://www.w3.org/2002/07/owl#hasSelf"), "true", _abbreviate("http://www.w3.org/2001/XMLSchema#boolean")))
+      stack[-1] = iri
+      print("!!!", stack)
+      
     elif (tag in card_restrs):
       iri = new_blank()
       objs.append((iri, _abbreviate(rdf_type), _abbreviate("http://www.w3.org/2002/07/owl#Restriction")))

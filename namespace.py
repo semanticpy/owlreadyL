@@ -1291,7 +1291,7 @@ class Ontology(Namespace, _GraphManager):
   def _parse_bnode(self, bnode):
     r = self._bnodes.get(bnode)
     if not r is None: return r
-    
+
     with LOADING:
       restriction_property = restriction_type = restriction_cardinality = Disjoint = members = on_datatype = with_restriction = None
       preds_objs = self._get_obj_triples_s_po(bnode)
@@ -1305,10 +1305,10 @@ class Ontology(Namespace, _GraphManager):
         
         elif pred == owl_onproperty: restriction_property = self._to_python(obj, None)
         
-        elif pred == SOME:      restriction_type = SOME;
-        elif pred == ONLY:      restriction_type = ONLY;
-        elif pred == VALUE:     restriction_type = VALUE;
-        elif pred == HAS_SELF:  restriction_type = HAS_SELF;
+        elif pred == SOME:      restriction_type = SOME
+        elif pred == ONLY:      restriction_type = ONLY
+        elif pred == VALUE:     restriction_type = VALUE
+        elif pred == HAS_SELF:  restriction_type = HAS_SELF
         
         elif pred == owl_oneof: r = OneOf(self._parse_list(obj), self, bnode); break
         
@@ -1342,6 +1342,7 @@ class Ontology(Namespace, _GraphManager):
             elif pred == EXACTLY:   restriction_type = EXACTLY; restriction_cardinality = self._to_python(obj, d)
             elif pred == MIN:       restriction_type = MIN;     restriction_cardinality = self._to_python(obj, d)
             elif pred == MAX:       restriction_type = MAX;     restriction_cardinality = self._to_python(obj, d)
+            elif pred == HAS_SELF:  restriction_type = HAS_SELF
             elif pred == owl_cardinality:     restriction_type = EXACTLY; restriction_cardinality = self._to_python(obj, d)
             elif pred == owl_min_cardinality: restriction_type = MIN;     restriction_cardinality = self._to_python(obj, d)
             elif pred == owl_max_cardinality: restriction_type = MAX;     restriction_cardinality = self._to_python(obj, d)

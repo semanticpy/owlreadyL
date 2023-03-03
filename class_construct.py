@@ -316,8 +316,10 @@ class Restriction(ClassConstruct):
   def __hash__(self): return hash((self.type, self.property, self.value, self.cardinality))
   
   def __repr__(self):
-    if (self.type == SOME) or (self.type == ONLY) or (self.type == VALUE) or (self.type == HAS_SELF):
+    if   (self.type == SOME) or (self.type == ONLY) or (self.type == VALUE):
       return """%s.%s(%s)""" % (self.property, _restriction_type_2_label[self.type], repr(self.value))
+    elif self.type == HAS_SELF:
+      return """%s.%s()""" % (self.property, _restriction_type_2_label[self.type])
     else:
       return """%s.%s(%s, %s)""" % (self.property, _restriction_type_2_label[self.type], self.cardinality, repr(self.value))
     
