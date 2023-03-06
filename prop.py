@@ -120,7 +120,6 @@ class PropertyClass(EntityClass):
       
       if issubclass(Prop, ObjectProperty):
         Prop._define_inverse_property()
-        
       return True
     
     if issubclass(Prop, ObjectProperty) and onto._has_obj_triple_spo(None, owl_inverse_property, Prop.storid):
@@ -924,8 +923,8 @@ def destroy_entity(e, undoable = False):
       
     for s in modified_entities:
       s = e.namespace.world._entities.get(s)
-      if s: delattr(s, e._python_name)
-        
+      if s and hasattr(s, e._python_name): delattr(s, e._python_name)
+      
     e.namespace.world._props          .pop(e._python_name, None)
     e.namespace.world._reasoning_props.pop(e._python_name, None)
     
