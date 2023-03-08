@@ -704,6 +704,7 @@ version 2 - 0.41
   - Fix Class.INDIRECT_get_class_properties() with restriction on Inverse(Prop)
   - Fix Restriction of type HasSelf
   - Fix delattr in destroy_entity()
+  - Fix blank nodes importation from RDFlib
     
     
 Links

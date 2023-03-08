@@ -6350,6 +6350,20 @@ ask where
     res4 = list(graph.query_owlready(rq_template.format("C2", "C1")))
     assert res4 == [False]
 
+  def test_rdflib_14(self):
+    node = rdflib.BNode()
+    graph_rdflib = rdflib.Graph()
+    graph_rdflib.add((node, rdflib.namespace.RDF.type, rdflib.namespace.OWL.Class))
+    
+    world = self.new_world()
+    graph_owlready = world.as_rdflib_graph()
+    
+    with world.get_ontology('http://test.org/t.owl'):
+      graph_owlready += graph_rdflib
+
+    assert len(world.graph) == 3
+    self.assert_triple(-1, rdf_type, owl_class, world = world)
+    
   def test_refactor_1(self):
     world = self.new_world()
     n = world.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test").load()

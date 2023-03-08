@@ -30,6 +30,7 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
   def __init__(self, world):
     self.world      = world
     self.triplelite = world.graph
+    self.non_int_bnode = {}
     super().__init__()
     
     self.__namespace = {}
@@ -57,10 +58,18 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
     elif isinstance(x, rdflib.term.BNode  ): return str(x)
     elif isinstance(x, rdflib.term.Literal): return x.toPython()
     
+  def _bnode_2_owlready(self, bnode):
+    try: return -int(bnode)
+    except:
+      bnode = str(bnode)
+      r = self.non_int_bnode.get(bnode)
+      if not r: r = self.non_int_bnode[bnode] = self.triplelite.new_blank_node()
+      return r
+    
   def _rdflib_2_owlready(self, spo):
     s,p,o = spo
     if   isinstance(s, rdflib.term.URIRef ): s = self.triplelite._abbreviate(str(s))
-    elif isinstance(s, rdflib.term.BNode  ): s = -int(s)
+    elif isinstance(s, rdflib.term.BNode  ): s = self._bnode_2_owlready(s)
     if   isinstance(p, rdflib.term.URIRef ): p = self.triplelite._abbreviate(str(p))
     if   isinstance(o, rdflib.term.URIRef ): o = self.triplelite._abbreviate(str(o)); d = None
     elif isinstance(o, rdflib.term.BNode  ): o = -int(o); d = None
@@ -208,7 +217,7 @@ class TripleLiteRDFlibGraph(rdflib.Graph):
       if isinstance(o, int):
         if o in _universal_abbrev_2_datatype: o = _universal_abbrev_2_datatype[o] 
     elif isinstance(o, rdflib.term.BNode  ):
-      o = (self.onto or self.store.world)._parse_bnode(-int(o))
+      o = (self.onto or self.store.world)._parse_bnode(self.store._bnode_2_owlready(o))
     elif isinstance(o, rdflib.term.Literal):
       if o.language is None:
         if o.datatype:
