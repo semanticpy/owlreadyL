@@ -17,3 +17,22 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+def execute_many(onto, prepared_queries, paramss):
+  if onto.world.graph.has_gevent:
+    from gevent.hub import get_hub
+    raws = get_hub().threadpool.apply(_execute_many_gevent, (onto, prepared_queries, paramss))
+    r = []
+    with onto:
+      for raw, q, params in zip(raws, prepared_queries, paramss):
+        r.append(q.execute(params, raw))
+    return r
+  else:
+    with onto:
+      r = [q.execute(params) for q, params in zip(prepared_queries, paramss)]
+    return r
+    
+def _execute_many_gevent(onto, prepared_queries, paramss):
+  #r = []
+  #for q, params in zip(prepared_queries, paramss):
+  #  r.append(q.execute_raw(params))
+  return [q.execute_raw(params).fetchall() for q, params in zip(prepared_queries, paramss)]  

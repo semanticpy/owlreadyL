@@ -111,26 +111,26 @@ class Translator(object):
       return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns), select_param_indexes)
     
     
-  def optimize_sql(self, sql, nb_sql_parameter):
-    plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql, (1,) * nb_sql_parameter))
+  # def optimize_sql(self, sql, nb_sql_parameter):
+  #   plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql, (1,) * nb_sql_parameter))
                 
-    has_automatic_index = False
-    for l in plan:
-      match = _RE_AUTOMATIC_INDEX.search(l[3])
-      if match:
-        table_name = match.group(1)
-        index_name = match.group(2)
-        table_type = self.table_name_2_type.get(table_name)
+  #   has_automatic_index = False
+  #   for l in plan:
+  #     match = _RE_AUTOMATIC_INDEX.search(l[3])
+  #     if match:
+  #       table_name = match.group(1)
+  #       index_name = match.group(2)
+  #       table_type = self.table_name_2_type.get(table_name)
         
-        if (table_type == "objs") or (table_type == "datas"):
-          if   index_name.startswith("s="): index_name = "index_%s_sp" % table_type
-          elif index_name.startswith("o="): index_name = "index_%s_op" % table_type
-          else: continue
+  #       if (table_type == "objs") or (table_type == "datas"):
+  #         if   index_name.startswith("s="): index_name = "index_%s_sp" % table_type
+  #         elif index_name.startswith("o="): index_name = "index_%s_op" % table_type
+  #         else: continue
           
-          print("OPTIMIZE!!!", l, table_type, table_name, "=>", index_name)
-          table_def = "%s %s" % (table_type, table_name)
-          sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
-    return sql
+  #         print("OPTIMIZE!!!", l, table_type, table_name, "=>", index_name)
+  #         table_def = "%s %s" % (table_type, table_name)
+  #         sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
+  #   return sql
     
   # def optimize_sql(self, sql):
   #   # Avoid Sqlite3 AUTOMATIC INDEX when a similar index can be used.
@@ -325,15 +325,17 @@ class PreparedQuery(object):
     self.nb_parameter        = nb_parameter
     self.parameter_datatypes = parameter_datatypes
     
-  def execute(self, params = ()):
+  def execute_raw(self, params = ()):
     self.world._nb_sparql_call += 1
     sql_params = [self.world._to_rdf(param)[0] for param in params]
     for i in self.parameter_datatypes: sql_params.append(self.world._to_rdf(params[i])[1])
     return self.world.graph.execute(self.sql, sql_params)
-  
+    #return self.world.graph.execute_long(self.sql, sql_params)
+    
 class PreparedSelectQuery(PreparedQuery):
-  def execute(self, params = ()):
-    for l in PreparedQuery.execute(self, params):
+  def execute(self, params = (), execute_raw_result = None):
+    if execute_raw_result is None: execute_raw_result = self.execute_raw(params)
+    for l in execute_raw_result:
       l2 = []
       i = 0
       while i < len(l):
@@ -351,7 +353,7 @@ class PreparedSelectQuery(PreparedQuery):
       yield l2
       
   def _execute_sql(self, params = ()):
-    for l in PreparedQuery.execute(self, params):
+    for l in self.execute_raw(params):
       l2 = []
       i = 0
       while i < len(l):
@@ -371,7 +373,7 @@ class PreparedSelectQuery(PreparedQuery):
       yield l2
       
   def execute_flat(self, params = ()):
-    for l in PreparedQuery.execute(self, params):
+    for l in self.execute_raw(params):
       i = 0
       while i < len(l):
         if self.column_types[i] == "objs":
@@ -393,7 +395,7 @@ class PreparedSelectQuery(PreparedQuery):
     f.writerow(col[1:] for col in self.column_names)
     rows = []
 
-    for l in PreparedQuery.execute(self, params):
+    for l in self.execute_raw(params):
       l2 = []
       i = 0
       while i < len(l):
@@ -420,7 +422,7 @@ class PreparedSelectQuery(PreparedQuery):
     colnames = [col[1:] for col in self.column_names]
     json = { "head" : { "vars" : colnames },
              "results" : { "bindings" : bindings } }
-    for l in PreparedQuery.execute(self, params):
+    for l in self.execute_raw(params):
       binding = {}
       bindings.append(binding)
       i = 0
@@ -458,7 +460,7 @@ class PreparedSelectQuery(PreparedQuery):
   <results>
 """
     
-    for l in PreparedQuery.execute(self, params):
+    for l in self.execute_raw(params):
       xml += """    <result>\n"""
       i = 0
       c = 0
@@ -490,7 +492,7 @@ class PreparedSelectQuery(PreparedQuery):
     return xml
   
   def execute_as_sql(self, params = ()):
-    for l in PreparedQuery.execute(self, params):
+    for l in self.execute_raw(params):
       l2 = []
       i = 0
       while i < len(l):
@@ -518,10 +520,16 @@ class PreparedModifyQuery(PreparedQuery):
     self.inserts  = inserts
     self.select_param_indexes = select_param_indexes
     
-  def execute(self, params = ()):
+  def execute_raw(self, params = ()):
+    if self.sql: return PreparedQuery.execute_raw(self, [params[i] for i in self.select_param_indexes])
+    else:        return [()]
+    
+  def execute(self, params = (), execute_raw_result = None):
     nb_match = 0
-    if self.sql: resultss = PreparedQuery.execute(self, [params[i] for i in self.select_param_indexes])
-    else:        resultss = [()]
+    #if self.sql: resultss = self.execute_raw([params[i] for i in self.select_param_indexes])
+    #else:        resultss = [()]
+    if execute_raw_result is None: resultss = self.execute_raw(params)
+    else:                          resultss = execute_raw_result
     
     added_triples = []
     for results in set(resultss):

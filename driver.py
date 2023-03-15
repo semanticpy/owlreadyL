@@ -145,7 +145,7 @@ class BaseSubGraph(BaseGraph):
         else:
           splitter = re.compile("\s")
           bn_src_2_sql = {}
-
+          
           line = f.readline().decode("utf8")
           while line:
             current_line += 1
@@ -158,9 +158,9 @@ class BaseSubGraph(BaseGraph):
                 bn = bn_src_2_sql.get(s)
                 if bn is None: bn = bn_src_2_sql[s] = new_blank()
                 s = bn
-              
+                
               p = p[1:-1]
-            
+              
               if   o.startswith("<"): on_prepare_obj(s, p, o[1:-1])
               elif o.startswith("_"):
                 bn = bn_src_2_sql.get(o)
@@ -178,7 +178,7 @@ class BaseSubGraph(BaseGraph):
                 on_prepare_data(s, p, o, d)
                 
             line = f.readline().decode("utf8")
-          
+            
         onto_base_iri = on_finish()
         
       except Exception as e:
@@ -188,7 +188,7 @@ class BaseSubGraph(BaseGraph):
           raise OwlReadyOntologyParsingError("NTriples parsing error (or unrecognized file format) in %s, line %s." % (getattr(f, "name", getattr(f, "url", "???")), current_line)) from e
         else:
           raise OwlReadyOntologyParsingError("NTriples parsing error (or unrecognized file format) in %s." % getattr(f, "name", getattr(f, "url", "???"))) from e
-          
+        
     elif format == "rdfxml":
       objs, datas, on_prepare_obj, on_prepare_data, insert_objs, insert_datas, new_blank, _abbreviate, on_finish = self.create_parse_func(getattr(f, "name", ""), delete_existing_triples)
       try:
