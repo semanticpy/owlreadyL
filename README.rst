@@ -706,7 +706,7 @@ version 2 - 0.41
   - Fix Restriction of type HasSelf
   - Fix delattr in destroy_entity()
   - Fix blank nodes importation from RDFlib
-  - Fix ' in FTS search
+  - Fix ' and - in FTS search
     
     
 Links
