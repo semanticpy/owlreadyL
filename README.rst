@@ -700,6 +700,7 @@ version 2 - 0.40
 version 2 - 0.41
 ****************
 
+* Parallelized huge OWL file parsing (about 25% faster on GO)
 * Bugfixes:
   - Fix Class.INDIRECT_get_class_properties() with restriction on Inverse(Prop)
   - Fix Restriction of type HasSelf

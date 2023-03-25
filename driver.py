@@ -39,6 +39,21 @@ if not owlready2_optimized:
 INT_DATATYPES   = { "http://www.w3.org/2001/XMLSchema#integer", "http://www.w3.org/2001/XMLSchema#byte", "http://www.w3.org/2001/XMLSchema#short", "http://www.w3.org/2001/XMLSchema#int", "http://www.w3.org/2001/XMLSchema#long", "http://www.w3.org/2001/XMLSchema#unsignedByte", "http://www.w3.org/2001/XMLSchema#unsignedShort", "http://www.w3.org/2001/XMLSchema#unsignedInt", "http://www.w3.org/2001/XMLSchema#unsignedLong", "http://www.w3.org/2001/XMLSchema#negativeInteger", "http://www.w3.org/2001/XMLSchema#nonNegativeInteger", "http://www.w3.org/2001/XMLSchema#positiveInteger" }
 FLOAT_DATATYPES = { "http://www.w3.org/2001/XMLSchema#decimal", "http://www.w3.org/2001/XMLSchema#double", "http://www.w3.org/2001/XMLSchema#float", "http://www.w3.org/2002/07/owl#real" }
 
+
+class _FakeQueue(object):
+  def __init__(self, insert_objs, insert_datas, finish):
+    self.insert_objs  = insert_objs
+    self.insert_datas = insert_datas
+    self.finish       = finish
+    
+  def put(self, args):
+    command, triples = args
+    if   command == "objs":   self.insert_objs(triples)
+    elif command == "datas":  self.insert_datas(triples)
+    elif command == "finish": return self.finish()
+    elif command == "error":  raise OwlReadyOntologyParsingError(*args)
+
+    
 class BaseGraph(object):
   _SUPPORT_CLONING = False
   #READ_METHODS  = ["_refactor", "_new_numbered_iri", "_abbreviate", "_unabbreviate",
@@ -135,52 +150,56 @@ class BaseSubGraph(BaseGraph):
     format = format or _guess_format(f)
     
     if   format == "ntriples":
-      objs, datas, on_prepare_obj, on_prepare_data, insert_objs, insert_datas, new_blank, _abbreviate, on_finish = self.create_parse_func(getattr(f, "name", ""), delete_existing_triples)
-      
+      current_line = 0
       try:
-        current_line = 0
-        if owlready2_optimized:
-          owlready2_optimized.parse_ntriples(f, objs, datas, insert_objs, insert_datas, _abbreviate, new_blank, default_base)
+        queue = _FakeQueue(*self.import_triples_from_queue(None, getattr(f, "name", ""), delete_existing_triples))
+        if  owlready2_optimized:
+          owlready2_optimized.parse_ntriples(f, queue, default_base, 800000)
           
         else:
           splitter = re.compile("\s")
-          bn_src_2_sql = {}
-          
-          line = f.readline().decode("utf8")
+          objs  = []
+          datas = []
+          line  = f.readline().decode("utf8")
           while line:
             current_line += 1
             if (not line.startswith("#")) and (not line.startswith("\n")):
-              if not line.endswith("\n"): line = "%s\n" % line
-              s,p,o = splitter.split(line[:-3], 2)
+              if not line.endswith("\n"): s,p,o = splitter.split(line[:-2], 2)
+              else:                       s,p,o = splitter.split(line[:-3], 2)
               
-              if   s.startswith("<"): s = s[1:-1]
-              elif s.startswith("_"):
-                bn = bn_src_2_sql.get(s)
-                if bn is None: bn = bn_src_2_sql[s] = new_blank()
-                s = bn
-                
+              if s.startswith("<"): s = s[1:-1]
+              
               p = p[1:-1]
               
-              if   o.startswith("<"): on_prepare_obj(s, p, o[1:-1])
-              elif o.startswith("_"):
-                bn = bn_src_2_sql.get(o)
-                if bn is None: bn = bn_src_2_sql[o] = new_blank()
-                on_prepare_obj(s, p, bn)
-              elif o.startswith('"'):
+              if   o.startswith("<"):
+                objs.append((s, p, o[1:-1]))
+                if len(objs) > 800000:
+                  queue.put(("objs", objs))
+                  objs = []
+                  
+              elif o.startswith("_"): objs.append((s, p, o))
+                
+              else: #if o.startswith('"'):
                 o, d = o.rsplit('"', 1)
                 if d.startswith("^"):
                   d = d[3:-1]
                   if   d in INT_DATATYPES:   o = int  (o[1:])
                   elif d in FLOAT_DATATYPES: o = float(o[1:])
                   else:                      o = o[1:].encode("raw-unicode-escape").decode("unicode-escape")
-                else:
-                  o = o[1:].encode("raw-unicode-escape").decode("unicode-escape")
-                on_prepare_data(s, p, o, d)
-                
+                elif d.startswith("@"):      o = o[1:].encode("raw-unicode-escape").decode("unicode-escape")
+                else:                        o = o[1:].encode("raw-unicode-escape").decode("unicode-escape"); d = ""
+                datas.append((s, p, o, d))
+                if len(datas) > 800000:
+                  queue.put(("datas", datas))
+                  datas = []
+                  
             line = f.readline().decode("utf8")
             
-        onto_base_iri = on_finish()
-        
+          if objs:  queue.put(("objs", objs))
+          if datas: queue.put(("datas", datas))
+          
+        onto_base_iri = queue.put(("finish", None))
+
       except Exception as e:
         if len(self) == 0:
           self._add_obj_triple_raw_spo(self.onto.storid, rdf_type, owl_ontology)
@@ -188,35 +207,78 @@ class BaseSubGraph(BaseGraph):
           raise OwlReadyOntologyParsingError("NTriples parsing error (or unrecognized file format) in %s, line %s." % (getattr(f, "name", getattr(f, "url", "???")), current_line)) from e
         else:
           raise OwlReadyOntologyParsingError("NTriples parsing error (or unrecognized file format) in %s." % getattr(f, "name", getattr(f, "url", "???"))) from e
+
         
-    elif format == "rdfxml":
-      objs, datas, on_prepare_obj, on_prepare_data, insert_objs, insert_datas, new_blank, _abbreviate, on_finish = self.create_parse_func(getattr(f, "name", ""), delete_existing_triples)
-      try:
-        if owlready2_optimized:
-          owlready2_optimized.parse_rdfxml(f, objs, datas, insert_objs, insert_datas, _abbreviate, new_blank, default_base)
-        else:
-          import owlready2.rdfxml_2_ntriples
-          owlready2.rdfxml_2_ntriples.parse(f, on_prepare_obj, on_prepare_data, new_blank, default_base)
-        onto_base_iri = on_finish()
-      except OwlReadyOntologyParsingError as e:
-        if len(self) == 0: self._add_obj_triple_raw_spo(self.onto.storid, rdf_type, owl_ontology)
-        raise e
-      
-    elif format == "owlxml":
-      objs, datas, on_prepare_obj, on_prepare_data, insert_objs, insert_datas, new_blank, _abbreviate, on_finish = self.create_parse_func(getattr(f, "name", ""), delete_existing_triples)
-      try:
-        if owlready2_optimized:
-          owlready2_optimized.parse_owlxml(f, objs, datas, insert_objs, insert_datas, _abbreviate, new_blank, default_base)
-        else:
-          import owlready2.owlxml_2_ntriples
-          owlready2.owlxml_2_ntriples.parse(f, on_prepare_obj, on_prepare_data, new_blank, default_base)
-        onto_base_iri = on_finish()
-      except OwlReadyOntologyParsingError as e:
-        if len(self) == 0: self._add_obj_triple_raw_spo(self.onto.storid, rdf_type, owl_ontology)
-        raise e
-      
     else:
-      raise ValueError("Unsupported format %s." % format)
+      queue = None
+      def do_parse(batch_size = 30000):
+        nonlocal queue
+        try:
+          if owlready2_optimized:
+            if format == "rdfxml": owlready2_optimized.parse_rdfxml(f, queue, default_base, batch_size)
+            else:                  owlready2_optimized.parse_owlxml(f, queue, default_base, batch_size)
+          else:
+            objs  = []
+            datas = []
+            def on_prepare_obj(*triple):
+              nonlocal objs
+              objs.append(triple)
+              if len(objs) > 30000: queue.put(("objs", objs));  objs = []
+            def on_prepare_data(*triple):
+              nonlocal datas
+              datas.append(triple)
+              if len(datas) > 30000: queue.put(("datas", datas)); datas = []
+            if format == "rdfxml":
+              import owlready2.rdfxml_2_ntriples
+              owlready2.rdfxml_2_ntriples.parse(f, on_prepare_obj, on_prepare_data, None, default_base)
+            else:
+              import owlready2.owlxml_2_ntriples
+              owlready2.owlxml_2_ntriples.parse(f, on_prepare_obj, on_prepare_data, None, default_base)
+              
+            if objs:  queue.put(("objs",  objs))
+            if datas: queue.put(("datas", datas))
+            
+          return queue.put(("finish", None))
+          
+        except Exception as e:
+          sys.excepthook(*sys.exc_info())
+          queue.put(("error", e.args))
+          
+      try:
+        parallel = os.path.getsize(f.name) > 7000000
+        if parallel: import multiprocessing
+      except:
+        parallel = False
+        
+      try:
+        if parallel:
+          queue = multiprocessing.Queue()
+          multiprocessing.Process(target = do_parse).start()
+          onto_base_iri = self.import_triples_from_queue(queue, getattr(f, "name", ""), delete_existing_triples)
+        else:
+          queue = _FakeQueue(*self.import_triples_from_queue(None, getattr(f, "name", ""), delete_existing_triples))
+          onto_base_iri = do_parse(800000)
+          
+      except OwlReadyOntologyParsingError as e:
+        if len(self) == 0: self._add_obj_triple_raw_spo(self.onto.storid, rdf_type, owl_ontology)
+        raise e
+      
+      
+    # elif format == "owlxml":
+    #   objs, datas, on_prepare_obj, on_prepare_data, insert_objs, insert_datas, new_blank, _abbreviate, on_finish = self.create_parse_func(getattr(f, "name", ""), delete_existing_triples)
+    #   try:
+    #     if owlready2_optimized:
+    #       owlready2_optimized.parse_owlxml(f, objs, datas, insert_objs, insert_datas, _abbreviate, new_blank, default_base)
+    #     else:
+    #       import owlready2.owlxml_2_ntriples
+    #       owlready2.owlxml_2_ntriples.parse(f, on_prepare_obj, on_prepare_data, new_blank, default_base)
+    #     onto_base_iri = on_finish()
+    #   except OwlReadyOntologyParsingError as e:
+    #     if len(self) == 0: self._add_obj_triple_raw_spo(self.onto.storid, rdf_type, owl_ontology)
+    #     raise e
+    
+    # else:
+    #   raise ValueError("Unsupported format %s." % format)
     
     return onto_base_iri
   

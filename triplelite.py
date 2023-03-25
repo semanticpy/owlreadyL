@@ -28,6 +28,9 @@ from owlready2.driver import _guess_format, _save
 from owlready2.util import FTS, _LazyListMixin
 from owlready2.base import _universal_abbrev_2_iri
 
+if sqlite3.sqlite_version == "3.41.2":
+  print("\nWarning: SQLite3 version 3.41.2 has a huge performance regression; please install version 3.41.1 or 3.42!\n", file = sys.stderr)
+
 def all_combinations(l):
   """returns all the combinations of the sublist in the given list (i.e. l[0] x l[1] x ... x l[n])."""
   if len(l) == 0: return ()
@@ -1088,68 +1091,51 @@ class SubGraph(BaseSubGraph):
     
     self.parent.onto_2_subgraph[onto] = self
     
-  def create_parse_func(self, filename = None, delete_existing_triples = True, datatype_attr = "http://www.w3.org/1999/02/22-rdf-syntax-ns#datatype"):
-    objs         = []
-    datas        = []
-    new_abbrevs  = []
-    
+  def import_triples_from_queue(self, queue, filename = None, delete_existing_triples = True):
     cur = self.db.cursor()
+    new_abbrevs = []
     
     if delete_existing_triples:
-      cur.execute("DELETE FROM objs WHERE c=?", (self.c,))
+      cur.execute("DELETE FROM objs WHERE c=?",  (self.c,))
       cur.execute("DELETE FROM datas WHERE c=?", (self.c,))
       
-    # Re-implement _abbreviate() for speed
-    abbrevs = {}
+    # Re-implement _abbreviate() for speed and blank node support
+    abbrevs = { "" : 0 }
     current_resource = max(self.execute("SELECT MAX(storid) FROM resources").fetchone()[0], 300) # First 300 values are reserved
     def _abbreviate(iri):
         nonlocal current_resource
         storid = abbrevs.get(iri)
-        if not storid is None: return storid
-        r = cur.execute("SELECT storid FROM resources WHERE iri=? LIMIT 1", (iri,)).fetchone()
-        if r:
-          abbrevs[iri] = r[0]
-          return r[0]
-        current_resource += 1
-        storid = current_resource
-        new_abbrevs.append((storid, iri))
-        abbrevs[iri] = storid
+        if storid is None:
+          if iri.startswith("_"): # A blank node
+            storid = abbrevs[iri] = self.parent.new_blank_node()
+          else:
+            r = cur.execute("SELECT storid FROM resources WHERE iri=? LIMIT 1", (iri,)).fetchone()
+            if r:
+              storid = abbrevs[iri] = r[0]
+            else:
+              current_resource += 1
+              storid = abbrevs[iri] = current_resource
+              new_abbrevs.append((storid, iri))
         return storid
       
-    def insert_objs():
-      nonlocal objs, new_abbrevs
-      if owlready2.namespace._LOG_LEVEL: print("* OwlReady2 * Importing %s object triples from ontology %s ..." % (len(objs), self.onto._base_iri), file = sys.stderr)
-      cur.executemany("INSERT INTO resources VALUES (?,?)", new_abbrevs)
+    if filename: date = os.path.getmtime(filename)
+    else:        date = time.time()
+    
+    def insert_objs(triples):
+      objs = [(_abbreviate(s), _abbreviate(p), _abbreviate(o)) for s, p, o in triples]
       cur.executemany("INSERT OR IGNORE INTO objs VALUES (%s,?,?,?)" % self.c, objs)
-      objs        .clear()
-      new_abbrevs .clear()
-      
-    def insert_datas():
-      nonlocal datas, new_abbrevs
-      if owlready2.namespace._LOG_LEVEL: print("* OwlReady2 * Importing %s data triples from ontology %s ..." % (len(datas), self.onto._base_iri), file = sys.stderr)
+      if new_abbrevs:
+        cur.executemany("INSERT INTO resources VALUES (?,?)", new_abbrevs)
+        new_abbrevs.clear()
+        
+    def insert_datas(triples):
+      datas = [(_abbreviate(s), _abbreviate(p), o, _abbreviate(d) if (d and (not d.startswith("@"))) else d or 0) for s, p, o, d in triples]
       cur.executemany("INSERT OR IGNORE INTO datas VALUES (%s,?,?,?,?)" % self.c, datas)
-      datas.clear()
-      
-    def on_prepare_obj(s, p, o):
-      if isinstance(s, str): s = _abbreviate(s)
-      if isinstance(o, str): o = _abbreviate(o)
-      objs.append((s, _abbreviate(p), o))
-      if len(objs) > 1000000: insert_objs()
-      
-    def on_prepare_data(s, p, o, d):
-      if isinstance(s, str): s = _abbreviate(s)
-      if d and (not d.startswith("@")): d = _abbreviate(d)
-      datas.append((s, _abbreviate(p), o, d or 0))
-      if len(datas) > 1000000: insert_datas()
-      
-      
-    def on_finish():
-      if filename: date = os.path.getmtime(filename)
-      else:        date = time.time()
-
-      insert_objs()
-      insert_datas()
-      
+      if new_abbrevs:
+        cur.executemany("INSERT INTO resources VALUES (?,?)", new_abbrevs)
+        new_abbrevs.clear()
+        
+    def finish():
       onto_base_iri = cur.execute("SELECT resources.iri FROM objs, resources WHERE objs.c=? AND objs.o=? AND resources.storid=objs.s LIMIT 1", (self.c, owl_ontology)).fetchone()
       if onto_base_iri: onto_base_iri = onto_base_iri[0]
       else:             onto_base_iri = ""
@@ -1164,13 +1150,26 @@ class SubGraph(BaseSubGraph):
         
       self.parent.select_abbreviate_method()
       self.parent.analyze()
-      
       return onto_base_iri
     
-    
-    return objs, datas, on_prepare_obj, on_prepare_data, insert_objs, insert_datas, self.parent.new_blank_node, _abbreviate, on_finish
-
-
+    if queue:
+      while True:
+        command, triples = queue.get()
+        
+        if   command == "objs":  insert_objs (triples)
+        elif command == "datas": insert_datas(triples)
+        
+        elif command == "finish":
+          return finish()
+          break
+        
+        elif command == "error":
+          import owlready2
+          raise owlready2.OwlReadyOntologyParsingError(*triples)
+        
+    else:
+      return insert_objs, insert_datas, finish
+      
   def context_2_user_context(self, c): return self.parent.context_2_user_context(c)
  
   def add_ontology_alias(self, iri, alias):
