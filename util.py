@@ -20,8 +20,8 @@
 #def _int_base_62(i):
 #  if i == 0: return ""
 #  return _int_base_62(i // 62) + "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"[i % 62]
-  
-  
+
+
 class FTS(str):
   __slots__ = ["lang"]
   def __new__(Class, s, lang = ""): return str.__new__(Class, s.replace("'", '''"'"''').replace("-", '''"-"''').replace("+", '''"+"'''))
