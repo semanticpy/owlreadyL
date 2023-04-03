@@ -17,22 +17,31 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-def execute_many(onto, prepared_queries, paramss):
+def execute_many(onto, prepared_queries, paramss, multiple_threads = True):
   if onto.world.graph.has_gevent:
+    if onto.world.graph.has_changes():
+      raise RuntimeError("Cannot execute parallelized queries on uncommited database. Please call World.save() before.")
+    
     from gevent.hub import get_hub
-    raws = get_hub().threadpool.apply(_execute_many_gevent, (onto, prepared_queries, paramss))
-    r = []
+    
+    import _thread
+    lock = _thread.allocate_lock()
+    def f(_dropit):
+      try:
+        with onto.world.graph.connexion_pool.get() as db:
+          while True:
+            with lock: i = args.pop()
+            raws[i] = prepared_queries[i].execute_raw_with_db(paramss[i], db).fetchall()
+      except IndexError: return
+      
+    args = list(range(len(prepared_queries)))
+    raws = [None] * len(prepared_queries)
+    get_hub().threadpool.map(f, [None, None, None])
+        
     with onto:
-      for raw, q, params in zip(raws, prepared_queries, paramss):
-        r.append(q.execute(params, raw))
-    return r
+      return [q.execute(params, raw) for raw, q, params in zip(raws, prepared_queries, paramss)]
+    
   else:
     with onto:
-      r = [q.execute(params) for q, params in zip(prepared_queries, paramss)]
-    return r
-    
-def _execute_many_gevent(onto, prepared_queries, paramss):
-  #r = []
-  #for q, params in zip(prepared_queries, paramss):
-  #  r.append(q.execute_raw(params))
-  return [q.execute_raw(params).fetchall() for q, params in zip(prepared_queries, paramss)]  
+      return [q.execute(params) for q, params in zip(prepared_queries, paramss)]
+

@@ -45,14 +45,17 @@ class _Connexion(object):
     self.pool = pool
     self.db   = sqlite3.connect(uri, check_same_thread = False, uri = True)
     self.execute = self.db.execute
+    #self.execute("PRAGMA journal_mode=WAL")
+    #self.execute("PRAGMA read_uncommitted=1")
     
   def __enter__(self): return self
   def __exit__(self, exc_type = None, exc_val = None, exc_tb = None): self.pool.queue.put(self)
     
 class _ConnexionPool(object):
   def __init__(self, uri, nb_connexion = 3):
-    import gevent.queue
-    self.queue = gevent.queue.Queue()
+    #import gevent.queue; self.queue = gevent.queue.Queue()
+    import queue; self.queue = queue.Queue()
+    #import multiprocessing; self.queue = multiprocessing.Queue()
     for i in range(nb_connexion): self.queue.put(_Connexion(self, uri))
     self.get = self.queue.get
     
@@ -166,36 +169,14 @@ class Graph(BaseMainGraph):
     else:
       self.execute  = self.db.execute
       
-      # import time
-      # def f(s, *args):
-      #   if "CREATE" in s: return self.db.execute(s, *args)
-      #   if "BEGIN" in s: return self.db.execute(s, *args)
-      #   if "END" in s: return self.db.execute(s, *args)
-      #   if "INSERT" in s: return self.db.execute(s, *args)
-        
-      #   t = time.perf_counter()
-      #   r = list(self.db.execute(s, *args))
-      #   t = time.perf_counter() - t
-      #   plan = "\n".join(d for a, b, c, d in list(self.db.execute("""EXPLAIN QUERY PLAN %s""" % s, *args)))
-      #   if ("BLOOM" in plan) and (t > 0.03):
-      #     print(s, t, args)
-      #     print(plan)
-      #     print()
-      #   return self.db.execute(s, *args)
-      # self.execute = f
-      
+    self.has_gevent = enable_gevent
     if enable_gevent:
+      import gevent.hub
       self.has_gevent = True
       if exclusive: raise ValueError("Cannot enable GEvent with exclusive mode! Please add 'exclusive=False'.")
       self.connexion_pool  = _ConnexionPool(uri)
-      self.execute_long    = self.execute_long_with_gevent
-      import gevent.hub
       self._get_gevent_hub = gevent.hub.get_hub
-      
-    else:
-      self.has_gevent = False
-      self.execute_long = self.execute
-      
+        
       
     self.c_2_onto          = {}
     self.onto_2_subgraph   = {}
@@ -456,16 +437,20 @@ class Graph(BaseMainGraph):
       
       self.analyze()
       
+    # Unindexed table for deprioritizing SPARQL subqueries
+    self.execute("""CREATE TEMP TABLE one (i INTEGER)""")
+    self.execute("""INSERT INTO one VALUES (1)""")
+    
     self.current_changes = self.db.total_changes
     self.select_abbreviate_method()
-
+    
   def execute_long_with_gevent(self, sql, args = ()):
     with self.connexion_pool.get() as db:
       return self._get_gevent_hub().threadpool.apply(db.execute, (sql, args))
     
   def analyze(self):
     self.nb_added_triples = 0
-
+    
     if self.read_only: return
     if sqlite3.sqlite_version_info[1] < 33: return # ANALYZE sqlite_schema not supported
 
@@ -508,16 +493,9 @@ class Graph(BaseMainGraph):
 
 
     
-    #self.execute(S)
-
-    
     #self.execute("""PRAGMA analysis_limit = 100""")
     #self.execute("""ANALYZE""")
     self.execute("""ANALYZE sqlite_schema""")
-    
-    #self.execute(""".testctrl optimizations 0x80000""")
-    
-    #for i in list(self.execute("SELECT * FROM sqlite_stat1")): print(i)
     
     
   def set_indexed(self, indexed): pass
@@ -623,6 +601,8 @@ class Graph(BaseMainGraph):
       self.execute("UPDATE resources SET iri=?||SUBSTR(iri,?) WHERE SUBSTR(iri,1,?)=? AND (NOT INSTR(SUBSTR(iri,?), '/')) AND (NOT INSTR(SUBSTR(iri,?), '#'))", (new_base_iri, len(old_base_iri) + 1, len(old_base_iri), old_base_iri, len(old_base_iri) + 1, len(old_base_iri) + 1))
       
     
+  def has_changes(self): return self.current_changes != self.db.total_changes
+
   def commit(self):
     if self.current_changes != self.db.total_changes:
       self.current_changes = self.db.total_changes
@@ -1486,7 +1466,7 @@ class _SearchMixin(list):
     if self.has_bm25():
       sql, params = self.sql_request()
       o_2_bm25 = {}
-      for (o, bm25) in self.world.graph.execute_long(sql, params).fetchall():
+      for (o, bm25) in self.world.graph.execute(sql, params).fetchall():
         if o in o_2_bm25:
           o_2_bm25[o] = min(bm25, o_2_bm25[o])
         else:
@@ -1495,16 +1475,16 @@ class _SearchMixin(list):
       return ((self.world._get_by_storid(o), bm25) for (o, bm25) in os_bm25s)
     else:
       sql, params = self.sql_request()
-      return (self.world._get_by_storid(o) for (o,) in self.world.graph.execute_long(sql, params).fetchall())
+      return (self.world._get_by_storid(o) for (o,) in self.world.graph.execute(sql, params).fetchall())
   _get_content = _do_search  
 
   def _do_search_rdf(self):
     sql, params = self.sql_request()
-    return self.world.graph.execute_long(sql, params).fetchall()
+    return self.world.graph.execute(sql, params).fetchall()
   
   def first(self):
     sql, params = self.sql_request()
-    o = self.world.graph.execute_long(sql, params).fetchone()
+    o = self.world.graph.execute(sql, params).fetchone()
     if o: return self.world._get_by_storid(o[0])
     
   def has_bm25(self): return False
@@ -1512,7 +1492,7 @@ class _SearchMixin(list):
   def __len__(self):
     sql, params = self.sql_request()
     sql =  "SELECT COUNT() FROM (%s)" % sql
-    return self.world.graph.execute_long(sql, params).fetchone()[0]
+    return self.world.graph.execute(sql, params).fetchone()[0]
         
       
 class _PopulatedSearchList(FirstList):
@@ -1962,7 +1942,7 @@ class _IntersectionSearchList(FirstList, _SearchMixin, _LazyListMixin):
     first = True
     for search in self.searches:
       sql, params = search.sql_request()
-      r1 = self.world.graph.execute_long(sql, params).fetchall()
+      r1 = self.world.graph.execute(sql, params).fetchall()
       if first:
         r.update(r1)
         first = False

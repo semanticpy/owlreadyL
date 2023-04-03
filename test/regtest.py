@@ -17,6 +17,7 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import owlready2, owlready2.util
 from owlready2 import *
 from owlready2.base import _universal_abbrev_2_datatype, _universal_datatype_2_abbrev
+import owlready2.sparql
 
 from owlready2.ntriples_diff import *
 
@@ -101,9 +102,9 @@ class BaseTest(object):
     TMPFILES.append(filename)
     return filename
     
-  def new_world(self):
+  def new_world(self, exclusive = True, enable_gevent = False):
     filename = self.new_tmp_file()
-    world = World(filename = filename)
+    world = World(filename = filename, exclusive = exclusive, enable_gevent = enable_gevent)
           
     return world
   
@@ -7929,7 +7930,85 @@ for i in range(500):
     
     s = world.graph.execute("SELECT MAX(storid) FROM resources").fetchone()[0]
     assert s == 300 + 4 + 200 * NB
+    
+  def test_parallel_6(self):
+    world = self.new_world(exclusive = False, enable_gevent = True)
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      for i in range(1000): c = C(label = "C item %s" % (i + 1))
+    world.save()
+    
+    qs = []
+    for i in range(10):
+      for j in range(10):
+        q = world.prepare_sparql("""SELECT ?x { ?x rdfs:label ?l . FILTER(LIKE(?l, "C item %s%%%s")) }""" % (i, j))
+        qs.append(q)
+        
+    for q in qs:list(q.execute())
+    
+    r = [list(i) for i in owlready2.sparql.execute_many(onto, qs, [[]] * len(qs))]
+    
+    #qs = qs * 9
+    
+    r1 = []
+    t = time.time()
+    for q in qs: r1.append(list(q.execute()))
+    t_mono = time.time() - t
+    
+    t = time.time()
+    r2 = [list(i) for i in owlready2.sparql.execute_many(onto, qs, [[]] * len(qs))]
+    t_para = time.time() - t
+    print("%s s VS %s s with parallelization" % (t_mono, t_para))
+    
+    assert r1 == r2
+    assert t_para < t_mono
+    
+  def test_parallel_7(self):
+    world = World(filename = "/home/jiba/tmp/pym.sqlite3", exclusive = False, enable_gevent = True)
+    #q = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a owl:Class . }""")
+    q0 = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a* owl:ObjectProperty . }""")
+    q1 = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a* owl:AnnotationProperty . }""")
+    q2 = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a* owl:DatatypeProperty . }""")
+    
+    def task0(x = None): return list(q0.execute())
+      
+    def task0_para(x = None): return list(q0.execute(parallel = True))
+    
+    def task1(x = None): return list(q1.execute())
+      
+    def task1_para(x = None): return list(q1.execute(parallel = True))
+      
+    def task2(x = None): return list(q2.execute())
+      
+    def task2_para(x = None): return list(q2.execute(parallel = True))
+      
+    def task3(x = None):
+      for i in range(150000): 2+3
+      
+    import gevent
+    
+    t = time.time()
+    g1 = gevent.spawn(task1)
+    g2 = gevent.spawn(task3)
+    r1 = g1.get()
+    r2 = g2.get()
+    t_mono = time.time() - t
+    
+    gevent.spawn(task0_para).join()
+    
+    t = time.time()
+    g1 = gevent.spawn(task1_para)
+    g2 = gevent.spawn(task3)
+    r1_para = g1.get()
+    r2_para = g2.get()
+    t_para = time.time() - t
+    print(t_para)
+    
+    print("%s s VS %s s with parallelization" % (t_mono, t_para))
 
+    assert r1_para == r1
+    #assert t_para < t_mono
     
     
 class Paper(BaseTest, unittest.TestCase):
@@ -10025,7 +10104,6 @@ SELECT ?x WHERE { ?x a onto:Cé }
     with onto:
       q, r = self.sparql(world, """INSERT { onto:C rdfs:label "ok" } WHERE { FILTER NOT EXISTS { onto:c1 rdfs:label ?x } }""", compare_with_rdflib = True)
     assert C.label == ["ok"]
-    
     
     
     

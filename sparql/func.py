@@ -75,6 +75,7 @@ _FUNC_2_DATATYPE = {
   "ISLITERAL" : _universal_datatype_2_abbrev[bool], # ok
   "ISNUMERIC" : _universal_datatype_2_abbrev[bool], # ok
   "REGEX" : _universal_datatype_2_abbrev[bool],
+  "LIKE" : _universal_datatype_2_abbrev[bool],
   #"SUBSTR" :  # ok
   #"REPLACE" :  # ok
   #"SIMPLEREPLACE" :  # ok
@@ -262,10 +263,6 @@ def register_python_builtin_functions(world):
   create_function("bnode",          -1, func._bnode)
   create_function("newinstanceiri",  1, func._newinstanceiri)
   create_function("loaded",          1, func._loaded)
-  
-  # Unindexed table for deprioritizing subqueries
-  world.graph.execute("""CREATE TEMP TABLE one (i INTEGER)""")
-  world.graph.execute("""INSERT INTO one VALUES (1)""")
 
 class FuncSupport(object):
   def parse_expression(self, expression):
@@ -276,6 +273,8 @@ class FuncSupport(object):
           func = expression[0].value.upper()
           if   func == "CONTAINS":
             return "(INSTR(%s)!=0)" % self.parse_expression(expression[2])
+          elif func == "LIKE":
+            return "(%s LIKE %s)" % (self.parse_expression(expression[2][0]), self.parse_expression(expression[2][2]))
           elif func == "STRSTARTS":
             x     = self.parse_expression(expression[2][0])
             start = self.parse_expression(expression[2][2]).strip()

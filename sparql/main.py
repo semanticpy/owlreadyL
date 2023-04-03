@@ -325,16 +325,22 @@ class PreparedQuery(object):
     self.nb_parameter        = nb_parameter
     self.parameter_datatypes = parameter_datatypes
     
-  def execute_raw(self, params = ()):
+  def execute_raw(self, params = (), parallel = False):
     self.world._nb_sparql_call += 1
     sql_params = [self.world._to_rdf(param)[0] for param in params]
     for i in self.parameter_datatypes: sql_params.append(self.world._to_rdf(params[i])[1])
-    return self.world.graph.execute(self.sql, sql_params)
-    #return self.world.graph.execute_long(self.sql, sql_params)
+    if parallel: return self.world.graph.execute_long_with_gevent(self.sql, sql_params)
+    else:        return self.world.graph.execute                 (self.sql, sql_params)
     
+  def execute_raw_with_db(self, params, db):
+    self.world._nb_sparql_call += 1
+    sql_params = [self.world._to_rdf(param)[0] for param in params]
+    for i in self.parameter_datatypes: sql_params.append(self.world._to_rdf(params[i])[1])
+    return db.execute(self.sql, sql_params)
+  
 class PreparedSelectQuery(PreparedQuery):
-  def execute(self, params = (), execute_raw_result = None):
-    if execute_raw_result is None: execute_raw_result = self.execute_raw(params)
+  def execute(self, params = (), execute_raw_result = None, parallel = False):
+    if execute_raw_result is None: execute_raw_result = self.execute_raw(params, parallel)
     for l in execute_raw_result:
       l2 = []
       i = 0
@@ -352,8 +358,8 @@ class PreparedSelectQuery(PreparedQuery):
           i += 2
       yield l2
       
-  def _execute_sql(self, params = ()):
-    for l in self.execute_raw(params):
+  def _execute_sql(self, params = (), parallel = False):
+    for l in self.execute_raw(params, parallel):
       l2 = []
       i = 0
       while i < len(l):
@@ -372,8 +378,8 @@ class PreparedSelectQuery(PreparedQuery):
           i += 2
       yield l2
       
-  def execute_flat(self, params = ()):
-    for l in self.execute_raw(params):
+  def execute_flat(self, params = (), parallel = False):
+    for l in self.execute_raw(params, parallel):
       i = 0
       while i < len(l):
         if self.column_types[i] == "objs":
@@ -388,14 +394,14 @@ class PreparedSelectQuery(PreparedQuery):
             yield self.world._to_python(l[i], l[i + 1])
           i += 2
           
-  def execute_csv(self, params = (), separator = ","):
+  def execute_csv(self, params = (), separator = ",", parallel = False):
     import csv, io
     b = io.StringIO()
     f = csv.writer(b, delimiter = separator)
     f.writerow(col[1:] for col in self.column_names)
     rows = []
 
-    for l in self.execute_raw(params):
+    for l in self.execute_raw(params, parallel):
       l2 = []
       i = 0
       while i < len(l):
@@ -415,14 +421,14 @@ class PreparedSelectQuery(PreparedQuery):
       f.writerow(l2)
     return b.getvalue()
   
-  def execute_tsv(self, params = ()): return self.execute_csv(params, "\t")
+  def execute_tsv(self, params = (), parallel = False): return self.execute_csv(params, "\t", parallel)
 
-  def execute_json(self, params = ()):
+  def execute_json(self, params = (), parallel = False):
     bindings = []
     colnames = [col[1:] for col in self.column_names]
     json = { "head" : { "vars" : colnames },
              "results" : { "bindings" : bindings } }
-    for l in self.execute_raw(params):
+    for l in self.execute_raw(params, parallel):
       binding = {}
       bindings.append(binding)
       i = 0
@@ -447,7 +453,7 @@ class PreparedSelectQuery(PreparedQuery):
         c += 1
     return repr(json)
 
-  def execute_xml(self, params = ()):
+  def execute_xml(self, params = (), parallel = False):
     bindings = []
     colnames = [col[1:] for col in self.column_names]
     xml = """<?xml version="1.0"?>
@@ -460,7 +466,7 @@ class PreparedSelectQuery(PreparedQuery):
   <results>
 """
     
-    for l in self.execute_raw(params):
+    for l in self.execute_raw(params, parallel):
       xml += """    <result>\n"""
       i = 0
       c = 0
@@ -491,8 +497,8 @@ class PreparedSelectQuery(PreparedQuery):
 """
     return xml
   
-  def execute_as_sql(self, params = ()):
-    for l in self.execute_raw(params):
+  def execute_as_sql(self, params = (), parallel = False):
+    for l in self.execute_raw(params, parallel):
       l2 = []
       i = 0
       while i < len(l):
@@ -520,15 +526,17 @@ class PreparedModifyQuery(PreparedQuery):
     self.inserts  = inserts
     self.select_param_indexes = select_param_indexes
     
-  def execute_raw(self, params = ()):
-    if self.sql: return PreparedQuery.execute_raw(self, [params[i] for i in self.select_param_indexes])
+  def execute_raw(self, params = (), parallel = False):
+    if self.sql: return PreparedQuery.execute_raw(self, [params[i] for i in self.select_param_indexes], parallel)
     else:        return [()]
     
-  def execute(self, params = (), execute_raw_result = None):
+  def execute_raw_with_db(self, params, db):
+    if self.sql: return PreparedQuery.execute_raw_with_db(self, [params[i] for i in self.select_param_indexes], db)
+    else:        return [()]
+    
+  def execute(self, params = (), execute_raw_result = None, parallel = False):
     nb_match = 0
-    #if self.sql: resultss = self.execute_raw([params[i] for i in self.select_param_indexes])
-    #else:        resultss = [()]
-    if execute_raw_result is None: resultss = self.execute_raw(params)
+    if execute_raw_result is None: resultss = self.execute_raw(params, parallel)
     else:                          resultss = execute_raw_result
     
     added_triples = []

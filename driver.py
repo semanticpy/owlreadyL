@@ -52,7 +52,7 @@ class _FakeQueue(object):
     elif command == "datas":  self.insert_datas(triples)
     elif command == "finish": return self.finish()
     elif command == "error":  raise OwlReadyOntologyParsingError(*args)
-
+    
     
 class BaseGraph(object):
   _SUPPORT_CLONING = False
@@ -215,8 +215,8 @@ class BaseSubGraph(BaseGraph):
         nonlocal queue
         try:
           if owlready2_optimized:
-            if format == "rdfxml": owlready2_optimized.parse_rdfxml(f, queue, default_base, batch_size)
-            else:                  owlready2_optimized.parse_owlxml(f, queue, default_base, batch_size)
+            if   format == "rdfxml": owlready2_optimized.parse_rdfxml(f, queue, default_base, batch_size)
+            elif format == "owlxml": owlready2_optimized.parse_owlxml(f, queue, default_base, batch_size)
           else:
             objs  = []
             datas = []
@@ -245,7 +245,7 @@ class BaseSubGraph(BaseGraph):
           queue.put(("error", e.args))
           
       try:
-        parallel = os.path.getsize(f.name) > 7000000
+        parallel = os.path.getsize(f.name) >= 8000000
         if parallel: import multiprocessing
       except:
         parallel = False
@@ -262,23 +262,6 @@ class BaseSubGraph(BaseGraph):
       except OwlReadyOntologyParsingError as e:
         if len(self) == 0: self._add_obj_triple_raw_spo(self.onto.storid, rdf_type, owl_ontology)
         raise e
-      
-      
-    # elif format == "owlxml":
-    #   objs, datas, on_prepare_obj, on_prepare_data, insert_objs, insert_datas, new_blank, _abbreviate, on_finish = self.create_parse_func(getattr(f, "name", ""), delete_existing_triples)
-    #   try:
-    #     if owlready2_optimized:
-    #       owlready2_optimized.parse_owlxml(f, objs, datas, insert_objs, insert_datas, _abbreviate, new_blank, default_base)
-    #     else:
-    #       import owlready2.owlxml_2_ntriples
-    #       owlready2.owlxml_2_ntriples.parse(f, on_prepare_obj, on_prepare_data, new_blank, default_base)
-    #     onto_base_iri = on_finish()
-    #   except OwlReadyOntologyParsingError as e:
-    #     if len(self) == 0: self._add_obj_triple_raw_spo(self.onto.storid, rdf_type, owl_ontology)
-    #     raise e
-    
-    # else:
-    #   raise ValueError("Unsupported format %s." % format)
     
     return onto_base_iri
   
