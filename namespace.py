@@ -522,10 +522,8 @@ class World(_GraphManager):
   def sparql_query(self, sparql, *args, **kargs):
     yield from self.as_rdflib_graph().query_owlready(sparql, *args, **kargs)
     
-  def sparql(self, sparql, params = (), error_on_undefined_entities = True):
-    import owlready2.sparql.main
-    query = self._prepare_sparql(sparql, error_on_undefined_entities)
-    return query.execute(params)
+  def sparql(self, sparql, params = (), error_on_undefined_entities = True, spawn = False):
+    return self._prepare_sparql(sparql, error_on_undefined_entities).execute(params, None, spawn)
   
   @lru_cache(maxsize = 1024)
   def _prepare_sparql(self, sparql, error_on_undefined_entities):

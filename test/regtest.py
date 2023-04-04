@@ -7962,17 +7962,17 @@ for i in range(500):
     t = time.time()
     r2 = [list(i) for i in owlready2.sparql.execute_many(onto, qs, [[]] * len(qs))]
     t_para = time.time() - t
-    print("%s s VS %s s with thread parallelization" % (t_mono, t_para))
+    #print("%s s VS %s s with thread parallelization" % (t_mono, t_para))
 
     t = time.time()
     r2 = [list(i) for i in owlready2.sparql.execute_many(onto, qs, [[]] * len(qs), gevent_spawn)]
     t_para = time.time() - t
-    print("%s s VS %s s with GEvent threadpool parallelization" % (t_mono, t_para))
-
+    #print("%s s VS %s s with GEvent threadpool parallelization" % (t_mono, t_para))
+    
     assert r1 == r2
     assert t_para < t_mono
     
-  def test_parallel_7(self):
+  def xxx_test_parallel_7(self):
     world = World(filename = "/home/jiba/tmp/pym.sqlite3", exclusive = False, enable_gevent = True)
     #q = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a owl:Class . }""")
     q0 = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a* owl:ObjectProperty . }""")
@@ -7994,6 +7994,7 @@ for i in range(500):
     def task3(x = None):
       for i in range(150000): 2+3
       
+    import gevent
     t = time.time()
     g1 = gevent.spawn(task1)
     g2 = gevent.spawn(task3)
@@ -8001,7 +8002,6 @@ for i in range(500):
     r2 = g2.get()
     t_mono = time.time() - t
     
-    import gevent
     gevent.spawn(task0_para).join()
     
     t = time.time()

@@ -2,8 +2,10 @@
 
 # python ./owlready2/test/bench.py -f > /dev/null
 
-#Load time 11.195453405380249 s.
-#List class time 9.762145757675171 s.
+#Load time 11.195453405380249 s. without parallelization
+
+#Load time 8.354663372039795 s.
+#List class time 9.638009309768677 s.
 
 import sys, time#, cProfile
 
@@ -23,8 +25,8 @@ onto_path.append("/home/jiba/telechargements/base_med/")
 #dron_ndc = get_ontology("http://purl.obolibrary.org/obo/dron/dron-ndc.owl").load()
 #dron = get_ontology("http://purl.obolibrary.org/obo/dron.owl").load()
 #vto = get_ontology("http://purl.obolibrary.org/obo/vto.owl").load()
-get_ontology("http://purl.obolibrary.org/obo/obi.owl").load()
-#go = get_ontology("http://purl.obolibrary.org/obo/go.owl").load()
+#get_ontology("http://purl.obolibrary.org/obo/obi.owl").load()
+go = get_ontology("http://purl.obolibrary.org/obo/go.owl").load()
 #go = get_ontology("/tmp/go.nt").load()
 default_world.save()
 
