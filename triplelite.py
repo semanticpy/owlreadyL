@@ -28,8 +28,8 @@ from owlready2.driver import _guess_format, _save
 from owlready2.util import FTS, _LazyListMixin
 from owlready2.base import _universal_abbrev_2_iri
 
-if sqlite3.sqlite_version == "3.41.2":
-  print("\nWarning: SQLite3 version 3.41.2 has a huge performance regression; please install version 3.41.1 or 3.42!\n", file = sys.stderr)
+if   (sqlite3.sqlite_version == "3.40.0") or (sqlite3.sqlite_version == "3.41.2"):
+  print("\nWarning: SQLite3 version 3.40.0 and 3.41.2 have huge performance regressions; please install version 3.41.1 or 3.42!\n", file = sys.stderr)
 
 def all_combinations(l):
   """returns all the combinations of the sublist in the given list (i.e. l[0] x l[1] x ... x l[n])."""
@@ -171,11 +171,11 @@ class Graph(BaseMainGraph):
       
     self.has_gevent = enable_gevent
     if enable_gevent:
-      import gevent.hub
       self.has_gevent = True
       if exclusive: raise ValueError("Cannot enable GEvent with exclusive mode! Please add 'exclusive=False'.")
       self.connexion_pool  = _ConnexionPool(uri)
-      self._get_gevent_hub = gevent.hub.get_hub
+      #import gevent.hub
+      #self._get_gevent_hub = gevent.hub.get_hub
         
       
     self.c_2_onto          = {}
@@ -444,10 +444,10 @@ class Graph(BaseMainGraph):
     self.current_changes = self.db.total_changes
     self.select_abbreviate_method()
     
-  def execute_long_with_gevent(self, sql, args = ()):
-    with self.connexion_pool.get() as db:
-      return self._get_gevent_hub().threadpool.apply(db.execute, (sql, args))
-    
+  #def execute_long_with_gevent(self, sql, args = ()):
+  #  with self.connexion_pool.get() as db:
+  #    return self._get_gevent_hub().threadpool.apply(db.execute, (sql, args))
+  
   def analyze(self):
     self.nb_added_triples = 0
     

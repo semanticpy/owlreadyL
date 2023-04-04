@@ -7947,7 +7947,10 @@ for i in range(500):
         
     for q in qs:list(q.execute())
     
-    r = [list(i) for i in owlready2.sparql.execute_many(onto, qs, [[]] * len(qs))]
+    import gevent.hub
+    gevent_spawn = gevent.hub.get_hub().threadpool.apply_async
+    
+    r = [list(i) for i in owlready2.sparql.execute_many(onto, qs, [[]] * len(qs), gevent_spawn)]
     
     #qs = qs * 9
     
@@ -7959,8 +7962,13 @@ for i in range(500):
     t = time.time()
     r2 = [list(i) for i in owlready2.sparql.execute_many(onto, qs, [[]] * len(qs))]
     t_para = time.time() - t
-    print("%s s VS %s s with parallelization" % (t_mono, t_para))
-    
+    print("%s s VS %s s with thread parallelization" % (t_mono, t_para))
+
+    t = time.time()
+    r2 = [list(i) for i in owlready2.sparql.execute_many(onto, qs, [[]] * len(qs), gevent_spawn)]
+    t_para = time.time() - t
+    print("%s s VS %s s with GEvent threadpool parallelization" % (t_mono, t_para))
+
     assert r1 == r2
     assert t_para < t_mono
     
@@ -7972,22 +7980,20 @@ for i in range(500):
     q2 = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a* owl:DatatypeProperty . }""")
     
     def task0(x = None): return list(q0.execute())
-      
-    def task0_para(x = None): return list(q0.execute(parallel = True))
+    
+    def task0_para(x = None): return list(q0.execute(spawn = True))
     
     def task1(x = None): return list(q1.execute())
-      
-    def task1_para(x = None): return list(q1.execute(parallel = True))
-      
+    
+    def task1_para(x = None): return list(q1.execute(spawn = True))
+    
     def task2(x = None): return list(q2.execute())
-      
-    def task2_para(x = None): return list(q2.execute(parallel = True))
-      
+    
+    def task2_para(x = None): return list(q2.execute(spawn = True))
+    
     def task3(x = None):
       for i in range(150000): 2+3
       
-    import gevent
-    
     t = time.time()
     g1 = gevent.spawn(task1)
     g2 = gevent.spawn(task3)
@@ -7995,6 +8001,7 @@ for i in range(500):
     r2 = g2.get()
     t_mono = time.time() - t
     
+    import gevent
     gevent.spawn(task0_para).join()
     
     t = time.time()
@@ -8003,10 +8010,25 @@ for i in range(500):
     r1_para = g1.get()
     r2_para = g2.get()
     t_para = time.time() - t
-    print(t_para)
-    
-    print("%s s VS %s s with parallelization" % (t_mono, t_para))
+    print("%s s VS %s s with thread parallelization" % (t_mono, t_para))
 
+    import gevent.hub
+    gevent_spawn = gevent.hub.get_hub().threadpool.apply_async
+    def task1_para(x = None): return list(q1.execute(spawn = gevent_spawn))
+
+    g1 = gevent.spawn(task1_para)
+    g2 = gevent.spawn(task3)
+    r1_para = g1.get()
+    r2_para = g2.get()
+    
+    t = time.time()
+    g1 = gevent.spawn(task1_para)
+    g2 = gevent.spawn(task3)
+    r1_para = g1.get()
+    r2_para = g2.get()
+    t_para = time.time() - t
+    print("%s s VS %s s with GEvent threadpool parallelization" % (t_mono, t_para))
+    
     assert r1_para == r1
     #assert t_para < t_mono
     

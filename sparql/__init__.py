@@ -16,8 +16,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+def _default_spawn(f):
+  from threading import Thread
+  thread = Thread(None, f)
+  thread.start()
+  return thread
 
-def execute_many(onto, prepared_queries, paramss, multiple_threads = True):
+
+def execute_many(onto, prepared_queries, paramss, spawn = True):
   if onto.world.graph.has_gevent:
     if onto.world.graph.has_changes():
       raise RuntimeError("Cannot execute parallelized queries on uncommited database. Please call World.save() before.")
@@ -26,7 +32,7 @@ def execute_many(onto, prepared_queries, paramss, multiple_threads = True):
     
     import _thread
     lock = _thread.allocate_lock()
-    def f(_dropit):
+    def f():
       try:
         with onto.world.graph.connexion_pool.get() as db:
           while True:
@@ -36,8 +42,15 @@ def execute_many(onto, prepared_queries, paramss, multiple_threads = True):
       
     args = list(range(len(prepared_queries)))
     raws = [None] * len(prepared_queries)
-    get_hub().threadpool.map(f, [None, None, None])
-        
+    
+    if spawn is True: spawn = _default_spawn
+    a = spawn(f)
+    b = spawn(f)
+    c = spawn(f)
+    a.join()
+    b.join()
+    c.join()
+    
     with onto:
       return [q.execute(params, raw) for raw, q, params in zip(raws, prepared_queries, paramss)]
     

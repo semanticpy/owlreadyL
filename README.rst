@@ -701,13 +701,14 @@ version 2 - 0.41
 ****************
 
 * Parallelized huge OWL file parsing (about 25% faster on GO)
+* Parallelized SPARQL queries (see owlready2.sparql.execute_many() and execute(spawn = True))
 * Bugfixes:
   - Fix Class.INDIRECT_get_class_properties() with restriction on Inverse(Prop)
   - Fix Restriction of type HasSelf
   - Fix delattr in destroy_entity()
   - Fix blank nodes importation from RDFlib
   - Fix ', + and - in FTS search
-    
+  
     
 Links
 -----
