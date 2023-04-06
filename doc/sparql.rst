@@ -264,12 +264,14 @@ The following functions are supported by Owlready, but not standard:
 
  * The SIMPLEREPLACE(a, b) function is a version of REPLACE() that does not support Regex. It works like Python or SQLite3 replace,
    and has better performances.
-
+   
+ * THE LIKE(a, b) function performs similarly to the SQL Like operator. It is more limited, but faster than the Regex SPARQL functions.
+   
  * The NEWINSTANCEIRI() function create a new IRI for an instance of the class given as argument. This IRI is similar to those
    created by default by Owlready. Note that the function creates 2 RDF triples, asserting that the new individual is an
    OWL NamedIndividual and an instance of the desired class passed as argument.
 
- * The LOADED(iri) function returns True if the given IRI is currently loaded in Python, and False otherwise.
+ * The LOADED(iri) function returns True if the entity with the given IRI is currently loaded in Python, and False otherwise.
 
  * The STORID(iri) function returns the integer Store-ID used by Owlready in the quadstore for representing the entity.
 
