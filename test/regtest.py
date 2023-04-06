@@ -623,13 +623,13 @@ class Test(BaseTest, unittest.TestCase):
     onto = world.get_ontology("file://" + filename).load()
     
     r = set(onto.get_triples(onto.Pizza.storid))
-    assert r == {(305, 39, '"Comment on Pizza"@en'), (305, 6, 11)}
+    assert r == {(306, 39, '"Comment on Pizza"@en'), (306, 6, 11)}
     
     r = set(onto.get_triples(None, rdf_type, onto.Pizza.storid))
-    assert r == {(319, 6, 305)}
+    assert r == {(320, 6, 306)}
     
     r = set(onto.get_triples(None, None, '"9.9"^^<http://www.w3.org/2001/XMLSchema#float>'))
-    assert r == {(319, 310, 9.9, 58)}
+    assert r == {(320, 311, 9.9, 58)}
     
   def test_ontology_25(self):
     w = self.new_world()
@@ -7794,7 +7794,7 @@ with onto:
     
     world = World(filename = q, exclusive = False)
     s = world.graph.execute("SELECT MAX(storid) FROM resources").fetchone()[0]
-    assert s == 300 + 3 + 200 * NB
+    assert s == 300 + 4 + 200 * NB
     
   def test_parallel_2(self):
     q  = self.new_tmp_file()
@@ -7837,7 +7837,7 @@ for i in range(500):
     
     world = World(filename = q, exclusive = False)
     s = world.graph.execute("SELECT MAX(storid) FROM resources").fetchone()[0]
-    assert s == 300 + 3 + 500 * NB
+    assert s == 300 + 4 + 500 * NB
     
     onto = world.get_ontology("http://test.org/onto.owl")
     labels = [onto["drug%s" % (i + 1)].label.first() for i in range(500)]
@@ -7869,7 +7869,7 @@ for i in range(500):
     for p in ps: assert p.exitcode == 0
     
     s = world.graph.execute("SELECT MAX(storid) FROM resources").fetchone()[0]
-    assert s == 300 + 3 + 1000 * NB
+    assert s == 300 + 4 + 1000 * NB
 
   def test_parallel_4(self):
     q  = self.new_tmp_file()
@@ -7898,7 +7898,7 @@ for i in range(500):
     for p in ps: assert p.exitcode == 0
     
     s = world.graph.execute("SELECT MAX(storid) FROM resources").fetchone()[0]
-    assert s == 300 + 3 + 500 * NB
+    assert s == 300 + 4 + 500 * NB
     
     labels = [onto["drug%s" % (i + 1)].label.first() for i in range(500)]
     assert len(set(labels)) > 1
@@ -7929,7 +7929,7 @@ for i in range(500):
     for p in ps: assert p.exitcode == 0
     
     s = world.graph.execute("SELECT MAX(storid) FROM resources").fetchone()[0]
-    assert s == 300 + 3 + 200 * NB
+    assert s == 300 + 4 + 200 * NB
     
   def test_parallel_6(self):
     world = self.new_world(exclusive = False, enable_gevent = True)

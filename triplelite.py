@@ -209,7 +209,6 @@ class Graph(BaseMainGraph):
       except sqlite3.OperationalError: # Old SQLite3 does not support WITHOUT ROWID -- here it is just an optimization
         self.execute("""CREATE TABLE resources (storid INTEGER PRIMARY KEY, iri TEXT)""")
       self.db.executemany("INSERT INTO resources VALUES (?,?)", _universal_abbrev_2_iri.items())
-      self.db.execute("INSERT INTO resources VALUES (300,'http://anonymous')")
       self.execute("""CREATE UNIQUE INDEX index_resources_iri ON resources(iri)""")
 
       self.execute("""CREATE INDEX index_objs_sp ON objs(s,p)""")
@@ -540,10 +539,8 @@ class Graph(BaseMainGraph):
       c = self.execute("SELECT ontologies.c FROM ontologies, ontology_alias WHERE ontology_alias.alias=? AND ontologies.iri=ontology_alias.iri", (onto._base_iri,)).fetchone()
       if c is None:
         new_in_quadstore = True
-        #self.execute("INSERT INTO ontologies VALUES (NULL, ?, 0)", (onto._base_iri,))
-        #c = self.execute("SELECT c FROM ontologies WHERE iri=?", (onto._base_iri,)).fetchone()
-        self.execute("INSERT INTO ontologies VALUES (?, ?, 0)", (onto.storid, onto._base_iri,))
-        c = (onto.storid,)
+        self.execute("INSERT INTO ontologies VALUES (NULL, ?, 0)", (onto._base_iri,))
+        c = self.execute("SELECT c FROM ontologies WHERE iri=?", (onto._base_iri,)).fetchone()
     c = c[0]
     self.c_2_onto[c] = onto
     

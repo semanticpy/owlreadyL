@@ -1017,10 +1017,13 @@ class SQLQuery(FuncSupport):
       if triple.consider_p: self.create_conditions(conditions, table, "p", p, triple.likelihood_p)
       if triple.consider_o: self.create_conditions(conditions, table, "o", o, triple.likelihood_o)
       if isinstance(triples, Block) and triples.ontology:
-        self.create_conditions(conditions, table, "c", triples.ontology)
-        if triples.ontology.name == "VAR":
-          self.parse_var(triples.ontology).update_type("onto")
-          var = self.parse_var(triples.ontology)
+        if triples.ontology.name == "PARAM":
+          self.create_conditions(conditions, table, "c", "(SELECT c FROM objs WHERE s=?%s AND p=6 AND o=80)" % triples.ontology.number)
+        else:
+          if triples.ontology.name == "VAR":
+            self.parse_var(triples.ontology).update_type("onto")
+            var = self.parse_var(triples.ontology)
+          self.create_conditions(conditions, table, "c", triples.ontology)
       if p.modifier == "+": conditions.append("%s.nb>0"  % table.name)
       
   def get_fix_levels(self, vars0, exclude_triple = None):
