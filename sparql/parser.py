@@ -79,7 +79,7 @@ lg.add("WITH",                 r"""WITH\b""", re.IGNORECASE)
 lg.add("AS",                   r"""AS\b""", re.IGNORECASE)
 lg.add("WHERE",                r"""WHERE\b""", re.IGNORECASE)
 lg.add("OPTIONAL",             r"""OPTIONAL\b""", re.IGNORECASE)
-#lg.add("GRAPH",                r"""GRAPH\b""", re.IGNORECASE)
+lg.add("GRAPH",                r"""GRAPH\b""", re.IGNORECASE)
 #lg.add("SERVICE",              r"""SERVICE\b""", re.IGNORECASE)
 #lg.add("SILENT",               r"""SILENT\b""", re.IGNORECASE)
 #lg.add("DEFAULT",              r"""DEFAULT\b""", re.IGNORECASE)
@@ -481,8 +481,31 @@ def f(p): return p[0]
 @pg.production("group_graph_pattern_item : STATIC group_graph_pattern")
 def f(p): return StaticBlock(p[1])
 
+@pg.production("group_graph_pattern_item : GRAPH iri group_graph_pattern")
+def f(p):
+  translator = CURRENT_TRANSLATOR.get()
+  #_set_onto(p[2], CURRENT_TRANSLATOR.get().world.get_ontology(p[1].value))
+  _set_onto(p[2], rply.Token("INTEGER", CURRENT_TRANSLATOR.get().world.get_ontology(p[1].value).graph.c))
+  return p[2]
+def _set_onto(p, onto):
+  if isinstance(p, list):
+    if isinstance(p, SimpleTripleBlock):
+      p.ontology = onto
+    for child in p: _set_onto(child, p)
+@pg.production("group_graph_pattern_item : GRAPH var group_graph_pattern")
+def f(p):
+  translator = CURRENT_TRANSLATOR.get()
+  _set_onto(p[2], p[1])
+  return p[2]
+@pg.production("group_graph_pattern_item : GRAPH param group_graph_pattern")
+def f(p):
+  translator = CURRENT_TRANSLATOR.get()
+  _set_onto(p[2], p[1])
+  return p[2]
+
 pg.list("group_graph_pattern_item*", ".?")
 pg.optional(".?")
+
 
 @pg.production("inline_data : VALUES data_block")
 def f(p): return p[1]
@@ -1002,6 +1025,7 @@ def f(p):
   translator = CURRENT_TRANSLATOR.get()
   p = p[0]
   p.value  = p.value[1:-1]
+  if p.value.endswith("#"): p.value = p.value[:-1]
   if not ":" in p.value: p.value = "%s%s" % (translator.base_iri, p.value) # Relative IRI
   p.storid = p.sql = translator.abbreviate(p.value)
   return p
@@ -1012,6 +1036,16 @@ def f(p):
   prefix, name = p.value.split(":", 1)
   p.name   = "IRI"
   p.value  = "%s%s" % (translator.expand_prefix("%s:" % prefix), name)
+  p.storid = p.sql = translator.abbreviate(p.value)
+  return p
+@pg.production("iri : PNAME_NS")
+def f(p):
+  translator = CURRENT_TRANSLATOR.get()
+  p = p[0]
+  prefix, name = p.value.split(":", 1)
+  p.name   = "IRI"
+  p.value  = "%s%s" % (translator.expand_prefix("%s:" % prefix), name)
+  if p.value.endswith("#"): p.value = p.value[:-1]
   p.storid = p.sql = translator.abbreviate(p.value)
   return p
 @pg.production("iri : A")
@@ -1057,6 +1091,7 @@ def _prefix_vars(x, prefix):
     elif isinstance(i, rply.Token) and i.name == "VAR": i.value = "%s%s" % (prefix, i.value)
     
 class Block(list):
+  ontology = None
   def __repr__(self):
     if getattr(self, "static_valuess", None): return "<%s %s static=%s>" % (self.__class__.__name__, list.__repr__(self), self.static_valuess)
     return "<%s %s>" % (self.__class__.__name__, list.__repr__(self))
@@ -1145,8 +1180,10 @@ class UnionBlock(Block):
     for var in union_vars: _var_found(var, vars, ordered_vars)
     
     
-class TripleBlock(Block): pass
-
+class TripleBlock(Block): 
+  def __init__(self, l = None):
+    Block.__init__(self, l or [])
+    
 def _var_found(var, vars, ordered_vars):
   if not var in vars:
     vars.add(var)
@@ -1155,7 +1192,7 @@ def _var_found(var, vars, ordered_vars):
 class TripleBlockWithStatic(TripleBlock):
   def __init__(self, l = None):
     TripleBlock.__init__(self, l or [])
-
+    
     if hasattr(l, "static_valuess"):
       self.static_valuess = l.static_valuess
     else:
@@ -1170,7 +1207,7 @@ class TripleBlockWithStatic(TripleBlock):
 
           
 class SimpleTripleBlock(TripleBlockWithStatic): pass
-      
+
 class OptionalBlock(TripleBlock):
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     for triple in self:

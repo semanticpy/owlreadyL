@@ -360,9 +360,12 @@ class PreparedSelectQuery(PreparedQuery):
       l2 = []
       i = 0
       while i < len(l):
-        if self.column_types[i] == "objs":
+        if   self.column_types[i] == "objs":
           if l[i] is None: l2.append(None)
           else: l2.append(self.world._to_python(l[i], None) or l[i])
+          i += 1
+        elif self.column_types[i] == "onto":
+          l2.append(self.world.graph.c_2_onto[l[i]])
           i += 1
         else:
           if l[i + 1] is None:
@@ -380,6 +383,9 @@ class PreparedSelectQuery(PreparedQuery):
       while i < len(l):
         #if self.column_types[i] == "objs":
         if (self.column_types[i] == "objs") or (self.column_types[i] == "value"):
+          l2.append(l[i])
+          i += 1
+        elif self.column_types[i] == "onto":
           l2.append(l[i])
           i += 1
         else:
@@ -400,6 +406,9 @@ class PreparedSelectQuery(PreparedQuery):
         if self.column_types[i] == "objs":
           if l[i] is None: l2.append(None)
           else: yield self.world._to_python(l[i], None) or l[i]
+          i += 1
+        elif self.column_types[i] == "onto":
+          yield self.world.graph.c_2_onto[l[i]]
           i += 1
         else:
           if l[i + 1] is None:
@@ -424,6 +433,9 @@ class PreparedSelectQuery(PreparedQuery):
           if   l[i] is None: l2.append("")
           elif l[i] > 0:     l2.append(self.world._unabbreviate(l[i]))
           else:              l2.append("_:%s" % (-l[i]))
+          i += 1
+        elif self.column_types[i] == "onto":
+          l2.append(self.world.graph.c_2_onto[l[i]].base_iri)
           i += 1
         else:
           if l[i + 1] is None:
@@ -453,6 +465,9 @@ class PreparedSelectQuery(PreparedQuery):
           if   l[i] is None: pass
           elif l[i] > 0:     binding[colnames[c]] = { "type" : "uri", "value" : self.world._unabbreviate(l[i]) }
           else:              binding[colnames[c]] = { "type" : "bnode", "value" : "r%s" % (-l[i]) }
+          i += 1
+        elif self.column_types[i] == "onto":
+          binding[colnames[c]] = { "type" : "uri", "value" : self.world.graph.c_2_onto[l[i]].base_iri }
           i += 1
         else:
           if l[i + 1] is None:
@@ -492,6 +507,9 @@ class PreparedSelectQuery(PreparedQuery):
           elif l[i] > 0:     xml += """        <uri>%s</uri>\n""" % self.world._unabbreviate(l[i])
           else:              xml += """        <bnode>r%s</bnode>\n""" % (-l[i])
           i += 1
+        elif self.column_types[i] == "onto":
+          xml += """        <uri>%s</uri>\n""" % self.world.graph.c_2_onto[l[i]].base_iri
+          i += 1
         else:
           if l[i + 1] is None:
             if   l[i] is None: pass
@@ -511,25 +529,7 @@ class PreparedSelectQuery(PreparedQuery):
 </sparql>
 """
     return xml
-  
-  def execute_as_sql(self, params = (), spawn = False):
-    for l in self.execute_raw(params, spawn):
-      l2 = []
-      i = 0
-      while i < len(l):
-        if self.column_types[i] == "objs":
-          if l[i] is None: l2.append(None)
-          else: l2.append(self.world._to_python(l[i], None) or l[i])
-          i += 1
-        else:
-          if l[i + 1] is None:
-            if l[i] is None: l2.append(None)
-            else:            l2.append(self.world._to_python(l[i], None) or l[i])
-          else:
-            l2.append(self.world._to_python(l[i], l[i + 1]))
-          i += 2
-      yield l2
-      
+        
   
 class PreparedModifyQuery(PreparedQuery):
   def __init__(self, world, sql, column_names, column_types, nb_parameter, parameter_datatypes, ontology, deletes, inserts, select_param_indexes):
@@ -678,6 +678,7 @@ class SQLQuery(FuncSupport):
     if self.tables:
       sql = """SELECT """
       if self.distinct: sql += "DISTINCT "
+      
       sql += """%s FROM """ % (", ".join(str(column.binding) for column in self.columns))
       
       table_2_preceding = {}
@@ -1015,61 +1016,13 @@ class SQLQuery(FuncSupport):
       if triple.consider_s: self.create_conditions(conditions, table, "s", s)
       if triple.consider_p: self.create_conditions(conditions, table, "p", p, triple.likelihood_p)
       if triple.consider_o: self.create_conditions(conditions, table, "o", o, triple.likelihood_o)
-      
+      if isinstance(triples, Block) and triples.ontology:
+        self.create_conditions(conditions, table, "c", triples.ontology)
+        if triples.ontology.name == "VAR":
+          self.parse_var(triples.ontology).update_type("onto")
+          var = self.parse_var(triples.ontology)
       if p.modifier == "+": conditions.append("%s.nb>0"  % table.name)
       
-    # if isinstance(triples, TripleBlockWithStatic):
-    #   for static in triples.static_valuess:
-    #     if isinstance(static, StaticBlock):
-    #       if self.raw_selects == "*":
-    #         static.vars = sorted(static.all_vars)
-    #       else:
-    #         used_vars = set(self.vars)
-    #         used_vars.update(var.name for var in self.vars_needed_for_select)
-    #         static.vars = sorted(var for var in static.all_vars if (var in used_vars))
-            
-    #       for var in static.vars:
-    #         var = static.translator.main_query.vars.get(var)
-    #         if var: static.types.append(var.type)
-    #         else:   static.types.append("quads")
-              
-    #       var_2_columns = defaultdict(list)
-    #       for column in static.translator.main_query.columns:
-    #         var_2_columns[column.var].append(column)
-            
-    #       static.translator.main_query.raw_selects = static.vars
-    #       static.translator.main_query.columns = []
-    #       static.translator.main_query.finalize_columns()
-    #       static.translator.solution_modifier = [None, None, None, None, None]
-    #       q = static.translator.finalize()
-    #       static.valuess = list(q._execute_sql())
-          
-    #     if (not [table for table in self.tables if table.join != ","]) and len(static.vars) == 1: # This optimization is not supported with optional blocks
-    #       var = self.parse_var(static.vars[0])
-    #       var.update_type(static.types[0])
-    #       sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-    #       if sql is None:
-    #         var.bindings.append("IN (%s)" % ",".join(str(value[0]) for value in static.valuess))
-    #         var.static = static.valuess
-    #         var.type = "objs"
-    #       else:
-    #         conditions.append("%s IN (%s)" % (sql, ",".join(str(value[0]) for value in static.valuess)))
-            
-    #     else:
-    #       prelim = SQLStaticValuesPreliminaryQuery(self.translator, "static%s" % (len(self.translator.preliminary_selects) + 1), static)
-    #       self.translator.preliminary_selects.append(prelim)
-    #       table = Table(self, prelim.name, prelim.name)
-    #       for i, (var, type) in enumerate(zip(static.vars, static.types)):
-    #         var = self.parse_var(var)
-    #         var.update_type(type)
-    #         sql, sql_type, sql_d, sql_d_type = self._to_sql(var)
-    #         if sql is None:
-    #           var.bindings.append("%s.col%s_o" % (prelim.name, i + 1))
-    #         else:
-    #           var.bindings.insert(0, "%s.col%s_o" % (prelim.name, i + 1)) # Favor static binding, because it is never optional
-    #           conditions.append("%s=%s.col%s_o" % (sql, prelim.name, i + 1))
-              
-              
   def get_fix_levels(self, vars0, exclude_triple = None):
     vars0_names = { var.name for var in vars0 }
     fix_levels  = defaultdict(float)
@@ -1215,7 +1168,6 @@ class SQLQuery(FuncSupport):
       nonlocal selected_parameter_index
       if isinstance(select, str) and select.startswith("?"): select = self.vars[select]
       sql, sql_type, sql_d, sql_d_type = self._to_sql(select)
-
       if   isinstance(select, rply.Token) and (select.name == "VAR"): var_name = select.value
       elif isinstance(select, Variable):                              var_name = select.name
       else:                                                           var_name = None
@@ -1268,12 +1220,13 @@ class SQLQuery(FuncSupport):
       
   def _to_sql(self, x):
     if isinstance(x, rply.Token) and (x.name == "VAR"): x = self.parse_var(x)
-
+    
     if   isinstance(x, str): return x, "value", None, None
     elif isinstance(x, Variable):
       if not x.bindings: return None, None, None, None
       binding = x.get_binding(self)
       if   x.type == "objs":  return binding, "objs", None, None
+      elif x.type == "onto":  return binding, "onto", None, None
       else:
         if not x.fixed_datatype is None:
           if isinstance(x.fixed_datatype, Variable):

@@ -20,13 +20,14 @@ SPARQL elements supported
 
 * SELECT, INSERT and DELETE queries
 * UNION
-* OPTIONAL (with a single triple)
+* OPTIONAL
 * FILTER, BIND, FILTER EXISTS, FILTER NOT EXISTS
+* GRAPH clauses
 * SELECT sub queries
 * VALUES in SELECT queries
 * All SPARQL functions and aggregation functions
 * Blank nodes notations with square bracket, e.g. '[ a XXX]'
-* Parameters in queries (i.e. '??')
+* Parameters in queries (i.e. '??' or '??1')
 * Property path expressions, e.g. 'a/rdfs:subClassOf*',  excepted those listed below
 
 SPARQL elements not supported
@@ -34,9 +35,8 @@ SPARQL elements not supported
 
 * ASK, DESCRIBE, LOAD, ADD, MOVE, COPY, CLEAR, DROP, CONSTRUCT queries
 * INSERT DATA, DELETE DATA, DELETE WHERE queries (you may use INSERT or DELETE instead)
-* OPTIONAL (with more than one triple)
 * SERVICE (Federated queries)
-* GRAPH, FROM, FROM NAMED keywords
+* FROM, FROM NAMED keywords
 * MINUS
 * Property path expressions with parentheses of the following forms:
 

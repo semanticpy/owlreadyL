@@ -4,8 +4,8 @@
 
 #Load time 11.195453405380249 s. without parallelization
 
-#Load time 8.354663372039795 s.
-#List class time 9.638009309768677 s.
+#Load time 8.173163652420044 s.
+#List class time 9.548468112945557 s.
 
 import sys, time#, cProfile
 

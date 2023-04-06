@@ -50,7 +50,7 @@ class _Connexion(object):
     
   def __enter__(self): return self
   def __exit__(self, exc_type = None, exc_val = None, exc_tb = None): self.pool.queue.put(self)
-    
+  
 class _ConnexionPool(object):
   def __init__(self, uri, nb_connexion = 3):
     #import gevent.queue; self.queue = gevent.queue.Queue()
@@ -112,7 +112,7 @@ class Graph(BaseMainGraph):
     if options: uri = "%s?%s" % (uri, "&".join(options))
     
     self.db = sqlite3.connect(uri, isolation_level = "EXCLUSIVE" if exclusive else "DEFERRED", check_same_thread = False, uri = True)
-        
+    
     if exclusive: self.db.execute("""PRAGMA locking_mode = EXCLUSIVE""")
     if exclusive and read_only: self.db.execute("""PRAGMA read_uncommitted = True""") # Exclusive + no write => no need for read lock
     #if read_only: self.db.execute("""PRAGMA query_only = 1""") # No, because we may need to create TEMP tables (SPARQL module does that)
@@ -209,6 +209,7 @@ class Graph(BaseMainGraph):
       except sqlite3.OperationalError: # Old SQLite3 does not support WITHOUT ROWID -- here it is just an optimization
         self.execute("""CREATE TABLE resources (storid INTEGER PRIMARY KEY, iri TEXT)""")
       self.db.executemany("INSERT INTO resources VALUES (?,?)", _universal_abbrev_2_iri.items())
+      self.db.execute("INSERT INTO resources VALUES (300,'http://anonymous')")
       self.execute("""CREATE UNIQUE INDEX index_resources_iri ON resources(iri)""")
 
       self.execute("""CREATE INDEX index_objs_sp ON objs(s,p)""")
@@ -539,8 +540,10 @@ class Graph(BaseMainGraph):
       c = self.execute("SELECT ontologies.c FROM ontologies, ontology_alias WHERE ontology_alias.alias=? AND ontologies.iri=ontology_alias.iri", (onto._base_iri,)).fetchone()
       if c is None:
         new_in_quadstore = True
-        self.execute("INSERT INTO ontologies VALUES (NULL, ?, 0)", (onto._base_iri,))
-        c = self.execute("SELECT c FROM ontologies WHERE iri=?", (onto._base_iri,)).fetchone()
+        #self.execute("INSERT INTO ontologies VALUES (NULL, ?, 0)", (onto._base_iri,))
+        #c = self.execute("SELECT c FROM ontologies WHERE iri=?", (onto._base_iri,)).fetchone()
+        self.execute("INSERT INTO ontologies VALUES (?, ?, 0)", (onto.storid, onto._base_iri,))
+        c = (onto.storid,)
     c = c[0]
     self.c_2_onto[c] = onto
     

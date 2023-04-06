@@ -444,7 +444,7 @@ class World(_GraphManager):
     if filename:
       self.set_backend(backend, filename, dbname, **kargs)
       
-    self.get_ontology("http://anonymous/") # Pre-create, in order to avoird creation during a reading sequence
+    self.get_ontology("http://anonymous/") # Pre-create, in order to avoid creation during a reading sequence
     
   def set_backend(self, backend = "sqlite", filename = ":memory:", dbname = "owlready2_quadstore", **kargs):
     if   backend == "sqlite":

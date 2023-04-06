@@ -708,7 +708,12 @@ version 2 - 0.41
   - Fix delattr in destroy_entity()
   - Fix blank nodes importation from RDFlib
   - Fix ', + and - in FTS search
-  
+
+version 2 - 0.42
+****************
+
+* Support GRAPH clauses in SPARQL queries
+
     
 Links
 -----
