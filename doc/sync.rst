@@ -138,13 +138,23 @@ Synchronization
 
 For using Owlready with cooperative microthreads, you need to:
 
-* Perform each modification to an ontology inside a "with ontology:" block. Owlready maintain a lock for each
-  quadstore, which prevents multiple writes at the same time.
-  Thus, for improving performances, you should also avoid long computation inside "with ontology:" blocks.
-
-* Switch to other microthreads when desired (e.g. by calling gevent.sleep(0)). To let other microthreads write in
-  the quadstore, you should do that outside "with ontology:" blocks.
-
+* Use a custom lock for the quadstore. By default, Owlready use the internal SQLite3 database as a lock; this does not
+  work with microthreads because all microthreads share the same SQLite3 connexion. The solution is to use a custom lock,
+  for example with GEvent :
+  
+  ::
+     
+     >>> gevent.lock
+     >>> default_world.set_backend(filename = "your_quadstore.sqlite3",
+     ...                           lock     = gevent.lock.RLock())
+     
+* Perform each modification to an ontology inside a "with ontology:" block.
+  This prevents multiple writes at the same time.
+  For improving performances, you should also avoid long computation inside "with ontology:" blocks.
+  
+* Switch to other microthreads when desired (e.g. by calling gevent.sleep(0)).
+  To let other microthreads write in the quadstore, you should do that outside "with ontology:" blocks.
+  
 Other synchronization tasks (listed below, for multiprocessing) are not needed for microthreads.
 
 

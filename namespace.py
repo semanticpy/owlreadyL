@@ -61,22 +61,8 @@ class Namespace(object):
       
     self._base_iri = base_iri
     self.name      = name
-
+    
   def get_base_iri(self): return self._base_iri
-  # def set_base_iri(self, new_base_iri, rename_entities = True):
-  #   if rename_entities == False: raise ValueError("set_base_iri() with rename_entity=False is ontly supported on Ontology, not on Namespace. Please create a new Namespace.")
-  #   if self.world.graph: self.world.graph.acquire_write_lock()
-    
-  #   if self.ontology: del self.ontology._namespaces[self._base_iri]
-  #   else:             del self.world   ._namespaces[self._base_iri]
-    
-  #   self.world._refactor_onto(self.storid, self._base_iri, new_base_iri)
-      
-  #   self._base_iri = new_base_iri
-  #   if self.ontology: self.ontology._namespaces[new_base_iri] = self
-  #   else:             self.world   ._namespaces[new_base_iri] = self
-    
-  #   if self.world.graph: self.world.graph.release_write_lock()
   base_iri = property(get_base_iri)#, set_base_iri)
   
   def __enter__(self):
@@ -123,7 +109,6 @@ class _GraphManager(object):
   def _get_obj_triples_cspo(self, subject = None, predicate = None, object = None, ontology_graph = None): return []
   def _get_obj_triples_sp_o(self, subject, predicate): return []
   def _get_obj_triples_sp_co(self, s, p): return []
-  #def get_equivs_s_o(self, s): return [s]
   def _get_triples_sp_od(self, s, p): return []
   
   def get_triples(self, s = None, p = None, o = None):
@@ -150,50 +135,10 @@ class _GraphManager(object):
         r.append((s,p,o))
       return r
     
-  # def get_triples_rdf(self, s = None, p = None, o = None, d = None):
-  #   if s is None: s2 = None
-  #   else:         s2 = self.world._abbreviate(s)
-  #   if p is None:            p2 = None
-  #   elif isinstance(p, int): p2 = p
-  #   else:                    p2 = self.world._abbreviate(p)
-  #   if o is None: o2, d2 = None, None
-  #   else:         o2, d2 = self.world._to_rdf(o)
-    
-  #   r = []
-  #   for s3, p3, o3, d3 in self._get_triples_spod_spod(s2, p2, o2, d2):
-  #     if not o is None:
-  #       r.append((s or self.world._unabbreviate(s3),
-  #                 p or self.world._unabbreviate(p3),
-  #                 o, d))
-  #     else:
-  #       if d3 is None:
-  #         r.append((s or self.world._unabbreviate(s3),
-  #                   p or self.world._unabbreviate(p3),
-  #                   self.world._unabbreviate(o3),
-  #                   None))
-  #       else:
-  #         r.append((s or self.world._unabbreviate(s3),
-  #                   p or self.world._unabbreviate(p3),
-  #                   from_literal(o3, d3),
-  #                   self.world._unabbreviate(d3) if isinstance(d3, int) else d3))
-  #   return r
-  
   def _refactor(self, storid, new_iri): pass
   
   def _get_annotation_axioms(self, source, property, target, target_d):
     if target_d is None:
-#       r = self.graph.execute("""
-# SELECT q1.s
-# FROM objs q1, objs q2 INDEXED BY index_objs_sp, objs q3 INDEXED BY index_objs_sp, objs q4 INDEXED BY index_objs_sp
-# WHERE q1.p=6 AND q1.o=?
-#   AND q2.s=q1.s AND q2.p=? AND q2.o=?
-#   AND q3.s=q1.s AND q3.p=? AND q3.o=?
-#   AND q4.s=q1.s AND q4.p=? AND q4.o=?""",
-#                          (owl_axiom,
-#                           owl_annotatedsource, source,
-#                           owl_annotatedproperty, property,
-#                           owl_annotatedtarget, target))
-#       for l in r.fetchall(): yield l[0]
       r = self.graph.execute("""
 SELECT q1.s
 FROM objs q1, objs q2 INDEXED BY index_objs_sp, objs q3 INDEXED BY index_objs_sp, objs q4 INDEXED BY index_objs_sp
@@ -207,16 +152,6 @@ WHERE q1.p=? AND q1.o=?
                           owl_annotatedtarget, target))
       for l in r.fetchall(): yield l[0]
     
-      # for bnode in self._get_obj_triples_po_s(rdf_type, owl_axiom):
-      #   for p, o in self._get_obj_triples_s_po(bnode):
-      #     if   p == owl_annotatedsource: # SIC! If on a single if, elif are not appropriate.
-      #       if o != source: break
-      #     elif p == owl_annotatedproperty:
-      #       if o != property: break
-      #     elif p == owl_annotatedtarget:
-      #       if o != target: break
-      #   else:
-      #     yield bnode
     else:
       r = self.graph.execute("""
 SELECT q1.s
@@ -232,8 +167,6 @@ WHERE q1.p=? AND q1.o=?
       for l in r.fetchall(): yield l[0]
       
   def _del_obj_triple_spo(self, s = None, p = None, o = None):
-    #l = CURRENT_NAMESPACES.get()
-    #((l and l[-1].ontology) or self)._del_obj_triple_raw_spo(s, p, o)
     self._del_obj_triple_raw_spo(s, p, o)
     
     if _LOG_LEVEL > 1:
@@ -243,8 +176,6 @@ WHERE q1.p=? AND q1.o=?
       print("* Owlready2 * DEL TRIPLE", s, p, o, file = sys.stderr)
       
   def _del_data_triple_spod(self, s = None, p = None, o = None, d = None):
-    #l = CURRENT_NAMESPACES.get()
-    #((l and l[-1].ontology) or self)._del_data_triple_raw_spod(s, p, o, d)
     self._del_data_triple_raw_spod(s, p, o, d)
     
     if _LOG_LEVEL > 1:
@@ -265,8 +196,6 @@ WHERE q1.p=? AND q1.o=?
     while bnode and (bnode != rdf_nil):
       first, d = self._get_triple_sp_od(bnode, rdf_first)
       if not ((first == rdf_nil) and (d is None)): yield first, d
-      #if (first == rdf_nil) and (d is None): return
-      #yield first, d
       bnode = self._get_obj_triple_sp_o(bnode, rdf_rest)
       
   def _to_python(self, o, d = None, main_type = None, main_onto = None, default_to_none = False):
@@ -793,7 +722,6 @@ class World(_GraphManager):
           if e.args[0].startswith("metaclass conflict"):
             print("* Owlready2 * WARNING: DataProperty %s belongs to more than one entity types: %s; I'm trying to fix it..." % (full_iri, list(types) + is_a_entities), file = sys.stderr)
             is_a_entities = [t for t in is_a_entities if issubclass_python(t, DataProperty)]
-            #entity = DataPropertyClass(name, types or (DataProperty,), { "namespace" : namespace, "is_a" : is_a_entities, "storid" : storid } )
             entity = DataPropertyClass(name, (DataProperty,), { "namespace" : namespace, "is_a" : is_a_entities, "storid" : storid } )
             
       elif main_type is AnnotationPropertyClass:
@@ -807,10 +735,6 @@ class World(_GraphManager):
             entity = AnnotationPropertyClass(name, (AnnotationProperty,), { "namespace" : namespace, "is_a" : is_a_entities, "storid" : storid } )
           
       elif main_type is Thing:
-        #if   len(types) == 1: Class = types[0]
-        #elif len(types) >  1: Class = FusionClass._get_fusion_class(types)
-        #else:                 Class = Thing
-        #entity = Class(name, namespace = namespace)
         if   len(types) == 1: entity = types[0](name = name, namespace = namespace)
         elif len(types) >  1: entity = FusionClass._get_fusion_class(types)(name = name, namespace = namespace, is_a = types)
         else:                 entity = Thing(name = name, namespace = namespace)
@@ -823,10 +747,6 @@ class World(_GraphManager):
       if is_a_bnodes:
         list.extend(entity.is_a, (onto._parse_bnode(bnode) for onto, bnode in is_a_bnodes))
         
-      # print(storid, storid.__class__)
-      # if isinstance(storid, int) and (storid < 0) and (main_type is ThingClass):
-      #   list.append(entity.is_a, main_onto._parse_bnode(storid))
-        
     return entity
   
   def _parse_bnode(self, bnode):
@@ -836,150 +756,110 @@ class World(_GraphManager):
       for onto in self.ontologies.values():
         if onto.graph.c == c: return onto._parse_bnode(bnode)
         
-  # def _del_obj_triple_spo(self, s = None, p = None, o = None, ensure_change = False):
-  #   l = CURRENT_NAMESPACES.get()
-  #   if l and ensure_change:
-  #     total_changes = self.graph.db.total_changes
-  #     ((l and l[-1].ontology) or self)._del_obj_triple_raw_spo(s, p, o)
-  #     if total_changes == self.graph.db.total_changes: raise RuntimeError("Cannot remove RDF triple because the triple is defined in an ontology and another ontology has been select via a 'with ontology:...' statement!")
-      
-  #   else:
-  #     ((l and l[-1].ontology) or self)._del_obj_triple_raw_spo(s, p, o)
-        
-  #   if _LOG_LEVEL > 1:
-  #     if not s < 0: s = self._unabbreviate(s)
-  #     if p: p = self._unabbreviate(p)
-  #     if o and not ((isinstance(o, int) and (o < 0)) or (isinstance(o, str) and o.startswith('"'))): o = self._unabbreviate(o)
-  #     print("* Owlready2 * DEL TRIPLE", s, p, o, file = sys.stderr)
-      
-  # def _del_data_triple_spod(self, s = None, p = None, o = None, d = None, ensure_change = False):
-  #   l = CURRENT_NAMESPACES.get()
-  #   if l and ensure_change:
-  #     total_changes = self.graph.db.total_changes
-  #     ((l and l[-1].ontology) or self)._del_data_triple_raw_spod(s, p, o, d)
-  #     if total_changes == self.graph.db.total_changes: raise RuntimeError("Cannot remove RDF triple because the triple is defined in an ontology and another ontology has been select via a 'with ontology:...' statement!")
-      
-  #   else:
-  #     ((l and l[-1].ontology) or self)._del_data_triple_raw_spod(s, p, o, d)
-      
-  #   if _LOG_LEVEL > 1:
-  #     if not s < 0: s = self._unabbreviate(s)
-  #     if p: p = self._unabbreviate(p)
-  #     if d and (not d.startswith("@")): d = self._unabbreviate(d)
-  #     print("* Owlready2 * DEL TRIPLE", s, p, o, d, file = sys.stderr)
-      
-     
 class Ontology(Namespace, _GraphManager):
   def __init__(self, world, base_iri, name = None):
-    #need_write = False
     if world.graph: world.graph.acquire_write_lock()
-    
-    self.world       = world # Those 2 attributes are required before calling Namespace.__init__
-    self._namespaces = weakref.WeakValueDictionary()
-    Namespace.__init__(self, self, base_iri, name)
-    self._orig_base_iri        = base_iri
-    self.loaded                = False
-    self._bnodes               = weakref.WeakValueDictionary()
-    self.storid                = world._abbreviate(base_iri[:-1])
-    #self.storid                = world._abbreviate(base_iri[:-1], False)
-    #if self.storid is None:
-    #  if world.graph and not need_write:
-    #    need_write = True
-    #    world.graph.acquire_write_lock()
-    #  self.storid              = world._abbreviate(base_iri[:-1], True)
+
+    try:
+      self.world       = world # Those 2 attributes are required before calling Namespace.__init__
+      self._namespaces = weakref.WeakValueDictionary()
+      Namespace.__init__(self, self, base_iri, name)
+      self._orig_base_iri        = base_iri
+      self.loaded                = False
+      self._bnodes               = weakref.WeakValueDictionary()
+      self.storid                = world._abbreviate(base_iri[:-1])
+
+      self._imported_ontologies  = CallbackList([], self, Ontology._import_changed)
+      self.metadata              = Metadata(self, self.storid)
+
+      if world.graph is None:
+        self.graph = None
+      else:
+        self.graph, new_in_quadstore = world.graph.sub_graph(self)
+        for method in self.graph.__class__.BASE_METHODS + self.graph.__class__.ONTO_METHODS:
+          setattr(self, method, getattr(self.graph, method))
+        if not new_in_quadstore:
+          self._load_properties()
+
+      world.ontologies[self._base_iri] = self
+      if _LOG_LEVEL: print("* Owlready2 * Creating new ontology %s <%s>." % (self.name, self._base_iri), file = sys.stderr)
+
+      if (not LOADING) and (not self.graph is None):
+        if not self._has_obj_triple_spo(self.storid, rdf_type, owl_ontology):
+          self._add_obj_triple_spo(self.storid, rdf_type, owl_ontology)
+
+      if not self.world._rdflib_store is None: self.world._rdflib_store._add_onto(self)
       
-    self._imported_ontologies  = CallbackList([], self, Ontology._import_changed)
-    self.metadata              = Metadata(self, self.storid)
-    
-    #if world.graph: world.graph.acquire_write_lock()
-    
-    if world.graph is None:
-      self.graph = None
-    else:
-      self.graph, new_in_quadstore = world.graph.sub_graph(self)
-      for method in self.graph.__class__.BASE_METHODS + self.graph.__class__.ONTO_METHODS:
-        setattr(self, method, getattr(self.graph, method))
-      if not new_in_quadstore:
-        self._load_properties()
-        
-    world.ontologies[self._base_iri] = self
-    if _LOG_LEVEL: print("* Owlready2 * Creating new ontology %s <%s>." % (self.name, self._base_iri), file = sys.stderr)
-    
-    if (not LOADING) and (not self.graph is None):
-      if not self._has_obj_triple_spo(self.storid, rdf_type, owl_ontology):
-        #if not need_write:
-        #  need_write = True
-        #  world.graph.acquire_write_lock()
-        self._add_obj_triple_spo(self.storid, rdf_type, owl_ontology)
-        
-    if not self.world._rdflib_store is None: self.world._rdflib_store._add_onto(self)
-    
-    if world.graph: world.graph.release_write_lock()
-    #if need_write: world.graph.release_write_lock()
+    finally:
+      if world.graph: world.graph.release_write_lock()
 
   def get_base_iri(self): return self._base_iri
   def set_base_iri(self, new_base_iri, rename_entities = True):
     if self.world.graph: self.world.graph.acquire_write_lock()
 
-    del self.world.ontologies[self._base_iri]
-    del self._namespaces[self._base_iri]
-    
-    old_base_iri = self._base_iri
-    if rename_entities:
-      self.world._refactor_onto(self.storid, old_base_iri, new_base_iri)
-    else:
-      self.world._refactor(self.storid, new_base_iri)
-      
-    self._base_iri = new_base_iri
-    self.world.ontologies[new_base_iri] = self._namespaces[new_base_iri] = self
-    
-    if rename_entities: # Update Namespaces with the same base IRI
-      for d, namespace in [(self.world._namespaces, v) for v in self.world._namespaces.values()] + [(ontology._namespaces, v) for ontology in self.world.ontologies.values() for v in ontology._namespaces.values()]:
-        if (not isinstance(namespace, Ontology)) and (namespace._base_iri == old_base_iri):
-          del d[old_base_iri]
-          namespace._base_iri = new_base_iri
-          d[new_base_iri] = namespace
-          
-    else: # Create a Namespace for replacing the ontology
+    try:
+      del self.world.ontologies[self._base_iri]
+      del self._namespaces[self._base_iri]
+
+      old_base_iri = self._base_iri
+      if rename_entities:
+        self.world._refactor_onto(self.storid, old_base_iri, new_base_iri)
+      else:
+        self.world._refactor(self.storid, new_base_iri)
+
       self._base_iri = new_base_iri
-      namespace = self.get_namespace(old_base_iri)
-      for entity in self.world._entities.values():
-        if entity.namespace is self: entity.namespace = namespace
-        
-    if self.world.graph: self.world.graph.release_write_lock()
+      self.world.ontologies[new_base_iri] = self._namespaces[new_base_iri] = self
+
+      if rename_entities: # Update Namespaces with the same base IRI
+        for d, namespace in [(self.world._namespaces, v) for v in self.world._namespaces.values()] + [(ontology._namespaces, v) for ontology in self.world.ontologies.values() for v in ontology._namespaces.values()]:
+          if (not isinstance(namespace, Ontology)) and (namespace._base_iri == old_base_iri):
+            del d[old_base_iri]
+            namespace._base_iri = new_base_iri
+            d[new_base_iri] = namespace
+
+      else: # Create a Namespace for replacing the ontology
+        self._base_iri = new_base_iri
+        namespace = self.get_namespace(old_base_iri)
+        for entity in self.world._entities.values():
+          if entity.namespace is self: entity.namespace = namespace
+          
+    finally:  
+      if self.world.graph: self.world.graph.release_write_lock()
   base_iri = property(get_base_iri, set_base_iri)
   
   def destroy(self, update_relation = False, update_is_a = False):
     self.world.graph.acquire_write_lock()
-        
-    if update_relation:
-      for s, p in self.graph.execute("""SELECT DISTINCT s, p FROM quads WHERE c=?""", (self.graph.c,)):
-        entity = self.world._entities.get(s)
-        if (not entity is None) and (not entity.namespace.ontology is self):
-          prop = self.world._entities.get(p)
-          if not prop is None:
-            try: delattr(entity, prop.python_name)
-            except AttributeError: pass
+
+    try:
+      if update_relation:
+        for s, p in self.graph.execute("""SELECT DISTINCT s, p FROM quads WHERE c=?""", (self.graph.c,)):
+          entity = self.world._entities.get(s)
+          if (not entity is None) and (not entity.namespace.ontology is self):
+            prop = self.world._entities.get(p)
+            if not prop is None:
+              try: delattr(entity, prop.python_name)
+              except AttributeError: pass
+
+      if update_is_a:
+        entities_needing_update = set()
+        for s, p in self.graph.execute("""SELECT DISTINCT s, o FROM objs WHERE c=? AND p=?""", (self.graph.c, rdf_type)):
+          entity = self.world._entities.get(s)
+          if (not entity is None) and (not entity.namespace.ontology is self): entities_needing_update.add(entity)
+
+      del self.world.ontologies[self._base_iri]
+      if self._orig_base_iri != self._base_iri: del self.world.ontologies[self._orig_base_iri]
+
+      self.graph.destroy()
+      for entity in list(self.world._entities.values()):
+        if entity.namespace.ontology is self: del self.world._entities[entity.storid]
+
+      if update_is_a:
+        for entity in entities_needing_update:
+          with LOADING:
+            entity.is_a = [self.world._get_by_storid(o) for o in self.world.graph._get_obj_triples_sp_o(entity.storid, rdf_type)]
             
-    if update_is_a:
-      entities_needing_update = set()
-      for s, p in self.graph.execute("""SELECT DISTINCT s, o FROM objs WHERE c=? AND p=?""", (self.graph.c, rdf_type)):
-        entity = self.world._entities.get(s)
-        if (not entity is None) and (not entity.namespace.ontology is self): entities_needing_update.add(entity)
-        
-    del self.world.ontologies[self._base_iri]
-    if self._orig_base_iri != self._base_iri: del self.world.ontologies[self._orig_base_iri]
-    
-    self.graph.destroy()
-    for entity in list(self.world._entities.values()):
-      if entity.namespace.ontology is self: del self.world._entities[entity.storid]
-      
-    if update_is_a:
-      for entity in entities_needing_update:
-        with LOADING:
-          entity.is_a = [self.world._get_by_storid(o) for o in self.world.graph._get_obj_triples_sp_o(entity.storid, rdf_type)]
-          
-    self.world.graph.release_write_lock()
+    finally:
+      self.world.graph.release_write_lock()
 
   def _entity_destroyed(self, entity): pass
     
@@ -1041,72 +921,74 @@ class Ontology(Namespace, _GraphManager):
       
     self.world.graph.acquire_write_lock()
     
-    if reload: self._destroy_cached_entities()
-    
-    new_base_iri = None
-    if f.startswith("http:") or f.startswith("https:"):
-      if  reload or (self.graph.get_last_update_time() == 0.0): # Never loaded
-        if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
-        try:
-          fileobj = urllib.request.urlopen(url or f)
-        except:
-          if not ((url or f).endswith(".owl") or (url or f).endswith(".rdf") or (url or f).endswith("/")):
-            try:
-              fileobj = urllib.request.urlopen("%s/" % (url or f)) # Add missing trailing /, e.g. for https://spec.edmcouncil.org/fibo/ontology/master/latest/BE/LegalEntities/LegalPersons
-            except:
-              raise OwlReadyOntologyParsingError("Cannot download '%s/'!" % (url or f))
-          else:
-            raise OwlReadyOntologyParsingError("Cannot download '%s'!" % (url or f))
-        try:
-          new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
-        except OwlReadyOntologyParsingError:
-          if f.endswith(".owl") or f.endswith(".rdf") or f.endswith(".xml") or url: raise
-          else:
-            fileobj2 = None
-            for ext in ["owl", "rdf", "xml"]:
-              f2 = "%s.%s" % (f, ext)
+    try:
+      if reload: self._destroy_cached_entities()
+
+      new_base_iri = None
+      if f.startswith("http:") or f.startswith("https:"):
+        if  reload or (self.graph.get_last_update_time() == 0.0): # Never loaded
+          if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
+          try:
+            fileobj = urllib.request.urlopen(url or f)
+          except:
+            if not ((url or f).endswith(".owl") or (url or f).endswith(".rdf") or (url or f).endswith("/")):
               try:
-                fileobj2 = urllib.request.urlopen(f2)
-                break
-              except: pass
-            if not fileobj2: raise
-            
-            try:     new_base_iri = self.graph.parse(fileobj2, default_base = self._orig_base_iri, **args)
-            finally: fileobj2.close()
-        finally: fileobj.close()
-        
-    elif fileobj:
-      if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, getattr(fileobj, "name", "") or getattr(fileobj, "url", "???")), file = sys.stderr)
-      try:     new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
-      finally: fileobj.close()
-    else:
-      if reload or (self.graph.get_last_update_time() == 0.0):
-        if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
-        fileobj = open(f, "rb")
+                fileobj = urllib.request.urlopen("%s/" % (url or f)) # Add missing trailing /, e.g. for https://spec.edmcouncil.org/fibo/ontology/master/latest/BE/LegalEntities/LegalPersons
+              except:
+                raise OwlReadyOntologyParsingError("Cannot download '%s/'!" % (url or f))
+            else:
+              raise OwlReadyOntologyParsingError("Cannot download '%s'!" % (url or f))
+          try:
+            new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
+          except OwlReadyOntologyParsingError:
+            if f.endswith(".owl") or f.endswith(".rdf") or f.endswith(".xml") or url: raise
+            else:
+              fileobj2 = None
+              for ext in ["owl", "rdf", "xml"]:
+                f2 = "%s.%s" % (f, ext)
+                try:
+                  fileobj2 = urllib.request.urlopen(f2)
+                  break
+                except: pass
+              if not fileobj2: raise
+
+              try:     new_base_iri = self.graph.parse(fileobj2, default_base = self._orig_base_iri, **args)
+              finally: fileobj2.close()
+          finally: fileobj.close()
+
+      elif fileobj:
+        if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, getattr(fileobj, "name", "") or getattr(fileobj, "url", "???")), file = sys.stderr)
         try:     new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
         finally: fileobj.close()
       else:
-        if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s (cached)..." % self.name, file = sys.stderr)
-        
-    self.loaded = True
+        if reload or (self.graph.get_last_update_time() == 0.0):
+          if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s from %s..." % (self.name, f), file = sys.stderr)
+          fileobj = open(f, "rb")
+          try:     new_base_iri = self.graph.parse(fileobj, default_base = self._orig_base_iri, **args)
+          finally: fileobj.close()
+        else:
+          if _LOG_LEVEL: print("* Owlready2 *     ...loading ontology %s (cached)..." % self.name, file = sys.stderr)
 
-    if new_base_iri and (new_base_iri != self._base_iri):
-      self.graph.add_ontology_alias(new_base_iri, self._base_iri)
-      self._base_iri = new_base_iri
-      self._namespaces[self._base_iri] = self.world.ontologies[self._base_iri] = self
-      if new_base_iri.endswith("#") or new_base_iri.endswith("/"):
-        self.storid = self.world._abbreviate(new_base_iri[:-1])
-      else:
-        self.storid = self.world._abbreviate(new_base_iri)
-      self.metadata = Metadata(self, self.storid) # Metadata depends on storid
+      self.loaded = True
+
+      if new_base_iri and (new_base_iri != self._base_iri):
+        self.graph.add_ontology_alias(new_base_iri, self._base_iri)
+        self._base_iri = new_base_iri
+        self._namespaces[self._base_iri] = self.world.ontologies[self._base_iri] = self
+        if new_base_iri.endswith("#") or new_base_iri.endswith("/"):
+          self.storid = self.world._abbreviate(new_base_iri[:-1])
+        else:
+          self.storid = self.world._abbreviate(new_base_iri)
+        self.metadata = Metadata(self, self.storid) # Metadata depends on storid
+
+      elif not self.graph._has_obj_triple_spo(self.storid, rdf_type, owl_ontology): # Not always present (e.g. not in dbpedia)
+        #if self.world.graph: self.world.graph.acquire_write_lock() # Already locked
+        self._add_obj_triple_raw_spo(self.storid, rdf_type, owl_ontology)
+        #if self.world.graph: self.world.graph.release_write_lock()
+        
+    finally:
+      self.world.graph.release_write_lock()
       
-    elif not self.graph._has_obj_triple_spo(self.storid, rdf_type, owl_ontology): # Not always present (e.g. not in dbpedia)
-      if self.world.graph: self.world.graph.acquire_write_lock()
-      self._add_obj_triple_raw_spo(self.storid, rdf_type, owl_ontology)
-      if self.world.graph: self.world.graph.release_write_lock()
-      
-    self.world.graph.release_write_lock()
-    
     # Load imported ontologies
     imported_ontologies = [self.world.get_ontology(self._unabbreviate(abbrev_iri)).load() for abbrev_iri in self.world._get_obj_triples_sp_o(self.storid, owl_imports)]
     self._imported_ontologies._set(imported_ontologies)

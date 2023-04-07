@@ -62,7 +62,7 @@ class _ConnexionPool(object):
 
 class Graph(BaseMainGraph):
   _SUPPORT_CLONING = True
-  def __init__(self, filename, clone = None, exclusive = True, sqlite_tmp_dir = "", world = None, profiling = False, read_only = False, enable_gevent = False):
+  def __init__(self, filename, clone = None, exclusive = True, sqlite_tmp_dir = "", world = None, profiling = False, read_only = False, enable_thread_parallelism = False, lock = None):
     exists        = os.path.exists(filename) and os.path.getsize(filename) # BEFORE creating db!
     initialize_db = (clone is None) and ((filename == ":memory:") or (not exists))
     
@@ -169,26 +169,27 @@ class Graph(BaseMainGraph):
     else:
       self.execute  = self.db.execute
       
-    self.has_gevent = enable_gevent
-    if enable_gevent:
-      self.has_gevent = True
-      if exclusive: raise ValueError("Cannot enable GEvent with exclusive mode! Please add 'exclusive=False'.")
+    self.has_thread_parallelism = enable_thread_parallelism
+    if enable_thread_parallelism:
+      self.has_thread_parallelism = True
+      if exclusive: raise ValueError("Cannot enable thread parallelism with exclusive mode! Please add 'exclusive=False'.")
       self.connexion_pool  = _ConnexionPool(uri)
-      #import gevent.hub
-      #self._get_gevent_hub = gevent.hub.get_hub
         
       
     self.c_2_onto          = {}
     self.onto_2_subgraph   = {}
-    #self.last_numbered_iri = {}
     self.world             = world
     self.c                 = None
     self.nb_added_triples  = 0
 
-    if read_only:
+    if lock:
+      self.lock = lock
+      self.acquire_write_lock = self._acquire_write_lock_with_lock
+      self.release_write_lock = self._release_write_lock_with_lock
+    elif read_only:
       self.lock = multiprocessing.RLock()
-      self.acquire_write_lock = self._acquire_write_lock_read_only
-      self.release_write_lock = self._release_write_lock_read_only
+      self.acquire_write_lock = self._acquire_write_lock_with_lock
+      self.release_write_lock = self._release_write_lock_with_lock
       
     self.lock_level = 0
     
@@ -491,12 +492,9 @@ class Graph(BaseMainGraph):
 ('resources', 'resources', '%s 1')
 """ % (nb_objs, nb_objs, nb_datas, nb_datas, nb_iris, nb_iris))
 
-
-    
     #self.execute("""PRAGMA analysis_limit = 100""")
     #self.execute("""ANALYZE""")
     self.execute("""ANALYZE sqlite_schema""")
-    
     
   def set_indexed(self, indexed): pass
   
@@ -508,10 +506,12 @@ class Graph(BaseMainGraph):
     self.lock_level += 1
   def release_write_lock(self):
     self.lock_level -= 1
-  def _acquire_write_lock_read_only(self):
+  def _acquire_write_lock_with_lock(self):
     self.lock.acquire()
-  def _release_write_lock_read_only(self):
+    self.lock_level += 1
+  def _release_write_lock_with_lock(self):
     self.lock.release()
+    self.lock_level -= 1
   def has_write_lock(self): return self.lock_level
   
   def select_abbreviate_method(self):

@@ -24,7 +24,7 @@ def _default_spawn(f):
 
 
 def execute_many(onto, prepared_queries, paramss, spawn = True):
-  if onto.world.graph.has_gevent:
+  if onto.world.graph.has_thread_parallelism:
     if onto.world.graph.has_changes():
       raise RuntimeError("Cannot execute parallelized queries on uncommited database. Please call World.save() before.")
     

@@ -102,9 +102,9 @@ class BaseTest(object):
     TMPFILES.append(filename)
     return filename
     
-  def new_world(self, exclusive = True, enable_gevent = False):
+  def new_world(self, exclusive = True, enable_thread_parallelism = False):
     filename = self.new_tmp_file()
-    world = World(filename = filename, exclusive = exclusive, enable_gevent = enable_gevent)
+    world = World(filename = filename, exclusive = exclusive, enable_thread_parallelism = enable_thread_parallelism)
           
     return world
   
@@ -7932,7 +7932,7 @@ for i in range(500):
     assert s == 300 + 4 + 200 * NB
     
   def test_parallel_6(self):
-    world = self.new_world(exclusive = False, enable_gevent = True)
+    world = self.new_world(exclusive = False, enable_thread_parallelism = True)
     onto  = world.get_ontology("http://test.org/onto.owl")
     with onto:
       class C(Thing): pass
@@ -7973,7 +7973,7 @@ for i in range(500):
     assert t_para < t_mono
     
   def xxx_test_parallel_7(self):
-    world = World(filename = "/home/jiba/tmp/pym.sqlite3", exclusive = False, enable_gevent = True)
+    world = World(filename = "/home/jiba/tmp/pym.sqlite3", exclusive = False, enable_thread_parallelism = True)
     #q = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a owl:Class . }""")
     q0 = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a* owl:ObjectProperty . }""")
     q1 = world.prepare_sparql("""SELECT (COUNT(?x) AS ?nb) { ?x a* owl:AnnotationProperty . }""")
