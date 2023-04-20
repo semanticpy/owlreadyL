@@ -1,5 +1,16 @@
-Owlready2
+OwlreadyL
 =========
+
+OwlreadyL -  a light-weight version of owlready2, an OWL ontology development tool for python by Jean-Baptiste Lamy.
+
+Features
+--------
+
+ * owlready2 legacy code removed
+ * higher modularisation
+ * owlready2 essential core 
+ * improved documentation
+
 
 .. image:: https://readthedocs.org/projects/owlready2/badge/?version=latest
    :target: http://owlready2.readthedocs.io/en/latest/
