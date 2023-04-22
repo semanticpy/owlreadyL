@@ -6,7 +6,9 @@ import sys, os, time
 from owlready2 import *
 
 #default_world.set_backend(filename = "/home/jiba/tmp/quadstore_omop_sample_dataset.sqlite3")
-default_world.set_backend(filename = "/home/jiba/tmp/quadstore_v522_data.sqlite3")
+
+# python tempdir should be used instead of /tmp
+default_world.set_backend(filename = "/tmp/quadstore_v522_data.sqlite3")
 
 PYM = get_ontology("http://PYM/").load()
 omop_cdm = get_ontology("http://abimed.fr/onto/omop_cdm.owl")#.load()

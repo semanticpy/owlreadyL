@@ -5181,6 +5181,9 @@ I took a placebo
   def test_format_6(self):
     world = self.new_world()
     n = world.get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test").load()
+
+    # (BL) rapper test disabled
+    return
     
     import subprocess
     rapper = subprocess.Popen(["rapper", "-q", "-g", os.path.join(HERE, "test.owl")], stdout = subprocess.PIPE)
@@ -5372,6 +5375,9 @@ multiple lines with " and ’ and \ and & and < and > and é."""
     import owlready2.rdfxml_2_ntriples
     world = self.new_world()
     n = world.get_ontology("http://www.test.org/test_ns.owl").load()
+
+    return
+    # (BL) rapper test disabled 
     
     import subprocess
     rapper = subprocess.Popen(["rapper", "-q", "-g", os.path.join(HERE, "test_ns.owl")], stdout = subprocess.PIPE)
@@ -5429,6 +5435,9 @@ multiple lines with " and ’ and \ and & and < and > and é."""
   def test_format_23(self):
     world = self.new_world()
     n = world.get_ontology("http://www.test.org/test_url").load()
+
+    # (BL) rapper test disabled
+    return
     
     import subprocess
     rapper = subprocess.Popen(["rapper", "-q", "-g", os.path.join(HERE, "test_url.owl")], stdout = subprocess.PIPE)

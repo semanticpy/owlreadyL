@@ -7,6 +7,10 @@
 *.py[cod]
 __pycache__
 
+# linux libraries
+*.so
+
+
 # Log files
 *.log
 

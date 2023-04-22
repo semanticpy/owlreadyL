@@ -31,7 +31,7 @@ version = open(os.path.join(HERE, "__init__.py")).read().split('VERSION = "', 1)
 
 def do_setup(extensions):
   return setuptools.setup(
-  name         = "Owlready2",
+  name         = "owlready2",
   version      = version,
   license      = "LGPLv3+",
   description  = "A package for ontology-oriented programming in Python: load OWL 2.0 ontologies as Python objects, modify them, save them, and perform reasoning via HermiT. Includes an optimized RDF quadstore.",
