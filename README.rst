@@ -716,7 +716,8 @@ version 2 - 0.42
 * World now supports custom lock (e.g. World(lock = ...))
 * Bugfixes:
   - Fix World(enable_thread_parallelism = True) (was named enable_gevent)
-    
+  - Fix blank nodes in rdflib_store
+
     
 Links
 -----

@@ -72,7 +72,7 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
     elif isinstance(s, rdflib.term.BNode  ): s = self._bnode_2_owlready(s)
     if   isinstance(p, rdflib.term.URIRef ): p = self.triplelite._abbreviate(str(p))
     if   isinstance(o, rdflib.term.URIRef ): o = self.triplelite._abbreviate(str(o)); d = None
-    elif isinstance(o, rdflib.term.BNode  ): o = -int(o); d = None
+    elif isinstance(o, rdflib.term.BNode  ): o = self._bnode_2_owlready(o); d = None
     elif isinstance(o, rdflib.term.Literal):
       if o.language is None:
         if o.datatype:
