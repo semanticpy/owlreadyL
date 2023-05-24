@@ -717,7 +717,8 @@ version 2 - 0.42
 * Bugfixes:
   - Fix World(enable_thread_parallelism = True) (was named enable_gevent)
   - Fix blank nodes in rdflib_store
-  - Fix FILTER in SPARQL when the filter was just after a recursive query 
+  - Fix FILTER in SPARQL when the filter was just after a recursive query
+  - Fix recursive query in SPARQL involving variables in their right part
 
     
 Links

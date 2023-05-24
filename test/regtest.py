@@ -10177,7 +10177,31 @@ SELECT ?restr {
     
     assert r == [[address.max(1)]]
     
+  def test_159(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
     
+    with onto:
+      class Medicament(Thing): pass
+      class Patient(Thing): pass
+      class match(AnnotationProperty): pass
+      
+      class BetaBloquant(Medicament): pass
+      class Verapamil(Medicament): pass
+      class Metformine(Medicament): pass
+      class Aspirin(Medicament): pass
+      
+      patient1 = Patient(match = [BetaBloquant, Verapamil])
+      
+    q, r = self.sparql(world, """
+SELECT DISTINCT ?cond {
+onto:patient1 onto:match ?x .
+?x rdfs:subClassOf* ?cond .
+}""", compare_with_rdflib = False)
+    
+    assert { i[0] for i in r } == { Thing, Medicament, BetaBloquant, Verapamil }
+
+      
 # Add test for Pellet
 
 for Class in [Test, Paper]:

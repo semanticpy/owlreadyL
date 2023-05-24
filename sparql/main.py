@@ -1353,6 +1353,8 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
     self.parse_triples(prelim_triples)
     self.finalize_columns()
     self.set_column_names(column_names)
+
+    extra_cols = self.columns[len(column_names):]
     
     p_direct_conditions   = []
     p_inversed_conditions = []
@@ -1378,24 +1380,26 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
     if p_direct_conditions:
       self.extra_sql += """
 UNION
-SELECT q.%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
+SELECT q.%s%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
   self.non_fixed,
   ", q.d"                 if self.need_d    else "",
   ", rec.%s" % self.fixed if self.need_orig else "",
   ", rec.nb+1"            if self.need_nb   else "",
+  "".join(", rec.%s" % col.name for col in extra_cols),
   "quads"                 if self.need_d    else "objs",
   self.name, " AND ".join(p_direct_conditions),
   "AND rec.nb=0 " if p.modifier == "?" else "",
   self.fixed, self.non_fixed)
-  
+      
     if p_inversed_conditions:
       self.extra_sql += """
 UNION
-SELECT q.%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
+SELECT q.%s%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
   self.fixed,
   ", q.d"                     if self.need_d    else "",
   ", rec.%s" % self.non_fixed if self.need_orig else "",
   ", rec.nb+1"                if self.need_nb   else "",
+  "".join(", rec.%s" % col.name for col in extra_cols),
   "quads"                     if self.need_d    else "objs",
   self.name, " AND ".join(p_inversed_conditions),
   "AND rec.nb=0 " if p.modifier == "?" else "",
