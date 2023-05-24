@@ -717,6 +717,7 @@ version 2 - 0.42
 * Bugfixes:
   - Fix World(enable_thread_parallelism = True) (was named enable_gevent)
   - Fix blank nodes in rdflib_store
+  - Fix FILTER in SPARQL when the filter was just after a recursive query 
 
     
 Links
@@ -737,7 +738,7 @@ Contact "Jiba" Jean-Baptiste Lamy:
 
   <jean-baptiste.lamy *@* univ-paris13 *.* fr>
   LIMICS
-  Université Sorbonne Paris Nord, Sorbonne Université, INSERM
+  INSERM, Université Sorbonne Paris Nord, Sorbonne Université
   Bureau 149
   74 rue Marcel Cachin
   93017 BOBIGNY

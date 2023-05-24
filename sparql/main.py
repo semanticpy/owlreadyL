@@ -783,7 +783,7 @@ class SQLQuery(FuncSupport):
   def parse_filter(self, filter):
     sql = self.parse_expression(filter.constraint)
     self.conditions.append(sql)
-              
+    
   def add_subquery(self, sub):
     if isinstance(sub, SQLNestedQuery):
       self.conditions.append(sub)
@@ -986,7 +986,6 @@ class SQLQuery(FuncSupport):
         self.parse_bind(triple)
         continue
       elif isinstance(triple, Filter):
-        self.parse_filter(triple)
         continue
       elif isinstance(triple, Block):
         if   isinstance(triple, SimpleTripleBlock) and (len(triple) == 0): continue # Empty
@@ -1025,6 +1024,10 @@ class SQLQuery(FuncSupport):
             var = self.parse_var(triples.ontology)
           self.create_conditions(conditions, table, "c", triples.ontology)
       if p.modifier == "+": conditions.append("%s.nb>0"  % table.name)
+      
+    for triple in self.triples: # Pass 7: create filters (at the end to ensure all bindings are available)
+      if isinstance(triple, Filter):
+        self.parse_filter(triple)
       
   def get_fix_levels(self, vars0, exclude_triple = None):
     vars0_names = { var.name for var in vars0 }

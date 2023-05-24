@@ -10129,8 +10129,8 @@ SELECT ?x WHERE { ?x a onto:Cé }
 
   def test_157(self):
     world = self.new_world()
-    onto1  = world.get_ontology("http://test.org/onto.owl")
-    onto2  = world.get_ontology("http://test.org/onto2.owl")
+    onto1 = world.get_ontology("http://test.org/onto.owl")
+    onto2 = world.get_ontology("http://test.org/onto2.owl")
     with onto1:
       class C(Thing): pass
       class p(C >> int): pass
@@ -10158,7 +10158,24 @@ SELECT ?x WHERE { ?x a onto:Cé }
     q, r = self.sparql(world, """SELECT ?i { GRAPH ?? { onto:c1 onto:p ?i } }""", [onto2], compare_with_rdflib = False)
     assert set(i for i, in r) == { 2, 3 }
     
+  def test_158(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
     
+    with onto:
+      class Person(Thing): pass
+      class address(Thing >> Thing): pass
+      
+      Person.is_a.append(address.max(1))
+      
+    q, r = self.sparql(world, """
+SELECT ?restr {
+  ??1 (rdfs:subClassOf | owl:equivalentClass)* ?restr .
+  FILTER(?restr < 0) .
+  ?restr owl:onProperty ??2 .
+}""", [Person, address], compare_with_rdflib = False)
+    
+    assert r == [[address.max(1)]]
     
     
 # Add test for Pellet
