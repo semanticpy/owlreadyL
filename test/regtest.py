@@ -107,11 +107,6 @@ class BaseTest(object):
     world = World(filename = filename, exclusive = exclusive, enable_thread_parallelism = enable_thread_parallelism)
     return world
   
-  def new_world(self, exclusive = True):
-    filename = self.new_tmp_file()
-    world = World(filename = filename, exclusive = exclusive)
-    return world
-  
   def new_ontology(self):
     global next_id
     next_id += 1
