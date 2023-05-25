@@ -42,7 +42,7 @@ class Translator(object):
     self.escape_mark                   = "@@@ESCAPE@@@"
     self.next_table_id                 = 1
     self.table_name_2_type             = {}
-    self.table_type_2_cols             = { "objs" : ["s", "p", "o"], "datas" : ["s", "p", "o", "d"], "quads" : ["s", "p", "o", "d"] , "one" : ["i"] }
+    self.table_type_2_cols             = { "objs" : ["s", "p", "o"], "datas" : ["s", "p", "o", "d"], "quads2" : ["s", "p", "o", "d"] , "one" : ["i"] }
     
     if not getattr(world.graph, "_has_sparql_func", False):
       register_python_builtin_functions(world)
@@ -216,8 +216,6 @@ class Translator(object):
         
     elif isinstance(block, FilterBlock):
       s = SQLNestedQuery(name)
-      #if isinstance(block, ExistsBlock): s.extra_sql = "IS NOT NULL"
-      #else:                              s.extra_sql = "IS NULL"
       s.exists = isinstance(block, ExistsBlock)
       if nested_inside: s.vars = nested_inside.vars
       preliminary = False
@@ -340,10 +338,6 @@ class PreparedQuery(object):
           r = db.execute(self.sql, sql_params)
         spawn(f).join()
         return r
-        #from gevent.hub import get_hub
-        #return get_hub().threadpool.apply(db.execute, (self.sql, sql_params))
-        
-        #return self.world.graph.execute_spawn(self.sql, sql_params, spawn)
     else:
       return self.world.graph.execute(self.sql, sql_params)
     
@@ -368,7 +362,7 @@ class PreparedSelectQuery(PreparedQuery):
           l2.append(self.world.graph.c_2_onto[l[i]])
           i += 1
         else:
-          if l[i + 1] is None:
+          if l[i + 1] == 'o':
             if l[i] is None: l2.append(None)
             else:            l2.append(self.world._to_python(l[i], None) or l[i])
           else:
@@ -389,7 +383,7 @@ class PreparedSelectQuery(PreparedQuery):
           l2.append(l[i])
           i += 1
         else:
-          if l[i + 1] is None:
+          if l[i + 1] == 'o':
             if l[i] is None: v = None
             else:            v = self.world._to_python(l[i], None) or l[i]
           else:
@@ -411,7 +405,7 @@ class PreparedSelectQuery(PreparedQuery):
           yield self.world.graph.c_2_onto[l[i]]
           i += 1
         else:
-          if l[i + 1] is None:
+          if l[i + 1] == 'o':
             if l[i] is None: l2.append(None)
             else:            l2.append(self.world._to_python(l[i], None) or l[i])
           else:
@@ -438,7 +432,7 @@ class PreparedSelectQuery(PreparedQuery):
           l2.append(self.world.graph.c_2_onto[l[i]].base_iri)
           i += 1
         else:
-          if l[i + 1] is None:
+          if l[i + 1] == 'o':
             if   l[i] is None: l2.append("")
             elif l[i] > 0:     l2.append(self.world._unabbreviate(l[i]))
             else:              l2.append("_:%s" % (-l[i]))
@@ -470,7 +464,7 @@ class PreparedSelectQuery(PreparedQuery):
           binding[colnames[c]] = { "type" : "uri", "value" : self.world.graph.c_2_onto[l[i]].base_iri }
           i += 1
         else:
-          if l[i + 1] is None:
+          if l[i + 1] == 'o':
             if   l[i] is None: pass
             elif l[i] > 0:     binding[colnames[c]] = { "type" : "uri", "value" : self.world._unabbreviate(l[i]) }
             else:              binding[colnames[c]] = { "type" : "bnode", "value" : "r%s" % (-l[i]) }
@@ -511,7 +505,7 @@ class PreparedSelectQuery(PreparedQuery):
           xml += """        <uri>%s</uri>\n""" % self.world.graph.c_2_onto[l[i]].base_iri
           i += 1
         else:
-          if l[i + 1] is None:
+          if l[i + 1] == 'o':
             if   l[i] is None: pass
             elif l[i] > 0:     xml += """        <uri>%s</uri>\n""" % self.world._unabbreviate(l[i])
             else:              xml += """        <bnode>r%s</bnode>\n""" % (-l[i])
@@ -598,9 +592,9 @@ class Column(object):
 class Variable(object):
   def __init__(self, name):
     self.name           = name
-    self.type           = "quads"
+    self.type           = "quads2"
     self.fixed_datatype = None
-    self.prop_type      = "quads" # Type when the variable is used as a property
+    self.prop_type      = "quads2" # Type when the variable is used as a property
     self.bindings       = []
     self.bind           = None
     self.initial_query  = None
@@ -611,7 +605,7 @@ class Variable(object):
   def get_binding(self, query):
     if not self.bindings:
       #print("* Owlready2 * WARNING: variable without binding in SPARQL, use a suboptimal option", file = sys.stderr)
-      table = Table(query, "any%s" % query.translator.next_table_id, """(SELECT DISTINCT s AS o, NULL AS d FROM quads UNION SELECT DISTINCT o, d FROM quads)""")
+      table = Table(query, "any%s" % query.translator.next_table_id, """(SELECT DISTINCT s AS o, 'o' AS d FROM quads2 UNION SELECT DISTINCT o, d FROM quads2)""")
       table.subquery = query
       query.translator.next_table_id += 1
       self.bindings.append("%s.o" % table.name)
@@ -621,12 +615,12 @@ class Variable(object):
     return binding
   
   def update_type(self, type):
-    if   self.type == "quads": self.type = type
-    elif (type != self.type) and (type != "quads"):
+    if   self.type == "quads2": self.type = type
+    elif (type != self.type) and (type != "quads2"):
       raise ValueError("Variable %s cannot be both %s and %s!\n\n(NB if you are querying entities that are objects of a rdfs:label or comment relations, please add the following code to prevent Owlready from assuming that label and comment are data and not entities:\n    import owlready2.sparql.parser\n    owlready2.sparql.parser._DATA_PROPS = set()\n)" % (self.name, self.type, type))
     
 class Table(object):
-  def __init__(self, query, name, type = "quads", index = None, join = ",", join_conditions = None):
+  def __init__(self, query, name, type = "quads2", index = None, join = ",", join_conditions = None):
     self.name            = name
     self.type            = type
     self.index           = index
@@ -776,7 +770,7 @@ class SQLQuery(FuncSupport):
     var.bindings.insert(0, self.parse_expression(bind.expression))
     
     fixed_type, fixed_datatype = self.infer_expression_type(bind.expression, accept_zero = True)
-    if fixed_type is None: fixed_type = "quads"
+    if fixed_type is None: fixed_type = "quads2"
     var.update_type(fixed_type)
     if fixed_type != "objs":  var.fixed_datatype = fixed_datatype
     
@@ -841,8 +835,8 @@ class SQLQuery(FuncSupport):
     for triple in list(self.triples): # Pass 2: Determine var type, which may be changed due to prop type
       if isinstance(triple, (Bind, Filter, Block)): continue
       s, p, o = triple
-      if (triple.local_table_type == "quads") and (o.name == "VAR"): triple.local_table_type = self.parse_var(o).type
-      if (triple.local_table_type == "quads") and (p.name == "VAR"): triple.local_table_type = self.parse_var(p).prop_type # Repeat (table.type == "quads") condition, since table.type may have been changed by the previous if block
+      if (triple.local_table_type == "quads2") and (o.name == "VAR"): triple.local_table_type = self.parse_var(o).type
+      if (triple.local_table_type == "quads2") and (p.name == "VAR"): triple.local_table_type = self.parse_var(p).prop_type # Repeat (table.type == "quads2") condition, since table.type may have been changed by the previous if block
       if o.name == "VAR": self.parse_var(o).update_type(triple.local_table_type)
       
     non_preliminary_triples = []
@@ -943,7 +937,7 @@ class SQLQuery(FuncSupport):
           for var in static.vars:
             var = static.translator.main_query.vars.get(var)
             if var: static.types.append(var.type)
-            else:   static.types.append("quads")
+            else:   static.types.append("quads2")
               
           var_2_columns = defaultdict(list)
           for column in static.translator.main_query.columns:
@@ -1101,7 +1095,7 @@ class SQLQuery(FuncSupport):
           if column.name == "%sd" % n[:-1]:
             if str(column.binding) == "0":
               sql_d = None
-              conditions.append("%s.%sd IS NOT NULL" % (table.name, n[:-1])) # Datatype part
+              conditions.append("%s.%sd != 'o'" % (table.name, n[:-1])) # Datatype part
             break
           
           
@@ -1165,7 +1159,7 @@ class SQLQuery(FuncSupport):
     if   self.raw_selects == "*": selects = [self.vars[var] for var in self.block.get_ordered_vars() if not var.startswith("??")]      
     elif self.raw_selects:        selects = self.raw_selects
     elif self.tables:
-      if self.tables[0].type in { "objs", "datas", "quads" }:
+      if self.tables[0].type in { "objs", "datas", "quads2" }:
                                   selects = ["1"] # Nothing to select (see TestSPARQL.test_128)
       else:                       selects = ["%s.%s" % (self.tables[0].name, col) for col in self.translator.table_type_2_cols[self.tables[0].type]]
     else:                         selects = []
@@ -1240,7 +1234,7 @@ class SQLQuery(FuncSupport):
             return binding, "datas", other_sql_d, other_sql_d_type
           else:
             return binding, "datas", x.fixed_datatype, "datas"
-        type = "datas" if x.type == "datas" else "quads"
+        type = "datas" if x.type == "datas" else "quads2"
         if binding.startswith("static"): # no 'd' for static yet
           return binding, type, 0, type
         else:
@@ -1288,9 +1282,9 @@ class SQLCompoundQuery(object):
     for query in self.queries:
       for i, column in enumerate(query.columns):
         if column.name.endswith("o") and (column.name.split("_", 1)[0] in has_d):
-          column.type = "quads"
+          column.type = "quads2"
           if (column is query.columns[-1]) or (not query.columns[i+1].name.endswith("d")):
-            query.columns.insert(i + 1, Column(column.var, "quads", "NULL", "%sd" % column.name[:-1], i + 1))
+            query.columns.insert(i + 1, Column(column.var, "quads2", "'o'", "%sd" % column.name[:-1], i + 1))
       for i, column in enumerate(query.columns): # Re-index columns
         column.index = i
     self.columns = self.queries[0].columns
@@ -1340,7 +1334,7 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
     self.need_orig    = not self.fixed_var is None # XXX Optimizable
     self.need_nb      = p.modifier != "*"
     
-    SQLQuery.__init__(self, "%s_%s" % (name, "quads" if self.need_d else "objs"))
+    SQLQuery.__init__(self, "%s_%s" % (name, "quads2" if self.need_d else "objs"))
     self.recursive    = True
     self.preliminary  = True
     
@@ -1349,7 +1343,7 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
     column_names = [self.non_fixed] + ["d"] * self.need_d + [self.fixed] * self.need_orig + ["nb"] * self.need_nb
     if self.fixed_var and prelim_triples: value = self.fixed_var
     else:                                 value = s if self.fixed == "s" else o
-    self.parse_selects([value] + ["NULL"] * self.need_d + [value] * self.need_orig + ["0"] * self.need_nb)
+    self.parse_selects([value] + ["'o'"] * self.need_d + [value] * self.need_orig + ["0"] * self.need_nb)
     self.parse_triples(prelim_triples)
     self.finalize_columns()
     self.set_column_names(column_names)
@@ -1363,18 +1357,18 @@ class SQLRecursivePreliminaryQuery(SQLQuery):
       inversed_ps = [i for i in p if     i.inversed]
       if direct_ps:
         if len(direct_ps) == 1:
-          self.create_conditions(p_direct_conditions, Table(None, "q", "quads" if self.need_d else "objs"), "p", direct_ps[0])
+          self.create_conditions(p_direct_conditions, Table(None, "q", "quads2" if self.need_d else "objs"), "p", direct_ps[0])
         else:
           p_direct_conditions  .append("q.p IN (%s)" % ",".join(str(self._to_sql(i)[0]) for i in direct_ps))
           
       if inversed_ps:
         if len(inversed_ps) == 1:
-          self.create_conditions(p_inversed_conditions, Table(None, "q", "quads" if self.need_d else "objs"), "p", inversed_ps[0])
+          self.create_conditions(p_inversed_conditions, Table(None, "q", "quads2" if self.need_d else "objs"), "p", inversed_ps[0])
         else:
           p_inversed_conditions.append("q.p IN (%s)" % ",".join(str(self._to_sql(i)[0]) for i in inversed_ps))
           
     else:
-      self.create_conditions(p_direct_conditions, Table(None, "q", "quads" if self.need_d else "objs"), "p", p)
+      self.create_conditions(p_direct_conditions, Table(None, "q", "quads2" if self.need_d else "objs"), "p", p)
       
     self.extra_sql = ""
     if p_direct_conditions:
@@ -1386,7 +1380,7 @@ SELECT q.%s%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
   ", rec.%s" % self.fixed if self.need_orig else "",
   ", rec.nb+1"            if self.need_nb   else "",
   "".join(", rec.%s" % col.name for col in extra_cols),
-  "quads"                 if self.need_d    else "objs",
+  "quads2"                if self.need_d    else "objs",
   self.name, " AND ".join(p_direct_conditions),
   "AND rec.nb=0 " if p.modifier == "?" else "",
   self.fixed, self.non_fixed)
@@ -1400,7 +1394,7 @@ SELECT q.%s%s%s%s%s FROM %s q, %s rec WHERE %s %sAND q.%s=rec.%s""" % (
   ", rec.%s" % self.non_fixed if self.need_orig else "",
   ", rec.nb+1"                if self.need_nb   else "",
   "".join(", rec.%s" % col.name for col in extra_cols),
-  "quads"                     if self.need_d    else "objs",
+  "quads2"                    if self.need_d    else "objs",
   self.name, " AND ".join(p_inversed_conditions),
   "AND rec.nb=0 " if p.modifier == "?" else "",
   self.non_fixed, self.non_fixed)

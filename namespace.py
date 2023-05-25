@@ -200,6 +200,7 @@ WHERE q1.p=? AND q1.o=?
       
   def _to_python(self, o, d = None, main_type = None, main_onto = None, default_to_none = False):
     if d is None:
+      if   o is None: return None
       if   o < 0: return self._parse_bnode(o)
       if   o in _universal_abbrev_2_datatype: return _universal_abbrev_2_datatype[o] 
       else: return self.world._get_by_storid(o, None, main_type, main_onto, None, default_to_none)
@@ -482,6 +483,7 @@ class World(_GraphManager):
     
   def _del_triple_with_update(self, s, p, o, d = None):
     sub = None
+    if d == 'o': d = None # For SPARQL engine, because None is NULL in SQL, but '=' cannot be used on NULL
     
     if   (s > 0) and (s in self.world._entities):
       sub = self._entities[s]
@@ -535,9 +537,12 @@ class World(_GraphManager):
     is_a_triples = defaultdict(list)
     
     for triple in triples:
-      if len(triple) == 3: s, p, o    = triple; d = None
-      else:                s, p, o, d = triple
-      
+      if len(triple) == 3:
+        s, p, o    = triple; d = None
+      else:
+        s, p, o, d = triple
+        if d == 'o': d = None # For SPARQL engine, because None is NULL in SQL, but '=' cannot be used on NULL
+        
       if (p == rdf_type) or (p == rdfs_subclassof):
         is_a_triples[s, p].append(o)
         continue

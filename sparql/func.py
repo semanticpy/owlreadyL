@@ -299,7 +299,7 @@ class FuncSupport(object):
             e_type, ed = self.infer_expression_type(expression[2])
             if   e_type == "objs":  return "(SELECT iri FROM resources WHERE storid=%s)" % eo
             elif e_type == "datas": return "''||%s" % eo
-            else:                   return "IIF(%s IS NULL, (SELECT iri FROM resources WHERE storid=%s), ''||%s)" % (ed, eo, eo)
+            else:                   return "IIF(%s='o', (SELECT iri FROM resources WHERE storid=%s), ''||%s)" % (ed, eo, eo)
           elif func == "HTTP://WWW.W3.ORG/2001/XMLSCHEMA#DOUBLE":
             eo = self.parse_expression(expression[2])
             return "CAST(%s AS DOUBLE)" % eo
@@ -311,7 +311,7 @@ class FuncSupport(object):
             e_type, ed = self.infer_expression_type(expression[2])
             if   e_type == "objs":  return eo
             elif e_type == "datas": return "(SELECT storid FROM resources WHERE iri=%s)" % eo
-            else:                   return "IIF(%s IS NULL, %s, (SELECT storid FROM resources WHERE iri=%s))" % (ed, eo, eo)
+            else:                   return "IIF(%s='o', %s, (SELECT storid FROM resources WHERE iri=%s))" % (ed, eo, eo)
           elif func == "LANG":
             eo         = self.parse_expression     (expression[2])
             e_type, ed = self.infer_expression_type(expression[2])
@@ -320,18 +320,18 @@ class FuncSupport(object):
             eo         = self.parse_expression     (expression[2])
             e_type, ed = self.infer_expression_type(expression[2])
             if e_type == "objs": return "(%s > 0)" % eo
-            else:                return "(%s IS NULL) & (%s > 0)" % (ed, eo)
+            else:                return "(%s='o') & (%s > 0)" % (ed, eo)
           elif func == "ISBLANK":
             eo         = self.parse_expression     (expression[2])
             e_type, ed = self.infer_expression_type(expression[2])
             if e_type == "objs": return "(%s < 0)" % eo
-            else:                return "(%s IS NULL) & (%s < 0)" % (ed, eo)
+            else:                return "(%s='o') & (%s < 0)" % (ed, eo)
           elif func == "ISLITERAL":
             eo         = self.parse_expression     (expression[2])
             e_type, ed = self.infer_expression_type(expression[2])
             if   e_type == "objs":  return "0"
             elif e_type == "datas": return "1"
-            else:                   return "NOT(%s IS NULL)" % ed
+            else:                   return "NOT(%s='o')" % ed
           elif func == "ISNUMERIC":
             eo         = self.parse_expression     (expression[2])
             e_type, ed = self.infer_expression_type(expression[2])
@@ -346,7 +346,7 @@ class FuncSupport(object):
             e_type, ed = self.infer_expression_type(expression[2])
             return "IIF(TYPEOF(%s)='integer', %s, %s)" % (ed, ed, owlready2.rdf_langstring)
           elif func == "BOUND":
-            return "(%s IS NOT NULL)" % self.parse_expression(expression[2])
+            return "(%s!='o')" % self.parse_expression(expression[2])
           elif func == "YEAR":
             return "CAST(SUBSTR(%s, 1, 4) AS INTEGER)" % self.parse_expression(expression[2])
           elif func == "MONTH":
@@ -408,11 +408,11 @@ class FuncSupport(object):
             a1, a2 = self.infer_expression_type(expression[2][2], accept_zero)
             b1, b2 = self.infer_expression_type(expression[2][4], accept_zero)
             if accept_zero:
-              if a1 != b1: return "quads", 0
+              if a1 != b1: return "quads2", 0
               if a2 != b2: return a1, 0
               return a1, a2
             else:
-              if a1 != b1: a1 = "quads"
+              if a1 != b1: a1 = "quads2"
               if a2 != b2: return a1, "IIF(%s,%s,%s)" % (self.parse_expression(expression[2][0]), a2, b2)
               return a1, a2
           elif func == "COALESCE":
@@ -439,7 +439,7 @@ class FuncSupport(object):
             return self.infer_expression_type(expression[3], accept_zero)
           else:
             datatype = _FUNC_2_DATATYPE[func]
-            if datatype is None: return "objs", "NULL"
+            if datatype is None: return "objs", "'o'"
             return "datas", datatype
           
       for i in expression:
@@ -465,7 +465,7 @@ class FuncSupport(object):
         if not a1 is None:
           r1.add(a1)
           r2.add(a2)
-      if len(r1) != 1: return "quads", 0
+      if len(r1) != 1: return "quads2", 0
       if len(r2) != 1: return tuple(r1)[0], 0
       return tuple(r1)[0], tuple(r2)[0]
     
@@ -475,9 +475,9 @@ class FuncSupport(object):
     elif (expression.name == "FLOAT") or (expression.name == "DECIMAL"): return "datas", _universal_datatype_2_abbrev[float]
     elif  expression.name == "VAR":
       var = self.parse_var(expression)
-      if var.type == "objs": return "objs", "NULL"
+      if var.type == "objs": return "objs", "'o'"
       return var.type, "%sd" % var.get_binding(self)[:-1]
     elif  expression.name == "PARAM":
-      return "quads", "%sTypeOfParam?%s " % (self.translator.escape_mark, expression.number)
+      return "quads2", "%sTypeOfParam?%s " % (self.translator.escape_mark, expression.number)
     return None, None
   

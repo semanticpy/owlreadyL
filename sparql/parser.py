@@ -1154,7 +1154,7 @@ class UnionBlock(Block):
     r = Triple(r)
     if n == 1:
       table_types = { i[0].table_type for i in self }
-      if (len(table_types) > 1) or (table_types == { "quads" }): return None # quads is a virtual table; the "simple union" optimization does not benefit to such table in SQLite3
+      if (len(table_types) > 1) or (table_types == { "quads2" }): return None # quads is a virtual table; the "simple union" optimization does not benefit to such table in SQLite3
       r.table_type = tuple(table_types)[0]
     return [r]
   
@@ -1248,10 +1248,10 @@ class Triple(tuple):
     elif self[2].name in _DATA_TYPE:     self.table_type = "datas"
     elif p_storid in _OBJ_PROPS:         self.table_type = "objs"
     elif p_storid in _DATA_PROPS:        self.table_type = "datas"
-    elif not self.Prop:                  self.table_type = "quads"
+    elif not self.Prop:                  self.table_type = "quads2"
     elif isinstance(self.Prop, ObjectPropertyClass): self.table_type = "objs"
     elif isinstance(self.Prop, DataPropertyClass):   self.table_type = "datas"
-    else:                                            self.table_type = "quads"
+    else:                                            self.table_type = "quads2"
       
     
   def _get_ordered_vars(self, vars, ordered_vars):

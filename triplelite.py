@@ -197,10 +197,11 @@ class Graph(BaseMainGraph):
       self.prop_fts = set()
       
       self.execute("""CREATE TABLE store (version INTEGER, current_blank INTEGER, current_resource INTEGER)""")
-      self.execute("""INSERT INTO store VALUES (10, 0, 300)""")
+      self.execute("""INSERT INTO store VALUES (11, 0, 300)""")
       self.execute("""CREATE TABLE objs (c INTEGER, s INTEGER, p INTEGER, o INTEGER)""")
       self.execute("""CREATE TABLE datas (c INTEGER, s INTEGER, p INTEGER, o BLOB, d INTEGER)""")
       self.execute("""CREATE VIEW quads AS SELECT c,s,p,o,NULL AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""")
+      self.execute("""CREATE VIEW quads2 AS SELECT c,s,p,o,'o' AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""") # AVoid using NULL because, in SQL, NULL != NULL.
       
       self.execute("""CREATE TABLE ontologies (c INTEGER PRIMARY KEY, iri TEXT, last_update DOUBLE)""")
       self.execute("""CREATE TABLE ontology_alias (iri TEXT, alias TEXT)""")
@@ -431,6 +432,12 @@ class Graph(BaseMainGraph):
         self.execute("""CREATE INDEX index_objs_c ON objs(c)""")
         self.execute("""CREATE INDEX index_datas_c ON datas(c)""")
         self.execute("""UPDATE store SET version=10""")
+        self.db.commit()
+        version += 1
+        
+      if version == 10:
+        self.execute("""CREATE VIEW quads2 AS SELECT c,s,p,o,'o' AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""") # AVoid using NULL because, in SQL, NULL != NULL.
+        self.execute("""UPDATE store SET version=11""")
         self.db.commit()
         version += 1
         
