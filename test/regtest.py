@@ -105,7 +105,11 @@ class BaseTest(object):
   def new_world(self, exclusive = True, enable_thread_parallelism = False):
     filename = self.new_tmp_file()
     world = World(filename = filename, exclusive = exclusive, enable_thread_parallelism = enable_thread_parallelism)
-          
+    return world
+  
+  def new_world(self, exclusive = True):
+    filename = self.new_tmp_file()
+    world = World(filename = filename, exclusive = exclusive)
     return world
   
   def new_ontology(self):
@@ -10197,11 +10201,53 @@ SELECT ?restr {
 SELECT DISTINCT ?cond {
 onto:patient1 onto:match ?x .
 ?x rdfs:subClassOf* ?cond .
-}""", compare_with_rdflib = False)
+}""")
     
     assert { i[0] for i in r } == { Thing, Medicament, BetaBloquant, Verapamil }
 
+  def test_160(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    
+    with onto:
+      class Medicament(Thing): pass
+      class Patient(Thing): pass
+      class medicaments(Patient >> Medicament): pass
       
+      class Regle(Thing): pass
+      class nb_condition(Regle >> int, FunctionalProperty): pass
+      class conditions(AnnotationProperty): pass
+      class match(AnnotationProperty): pass
+      
+      class BetaBloquant(Medicament): pass
+      class Verapamil(Medicament): pass
+      class Metformine(Medicament): pass
+      class Aspirin(Medicament): pass
+      
+      patient1 = Patient(medicaments = [BetaBloquant(), Verapamil()])
+      regle1 = Regle(conditions = [BetaBloquant, Verapamil], nb_condition = 2)
+      
+      q, r = self.sparql(world, """
+      INSERT { ??1 onto:match ?cond . }
+      WHERE {
+      ?regle onto:conditions ?cond .
+      ??1 onto:medicaments/a/rdfs:subClassOf* ?cond.
+      }
+      """, [patient1])
+
+      q, r = self.sparql(world, """
+      INSERT { ??1 onto:match ?regle . }
+      WHERE {
+      ?regle onto:nb_condition ?nb_condition .
+      ?regle onto:conditions ?cond .
+      ??1 onto:match ?cond .
+      }
+      GROUP BY ?regle
+      HAVING(COUNT(DISTINCT ?cond) = ?nb_condition)
+      """, [patient1])
+      
+    assert r == [1]
+    
 # Add test for Pellet
 
 for Class in [Test, Paper]:

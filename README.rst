@@ -720,7 +720,7 @@ version 2 - 0.42
   - Fix FILTER in SPARQL when the filter was just after a recursive query
   - Fix recursive query in SPARQL involving variables in their right part
   - Fix SPARQL query with annotations containing entities
-
+    
     
 Links
 -----
