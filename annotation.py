@@ -66,7 +66,7 @@ class _AnnotList(CallbackListWithLanguage):
   def _callback(self, obj, old):
     old = set(old)
     new = set(self)
-    
+
     if isinstance(obj, _AnnotList): # Annotate an annotation
       storid = obj._od_2_bnode[self._target, self._target_d]
     else:

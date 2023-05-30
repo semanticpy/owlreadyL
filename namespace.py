@@ -1132,25 +1132,25 @@ class Ontology(Namespace, _GraphManager):
     return bnode
     
   
-  def _del_annotation_axiom(self, source, property, target, target_d, annot, value, d):
+  def _del_annotation_axiom(self, source, property, target, target_d, annot, value, value_d):
     for bnode in self._get_obj_triples_po_s(rdf_type, owl_axiom):
       ok    = False
       other = False
       for p, o, d in self._get_triples_s_pod(bnode):
         if   p == owl_annotatedsource: # SIC! If on a single if, elif are not appropriate.
-          if o != source: break
+          if o != source: print("AAA"); break
         elif p == owl_annotatedproperty:
-          if o != property: break
+          if o != property: print("BBB"); break
         elif p == owl_annotatedtarget:
-          if o != target: break
+          if o != target: print("CCC"); break
         elif  p == rdf_type: pass
-        elif (p == annot) and (o == value): ok = True
+        elif (p == annot) and (o == value) and (d == value_d): ok = True
         else: other = True
       else:
         if ok:
           if other:
-            if d is None: self._del_obj_triple_spo(bnode, annot, value)
-            else:         self._del_data_triple_spod(bnode, annot, value, None)
+            if value_d is None: self._del_obj_triple_spo(bnode, annot, value)
+            else:               self._del_data_triple_spod(bnode, annot, value, value_d)
           else:
             self._del_obj_triple_spo  (bnode, None, None)
             self._del_data_triple_spod(bnode, None, None, None)

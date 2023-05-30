@@ -2824,7 +2824,21 @@ class Test(BaseTest, unittest.TestCase):
     self.assert_not_triple(c1.storid, p.storid, c3.storid, world = w)
     self.assert_triple    (c1.storid, p.storid, c4.storid, world = w)
     
-    
+  def test_prop_56(self):
+    w  = self.new_world()
+    o1 = w.get_ontology("http://test.org/o1.owl")
+    with o1:
+      class C(Thing): pass
+      class i(C >> int): pass
+      class p(AnnotationProperty): pass
+      
+      c1 = C(p = [locstr("Test", "en"), locstr("Test", "fr")])
+      
+      c1.p.remove(locstr("Test", "en"))
+      assert c1.p == [locstr("Test", "fr")]
+      del c1.p
+      assert c1.p == [locstr("Test", "fr")]
+      
   def test_prop_inverse_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
     assert n.price.inverse_property is None
@@ -3581,7 +3595,8 @@ I took a placebo
 
     assert set(onto.e.is_a) == set([onto.E, onto.S])
     assert set(onto.e.prop) == set([onto.obj])
-    assert set(onto.e.data_prop) == set([1.0, "english", True])
+
+    assert set(onto.e.data_prop) == set([1.0, locstr("english", "en"), True])
     assert len(onto.e.data_prop) == 3
     
     i = [i for i in onto.e.data_prop if isinstance(i, str)][0]
@@ -3597,7 +3612,7 @@ I took a placebo
     
     assert set(onto.e.is_a) == set([onto.E, onto.S])
     assert set(onto.e.prop) == set([onto.obj])
-    assert set(onto.e.data_prop) == set([1.0, "english", True])
+    assert set(onto.e.data_prop) == set([1.0, locstr("english", "en"), True])
     assert len(onto.e.data_prop) == 3
     
     i = [i for i in onto.e.data_prop if isinstance(i, str)][0]
@@ -3896,7 +3911,7 @@ I took a placebo
         annots = { (p, n._to_python(o,d)) for s,p,o,d in n._get_triples_spod_spod(bnode, None, None, None) if not p in [rdf_type, owl_annotatedsource, owl_annotatedproperty, owl_annotatedtarget] }
         break
     assert annots == { (annot.storid, locstr("Un test", "fr")), (annot.storid, locstr("Un second test", "fr")), (annot.storid, locstr("A test", "en")) }
-    
+
     annot[c1, prop, c2].fr.remove("Un test")
     annots = None
     for bnode, p, o in n._get_obj_triples_spo_spo(None, rdf_type, owl_axiom):
@@ -4117,7 +4132,7 @@ I took a placebo
     onto = world.get_ontology("http://www.semanticweb.org/jiba/ontologies/2018/10/test_datatype_one_of_owlxml.owl").load()
 
     assert onto.d1.p == [1]
-    assert comment[onto.d1, onto.p, 1] == ["Annotation on a triple with a datatype value."]
+    assert comment[onto.d1, onto.p, 1] == [locstr("Annotation on a triple with a datatype value.")]
     assert onto.D.is_a[1].value.instances == [1, 2, 3]
     
   def test_annotation_17(self):
@@ -4191,6 +4206,24 @@ I took a placebo
       b.append("commentaire d'un commentaire d'un commentaire")
 
       self.assert_triple(-3, comment.storid, *o._to_rdf("commentaire d'un commentaire d'un commentaire"), world = w)
+      
+  def test_annotation_19(self):
+    w = self.new_world()
+    o = w.get_ontology("http://test.org/onto.owl")
+    
+    with o:
+      class C(Thing): pass
+      class p(AnnotationProperty): pass
+      class i(C >> int): pass
+      c1 = C()
+      c1.i = [1]
+      p[c1, i, 1] = [locstr("Test", "en")]
+      p[c1, i, 1].append(locstr("Test", "fr"))
+      assert set(p[c1, i, 1]) == { locstr("Test", "en"), locstr("Test", "fr") }
+      p[c1, i, 1].remove(locstr("Test", "en"))
+      assert p[c1, i, 1] == [locstr("Test", "fr")]
+  
+      
       
   def test_import_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/2/test_mixed.owl").load()
@@ -5317,10 +5350,10 @@ I took a placebo
   def test_format_15(self):
     world = self.new_world()
     onto  = world.get_ontology("http://www.test.org/test_breakline.owl").load()
-    
-    assert onto.C.comment.first() == r"""Comment long
+
+    assert onto.C.comment.first() == locstr(r"""Comment long
 on
-multiple lines with " and ’ and \ and & and < and > and é."""
+multiple lines with " and ’ and \ and & and < and > and é.""", "en")
     
     f = BytesIO()
     onto.save(f, format = "ntriples")
@@ -8335,14 +8368,14 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?x ?y  { ?x a onto:A .  ?x rdfs:label ?y . }""")
     assert len(r) == 1
-    assert r == [[onto.a1, "label_a"]]
+    assert r == [[onto.a1, locstr("label_a", "en")]]
     assert q.column_names == ["?x", "?y"]
     
   def test_2(self):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?x  { onto:a1 rdfs:label ?x . }""")
     assert len(r) == 1
-    assert r == [["label_a"]]
+    assert r == [[locstr("label_a", "en")]]
   
   def test_3(self):
     world, onto = self.prepare1()
@@ -8366,7 +8399,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?x  { onto:a1 rdfs:label ?x . }""")
     assert len(r) == 1
-    assert r == [["label_a"]]
+    assert r == [[locstr("label_a", "en")]]
     assert r[0][0].lang == "en"
     
   def test_7(self):
@@ -8460,7 +8493,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?x  { ?x ^rdfs:label onto:a1 . }""")
     assert len(r) == 1
-    assert r == [["label_a"]]
+    assert r == [[locstr("label_a", "en")]]
     assert r[0][0].lang == "en"
     
   def test_20(self):
@@ -8550,7 +8583,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  (UCASE(?x) AS ?l)  { onto:a1 rdfs:label ?x . }""")
     assert len(r) == 1
-    assert r == [["LABEL_A"]]
+    assert r == [[locstr("LABEL_A", "en")]]
     onto.a1.label = ["XxX"]
     q, r = self.sparql(world, """SELECT  (LCASE(?x) AS ?l)  { onto:a1 rdfs:label ?x . }""")
     assert len(r) == 1
@@ -8591,29 +8624,29 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     
     q, r = self.sparql(world, """SELECT  (STRBEFORE(?x, "_") AS ?l)  { onto:a1 rdfs:label ?x . }""")
     assert len(r) == 1
-    assert r == [["label"]]
-    q, r = self.sparql(world, """SELECT  (STRBEFORE(?x, "zzz") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert r == [[locstr("label", "en")]]
+    q, r = self.sparql(world, """SELECT  (STRBEFORE(?x, "zzz") AS ?l)  { onto:a1 rdfs:label ?x . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert r == [[""]]
+    assert r == [[locstr("", "en")]]
     
     q, r = self.sparql(world, """SELECT  (STRAFTER(?x, "b") AS ?l)  { onto:a1 rdfs:label ?x . }""")
     assert len(r) == 1
-    assert r == [["el_a"]]
-    q, r = self.sparql(world, """SELECT  (STRAFTER(?x, "zzz") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    assert r == [[locstr("el_a", "en")]]
+    q, r = self.sparql(world, """SELECT  (STRAFTER(?x, "zzz") AS ?l)  { onto:a1 rdfs:label ?x . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert r == [[""]]
+    assert r == [[locstr("", "en")]]
 
     q, r = self.sparql(world, """SELECT  (SUBSTR(?x, 2, 4) AS ?l)  { onto:a1 rdfs:label ?x . }""")
     assert len(r) == 1
-    assert r == [["abel"]]
+    assert r == [[locstr("abel", "en")]]
     
     q, r = self.sparql(world, """SELECT  (SIMPLEREPLACE(?x, "_", "-") AS ?l)  { onto:a1 rdfs:label ?x . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert r == [["label-a"]]
+    assert r == [[locstr("label-a", "en")]]
     
-    q, r = self.sparql(world, """SELECT  (CONCAT("before", ?x, "after") AS ?l)  { onto:a1 rdfs:label ?x . }""")
+    q, r = self.sparql(world, """SELECT  (CONCAT("before", ?x, "after") AS ?l)  { onto:a1 rdfs:label ?x . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert r == [["beforelabel_aafter"]]
+    assert r == [[locstr("beforelabel_aafter", "en")]]
     
   def test_33(self):
     world, onto = self.prepare1()
@@ -8627,7 +8660,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     onto.a1.annot = [locstr("lesson", "en"), locstr("leçon", "fr"), "xxx", 1.2, onto.b1]
     q, r = self.sparql(world, """SELECT  ?x (LANG(?x) AS ?l)  { onto:a1 onto:annot ?x . }""", compare_with_rdflib = False)
     assert len(r) == 5
-    assert { tuple(x) for x in r } == { ("lesson", "en"), ("leçon", "fr"), ("xxx", ""), (1.2, ""), (onto.b1, "") }
+    assert { tuple(x) for x in r } == { (locstr("lesson", "en"), "en"), (locstr("leçon", "fr"), "fr"), ("xxx", ""), (1.2, ""), (onto.b1, "") }
     
   def test_35(self):
     world, onto = self.prepare1()
@@ -8656,7 +8689,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     onto.a1.annot = [8.0, "eee", 4, locstr("xxx", "fr")]
     q, r = self.sparql(world, """SELECT  ?x (DATATYPE(?x) AS ?l1) { onto:a1 onto:annot ?x . }""")
     assert len(r) == 4
-    assert { tuple(x) for x in r } == { ("xxx", locstr), (8.0, float), (4, int), ("eee", str) }
+    assert { tuple(x) for x in r } == { (locstr("xxx", "fr"), locstr), (8.0, float), (4, int), ("eee", str) }
     
   def test_39(self):
     world, onto = self.prepare1()
@@ -8692,10 +8725,10 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     onto.a1.annot = [locstr("abc", "en"), locstr("def", "fr"), "ghi"]
     q, r = self.sparql(world, """SELECT  ?x (LANGMATCHES(?x, "*") AS ?l1) { onto:a1 onto:annot ?x }""", compare_with_rdflib = False)
     assert len(r) == 3
-    assert { tuple(x) for x in r } == { ("abc", True), ("def", True), ("ghi", False) }
+    assert { tuple(x) for x in r } == { (locstr('abc', 'en'), True), (locstr('def', 'fr'), True), ("ghi", False) }
     q, r = self.sparql(world, """SELECT  ?x (LANGMATCHES(?x, "FR") AS ?l1) { onto:a1 onto:annot ?x }""", compare_with_rdflib = False)
     assert len(r) == 3
-    assert { tuple(x) for x in r } == { ("abc", False), ("def", True), ("ghi", False) }
+    assert { tuple(x) for x in r } == { (locstr('abc', 'en'), False), (locstr('def', 'fr'), True), ("ghi", False) }
     
   def test_43(self):
     world, onto = self.prepare1()
@@ -8749,7 +8782,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     q, r = self.sparql(world, """SELECT  (STRLANG(?x, "fr") AS ?l1) { onto:a1 onto:annot ?x . }""", compare_with_rdflib = False)
     assert len(r) == 2
     r = sorted([x[0] for x in r])
-    assert r == ["abc", "def"]  
+    assert r == [locstr("abc", "fr"), locstr("def", "fr")]  
     assert r[0].lang == "fr"
     assert r[1].lang == "fr"
 
@@ -8777,7 +8810,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?p ?x  { onto:a1 ?p ?x . }""")
     assert len(r) == 7
-    assert { tuple(x) for x in r } == { (rdf_type, NamedIndividual), (rdf_type, onto.A), (onto.rel, onto.b2), (onto.subrel, onto.b3), (label, "label_a"), (onto.price, 10.0), (onto.price_vat_free, 8.0) }
+    assert { tuple(x) for x in r } == { (rdf_type, NamedIndividual), (rdf_type, onto.A), (onto.rel, onto.b2), (onto.subrel, onto.b3), (label, locstr("label_a", "en")), (onto.price, 10.0), (onto.price_vat_free, 8.0) }
   
   def test_52(self):
     world, onto = self.prepare1()
@@ -8805,15 +8838,15 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  *  { ?x a onto:A . ?x rdfs:label ?l . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert { tuple(x) for x in r } == { (onto.a1, "label_a") }
+    assert { tuple(x) for x in r } == { (onto.a1, locstr("label_a", "en")) }
     assert q.column_names == ["?x", "?l"]
     q, r = self.sparql(world, """SELECT  *  { ?x rdfs:label ?l . ?x a onto:A . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert { tuple(x) for x in r } == { (onto.a1, "label_a") }
+    assert { tuple(x) for x in r } == { (onto.a1, locstr("label_a", "en")) }
     assert q.column_names == ["?x", "?l"]
     q, r = self.sparql(world, """SELECT  *  { ?l ^rdfs:label ?x . ?x a onto:A . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert { tuple(x) for x in r } == { ("label_a", onto.a1) }
+    assert { tuple(x) for x in r } == { (locstr("label_a", "en"), onto.a1) }
     assert q.column_names == ["?l", "?x"]
 
   def test_56(self):
@@ -8856,7 +8889,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     assert not "WITH" in q.sql
     assert " IN " in q.sql
     assert len(r) == 2
-    assert { tuple(x) for x in r } == { (onto.a1, "label_a"), (onto.a1, "comm") }
+    assert { tuple(x) for x in r } == { (onto.a1, locstr("label_a", "en")), (onto.a1, "comm") }
     
   def test_58(self):
     world, onto = self.prepare1()
@@ -8864,7 +8897,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     assert not "WITH" in q.sql
     assert " IN " in q.sql
     assert len(r) == 2
-    assert { tuple(x) for x in r } == { ("label_a",), ("label_b",) }
+    assert { tuple(x) for x in r } == { (locstr("label_a", "en"),), (locstr("label_b", "en"),) }
     
   def test_59(self):
     world, onto = self.prepare1()
@@ -8944,7 +8977,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     r = world.sparql("""SELECT  ?x ?y  { ?x a onto:A .  ?x rdfs:label ?y . }""")
     r = list(r)
     assert len(r) == 1
-    assert r == [[onto.a1, "label_a"]]
+    assert r == [[onto.a1, locstr("label_a", "en")]]
     q1 = world.prepare_sparql("""SELECT  ?x ?y  { ?x a onto:A .  ?x rdfs:label ?y . }""")
     q2 = world.prepare_sparql("""SELECT  ?x ?y  { ?x a onto:A .  ?x rdfs:label ?y . }""")
     assert q1 is q2
@@ -9005,10 +9038,10 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     assert q1.nb_parameter == 1
     assert len(q1.parameter_datatypes) == 0
     assert len(r) == 1
-    assert { x[0] for x in r } == { "label_a" }
+    assert { x[0] for x in r } == { locstr("label_a", "en") }
     q2, r = self.sparql(world, """SELECT  ?l { ?? rdfs:label ?l }""", [onto.b1], compare_with_rdflib = False)
     assert len(r) == 1
-    assert { x[0] for x in r } == { "label_b" }
+    assert { x[0] for x in r } == { locstr("label_b", "en") }
     assert q1 is q2
     
   def test_77(self):
@@ -9016,13 +9049,13 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     q1, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { onto:a1 rdfs:label ?l }""", [locstr("test_", "fr")], compare_with_rdflib = False)
     assert q1.nb_parameter == 1
     assert len(r) == 1
-    assert { x[0] for x in r } == { "test_label_a" }
+    assert { x[0] for x in r } == { locstr("test_label_a", "fr") }
     assert isinstance(r[0][0], locstr)
     assert r[0][0].lang == "fr"
     q2, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { onto:a1 rdfs:label ?l }""", [locstr("test_", "en")], compare_with_rdflib = False)
     assert q2.nb_parameter == 1
     assert len(r) == 1
-    assert { x[0] for x in r } == { "test_label_a" }
+    assert { x[0] for x in r } == { locstr("test_label_a", "en") }
     assert isinstance(r[0][0], locstr)
     assert r[0][0].lang == "en"
     assert q1 is q2
@@ -9046,21 +9079,21 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     assert q.nb_parameter == 2
     assert len(q.parameter_datatypes) == 0
     assert len(r) == 1
-    assert { x[0] for x in r } == { "label_a" }
+    assert { x[0] for x in r } == { locstr("label_a", "en") }
     
   def test_80(self):
     world, onto = self.prepare1()
     onto.b2.label = []
     q, r = self.sparql(world, """SELECT  ?x ?l  { ?x a onto:B . OPTIONAL { ?x rdfs:label ?l . } }""")
     assert len(r) == 3
-    assert { tuple(x) for x in r } == { (onto.b1, "label_b"), (onto.b2, None), (onto.b3, "label_b") }
+    assert { tuple(x) for x in r } == { (onto.b1, locstr("label_b", "en")), (onto.b2, None), (onto.b3, locstr("label_b", "fr")) }
     
   def test_81(self):
     world, onto = self.prepare1()
     onto.a1.comment = ["test"]
     q, r = self.sparql(world, """SELECT  ?l  { onto:a1 rdfs:label|rdfs:comment ?l . }""")
     assert len(r) == 2
-    assert { x[0] for x in r } == { "label_a", "test" }
+    assert { x[0] for x in r } == { locstr("label_a", "en"), "test" }
     assert " IN " in q.sql
 
   def test_82(self):
@@ -9115,11 +9148,11 @@ class TestSPARQL(BaseTest, unittest.TestCase):
   def test_85(self):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?x ?l { ?x rdfs:label ?l . } ORDER BY ?l""")
-    assert r == [[onto.A, 'Classe A'], [onto.A1, 'Classe A1'], [onto.a1, 'label_a'], [onto.b1, 'label_b'], [onto.b2, 'label_b'], [onto.b3, 'label_b'], [onto.price, 'price'], [onto.rel, 'rel']]
+    assert r == [[onto.A, 'Classe A'], [onto.A1, 'Classe A1'], [onto.a1, locstr('label_a', "en")], [onto.b1, locstr('label_b', "en")], [onto.b2, locstr('label_b', "en")], [onto.b3, locstr('label_b', "fr")], [onto.price, 'price'], [onto.rel, 'rel']]
     q, r = self.sparql(world, """SELECT  ?x ?l { ?x rdfs:label ?l . } ORDER BY DESC(?l)""")
-    assert r == [[onto.rel, 'rel'], [onto.price, 'price'], [onto.b3, 'label_b'], [onto.b2, 'label_b'], [onto.b1, 'label_b'], [onto.a1, 'label_a'], [onto.A1, 'Classe A1'], [onto.A, 'Classe A']]
+    assert r == [[onto.rel, 'rel'], [onto.price, 'price'], [onto.b3, locstr('label_b', "fr")], [onto.b2, locstr('label_b', "en")], [onto.b1, locstr('label_b', "en")], [onto.a1, locstr('label_a', "en")], [onto.A1, 'Classe A1'], [onto.A, 'Classe A']]
     q, r = self.sparql(world, """SELECT  ?x ?l { ?x rdfs:label ?l . } ORDER BY DESC(?l) ?x""")
-    assert r == [[onto.rel, 'rel'], [onto.price, 'price'], [onto.b1, 'label_b'], [onto.b2, 'label_b'], [onto.b3, 'label_b'], [onto.a1, 'label_a'], [onto.A1, 'Classe A1'], [onto.A, 'Classe A']]
+    assert r == [[onto.rel, 'rel'], [onto.price, 'price'], [onto.b1, locstr('label_b', "en")], [onto.b2, locstr('label_b', "en")], [onto.b3, locstr('label_b', "fr")], [onto.a1, locstr('label_a', "en")], [onto.A1, 'Classe A1'], [onto.A, 'Classe A']]
     
   def test_86(self):
     world, onto = self.prepare1()
@@ -9237,7 +9270,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     onto.b3.label.append("b3")
     q, r = self.sparql(world, """SELECT  ?b ?l  { ?b a onto:B . OPTIONAL { ?b rdfs:label ?l . } FILTER(BOUND(?l)) }""")
     assert len(r) == 3
-    assert { tuple(x) for x in r } == { (onto.b1, "label_b"), (onto.b3, "label_b"), (onto.b3, "b3") }
+    assert { tuple(x) for x in r } == { (onto.b1, locstr("label_b", "en")), (onto.b3, locstr("label_b", "fr")), (onto.b3, "b3") }
     
   def test_98(self):
     world, onto = self.prepare1()
@@ -9323,14 +9356,14 @@ class TestSPARQL(BaseTest, unittest.TestCase):
   def test_106(self):
     world, onto = self.prepare1()
     onto.a1.annot = [locstr("Oignon", "fr")]
-    q, r = self.sparql(world, """SELECT  (CONCAT(?x, "s") AS ?r)  { onto:a1 onto:annot ?x . }""")
+    q, r = self.sparql(world, """SELECT  (CONCAT(?x, "s") AS ?r)  { onto:a1 onto:annot ?x . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert r == [["Oignons"]]
+    assert r == [[locstr("Oignons", "fr")]]
     assert isinstance(r[0][0], locstr)
     assert r[0][0].lang == "fr"
-    q, r = self.sparql(world, """SELECT  (CONCAT("Z", ?x) AS ?r)  { onto:a1 onto:annot ?x . }""")
+    q, r = self.sparql(world, """SELECT  (CONCAT("Z", ?x) AS ?r)  { onto:a1 onto:annot ?x . }""", compare_with_rdflib = False)
     assert len(r) == 1
-    assert r == [["ZOignon"]]
+    assert r == [[locstr("ZOignon", "fr")]]
     assert isinstance(r[0][0], locstr)
     assert r[0][0].lang == "fr"
     
@@ -9376,15 +9409,15 @@ class TestSPARQL(BaseTest, unittest.TestCase):
       q, r = self.sparql(world, """INSERT { ?x rdfs:label "un A"@fr } WHERE  { ?x a onto:A . }""", compare_with_rdflib = False)
     assert len(onto.a1.label) == 2
     l = sorted(onto.a1.label)
-    assert l[0] == "label_a"
+    assert l[0] == locstr("label_a", "en")
     assert l[0].lang == "en"
-    assert l[1] == "un A"
+    assert l[1] == locstr("un A", "fr")
     assert l[1].lang == "fr"
     del onto.a1.label
     assert len(onto.a1.label) == 2
-    assert l[0] == "label_a"
+    assert l[0] == locstr("label_a", "en")
     assert l[0].lang == "en"
-    assert l[1] == "un A"
+    assert l[1] == locstr("un A", "fr")
     assert l[1].lang == "fr"
 
   def test_112(self):
@@ -9394,12 +9427,12 @@ class TestSPARQL(BaseTest, unittest.TestCase):
       q, r = self.sparql(world, """INSERT { ?x rdfs:label "un A" } WHERE  { ?x a onto:A . }""", compare_with_rdflib = False)
     assert len(onto.a1.label) == 2
     l = sorted(onto.a1.label)
-    assert l[0] == "label_a"
+    assert l[0] == locstr("label_a", "en")
     assert l[0].lang == "en"
     assert l[1] == "un A"
     del onto.a1.label
     assert len(onto.a1.label) == 2
-    assert l[0] == "label_a"
+    assert l[0] == locstr("label_a", "en")
     assert l[0].lang == "en"
     assert l[1] == "un A"
 
@@ -9415,7 +9448,7 @@ class TestSPARQL(BaseTest, unittest.TestCase):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT  ?x ?y  { ?x a onto:A.  ?x rdfs:label ?y. }""")
     assert len(r) == 1
-    assert r == [[onto.a1, "label_a"]]
+    assert r == [[onto.a1, locstr("label_a", "en")]]
     assert q.column_names == ["?x", "?y"]
     
   def test_115(self):
@@ -9477,7 +9510,7 @@ http://test.org/onto.owl#A\tClasse A
   def test_117(self):
     world, onto = self.prepare1()
     q, r = self.sparql(world, """SELECT DISTINCT ?x ?l  { { ?x rdfs:label ?l. } UNION { ?x rdfs:label ?l. } } ORDER BY ?l""")
-    assert set(tuple(x) for x in r) == set(tuple(x) for x in [[onto.A, 'Classe A'], [onto.A1, 'Classe A1'], [onto.a1, 'label_a'], [onto.b1, 'label_b'], [onto.b2, 'label_b'], [onto.b3, 'label_b'], [onto.price, 'price'], [onto.rel, 'rel']])
+    assert set(tuple(x) for x in r) == set(tuple(x) for x in [[onto.A, 'Classe A'], [onto.A1, 'Classe A1'], [onto.a1, locstr('label_a', "en")], [onto.b1, locstr('label_b', "en")], [onto.b2, locstr('label_b', "en")], [onto.b3, locstr('label_b', "fr")], [onto.price, 'price'], [onto.rel, 'rel']])
     
   def test_118(self):
     world, onto = self.prepare1()
@@ -9736,7 +9769,7 @@ WHERE {
     q1, r = self.sparql(world, """SELECT  (CONCAT(??, ?l) AS ?l2) { ?? rdfs:label ?l }""", [locstr("test_", "fr"), onto.a1], compare_with_rdflib = False)
     assert q1.nb_parameter == 2
     assert len(r) == 1
-    assert { x[0] for x in r } == { "test_label_a" }
+    assert { x[0] for x in r } == { locstr("test_label_a", "fr") }
     assert isinstance(r[0][0], locstr)
     assert r[0][0].lang == "fr"
     
@@ -9970,7 +10003,7 @@ OPTIONAL { ?a onto:rel ?b . } OPTIONAL { ?b rdfs:label ?l . } .
 """, compare_with_rdflib = False)
     
     assert "JOIN" in q.sql
-    assert r == [[onto.a1, onto.b2, "label_b"]]
+    assert r == [[onto.a1, onto.b2, locstr("label_b", "en")]]
 
   def test_150(self):
     world, onto = self.prepare1()
