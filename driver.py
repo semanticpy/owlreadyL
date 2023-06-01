@@ -378,10 +378,10 @@ def _save(f, format, graph, filter = None):
         xmln  = "%s:" % xmln0
         i = 2
         while xmln in xmlns_abbbrevs: xmln = "%s%s:" % (xmln0, i) ; i += 1
-
+        
         xmlns[left] = xmln = xmln
         xmlns_abbbrevs.add(xmln)
-
+        
       x = x[splitat + 1:]
       r = "%s%s" % (xmln, x)
       if not x[0] in "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ": bad_types.add(r)
@@ -421,7 +421,6 @@ def _save(f, format, graph, filter = None):
       "owl:SymmetricProperty",
       "owl:ReflexiveProperty",
       "owl:IrreflexiveProperty",
-      "owl:NamedIndividual",
       }
     
     def parse_list(bn):

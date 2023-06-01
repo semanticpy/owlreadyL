@@ -712,9 +712,9 @@ version 2 - 0.41
 version 2 - 0.42
 ****************
 
+* INCOMPATIBLE CHANGE: Consider literal with different language as different (e.g. locstr("Test", "en") != locstr("Test", "fr"))
 * Support GRAPH clauses in SPARQL queries
 * World now supports custom lock (e.g. World(lock = ...))
-* INCOMPATIBLE CHANGE: Consider literal with different language as different (e.g. locstr("Test", "en") != locstr("Test", "fr"))
 * Bugfixes:
   - Fix World(enable_thread_parallelism = True) (was named enable_gevent)
   - Fix blank nodes in rdflib_store
@@ -723,6 +723,8 @@ version 2 - 0.42
   - Fix SPARQL query with annotations containing entities
   - Fix property creation when using a Union in the '>>' syntax (e.g. class Prop((MyClass | MyOtherClass) >> str): pass)
   - Fix UMLS extraction in PyMedTermino2
+  - Fix Class IRI with brackets (or other special characters) when writing RDF/XML file
+    
     
 Links
 -----
