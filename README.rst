@@ -722,7 +722,7 @@ version 2 - 0.42
   - Fix recursive query in SPARQL involving variables in their right part
   - Fix SPARQL query with annotations containing entities
   - Fix property creation when using a Union in the '>>' syntax (e.g. class Prop((MyClass | MyOtherClass) >> str): pass)
-    
+  - Fix UMLS extraction in PyMedTermino2
     
 Links
 -----

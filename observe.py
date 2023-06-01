@@ -227,6 +227,9 @@ class ObjectPack(object):
     self._objects = objects
     
   def __repr__(self): return "<ObjectPack %s>" % self._objects
+
+  def get_namespace(self): return self._objects[0].namespace
+  namespace = property(get_namespace)
   
   
 def scan_collapsed_changes():
