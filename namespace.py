@@ -181,7 +181,7 @@ WHERE q1.p=? AND q1.o=?
     if _LOG_LEVEL > 1:
       if not s < 0: s = self._unabbreviate(s)
       if p: p = self._unabbreviate(p)
-      if d and (not d.startswith("@")): d = self._unabbreviate(d)
+      if d and isinstance(d, int): d = self._unabbreviate(d)
       print("* Owlready2 * DEL TRIPLE", s, p, o, d, file = sys.stderr)
       
   def _parse_list(self, bnode):
@@ -1094,7 +1094,7 @@ class Ontology(Namespace, _GraphManager):
     if _LOG_LEVEL > 1:
       if not s < 0: s = self._unabbreviate(s)
       if p: p = self._unabbreviate(p)
-      if isinstance(d, str) and (not d.startswith("@")): d = self._unabbreviate(d)
+      if d and isinstance(d, int): d = self._unabbreviate(d)
       print("* Owlready2 * ADD TRIPLE", s, p, o, d, file = sys.stderr)
       
   def _set_data_triple_spod(self, s, p, o, d):
@@ -1103,7 +1103,7 @@ class Ontology(Namespace, _GraphManager):
     if _LOG_LEVEL > 1:
       if not s < 0: s = self._unabbreviate(s)
       if p: p = self._unabbreviate(p)
-      if isinstance(d, str) and (not d.startswith("@")): d = self._unabbreviate(d)
+      if d and isinstance(d, int): d = self._unabbreviate(d)
       print("* Owlready2 * SET TRIPLE", s, p, o, d, file = sys.stderr)
     
   # Will be replaced by the graph methods

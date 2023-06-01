@@ -725,6 +725,12 @@ version 2 - 0.42
   - Fix UMLS extraction in PyMedTermino2
   - Fix Class IRI with brackets (or other special characters) when writing RDF/XML file
     
+version 2 - 0.43
+****************
+
+* Bugfixes:
+  - Fix != operator on locstr
+
     
 Links
 -----

@@ -51,11 +51,11 @@ class locstr(str):
     str.__init__(self)
     self.lang = lang
     
-  #def __eq__(self, other):
-  #  return str.__eq__(self, other) and ((not isinstance(other, locstr)) or (self.lang == other.lang))
-   
   def __eq__(self, other):
     return isinstance(other, locstr) and str.__eq__(self, other) and (self.lang == other.lang)
+  
+  def __ne__(self, other):
+    return (not isinstance(other, locstr)) or str.__ne__(self, other) or (self.lang != other.lang)
   
   def __hash__(self): return hash((str(self), self.lang))
 
