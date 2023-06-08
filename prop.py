@@ -957,11 +957,11 @@ def destroy_entity(e, undoable = False):
         elif (r == owl_equivalentproperty) or (r == owl_equivalentindividual):
           if o._equivalent_to._indirect:
             for o2 in o.equivalent_to._indirect: o2._equivalent_to._indirect = None
-          del o._equivalent_to
+          o._equivalent_to = None
         elif r == owl_equivalentclass:
           if o.equivalent_to._indirect:
             for o2 in o._equivalent_to._indirect: o2._equivalent_to._indirect = None
-          del o._equivalent_to
+          o._equivalent_to = None
           for Subclass in o.descendants(True, True): _FUNCTIONAL_FOR_CACHE.pop(Subclass, None)
           
         elif r == rdf_domain:
