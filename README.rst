@@ -731,6 +731,12 @@ version 2 - 0.43
 * Bugfixes:
   - Fix != operator on locstr
 
+version 2 - 0.44
+****************
+
+* Bugfixes:
+  - Fix the update of equivalent_to after destroying a class
+    
     
 Links
 -----

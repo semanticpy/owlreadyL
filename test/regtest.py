@@ -1287,6 +1287,31 @@ class Test(BaseTest, unittest.TestCase):
       
     assert set(Thing.subclasses(world = w)) == { A, C }
     
+  def test_class_29(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test")
+    with o:
+      class Test1(Thing): pass
+      class Test2(Thing): pass
+      Test2.equivalent_to = [Test1]
+      
+    destroy_entity(Test1)
+    assert Test2.equivalent_to == []
+    
+  def test_class_30(self):
+    w = self.new_world()
+    o = w.get_ontology("http://www.test.org/test")
+    with o:
+      class Test1(Thing): pass
+      class Test2(Thing): pass
+      Test2.equivalent_to = [Test1]
+      
+    undo = destroy_entity(Test1, undoable = True)
+    assert Test2.equivalent_to == []
+    
+    undo()
+    assert Test2.equivalent_to == [Test1]
+    
     
   def test_individual_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
