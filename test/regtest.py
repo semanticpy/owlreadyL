@@ -9520,14 +9520,14 @@ http://test.org/onto.owl#A\tClasse A
     endpoint = EndPoint(world)
     app.route("/sparql", methods = ["GET"])(endpoint)
     
-    p = multiprocessing.Process(target = werkzeug.serving.run_simple, args = ("localhost", 5000, app))
+    p = multiprocessing.Process(target = werkzeug.serving.run_simple, args = ("localhost", 5032, app))
     p.start()
     
     time.sleep(0.3)
-    r = urllib.request.urlopen("http://localhost:5000/sparql?query=SELECT%20%20?x%20?y%20%20{%20?x%20rdfs:label%20?y.%20}%20ORDER%20BY%20DESC(?y)").read()
+    r = urllib.request.urlopen("http://localhost:5032/sparql?query=SELECT%20%20?x%20?y%20%20{%20?x%20rdfs:label%20?y.%20}%20ORDER%20BY%20DESC(?y)").read()
     assert r == b'x,y\r\nhttp://test.org/onto.owl#rel,rel\r\nhttp://test.org/onto.owl#price,price\r\nhttp://test.org/onto.owl#b3,label_b\r\nhttp://test.org/onto.owl#b2,label_b\r\nhttp://test.org/onto.owl#b1,label_b\r\nhttp://test.org/onto.owl#a1,label_a\r\nhttp://test.org/onto.owl#A1,Classe A1\r\nhttp://test.org/onto.owl#A,Classe A\r\n'
     
-    r = urllib.request.urlopen(urllib.request.Request("http://localhost:5000/sparql?query=SELECT%20%20?x%20?y%20%20{%20?x%20rdfs:label%20?y.%20}%20ORDER%20BY%20DESC(?y)", headers = { "Accept" : "application/json" })).read()
+    r = urllib.request.urlopen(urllib.request.Request("http://localhost:5032/sparql?query=SELECT%20%20?x%20?y%20%20{%20?x%20rdfs:label%20?y.%20}%20ORDER%20BY%20DESC(?y)", headers = { "Accept" : "application/json" })).read()
     assert r == b"{'head': {'vars': ['x', 'y']}, 'results': {'bindings': [{'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#rel'}, 'y': {'type': 'literal', 'value': 'rel', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#price'}, 'y': {'type': 'literal', 'value': 'price', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b3'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'fr'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b2'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'en'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#b1'}, 'y': {'type': 'literal', 'value': 'label_b', 'xml:lang': 'en'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#a1'}, 'y': {'type': 'literal', 'value': 'label_a', 'xml:lang': 'en'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#A1'}, 'y': {'type': 'literal', 'value': 'Classe A1', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}, {'x': {'type': 'uri', 'value': 'http://test.org/onto.owl#A'}, 'y': {'type': 'literal', 'value': 'Classe A', 'datatype': 'http://www.w3.org/2001/XMLSchema#string'}}]}}"
     
     p.terminate()
