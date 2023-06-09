@@ -2864,6 +2864,23 @@ class Test(BaseTest, unittest.TestCase):
       del c1.p
       assert c1.p == [locstr("Test", "fr")]
       
+  def test_prop_57(self):
+    w1 = self.new_world()
+    o  = w1.get_ontology("http://test.org/o.owl")
+    with o:
+      class C(Thing): pass
+      c1 = C()
+      c2 = C()
+    with o.get_namespace("http://test.org/o/prop/"):
+      class p(C >> C): pass
+    c1.p = [c2]
+    temp = self.new_tmp_file()
+    o.save(temp)
+    
+    w2 = self.new_world()
+    o  = w2.get_ontology(temp).load()
+    assert o.c1.p == [o.c2]
+    
   def test_prop_inverse_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
     assert n.price.inverse_property is None
@@ -4248,6 +4265,28 @@ I took a placebo
       p[c1, i, 1].remove(locstr("Test", "en"))
       assert p[c1, i, 1] == [locstr("Test", "fr")]
   
+  def test_annotation_20(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class D(C): pass
+      c1 = C()
+      
+    C.comment = ["C"]
+    assert C.comment == ["C"]
+    assert D.comment == []
+    assert c1.comment == []
+
+    D.comment = ["D"]
+    assert C.comment == ["C"]
+    assert D.comment == ["D"]
+    assert c1.comment == []
+    
+    c1.comment = ["c1"]
+    assert C.comment == ["C"]
+    assert D.comment == ["D"]
+    assert c1.comment == ["c1"]
       
       
   def test_import_1(self):
@@ -10199,6 +10238,9 @@ SELECT ?x WHERE { ?x a onto:Cé }
       
     q, r = self.sparql(world, """SELECT ?i { onto:c1 onto:p ?i }""", compare_with_rdflib = True)
     assert set(i for i, in r) == { 1, 2, 3 }
+
+    q = world.prepare_sparql("""SELECT ?i { GRAPH onto: { onto:c1 onto:p ?i } }""")
+    print(q.sql)
     
     q, r = self.sparql(world, """SELECT ?i { GRAPH onto: { onto:c1 onto:p ?i } }""", compare_with_rdflib = False)
     assert set(i for i, in r) == { 1 }
@@ -10300,6 +10342,43 @@ onto:patient1 onto:match ?x .
       """, [patient1])
       
     assert r == [1]
+    
+  def test_161(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      
+    q, r = self.sparql(world, """INSERT { GRAPH <http://test.org/onto.owl> { ?c rdfs:comment "ok" } } WHERE { GRAPH ?g { ?c a owl:Class } }""", compare_with_rdflib = True)
+    assert C.comment == ["ok"]
+    
+  def test_162(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      
+    q, r = self.sparql(world, """INSERT { GRAPH <http://test.org/onto.owl> { ?c rdfs:comment "ok" . ?c rdfs:label "lab", "lab2" ; rdfs:seeAlso 2 . } } WHERE { GRAPH ?g { ?c a owl:Class } }""", compare_with_rdflib = True)
+    assert C.comment == ["ok"]
+    assert C.label == ["lab", "lab2"]
+    assert C.seeAlso == [2]
+        
+  def test_163(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      c1 = C()
+      
+    assert c1.comment == []
+    q, r = self.sparql(world, """INSERT { GRAPH <http://test.org/onto.owl> { onto:c1 rdfs:comment "ok" . } } WHERE {}""", compare_with_rdflib = True)
+    assert c1.comment == ["ok"]
+      
+    assert C.comment == []
+    q, r = self.sparql(world, """INSERT { GRAPH <http://test.org/onto.owl> { onto:C rdfs:comment "ok" . } } WHERE {}""", compare_with_rdflib = True)
+    assert C.comment == ["ok"]
+    
+    
     
 # Add test for Pellet
 

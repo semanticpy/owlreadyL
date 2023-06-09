@@ -108,7 +108,7 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
       ontology = context.triplelite.onto
     else:
       ontology = None
-    self.world._add_triples_with_update(ontology, [self._rdflib_2_owlready(xxx_todo_changeme)])
+    self.world._add_quads_with_update(ontology, [(None, *self._rdflib_2_owlready(xxx_todo_changeme))])
     
   def remove(self, xxx_todo_changeme, context = None):
     self.world._del_triple_with_update(*self._rdflib_2_owlready(xxx_todo_changeme))

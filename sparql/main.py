@@ -108,7 +108,7 @@ class Translator(object):
     
     elif self.main_query.type == "modify":
       select_param_indexes = [i - 1 for i in self.main_query.select_param_indexes]
-      return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns), select_param_indexes)
+      return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns, False), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns, True), select_param_indexes)
     
     
   # def optimize_sql(self, sql, nb_sql_parameter):
@@ -158,12 +158,22 @@ class Translator(object):
   #   return sql
     
   
-  def parse_inserts_deletes(self, triples, columns):
+  def parse_inserts_deletes(self, triples, columns, is_insert):
     var_2_column = { column.var : column for column in self.main_query.columns if not column.name.endswith("d") }
     r = []
+    o_pos = 4 if is_insert else 3
     for triple0 in triples:
-      triple = []
+      if is_insert:
+        if triple0[0]: # graph/onto
+          triple = [("onto", triple0[0].value)]
+        else:
+          triple = [(None, None)]
+        triple0 = triple0[1:]
+      else:
+        triple = []
+        
       for x in triple0:
+        #if x is None: continue
         if   hasattr(x, "storid"):
           triple.append(("objs", x.storid))
         elif x.name == "VAR":
@@ -172,14 +182,14 @@ class Translator(object):
           else: # a normal var
             column = var_2_column[x.value]
             triple.append(("vars", column.index))
-            if len(triple) == 3: # in 'o' position => can be objs or datas!
+            if len(triple) == o_pos: # in 'o' position => can be objs or datas!
               if column.index + 1 < len(columns):
                 next_column = columns[column.index + 1]
                 if next_column.name.endswith("d"):
                   triple.append(("vars", next_column.index))
         elif x.name == "PARAM":
           triple.append(("param", x.number - 1))
-          if len(triple) == 3: # in 'o' position => can be datas!
+          if len(triple) == o_pos: # in 'o' position => can be datas!
             triple.append(("paramdatatype", x.number - 1))
         else:
           if   isinstance(x.value, locstr):
@@ -193,7 +203,7 @@ class Translator(object):
             triple.append(("datas", d2))
             
       r.append(triple)
-
+      
     return r
   
   def new_sql_query(self, name, block, selects = None, distinct = None, solution_modifier = None, preliminary = False, extra_binds = None, nested_inside = None, copy_vars = False):
@@ -547,7 +557,7 @@ class PreparedModifyQuery(PreparedQuery):
     nb_match = 0
     if execute_raw_result is None: resultss = self.execute_raw(params, spawn)
     else:                          resultss = execute_raw_result
-    
+
     added_triples = []
     for results in set(resultss):
       nb_match += 1
@@ -574,7 +584,7 @@ class PreparedModifyQuery(PreparedQuery):
         #print("ADD", insert, triple)
         added_triples.append(triple)
         
-    if added_triples: self.world._add_triples_with_update(self.ontology, added_triples)
+    if added_triples: self.world._add_quads_with_update(self.ontology, added_triples)
     return nb_match
   
     

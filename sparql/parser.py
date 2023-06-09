@@ -60,7 +60,6 @@ lg.add(".",                    r"""\.""")
 lg.add("PREFIXED_NAME",        r"""[\w\.\-]*:([\w\.\-:]|%[0-9a-fA-F]{2}|\\[_~\.\-!$&"'()*+,;=/?#@%])*([\w\-:]|%[0-9a-fA-F]{2}|\\[_~\.\-!$&"'()*+,;=/?#@%])""")
 lg.add("PNAME_NS",             r"""[\w\.\-]*:""")
 lg.add("FUNC",                 r"""(?:STRLANG)|(?:STRDT)|(?:STRLEN)|(?:STRSTARTS)|(?:STRENDS)|(?:STRBEFORE)|(?:STRAFTER)|(?:LANGMATCHES)|(?:LANG)|(?:DATATYPE)|(?:BOUND)|(?:IRI)|(?:URI)|(?:BNODE)|(?:RAND)|(?:ABS)|(?:CEIL)|(?:FLOOR)|(?:ROUND)|(?:CONCAT)|(?:STR)|(?:UCASE)|(?:LCASE)|(?:ENCODE_FOR_URI)|(?:CONTAINS)|(?:YEAR)|(?:MONTH)|(?:DAY)|(?:HOURS)|(?:MINUTES)|(?:SECONDS)|(?:TIMEZONE)|(?:TZ)|(?:NOW)|(?:UUID)|(?:STRUUID)|(?:MD5)|(?:SHA1)|(?:SHA256)|(?:SHA384)|(?:SHA512)|(?:COALESCE)|(?:IF)|(?:sameTerm)|(?:isIRI)|(?:isURI)|(?:isBLANK)|(?:isLITERAL)|(?:isNUMERIC)|(?:REGEX)|(?:SUBSTR)|(?:REPLACE)|(?:SIMPLEREPLACE)|(?:NEWINSTANCEIRI)|(?:LOADED)|(?:STORID)|(?:DATETIME_DIFF)|(?:DATETIME_ADD)|(?:DATETIME_SUB)|(?:DATETIME)|(?:DATE_ADD)|(?:DATE_DIFF)|(?:DATE_SUB)|(?:DATE)|(?:TIME)|(?:LIKE)\b""", re.IGNORECASE)
-#lg.add("FUNC",                 r"""(?:STRLANG)|(?:STRDT)|(?:STRLEN)|(?:STRSTARTS)|(?:STRENDS)|(?:STRBEFORE)|(?:STRAFTER)|(?:LANGMATCHES)|(?:LANG)|(?:DATATYPE)|(?:BOUND)|(?:IRI)|(?:URI)|(?:BNODE)|(?:RAND)|(?:ABS)|(?:CEIL)|(?:FLOOR)|(?:ROUND)|(?:CONCAT)|(?:STR)|(?:UCASE)|(?:LCASE)|(?:ENCODE_FOR_URI)|(?:CONTAINS)|(?:YEAR)|(?:MONTH)|(?:DAY)|(?:HOURS)|(?:MINUTES)|(?:SECONDS)|(?:TIMEZONE)|(?:TZ)|(?:NOW)|(?:UUID)|(?:STRUUID)|(?:MD5)|(?:SHA1)|(?:SHA256)|(?:SHA384)|(?:SHA512)|(?:COALESCE)|(?:IF)|(?:sameTerm)|(?:isIRI)|(?:isURI)|(?:isBLANK)|(?:isLITERAL)|(?:isNUMERIC)|(?:REGEX)|(?:SUBSTR)|(?:REPLACE)|(?:SIMPLEREPLACE)|(?:NEWINSTANCEIRI)|(?:XSD:DOUBLE)|(?:XSD:INTEGER)\b""", re.IGNORECASE)
 lg.add("MINUS",                r"""MINUS\b""", re.IGNORECASE)
 lg.add("AGGREGATE_FUNC",       r"""(?:COUNT)|(?:SUM)|(?:MIN)|(?:MAX)|(?:AVG)|(?:SAMPLE)|(?:GROUP_CONCAT)\b""", re.IGNORECASE)
 lg.add("BASE",                 r"""BASE\b""", re.IGNORECASE)
@@ -328,7 +327,7 @@ def _create_modify_query(ontology_iri, deletes, inserts, using, group_graph_patt
   vars    = set()
   for triple in inserts + deletes:
     for x in triple:
-      if   (x.name == "VAR") and not x.value.startswith("??anon") and not x.value.startswith("_:") and not (x.value in vars):
+      if x and (x.name == "VAR") and not x.value.startswith("??anon") and not x.value.startswith("_:") and not (x.value in vars):
         vars.add(x.value)
         selects.append(x)
         
@@ -355,12 +354,25 @@ def f(p): return _create_modify_query(p[0], p[1], [], p[2], p[4], p[5])
 @pg.production("modify : with_iri? delete_clause insert_clause using_clause*  WHERE group_graph_pattern solution_modifier")
 def f(p): return _create_modify_query(p[0], p[1], p[2], p[3], p[5], p[6])
 
+
+@pg.production("graph_or_triples_same_subject_path : triples_same_subject_path")
+def f(p): return [[(None, *i) for i in p[0]]]
+@pg.production("graph_or_triples_same_subject_path : GRAPH iri { triples_same_subject_path+ }")
+def f(p): return [[(_iri_2_onto_c(p[1]), *j) for i in p[3] for j in i]]
+pg.list("graph_or_triples_same_subject_path+", ".?")
+
 #@pg.production("delete_clause : DELETE quad_pattern")
 #@pg.production("insert_clause : INSERT quad_pattern")
 @pg.production("delete_clause : DELETE { triples_same_subject_path+ }")
-@pg.production("insert_clause : INSERT { triples_same_subject_path+ }")
 def f(p):
   p = [j for i in p[2] for j in i]
+  return p
+#@pg.production("insert_clause : INSERT { triples_same_subject_path+ }")
+@pg.production("insert_clause : INSERT { graph_or_triples_same_subject_path+ }")
+def f(p):
+  #print(p)
+  p = [k for i in p[2] for j in i for k in j]
+  #print(p)
   return p
 
 @pg.production("using_clause : USING iri")
@@ -481,11 +493,13 @@ def f(p): return p[0]
 @pg.production("group_graph_pattern_item : STATIC group_graph_pattern")
 def f(p): return StaticBlock(p[1])
 
+def _iri_2_onto_c(iri): return rply.Token("INTEGER", CURRENT_TRANSLATOR.get().world.get_ontology(iri.value).graph.c)
+
 @pg.production("group_graph_pattern_item : GRAPH iri group_graph_pattern")
 def f(p):
   translator = CURRENT_TRANSLATOR.get()
   #_set_onto(p[2], CURRENT_TRANSLATOR.get().world.get_ontology(p[1].value))
-  _set_onto(p[2], rply.Token("INTEGER", CURRENT_TRANSLATOR.get().world.get_ontology(p[1].value).graph.c))
+  _set_onto(p[2], _iri_2_onto_c(p[1]))
   return p[2]
 def _set_onto(p, onto):
   if isinstance(p, list):

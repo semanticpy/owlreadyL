@@ -24,7 +24,7 @@ import weakref
 
 from owlready2.base import rdf_type, rdfs_subclassof, owl_equivalentclass, owl_equivalentproperty, owl_equivalentindividual
 from owlready2.namespace import Ontology
-from owlready2 import Thing, ThingClass
+from owlready2 import Thing, ThingClass, owl_world
 
 class ObservedOntology(Ontology):
   def _get_pred_value_obj(self, subject, predicate):
@@ -246,6 +246,7 @@ def observe(o, listener, collapsed = False, world = None):
   if world is None:
     world = o.namespace.world
     o = o.storid
+  if world is owl_world: return
     
   observation = world._observations.get(o)
   if not observation: observation = world._observations[o] = Observation(o)
@@ -261,6 +262,7 @@ def isobserved(o, listener = None, world = None):
   if world is None:
     world = o.namespace.world
     o = o.storid
+  if world is owl_world: return False
   
   observation = world._observations.get(o)
   if listener: return observation and ((listener in observation.listeners) or (listener in observation.collapsed_listeners))
@@ -287,6 +289,7 @@ def unobserve(o, listener = None, world = None):
   if world is None:
     world = o.namespace.world
     o = o.storid
+  if world is owl_world: return
   
   if listener:
     observation = world._observations.get(o)

@@ -587,7 +587,6 @@ SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) 
       if attr == "INDIRECT_is_a": return Class.ancestors(True, True)
       Prop = Class.namespace.world._props.get(attr[9:])
       if not Prop: raise AttributeError("'%s' property is not defined." % attr)
-      #if Prop.is_functional_for(Class): return Prop._get_indirect_value_for_class(Class)
       if issubclass(Prop, FunctionalProperty): return Prop._get_indirect_value_for_class(Class)
       else:                                    return Prop._get_indirect_values_for_class(Class)
       
@@ -602,7 +601,6 @@ SELECT q1.s FROM objs q1 WHERE q1.p=6 AND (q1.o IN (SELECT s FROM prelim1_objs) 
           type.__setattr__(Class, attr, values)
         return values
       
-      #if Prop.is_functional_for(Class): return Prop._get_value_for_class (Class)
       if issubclass(Prop, FunctionalProperty): return Prop._get_value_for_class (Class)
       else:                                    return Prop._get_values_for_class(Class)
       

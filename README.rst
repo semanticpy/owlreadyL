@@ -713,7 +713,7 @@ version 2 - 0.42
 ****************
 
 * INCOMPATIBLE CHANGE: Consider literal with different language as different (e.g. locstr("Test", "en") != locstr("Test", "fr"))
-* Support GRAPH clauses in SPARQL queries
+* Support GRAPH clauses in SPARQL SELECT queries
 * World now supports custom lock (e.g. World(lock = ...))
 * Bugfixes:
   - Fix World(enable_thread_parallelism = True) (was named enable_gevent)
@@ -734,8 +734,10 @@ version 2 - 0.43
 version 2 - 0.44
 ****************
 
+* Support GRAPH clauses in SPARQL INSERT queries
 * Bugfixes:
   - Fix the update of equivalent_to after destroying a class
+  - Fix the update of annotations on class when modified with SPARQL queries
     
     
 Links

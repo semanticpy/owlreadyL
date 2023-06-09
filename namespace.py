@@ -525,27 +525,28 @@ class World(_GraphManager):
     if d is None: self._del_obj_triple_raw_spo  (s,p,o)
     else:         self._del_data_triple_raw_spod(s,p,o,d)
     
-  def _add_triples_with_update(self, ontology0, triples):
+  def _add_quads_with_update(self, ontology0, quads):
     l = owlready2.namespace.CURRENT_NAMESPACES.get()
     if l:
-      ontology = l[-1].ontology
+      ontology1 = l[-1].ontology
     else:
-      ontology = ontology0
-      if not ontology:
-        raise ValueError("Cannot add triples outside a 'with' block. Please start a 'with' block to indicate in which ontology the new triple is added, or include a 'WITH <onto_IRI>' statement in SPARQL.")
+      ontology1 = ontology0
       
-    is_a_triples = defaultdict(list)
+    is_a_quads = defaultdict(list)
     
-    for triple in triples:
-      if len(triple) == 3:
-        s, p, o    = triple; d = None
+    for quad in quads:
+      if len(quad) == 4:
+        g, s, p, o    = quad; d = None
       else:
-        s, p, o, d = triple
+        g, s, p, o, d = quad
         if d == 'o': d = None # For SPARQL engine, because None is NULL in SQL, but '=' cannot be used on NULL
         
       if (p == rdf_type) or (p == rdfs_subclassof):
-        is_a_triples[s, p].append(o)
+        is_a_quads[g, s, p].append(o)
         continue
+      
+      ontology = g and self.graph.c_2_onto[g] or ontology1
+      if not ontology: raise ValueError("Cannot add triples outside a 'with' block. Please start a 'with' block to indicate in which ontology the new triple is added, or include a 'WITH <onto_IRI>' statement in SPARQL.")
       
       if   (s > 0) and (s in self.world._entities): sub = self._entities[s]
       elif (s < 0) and (s in ontology._bnodes):     sub = ontology._bnodes[s]
@@ -553,7 +554,9 @@ class World(_GraphManager):
       if not sub is None:
         prop = self._entities.get(p)
         if   prop:
-          try: delattr(sub, prop.python_name)
+          try:
+            if type.__instancecheck__(Thing, sub): delattr(sub, prop.python_name)
+            else:                                  delattr(sub, "__%s" % prop.python_name)
           except: pass
           
         elif d is None:
@@ -585,8 +588,11 @@ class World(_GraphManager):
       if d is None: ontology.graph._add_obj_triple_raw_spo  (s, p, o)
       else:         ontology.graph._add_data_triple_raw_spod(s, p, o, d)
       
-    # Factorize is_a triples for better performance
-    for (s, p), os in is_a_triples.items():
+    # Factorize is_a quads for better performance
+    for (g, s, p), os in is_a_quads.items():
+      ontology = g and self.graph.c_2_onto[g] or ontology1
+      if not ontology: raise ValueError("Cannot add triples outside a 'with' block. Please start a 'with' block to indicate in which ontology the new triple is added, or include a 'WITH <onto_IRI>' statement in SPARQL.")
+      
       if   (s > 0) and (s in self.world._entities): sub = self._entities[s]
       elif (s < 0) and (s in ontology._bnodes):     sub = ontology._bnodes[s]
       else:                                         sub = None
