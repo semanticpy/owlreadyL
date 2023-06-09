@@ -10378,7 +10378,34 @@ onto:patient1 onto:match ?x .
     q, r = self.sparql(world, """INSERT { GRAPH <http://test.org/onto.owl> { onto:C rdfs:comment "ok" . } } WHERE {}""", compare_with_rdflib = True)
     assert C.comment == ["ok"]
     
+  def test_164(self):
+    world = self.new_world()
+    onto1 = world.get_ontology("http://test.org/onto2.owl")
+    onto2 = world.get_ontology("http://test.org/onto1.owl")
+    with onto1:
+      class C(Thing): pass
+    with onto2:
+      class D(Thing): pass
+      
+    q, r = self.sparql(world, """INSERT { GRAPH ?g { ?c rdfs:comment "ok" } } WHERE { GRAPH ?g { ?c a owl:Class } }""", compare_with_rdflib = True)
+    assert C.comment == ["ok"]
+    assert D.comment == ["ok"]
     
+    assert onto1.graph._get_data_triples_sp_od(C.storid, comment.storid) == [("ok", 60)]
+    assert onto2.graph._get_data_triples_sp_od(C.storid, comment.storid) == []
+    assert onto1.graph._get_data_triples_sp_od(D.storid, comment.storid) == []
+    assert onto2.graph._get_data_triples_sp_od(D.storid, comment.storid) == [("ok", 60)]
+    
+    # q, r = self.sparql(world, """INSERT { GRAPH ??1 { ?c rdfs:label "lab" } } WHERE { ?c a owl:Class }""", [onto1], compare_with_rdflib = True)
+    # assert C.label == ["lab"]
+    # assert D.label == ["lab"]
+    
+    # assert onto1.graph._get_data_triples_sp_od(C.storid, label.storid) == [("lab", 60)]
+    # assert onto2.graph._get_data_triples_sp_od(C.storid, label.storid) == []
+    # assert onto1.graph._get_data_triples_sp_od(D.storid, label.storid) == [("lab", 60)]
+    # assert onto2.graph._get_data_triples_sp_od(D.storid, label.storid) == []
+    
+
     
 # Add test for Pellet
 

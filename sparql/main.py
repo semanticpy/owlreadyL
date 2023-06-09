@@ -98,11 +98,6 @@ class Translator(object):
         return "?%s" % r
       sql = re.sub("%s[^ ]*" % self.escape_mark, sub, sql)
       
-    #if sql:
-    #  if   self.main_query.type == "select": nb_sql_parameter = nb_parameter + len(parameter_datatypes)
-    #  else:                                  nb_sql_parameter = len(self.main_query.select_param_indexes)
-    #  sql = self.optimize_sql(sql, nb_sql_parameter)
-    
     if   self.main_query.type == "select":
       return PreparedSelectQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes)
     
@@ -110,52 +105,6 @@ class Translator(object):
       select_param_indexes = [i - 1 for i in self.main_query.select_param_indexes]
       return PreparedModifyQuery(self.world, sql, [column.var for column in self.main_query.columns if not column.name.endswith("d")], [column.type for column in self.main_query.columns], nb_parameter, parameter_datatypes, self.world.get_ontology(self.main_query.ontology_iri.value) if self.main_query.ontology_iri else None, self.parse_inserts_deletes(self.main_query.deletes, self.main_query.columns, False), self.parse_inserts_deletes(self.main_query.inserts, self.main_query.columns, True), select_param_indexes)
     
-    
-  # def optimize_sql(self, sql, nb_sql_parameter):
-  #   plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql, (1,) * nb_sql_parameter))
-                
-  #   has_automatic_index = False
-  #   for l in plan:
-  #     match = _RE_AUTOMATIC_INDEX.search(l[3])
-  #     if match:
-  #       table_name = match.group(1)
-  #       index_name = match.group(2)
-  #       table_type = self.table_name_2_type.get(table_name)
-        
-  #       if (table_type == "objs") or (table_type == "datas"):
-  #         if   index_name.startswith("s="): index_name = "index_%s_sp" % table_type
-  #         elif index_name.startswith("o="): index_name = "index_%s_op" % table_type
-  #         else: continue
-          
-  #         print("OPTIMIZE!!!", l, table_type, table_name, "=>", index_name)
-  #         table_def = "%s %s" % (table_type, table_name)
-  #         sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
-  #   return sql
-    
-  # def optimize_sql(self, sql):
-  #   # Avoid Sqlite3 AUTOMATIC INDEX when a similar index can be used.
-  #   plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
-  #   #for l in plan:
-  #     #if (" USING AUTOMATIC " in l[3]) and not (" TABLE " in l[3]): break
-  #   #else:
-  #   try:
-  #     self.world.graph.execute("PRAGMA automatic_index = false")
-  #     plan = list(self.world.graph.execute("""EXPLAIN QUERY PLAN %s""" % sql))
-  #   finally:
-  #     self.world.graph.execute("PRAGMA automatic_index = true")
-      
-  #   for l in plan:
-  #       match = _RE_NORMAL_INDEX.search(l[3])
-  #       if match:
-  #         table_type = match.group(1)
-  #         table_name = match.group(2)
-  #         index_name = match.group(4)
-  #         if table_name == "q": continue # Recursive hard-coded preliminary queries
-  #         #if ("%s INDEXED" % table_name) in sql: continue
-  #         table_def = "%s %s" % (table_type, table_name)
-  #         #print("OPTIMIZE!!!", l, table_type, table_name, index_name)
-  #         sql = sql.replace(table_def, "%s INDEXED BY %s" % (table_def, index_name), 1)
-  #   return sql
     
   
   def parse_inserts_deletes(self, triples, columns, is_insert):
@@ -165,7 +114,8 @@ class Translator(object):
     for triple0 in triples:
       if is_insert:
         if triple0[0]: # graph/onto
-          triple = [("onto", triple0[0].value)]
+          if   triple0[0].name == "VAR":   triple = [("vars",  var_2_column[triple0[0].value].index)]
+          else:                            triple = [("onto",  triple0[0].value)]
         else:
           triple = [(None, None)]
         triple0 = triple0[1:]
@@ -173,7 +123,6 @@ class Translator(object):
         triple = []
         
       for x in triple0:
-        #if x is None: continue
         if   hasattr(x, "storid"):
           triple.append(("objs", x.storid))
         elif x.name == "VAR":
@@ -558,6 +507,8 @@ class PreparedModifyQuery(PreparedQuery):
     if execute_raw_result is None: resultss = self.execute_raw(params, spawn)
     else:                          resultss = execute_raw_result
 
+    print(self.inserts, params)
+    
     added_triples = []
     for results in set(resultss):
       nb_match += 1

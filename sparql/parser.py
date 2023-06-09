@@ -359,21 +359,17 @@ def f(p): return _create_modify_query(p[0], p[1], p[2], p[3], p[5], p[6])
 def f(p): return [[(None, *i) for i in p[0]]]
 @pg.production("graph_or_triples_same_subject_path : GRAPH iri { triples_same_subject_path+ }")
 def f(p): return [[(_iri_2_onto_c(p[1]), *j) for i in p[3] for j in i]]
+@pg.production("graph_or_triples_same_subject_path : GRAPH var { triples_same_subject_path+ }")
+def f(p): return [[(p[1], *j) for i in p[3] for j in i]]
 pg.list("graph_or_triples_same_subject_path+", ".?")
 
 #@pg.production("delete_clause : DELETE quad_pattern")
 #@pg.production("insert_clause : INSERT quad_pattern")
 @pg.production("delete_clause : DELETE { triples_same_subject_path+ }")
-def f(p):
-  p = [j for i in p[2] for j in i]
-  return p
+def f(p): return [j for i in p[2] for j in i]
 #@pg.production("insert_clause : INSERT { triples_same_subject_path+ }")
 @pg.production("insert_clause : INSERT { graph_or_triples_same_subject_path+ }")
-def f(p):
-  #print(p)
-  p = [k for i in p[2] for j in i for k in j]
-  #print(p)
-  return p
+def f(p): return [k for i in p[2] for j in i for k in j]
 
 @pg.production("using_clause : USING iri")
 @pg.production("using_clause : USING NAMED iri")
@@ -412,9 +408,7 @@ pg.list("using_clause*", "")
 #pg.optional("triples_template?")
 
 @pg.production("group_graph_pattern : { select_query }")
-def f(p):
-  r = SubQueryBlock(p[1])
-  return r
+def f(p): return SubQueryBlock(p[1])
 
 @pg.production("group_graph_pattern : { group_graph_pattern_item* }")
 def _create_simple_block(p, accept_static = True):
@@ -497,25 +491,18 @@ def _iri_2_onto_c(iri): return rply.Token("INTEGER", CURRENT_TRANSLATOR.get().wo
 
 @pg.production("group_graph_pattern_item : GRAPH iri group_graph_pattern")
 def f(p):
-  translator = CURRENT_TRANSLATOR.get()
-  #_set_onto(p[2], CURRENT_TRANSLATOR.get().world.get_ontology(p[1].value))
   _set_onto(p[2], _iri_2_onto_c(p[1]))
+  return p[2]
+@pg.production("group_graph_pattern_item : GRAPH var group_graph_pattern")
+@pg.production("group_graph_pattern_item : GRAPH param group_graph_pattern")
+def f(p):
+  _set_onto(p[2], p[1])
   return p[2]
 def _set_onto(p, onto):
   if isinstance(p, list):
     if isinstance(p, SimpleTripleBlock):
       p.ontology = onto
     for child in p: _set_onto(child, p)
-@pg.production("group_graph_pattern_item : GRAPH var group_graph_pattern")
-def f(p):
-  translator = CURRENT_TRANSLATOR.get()
-  _set_onto(p[2], p[1])
-  return p[2]
-@pg.production("group_graph_pattern_item : GRAPH param group_graph_pattern")
-def f(p):
-  translator = CURRENT_TRANSLATOR.get()
-  _set_onto(p[2], p[1])
-  return p[2]
 
 pg.list("group_graph_pattern_item*", ".?")
 pg.optional(".?")
@@ -525,7 +512,6 @@ pg.optional(".?")
 def f(p): return p[1]
 
 @pg.production("data_block : inline_data_one_var")
-def f(p): return p[0]
 @pg.production("data_block : inline_data_full")
 def f(p): return p[0]
 
@@ -586,8 +572,6 @@ def f(p): return p
 
 @pg.production("arg_list : NIL")
 @pg.production("arg_list : ( DISTINCT? expression+ )")
-def f(p): return p
-
 @pg.production("expression_list : NIL")
 @pg.production("expression_list : ( expression+ )")
 def f(p): return p
@@ -617,12 +601,6 @@ def f(p): return p
 
 def _expand_triple(triples, s, ps_os):
   for p, o in ps_os:
-    #if p.modifier == "*STATIC":
-    #  triples0 = triples
-    #  triples  = []
-    #  b = SimpleTripleBlock()
-    #  static_group = StaticGroup(b)
-    
     if   isinstance(p, rply.Token):
       if (p.name == "VAR") or (p.name == "PARAM"):
         p.inversed = False
@@ -653,7 +631,6 @@ def _expand_triple(triples, s, ps_os):
         for p2 in p:
           if p2 is p[-1]: o2 = o
           else:           o2 = rply.Token("VAR", translator.new_var())
-          #_add_triple(triples, s2, p2, o2)
           _expand_triple(triples, s2, [(p2, o2)])
           s2 = o2
         triples[-1].end_sequence = True
@@ -779,7 +756,6 @@ def f(p): return p[0]
 def f(p): return p
 
 @pg.production("collection : ( graph_node+ )")
-def f(p): return p[1]
 @pg.production("collection_path : ( graph_node_path+ )")
 def f(p): return p[1]
 
@@ -805,8 +781,6 @@ pg.list("graph_node_path+", "")
 
 @pg.production("var_or_term : var")
 @pg.production("var_or_term : graph_term")
-def f(p): return p[0]
-
 @pg.production("var_or_iri : var")
 @pg.production("var_or_iri : iri")
 def f(p): return p[0]
@@ -899,7 +873,6 @@ def f(p):
   return p
 @pg.production("unary_expression : + primary_expression")
 @pg.production("unary_expression : - primary_expression")
-def f(p): return p
 @pg.production("unary_expression : primary_expression")
 def f(p): return p
 
@@ -923,8 +896,6 @@ def f(p): return p
 @pg.production("builtin_call : aggregate")
 @pg.production("builtin_call : exists")
 @pg.production("builtin_call : not_exists")
-def f(p): return p[0]
-
 @pg.production("builtin_call : aggregate")
 def f(p): return p[0]
 
@@ -964,7 +935,6 @@ def f(p):
   return p
 
 @pg.production("exists : EXISTS group_graph_pattern")
-def f(p): return p
 @pg.production("not_exists : NOT_EXISTS group_graph_pattern")
 def f(p): return p
 
@@ -986,10 +956,6 @@ def f(p):
   p[0].datatype = translator.abbreviate(p[2].value)
   if   p[0].datatype in _INT_DATATYPES:   p[0].value = int  (p[0].value[1:-1])
   elif p[0].datatype in _FLOAT_DATATYPES: p[0].value = float(p[0].value[1:-1])
-  #else:
-  #  datatype_parser = _universal_abbrev_2_datatype_parser.get(p[0].datatype)
-  #  if datatype_parser:
-  #    p[0].value = datatype_parser[1](p[0].value[1:-1])
   return p[0]
 
 _INT_DATATYPES   = { 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54 }
