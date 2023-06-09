@@ -738,7 +738,8 @@ version 2 - 0.44
 * Bugfixes:
   - Fix the update of equivalent_to after destroying a class
   - Fix the update of annotations on class when modified with SPARQL queries
-    
+  - Fix SPARQL GRAPH clause in SELECT queries when querying the graph as a variable and all triples are not inside the GRAPH clause
+
     
 Links
 -----

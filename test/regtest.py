@@ -10238,7 +10238,7 @@ SELECT ?x WHERE { ?x a onto:Cé }
       
     q, r = self.sparql(world, """SELECT ?i { onto:c1 onto:p ?i }""", compare_with_rdflib = True)
     assert set(i for i, in r) == { 1, 2, 3 }
-
+    
     q = world.prepare_sparql("""SELECT ?i { GRAPH onto: { onto:c1 onto:p ?i } }""")
     
     q, r = self.sparql(world, """SELECT ?i { GRAPH onto: { onto:c1 onto:p ?i } }""", compare_with_rdflib = False)
@@ -10379,8 +10379,8 @@ onto:patient1 onto:match ?x .
     
   def test_164(self):
     world = self.new_world()
-    onto1 = world.get_ontology("http://test.org/onto2.owl")
-    onto2 = world.get_ontology("http://test.org/onto1.owl")
+    onto1 = world.get_ontology("http://test.org/onto1.owl")
+    onto2 = world.get_ontology("http://test.org/onto2.owl")
     with onto1:
       class C(Thing): pass
     with onto2:
@@ -10404,7 +10404,19 @@ onto:patient1 onto:match ?x .
     # assert onto1.graph._get_data_triples_sp_od(D.storid, label.storid) == [("lab", 60)]
     # assert onto2.graph._get_data_triples_sp_od(D.storid, label.storid) == []
     
-
+  def test_165(self):
+    world = self.new_world()
+    onto = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      class p(C >> int): pass
+      c1 = C(p = [1, 2])
+      comment[c1, p, 1] = ["com"]
+      
+    q, r = self.sparql(world, """DELETE { ?x owl:annotatedTarget ??3 }  INSERT  { GRAPH ?g { ?x owl:annotatedTarget ??4 } }  WHERE  { ?x owl:annotatedSource ??1 ; owl:annotatedProperty ??2 . GRAPH ?g { ?x owl:annotatedTarget ??3 } }""", [c1, p, 1, 2], compare_with_rdflib = False)
+    
+    assert comment[c1, p, 1] == []
+    assert comment[c1, p, 2] == ["com"]
     
 # Add test for Pellet
 

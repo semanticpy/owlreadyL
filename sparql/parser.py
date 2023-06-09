@@ -1073,8 +1073,10 @@ def _prefix_vars(x, prefix):
 class Block(list):
   ontology = None
   def __repr__(self):
-    if getattr(self, "static_valuess", None): return "<%s %s static=%s>" % (self.__class__.__name__, list.__repr__(self), self.static_valuess)
-    return "<%s %s>" % (self.__class__.__name__, list.__repr__(self))
+    extra = ""
+    if getattr(self, "ontology", None): extra += " ontology=%s" % self.ontology
+    if getattr(self, "static_valuess", None): extra += " static_valuess=%s" % self.static_valuess
+    return "<%s %s%s>" % (self.__class__.__name__, list.__repr__(self), extra)
   
   def get_ordered_vars(self):
     vars = set()
@@ -1186,8 +1188,13 @@ class TripleBlockWithStatic(TripleBlock):
       static._get_ordered_vars(vars, ordered_vars)
 
           
-class SimpleTripleBlock(TripleBlockWithStatic): pass
-
+class SimpleTripleBlock(TripleBlockWithStatic):
+  def get_ordered_vars(self):
+    ordered_vars = TripleBlockWithStatic.get_ordered_vars(self)
+    if self.ontology and self.ontology.name == "VAR": ordered_vars.insert(0, self.ontology.value)
+    return ordered_vars
+  
+  
 class OptionalBlock(TripleBlock):
   def _get_ordered_vars(self, vars, ordered_vars, root_call = False):
     for triple in self:
