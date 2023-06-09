@@ -507,8 +507,6 @@ class PreparedModifyQuery(PreparedQuery):
     if execute_raw_result is None: resultss = self.execute_raw(params, spawn)
     else:                          resultss = execute_raw_result
 
-    print(self.inserts, params)
-    
     added_triples = []
     for results in set(resultss):
       nb_match += 1

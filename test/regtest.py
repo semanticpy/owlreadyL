@@ -10240,7 +10240,6 @@ SELECT ?x WHERE { ?x a onto:Cé }
     assert set(i for i, in r) == { 1, 2, 3 }
 
     q = world.prepare_sparql("""SELECT ?i { GRAPH onto: { onto:c1 onto:p ?i } }""")
-    print(q.sql)
     
     q, r = self.sparql(world, """SELECT ?i { GRAPH onto: { onto:c1 onto:p ?i } }""", compare_with_rdflib = False)
     assert set(i for i, in r) == { 1 }
