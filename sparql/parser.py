@@ -1061,7 +1061,7 @@ del lg, pg
 CURRENT_TRANSLATOR = ContextVar("CURRENT_TRANSLATOR")
 
 _DATA_TYPE  = { "STRING", "BOOL", "INTEGER", "DECIMAL", "DOUBLE", "DATA" }
-_OBJ_PROPS  = { rdf_type, rdf_domain, rdf_range, rdfs_subclassof, rdfs_subpropertyof, owl_object_property, owl_inverse_property, owl_onproperty, owl_onclass, owl_ondatarange, owl_equivalentclass, owl_members, owl_distinctmembers, owl_unionof, owl_intersectionof, owl_oneof, SOME, ONLY, HAS_SELF }
+_OBJ_PROPS  = { rdf_type, rdf_domain, rdf_range, rdfs_subclassof, rdfs_subpropertyof, owl_object_property, owl_inverse_property, owl_onproperty, owl_onclass, owl_ondatarange, owl_equivalentclass, owl_members, owl_distinctmembers, owl_unionof, owl_intersectionof, owl_oneof, owl_annotatedsource, owl_annotatedproperty, SOME, ONLY, HAS_SELF }
 _DATA_PROPS = { label.storid, comment.storid }
 
 

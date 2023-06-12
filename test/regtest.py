@@ -3858,9 +3858,12 @@ I took a placebo
     
   def test_annotation_2(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/0/test")
-    
+
     assert set(comment[n.ma_pizza, rdf_type, n.Pizza]) == { locstr('Comment on a triple', 'en'), locstr('Commentaire sur un triplet', 'fr') }
     assert comment[n.ma_pizza, rdf_type, n.Pizza].fr == ["Commentaire sur un triplet"]
+
+    assert set(AnnotatedRelation(n.ma_pizza, rdf_type, n.Pizza).comment) == { locstr('Comment on a triple', 'en'), locstr('Commentaire sur un triplet', 'fr') }
+    assert AnnotatedRelation(n.ma_pizza, rdf_type, n.Pizza).comment.fr == ["Commentaire sur un triplet"]
     
   def test_annotation_3(self):
     n = self.new_ontology()
@@ -3877,6 +3880,7 @@ I took a placebo
     assert annot[c1, prop, c2] == []
     
     annot[c1, prop, c2].append("Test")
+    
     annots = None
     for bnode, p, o in n._get_obj_triples_spo_spo(None, rdf_type, owl_axiom):
       if ((n._get_obj_triple_sp_o(bnode, owl_annotatedsource  ) == c1.storid) and
@@ -3895,8 +3899,9 @@ I took a placebo
         annots = { (p, n._to_python(o,d)) for s,p,o,d in n._get_triples_spod_spod(bnode, None, None) if not p in [rdf_type, owl_annotatedsource, owl_annotatedproperty, owl_annotatedtarget] }
         break
     assert annots == { (annot.storid, "Test"), (annot.storid, "Test1") }
-      
+    
     annot2[c1, prop, c2].append("Test2")
+    
     annots = None
     for bnode, p, o in n._get_obj_triples_spo_spo(None, rdf_type, owl_axiom):
       if ((n._get_obj_triple_sp_o(bnode, owl_annotatedsource  ) == c1.storid) and
@@ -3904,6 +3909,7 @@ I took a placebo
           (n._get_obj_triple_sp_o(bnode, owl_annotatedtarget  ) == c2.storid)):
         annots = { (p, n._to_python(o,d)) for s,p,o,d in n._get_triples_spod_spod(bnode, None, None) if not p in [rdf_type, owl_annotatedsource, owl_annotatedproperty, owl_annotatedtarget] }
         break
+      
     assert annots == { (annot.storid, "Test"), (annot.storid, "Test1"), (annot2.storid, "Test2") }
     
     annot[c1, prop, c2].remove("Test")
@@ -4227,7 +4233,7 @@ I took a placebo
 
     assert comment[C.is_a[-1]] == ["A comment on a restriction."]
     
-  def test_annotation_19(self):
+  def test_annotation_19_0(self):
     w = self.new_world()
     o = w.get_ontology("http://test.org/onto.owl")
     
@@ -4241,12 +4247,14 @@ I took a placebo
       comment[c1, p, c2].append("commentaire")
       comment[c1, p, c2].append("commentaire 2")
       
-      a = comment[comment[c1, p, c2], comment, "commentaire"]
-      a.append("commentaire d'un commentaire")
+      a = AnnotatedRelation(AnnotatedRelation(c1, p, c2), comment, "commentaire")
+      a.comment.append("commentaire d'un commentaire")
       
       b = comment[a, comment, "commentaire d'un commentaire"]
       b.append("commentaire d'un commentaire d'un commentaire")
 
+      assert comment[a, comment, "commentaire d'un commentaire"] == comment[a.comment, comment, "commentaire d'un commentaire"]
+      
       self.assert_triple(-3, comment.storid, *o._to_rdf("commentaire d'un commentaire d'un commentaire"), world = w)
       
   def test_annotation_19(self):
@@ -4277,7 +4285,7 @@ I took a placebo
     assert C.comment == ["C"]
     assert D.comment == []
     assert c1.comment == []
-
+    
     D.comment = ["D"]
     assert C.comment == ["C"]
     assert D.comment == ["D"]
@@ -4287,8 +4295,38 @@ I took a placebo
     assert C.comment == ["C"]
     assert D.comment == ["D"]
     assert c1.comment == ["c1"]
+    
+  def test_annotation_21(self):
+    world = self.new_world()
+    onto1 = world.get_ontology("http://test.org/onto1.owl")
+    onto2 = world.get_ontology("http://test.org/onto2.owl")
+    with onto1:
+      class C(Thing): pass
+      class p(C >> int): pass
+      c1 = C(p = [1])
+      comment[c1, p, 1].append("com1")
       
+    with onto2:
+      comment[c1, p, 1].append("com2")
       
+    assert set(comment[c1, p, 1]) == { "com1", "com2" }
+    assert set(AnnotatedRelation(c1, p, 1)._bnodes) == { -1, -2 }
+    
+  def test_annotation_22(self):
+    world = self.new_world()
+    onto  = world.get_ontology("http://test.org/onto.owl")
+    with onto:
+      class C(Thing): pass
+      C.label = ["C label"]
+      AnnotatedRelation(C, label, "C label").comment = ["Provisoire"]
+      AnnotatedRelation(AnnotatedRelation(C, label, "C label"), comment, "Provisoire").comment = ["1/1/2023"]
+      
+    assert AnnotatedRelation(AnnotatedRelation(C, label, "C label"), comment, "Provisoire").comment == ["1/1/2023"]
+    
+    self.assert_triple(-2, owl_annotatedsource, -1, world = world)
+    self.assert_triple(-2, owl_annotatedproperty, comment.storid, world = world)
+    
+    
   def test_import_1(self):
     n = get_ontology("http://www.semanticweb.org/jiba/ontologies/2017/2/test_mixed.owl").load()
     
@@ -7273,15 +7311,16 @@ ask where
       class ps(C >> int): pass
       
     c = C()
+
+    before_func = onto._add_obj_triple_raw_spo
     
     listened = "\n"
-    def listener(o, p):
+    def listener(o, ps):
       nonlocal listened
-      listened += "%s %s\n" % (w._unabbreviate(o), w._unabbreviate(p))
-      #print("%s %s %s\n" % (w._unabbreviate(o), w._unabbreviate(p), c.ps))
+      listened += "%s %s\n" % (w._unabbreviate(o), " ".join(w._unabbreviate(p) for p in sorted(ps)))
     owlready2.observe.start_observing(onto)
     owlready2.observe.observe(c, listener)
-
+    
     c.ps = [1, 2, 3]
     
     c.ps.remove(2)
@@ -7306,87 +7345,8 @@ http://test.org/t.owl#c1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type
 http://test.org/t.owl#c1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type
 """
     
-  def test_observe_2(self):
-    import owlready2.observe
-    
-    w = self.new_world()
-    onto = w.get_ontology("http://test.org/t.owl")
-    
-    with onto:
-      class C(Thing): pass
-      class D(Thing): pass
-      class ps(C >> int): pass
-      
-    c = C()
-    c.ps = [1, 2, 3]
-    
-    listened = set()
-    def listener(o, ps):
-      for p in ps:
-        listened.add("%s %s" % (w._unabbreviate(o), w._unabbreviate(p)))
-    owlready2.observe.start_observing(onto)
-    owlready2.observe.observe(c.storid, listener, True, w)
-    
-    c.ps.remove(2)
-    c.ps.append(4)
-    
-    c.is_a = [D]
-    
-    assert not listened
-    
-    owlready2.observe.scan_collapsed_changes()
-
-    assert listened == {"http://test.org/t.owl#c1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://test.org/t.owl#c1 http://test.org/t.owl#ps"}
-    
-    listened = set()
-    owlready2.observe.scan_collapsed_changes()
-    assert not listened # Now empty
-    
-    owlready2.observe.unobserve(c.storid, listener, w)
-    c.ps.append(5)
-    owlready2.observe.scan_collapsed_changes()
-    assert not listened
-    
-  def test_observe_3(self):
-    import owlready2.observe
-    
-    w = self.new_world()
-    onto = w.get_ontology("http://test.org/t.owl")
-    
-    with onto:
-      class C(Thing): pass
-      class D(Thing): pass
-      class ps(C >> int): pass
-      
-    c = C()
-    c.ps = [1, 2, 3]
-    
-    listened = set()
-    def listener(o, ps):
-      for p in ps:
-        listened.add("%s %s" % (w._unabbreviate(o), w._unabbreviate(p)))
-    owlready2.observe.start_observing(onto)
-    owlready2.observe.observe(c, listener, True)
-    
-    c.ps.remove(2)
-    c.ps.append(4)
-    
-    c.is_a = [D]
-    
-    assert not listened
-    
-    owlready2.observe.scan_collapsed_changes()
-    
-    assert listened == {"http://test.org/t.owl#c1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type", "http://test.org/t.owl#c1 http://test.org/t.owl#ps"}
-    
-    listened = set()
-    owlready2.observe.scan_collapsed_changes()
-    assert not listened # Now empty
-    
-    owlready2.observe.unobserve(c, listener)
-    c.ps.append(5)
-    owlready2.observe.scan_collapsed_changes()
-    assert not listened
+    owlready2.observe.stop_observing(onto)
+    assert onto._add_obj_triple_raw_spo == before_func
     
   def disabled_test_observe_4(self):
     import owlready2.observe
@@ -7463,13 +7423,13 @@ http://test.org/t.owl#c1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type
       listened.extend(diffs)
     l = owlready2.observe.InstancesOfClass(C, use_observe = True)
     owlready2.observe.start_observing(onto)
-    owlready2.observe.observe(l, listener, True)
+    owlready2.observe.observe(l, listener, None, True)
     
     c3 = C()
     c4 = C()
     
     assert listened == []
-    owlready2.observe.scan_collapsed_changes()
+    owlready2.observe.emit_collapsed_changes()
     
     assert listened[0][0] == "Inverse(http://www.w3.org/1999/02/22-rdf-syntax-ns#type)"
     assert list(listened[0][1]) == [c1, c2, c3, c4]
@@ -7513,15 +7473,110 @@ http://test.org/t.owl#c1 http://www.w3.org/1999/02/22-rdf-syntax-ns#type
       c2 = C()
       
     listened = "\n"
-    def listener(o, p):
+    def listener(o, ps):
       nonlocal listened
-      listened += "%s %s\n" % (w._unabbreviate(o), w._unabbreviate(p))
+      listened += "%s %s\n" % (w._unabbreviate(o), " ".join(w._unabbreviate(p) for p in sorted(ps)))
     owlready2.observe.start_observing(onto)
     owlready2.observe.observe(c2, listener)
     
     c1.p.append(c2)
 
     assert listened == """\nhttp://test.org/t.owl#c2 http://test.org/t.owl#i\n"""
+    
+  def test_observe_9(self):
+    import owlready2.observe
+    
+    w = self.new_world()
+    onto = w.get_ontology("http://test.org/t.owl")
+    
+    with onto:
+      class C(Thing): pass
+      class p(C >> int): pass
+      c1 = C(p = [1])
+      
+    listened = "\n"
+    def unabbreviate(o):
+      if isinstance(o, tuple):
+        o2 = [None] * 3
+        o2[0] = unabbreviate(o[0])
+        if not o[1] is None: o2[1] = w._unabbreviate(o[1])
+        if not o[2] is None: o2[2] = w._to_python(o[2], o[3])
+        return tuple(o2)
+      else:
+        return w._unabbreviate(o)
+    def listener(o, ps):
+      nonlocal listened
+      o2 = unabbreviate(o)
+      listened += "(%s) %s\n" % (" ".join(str(i) for i in o2), " ".join(w._unabbreviate(p) for p in sorted(ps)))
+    owlready2.observe.observe((c1, p, 1), listener)
+    
+    comment[c1, p, 1] = ["ok"]
+    assert listened == '\n(http://test.org/t.owl#c1 http://test.org/t.owl#p 1) http://www.w3.org/2000/01/rdf-schema#comment\n'
+    
+    listened = "\n"
+    comment[c1, p, 1].append(C)
+    assert listened == '\n(http://test.org/t.owl#c1 http://test.org/t.owl#p 1) http://www.w3.org/2000/01/rdf-schema#comment\n'
+    
+    listened = "\n"
+    comment[c1, p, 1] = []
+    assert listened == '\n(http://test.org/t.owl#c1 http://test.org/t.owl#p 1) http://www.w3.org/2000/01/rdf-schema#comment\n(http://test.org/t.owl#c1 http://test.org/t.owl#p 1) http://www.w3.org/2000/01/rdf-schema#comment\n'
+    
+    owlready2.observe.unobserve((c1, p, 1), listener)
+    
+    listened = "\n"
+    comment[c1, p, 1].append("x")
+    assert listened == """\n"""
+    
+    owlready2.observe.observe((c1, None, None), listener)
+    
+    listened = "\n"
+    label[c1, p, 1].append("ok")
+    assert listened == '\n(http://test.org/t.owl#c1 None None) http://test.org/t.owl#p\n'
+    
+    owlready2.observe.observe(((c1, p, 1), label, "ok"), listener)
+    
+    listened = "\n"
+    comment[AnnotatedRelation(c1, p, 1), label, "ok"] = ["ok2"]
+    assert listened == """\n(('http://test.org/t.owl#c1', 'http://test.org/t.owl#p', 1) http://www.w3.org/2000/01/rdf-schema#label ok) http://www.w3.org/2000/01/rdf-schema#comment\n"""
+    
+            
+  def test_observe_10(self):
+    import owlready2.observe
+    
+    w = self.new_world()
+    onto = w.get_ontology("http://test.org/t.owl")
+    owlready2.observe.start_observing(w)
+    
+    with onto:
+      class C(Thing): pass
+      class p(C >> int): pass
+      class q(C >> int): pass
+      c1 = C(p = [1])
+      
+    listened = "\n"
+    def listener(o, ps):
+      nonlocal listened
+      listened += "%s %s\n" % (w._unabbreviate(o), " ".join(w._unabbreviate(p) for p in sorted(ps)))
+    owlready2.observe.observe(c1, listener)
+    
+    c1.p.append(2)
+    assert listened == """\nhttp://test.org/t.owl#c1 http://test.org/t.owl#p\n"""
+    
+    c1.q.append(3)
+    assert listened == """\nhttp://test.org/t.owl#c1 http://test.org/t.owl#p\nhttp://test.org/t.owl#c1 http://test.org/t.owl#q\n"""
+    
+    listened = "\n"
+    
+    with owlready2.observe.coalesced_observations:
+      c1.p.append(4)
+      c1.q.append(5)
+      c1.q.append(6)
+      
+      assert listened == """\n"""
+      
+    assert listened == """\nhttp://test.org/t.owl#c1 http://test.org/t.owl#p http://test.org/t.owl#q\n"""
+    
+    
     
     
   def test_fts_1(self):
@@ -10410,13 +10465,18 @@ onto:patient1 onto:match ?x .
     with onto:
       class C(Thing): pass
       class p(C >> int): pass
-      c1 = C(p = [1, 2])
+      c1 = C(p = [1, 2, 3])
       comment[c1, p, 1] = ["com"]
       
     q, r = self.sparql(world, """DELETE { ?x owl:annotatedTarget ??3 }  INSERT  { GRAPH ?g { ?x owl:annotatedTarget ??4 } }  WHERE  { ?x owl:annotatedSource ??1 ; owl:annotatedProperty ??2 . GRAPH ?g { ?x owl:annotatedTarget ??3 } }""", [c1, p, 1, 2], compare_with_rdflib = False)
-    
     assert comment[c1, p, 1] == []
     assert comment[c1, p, 2] == ["com"]
+    assert comment[c1, p, 3] == []
+    
+    q, r = self.sparql(world, """DELETE { ?x owl:annotatedTarget ??3 }  INSERT  { GRAPH ?g { ?x owl:annotatedTarget ??4 } }  WHERE  { GRAPH ?g { ?x owl:annotatedSource ??1 ; owl:annotatedProperty ??2 ; owl:annotatedTarget ??3 } }""", [c1, p, 2, 3], compare_with_rdflib = False)
+    assert comment[c1, p, 1] == []
+    assert comment[c1, p, 2] == []
+    assert comment[c1, p, 3] == ["com"]
     
 # Add test for Pellet
 

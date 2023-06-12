@@ -159,11 +159,11 @@ FROM objs q1, objs q2 INDEXED BY index_objs_sp, objs q3 INDEXED BY index_objs_sp
 WHERE q1.p=? AND q1.o=?
   AND q2.s=q1.s AND q2.p=6 AND q2.o=?
   AND q3.s=q1.s AND q3.p=? AND q3.o=?
-  AND q4.s=q1.s AND q4.p=? AND q4.o=?""",
+  AND q4.s=q1.s AND q4.p=? AND q4.o=? AND q4.d=?""",
                          (owl_annotatedsource, source,
                           owl_axiom,
                           owl_annotatedproperty, property,
-                          owl_annotatedtarget, target))
+                          owl_annotatedtarget, target, target_d))
       for l in r.fetchall(): yield l[0]
       
   def _del_obj_triple_spo(self, s = None, p = None, o = None):
@@ -375,6 +375,9 @@ class World(_GraphManager):
       self.set_backend(backend, filename, dbname, **kargs)
       
     self.get_ontology("http://anonymous/") # Pre-create, in order to avoid creation during a reading sequence
+    
+  def _register_ontology(self, onto):
+    self.ontologies[onto._base_iri] = onto
     
   def set_backend(self, backend = "sqlite", filename = ":memory:", dbname = "owlready2_quadstore", **kargs):
     if   backend == "sqlite":
@@ -770,7 +773,7 @@ class World(_GraphManager):
 class Ontology(Namespace, _GraphManager):
   def __init__(self, world, base_iri, name = None):
     if world.graph: world.graph.acquire_write_lock()
-
+    
     try:
       self.world       = world # Those 2 attributes are required before calling Namespace.__init__
       self._namespaces = weakref.WeakValueDictionary()
@@ -792,7 +795,8 @@ class Ontology(Namespace, _GraphManager):
         if not new_in_quadstore:
           self._load_properties()
 
-      world.ontologies[self._base_iri] = self
+      #world.ontologies[self._base_iri] = self
+      world._register_ontology(self)
       if _LOG_LEVEL: print("* Owlready2 * Creating new ontology %s <%s>." % (self.name, self._base_iri), file = sys.stderr)
 
       if (not LOADING) and (not self.graph is None):
@@ -1077,6 +1081,9 @@ class Ontology(Namespace, _GraphManager):
       self.graph.save(file, format, **kargs)
       
   def _add_obj_triple_spo(self, s, p, o):
+    
+    if o == 0 and p == owl_annotatedsource: zpj
+    
     l = CURRENT_NAMESPACES.get()
     ((l and l[-1].ontology) or self)._add_obj_triple_raw_spo(s, p, o)
     if _LOG_LEVEL > 1:
@@ -1119,48 +1126,91 @@ class Ontology(Namespace, _GraphManager):
   def _add_data_triple_raw_spodsd(self, subject, predicate, object, d): pass
   def _set_data_triple_raw_spodsd(self, subject, predicate, object, d): pass
   def _del_data_triple_raw_spodsd(self, subject, predicate, object, d): pass
+  
+  # def _add_annotation_axiom(self, source, property, target, annot, value, value_d, bnode = None):
+  #   target, target_d = self.world._to_rdf(target)
+  #   if not bnode:
+  #     for bnode in self.world._get_annotation_axioms(source, property, target, target_d):
+  #       break # Take first
+      
+  #   if (not bnode) or (not self._has_obj_triple_spo(bnode, rdf_type, owl_axiom)):
+  #     bnode = bnode or self.world.new_blank_node() # Not found => new axiom
+  #     self._add_obj_triple_spo(bnode, rdf_type, owl_axiom)
+  #     self._add_obj_triple_spo(bnode, owl_annotatedsource  , source)
+  #     self._add_obj_triple_spo(bnode, owl_annotatedproperty, property)
+  #     if target_d is None: self._add_obj_triple_spo  (bnode, owl_annotatedtarget, target)
+  #     else:                self._add_data_triple_spod(bnode, owl_annotatedtarget, target, target_d)
+      
+  #   if value_d is None: self._add_obj_triple_spo  (bnode, annot, value)
+  #   else:               self._add_data_triple_spod(bnode, annot, value, value_d)
+  #   return bnode
+  
+  def _add_annotation_axiom(self, source, property, target, annot, value, value_d, bnodes = None):
+    # Force the use of the right ontology in case of a "with onto:" block
+    l = CURRENT_NAMESPACES.get()
+    self = (l and l[-1].ontology) or self
     
-  def _add_annotation_axiom(self, source, property, target, target_d, annot, value, d):
-    for bnode in self.world._get_annotation_axioms(source, property, target, target_d):
-      break # Take first
+    target, target_d = self.world._to_rdf(target)
+    for bnode in bnodes:
+      if self._has_obj_triple_spo(bnode, rdf_type, owl_axiom): break # Defined in this onto
     else:
-      bnode = self.world.new_blank_node() # Not found => new axiom
+      for bnode in bnodes:
+        if not self.world._has_obj_triple_spo(bnode, rdf_type, owl_axiom): break # Not defined in any onto => reuse
+      else:
+        bnode = self.world.new_blank_node() # Not found => new axiom
+        
       self._add_obj_triple_spo(bnode, rdf_type, owl_axiom)
       self._add_obj_triple_spo(bnode, owl_annotatedsource  , source)
       self._add_obj_triple_spo(bnode, owl_annotatedproperty, property)
-      if target_d is None:
-        self._add_obj_triple_spo(bnode, owl_annotatedtarget, target)
-      else:
-        self._add_data_triple_spod(bnode, owl_annotatedtarget, target, target_d)
-    
-    if d is None: self._add_obj_triple_spo  (bnode, annot, value)
-    else:         self._add_data_triple_spod(bnode, annot, value, d)
+      if target_d is None: self._add_obj_triple_spo  (bnode, owl_annotatedtarget, target)
+      else:                self._add_data_triple_spod(bnode, owl_annotatedtarget, target, target_d)
+      
+    if value_d is None: self._add_obj_triple_spo  (bnode, annot, value)
+    else:               self._add_data_triple_spod(bnode, annot, value, value_d)
     return bnode
-    
   
-  def _del_annotation_axiom(self, source, property, target, target_d, annot, value, value_d):
-    for bnode in self._get_obj_triples_po_s(rdf_type, owl_axiom):
-      ok    = False
-      other = False
-      for p, o, d in self._get_triples_s_pod(bnode):
-        if   p == owl_annotatedsource: # SIC! If on a single if, elif are not appropriate.
-          if o != source: print("AAA"); break
-        elif p == owl_annotatedproperty:
-          if o != property: print("BBB"); break
-        elif p == owl_annotatedtarget:
-          if o != target: print("CCC"); break
-        elif  p == rdf_type: pass
-        elif (p == annot) and (o == value) and (d == value_d): ok = True
-        else: other = True
-      else:
-        if ok:
-          if other:
-            if value_d is None: self._del_obj_triple_spo(bnode, annot, value)
-            else:               self._del_data_triple_spod(bnode, annot, value, value_d)
-          else:
-            self._del_obj_triple_spo  (bnode, None, None)
-            self._del_data_triple_spod(bnode, None, None, None)
-          return bnode
+  # def _del_annotation_axiom(self, source, property, target, target_d, annot, value, value_d, bnode = None):
+  #   for bnode in self._get_obj_triples_po_s(rdf_type, owl_axiom):
+  #     ok    = False
+  #     other = False
+  #     for p, o, d in self._get_triples_s_pod(bnode):
+  #       if   p == owl_annotatedsource: # SIC! If on a single if, elif are not appropriate.
+  #         if o != source: break
+  #       elif p == owl_annotatedproperty:
+  #         if o != property: break
+  #       elif p == owl_annotatedtarget:
+  #         if o != target: break
+  #       elif  p == rdf_type: pass
+  #       elif (p == annot) and (o == value) and (d == value_d): ok = True
+  #       else: other = True
+  #     else:
+  #       if ok:
+  #         if other:
+  #           if value_d is None: self._del_obj_triple_spo  (bnode, annot, value)
+  #           else:               self._del_data_triple_spod(bnode, annot, value, value_d)
+  #         else:
+  #           self._del_obj_triple_spo  (bnode, None, None)
+  #           self._del_data_triple_spod(bnode, None, None, None)
+  #         return bnode
+  
+  def _del_annotation_axiom(self, source, property, target, annot, value, value_d, bnodes = None):
+    if bnodes is None:
+      bnodes = [bnode for (bnode,) in self.sparql("""SELECT ?x { ?x owl:annotatedSource ??1 ; owl:annotatedProperty ??2 ; owl:annotatedTarget ??3 . } LIMIT 1""", (source, property, target))]
+      
+    if value_d is None:
+      for bnode in bnodes:
+        if not self._has_obj_triple_spo(bnode, annot, value): continue
+        self._del_obj_triple_spo  (bnode, annot, value) # Needed for observe
+        if len(self._get_triples_s_pod(bnode)) <= 4: self._del_obj_triple_spo(bnode, None, None)
+        #if len(self._get_triples_s_pod(bnode)) <= 5: self._del_obj_triple_spo  (bnode, None, None)
+        #else:                                        self._del_obj_triple_spo  (bnode, annot, value)
+    else:
+      for bnode in bnodes:
+        if not self._has_data_triple_spod(bnode, annot, value, value_d): continue
+        self._del_data_triple_spod(bnode, annot, value, value_d) # Needed for observe
+        if len(self._get_triples_s_pod(bnode)) <= 4: self._del_obj_triple_spo(bnode, None, None); self._del_data_triple_spod(bnode, None, None, None)
+        #if len(self._get_triples_s_pod(bnode)) <= 5: self._del_obj_triple_spo  (bnode, None, None); self._del_data_triple_spod(bnode, None, None, None)
+        #else:                                        self._del_data_triple_spod(bnode, annot, value, value_d)
         
         
   def _reload_bnode(self, bnode):
