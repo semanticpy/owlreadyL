@@ -133,45 +133,6 @@ class AnnotatedRelationValueList(CallbackListWithLanguage):
           if world._has_data_triple_spod(bnode, self._Prop.storid, o, d):
             world._del_data_triple_spod(bnode, self._Prop.storid, o, d) # Needed for observe
             if len(world._get_triples_s_pod(bnode)) <= 4: self._obj._remove_bnode(bnode)
-
-# import weakref
-# _cache = weakref.WeakValueDictionary()
-# def AnnotatedRelation(s, p, o):
-#   r = _cache.get((s, p, o))
-#   if r is None:
-#     r = _cache[s, p, o] = _AnnotatedRelation(s, p, o)
-#   return r
-
-# class _AnnotList(CallbackListWithLanguage):
-#   __slots__ = ["namespace", "storid", "bnodes", "_property", "_target", "_annot", "_od_2_bnode"]
-#   def __init__(self, l, source, property, target, annot, namespace, bnodes, od_2_bnode):
-#     list.__init__(self, l)
-#     self.namespace   = namespace
-#     self.bnodes      = bnodes
-#     self._obj        = source
-#     self._property   = property
-#     self._target     = target
-#     self._annot      = annot
-#     self._od_2_bnode = od_2_bnode
-    
-#   def _callback(self, obj, old):
-#     old = set(old)
-#     new = set(self)
-    
-#     if isinstance(obj, _AnnotList): # Annotate an annotation
-#       s = obj.bnodes[0]
-#     else:
-#       s = obj.storid
-      
-#     # Add before, in order to avoid destroying the axiom and then recreating, if all annotations are modified
-#     for added in new - old:
-#       o, d = obj.namespace.ontology._to_rdf(added)
-#       self.storid = bnode = obj.namespace.ontology._add_annotation_axiom(s, self._property, self._target, self._annot, o, d, self.bnodes)
-#       if not bnode in self.bnodes: self.bnodes.append(bnode)
-      
-#     for removed in old - new:
-#       o, d = obj.namespace.ontology._to_rdf(removed)
-#       obj.namespace.ontology._del_annotation_axiom(s, self._property, self._target, self._annot, o, d, self.bnodes)
       
     
 class AnnotationPropertyClass(PropertyClass):
@@ -180,31 +141,6 @@ class AnnotationPropertyClass(PropertyClass):
   
   def __getitem__(Annot, entity):
     if isinstance(entity, tuple):
-      # source, property, target = entity
-
-      # if isinstance(source, tuple): # Annotation axiom on an annotation axiom!
-      #   source = property[source]
-      # if isinstance(source, _AnnotList): # Annotation axiom on an annotation axiom!
-      #   source_storid = source._od_2_bnode[source.namespace._to_rdf(target)]
-      # else:
-      #   source_storid = source.storid
-        
-      # if hasattr(source, "namespace"): namespace = source.namespace
-      # else:                            namespace = Annot.namespace
-      
-      # if hasattr(property, "storid"): property = property.storid
-      
-      # l = []
-      # bnodes = set()
-      
-      # od_2_bnode = {}
-      # for bnode in namespace.world._get_annotation_axioms(source_storid, property, *namespace._to_rdf(target)):
-      #   bnodes.add(bnode)
-      #   for o, d in namespace.world._get_triples_sp_od(bnode, Annot.storid):
-      #     l.append(namespace.world._to_python(o, d))
-      #     od_2_bnode[o, d] = bnode
-      
-      # return _AnnotList(l, source, property, target, Annot.storid, namespace, list(bnodes), od_2_bnode)
       return AnnotatedRelation(*entity).__getattr__(Annot.python_name)
     
     else:
