@@ -235,31 +235,6 @@ class CoalescedObservations(object):
     
 coalesced_observations = CoalescedObservations()
     
-
-class ObjectPack(object):
-  storid = 0 # Fake storid
-  
-  def __init__(self, objects):
-    self._objects = objects
-    
-  def __repr__(self): return "<ObjectPack %s>" % self._objects
-
-  def get_namespace(self): return self._objects[0].namespace
-  namespace = property(get_namespace)
-  
-  def observed(self, listener):
-    for o in self._objects: observe(o, listener)
-    return True
-  
-  def is_observed(self, listener = None):
-    for o in self._objects:
-      if isobserved(o, listener): return True
-    return False
-  
-  def unobserved(self, listener):
-    for o in self._objects: unobserve(o, listener)
-    return True
-    
     
   
 def _prepare_tuple_o(o, world):
