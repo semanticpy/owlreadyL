@@ -242,7 +242,7 @@ class Graph(BaseMainGraph):
       version = self.execute("SELECT version FROM store").fetchone()[0]
 
       if version < 11:
-        update_triplestore(self, world)      
+        update_triplestore(self, version)      
         
       self.prop_fts = { storid for (storid,) in self.execute("""SELECT storid FROM prop_fts;""") }
       
