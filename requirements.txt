@@ -1,6 +1,0 @@
-wheel
-setuptools
-rdflib
-cython
-flask
-gevent

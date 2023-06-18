@@ -1,2 +1,39 @@
 [build-system]
 requires = ["setuptools", "wheel", "Cython"]
+
+
+[project]
+name =  "owlready2"
+version = "0.42"
+authors = [{ name = "Lamy Jean-Baptiste (Jiba)", email="jibalamy@free.fr"}]
+readme = "README.rst"
+description = "A package for ontology-oriented programming in Python: load OWL 2.0 ontologies as Python objects, modify them, save them, and perform reasoning via HermiT. Includes an optimized RDF quadstore."
+requires-python = ">= 3.6"
+
+classifiers  = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Information Technology",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.6",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    ]
+  
+
+[project.optional-dependencies]
+test = ["rdflib", "flask", "gevent", ]
+
+
+
+
