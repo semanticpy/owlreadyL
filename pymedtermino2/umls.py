@@ -516,7 +516,6 @@ class _Importer(object):
     self.cuis_having_tui = set()
     self.next_arbitrary_code = 1
     
-    
     self.orig_2_terms = {}
     self.cui_2_terms  = {}
     self.partial_relations = {}
@@ -536,7 +535,6 @@ class _Importer(object):
       self.objs .append((self.CUI, PYM.terminology.storid, self._abbreviate("http://PYM/SRC/SRC")))
       self.datas.append((self.CUI, label.storid, "UMLS unified concepts (CUI)", 0))
       
-      
   def after(self, parser): # Free some memory
     self.check_insert()
     if   parser == "MRCONSO":
@@ -555,16 +553,6 @@ class _Importer(object):
           self.datas.append((cui, self.PYM.synonyms.storid, term, "@%s" % lang))
         self.check_insert()
         
-      #for cui, origs in self.cui_2_origs.items():
-      #  terms = []
-      #  for orig in origs:
-      #    terms.extend(self.orig_2_terms[orig])
-      #  terms.sort()
-      #  self.datas.append((cui, label.storid, terms[-1][1], "@%s" % terms[-1][2]))
-      #  for priority, term, lang in terms[:-1]:
-      #    self.datas.append((cui, self.PYM.synonyms.storid, term, "@%s" % lang))
-      #  self.check_insert()
-      
       del self.cui_2_terms
       
     elif parser == "MRREL":
