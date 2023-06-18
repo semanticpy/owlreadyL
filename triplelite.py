@@ -628,8 +628,12 @@ class Graph(BaseMainGraph):
     return -blank
     
   def _get_obj_triples_spo_spo(self, s, p, o):
-    # tuple( x is None for x in (s,p,o) )
-    # { (False, True, True): ("SELECT s,p,o FROM objs", (o,)) }
+    # more readable version :
+    # spo_selector = tuple( x is None for x in (s,p,o) )
+    # actions = { (False, True, True): ("SELECT s,p,o FROM objs", (o,)),
+    #             (True, False, True): ("SELECT s,p,o FROM objs", (s,)),
+    #             (True, True, False): ("SELECT s,p,o FROM objs", (p,)), ... needs to be checked for all 8 cases }
+    # return self.execute(actions[spo_selector]).fetchall()
     if s is None:
       if p is None:
         if o is None: cur = self.execute("SELECT s,p,o FROM objs")
@@ -647,6 +651,12 @@ class Graph(BaseMainGraph):
     return cur.fetchall()
   
   def _get_data_triples_spod_spod(self, s, p, o, d):
+    # more readable version :
+    # spod_selector = tuple( x is None for x in (s,p,o,d) )
+    # actions = { (False, True, True, True): ("SELECT s,p,o,d FROM datas", (o,d,)),
+    #             (True, False, True, True): ("SELECT s,p,o,d FROM datas", (s,d,)),
+    #             (True, True, False, True): ("SELECT s,p,o,d FROM datas", (p,d,)), ... needs to be checked for all 16 cases }
+    # return self.execute(actions[spod_selector]).fetchall()
     if s is None:
       if p is None:
         if o is None: cur = self.execute("SELECT s,p,o,d FROM datas")
