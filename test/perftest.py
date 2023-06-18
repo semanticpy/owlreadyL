@@ -412,7 +412,7 @@ if __name__ == "__main__":
           color = ""
         print(name, " " * (name_length - len(name)), "%4i" % round(t1), "%4i" % round(t2), " ", color, "%+.2f%%" % delta, "\033[00m")
     print()
-
+    
   FS = "/home/jiba/tmp/owlready_pytest_results.txt"
   if "-s" in sys.argv:
     F = FS

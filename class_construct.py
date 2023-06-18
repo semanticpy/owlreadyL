@@ -197,7 +197,7 @@ class LogicalClassConstruct(ClassConstruct):
   
   def __rshift__(Domain, Range):
     import owlready2.prop
-    owlready2.prop._next_domain_range = (Domain, Range)
+    owlready2.prop._NEXT_DOMAIN_RANGE.set((Domain, Range))
     if isinstance(Range, ThingClass) or isinstance(Range, Construct):
       return owlready2.prop.ObjectProperty
     else:

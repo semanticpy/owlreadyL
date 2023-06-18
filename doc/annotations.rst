@@ -28,8 +28,7 @@ annotations:
 The following annotations are available by default: comment, isDefinedBy, label, seeAlso,
 backwardCompatibleWith, deprecated, incompatibleWith, priorVersion, versionInfo.
 
-Owlready2 also supports annotations on relation triples, using the AnnotationProperty (here comment)
-as a pseudo-dictionary:
+Owlready2 also supports annotations on relation triples, using the AnnotatedRelation class as folows:
 
 ::
 
@@ -44,14 +43,27 @@ as a pseudo-dictionary:
    >>> pain = HealthProblem("pain")
    >>> acetaminophen.is_prescribed_for.append(pain)
    
-   >>> comment[acetaminophen, is_prescribed_for, pain] = "A comment on the acetaminophen-pain relation"
+   >>> AnnotatedRelation(acetaminophen, is_prescribed_for, pain).comment = ["A comment on the acetaminophen-pain relation"]
+
+The AnnotatedRelation class constructor takes three parameters, corresponding to a subject-predicate-object triple.
+Then, you can use the dotted notation on the AnnotatedRelation object to access the various annotations
+(e.g., .comment, .label, etc).
+
+.. note::
+
+   The following, old, syntax remains supported:
+
+   ::
+
+      >>> comment[acetaminophen, is_prescribed_for, pain] = ["A comment on the acetaminophen-pain relation"]
+   
 
 Special pseudo-properties are provided for annotating is-a relations (rdfs_subclassof and rdf_type),
 domains (rdf_domain) and ranges (rdf_range).
 
 ::
 
-   >>> comment[Drug, rdfs_subclassof, Thing] = "A comment on an is-a relation"
+   >>> AnnotatedRelation(Drug, rdfs_subclassof, Thing).comment = ["A comment on an is-a relation"]
 
 
 Annotation values are usually lists of values. However, in many cases, a single value is used.
@@ -72,10 +84,10 @@ Annotation values can be obtained using the dot notation, as if they were attrib
    >>> print(Drug.comment)
    ['A first comment on the Drug class', 'A second comment', 'A third comment']
    
-   >>> print(comment[acetaminophen, is_prescribed_for, pain])
+   >>> print(AnnotatedRelation(acetaminophen, is_prescribed_for, pain).comment)
    ['A comment on the acetaminophen-pain relation']
    
-   >>> print(comment[Drug, rdfs_subclassof, Thing])
+   >>> print(AnnotatedRelation(Drug, rdfs_subclassof, Thing).comment)
    ['A comment on an is-a relation']
 
 If you expect a single value, the .first() method of the list can be used. It returns the first value of
@@ -85,6 +97,15 @@ the list, or None if the list is empty.
 
    >>> acetaminophen.comment.first()
    'This comment replaces all existing comments on acetaminophen'
+
+
+.. note::
+
+   The following, old, syntax remains supported:
+
+   ::
+
+      >>> comment[acetaminophen, is_prescribed_for, pain]
 
 
 Deleting annotations
@@ -104,6 +125,18 @@ For removing **all** annotations of a given type:
    >>> Drug.comment = []
 
 
+Nested annotated relations
+--------------------------
+
+AnnotatedRelation can be nested if desired, as follows:
+
+::
+   
+   >>> annotr = AnnotatedRelation(acetaminophen, is_prescribed_for, pain)
+   >>> nested = AnnotatedRelation(annotr, comment, "A comment on the acetaminophen-pain relation")
+   >>> nested.comment = ["A comment on the previous comment"]
+
+   
 Custom rendering of entities
 ----------------------------
 

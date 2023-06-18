@@ -44,7 +44,7 @@ class OwlReadyJavaError(OwlReadyError): pass
 
 
 def to_literal(o):
-  if isinstance(o, locstr) and o.lang: return o, "@%s" % o.lang
+  if isinstance(o, locstr) and o.lang: return str(o), "@%s" % o.lang
   datatype, unparser = _universal_datatype_2_abbrev_unparser.get(o.__class__) or (None, None)
   if datatype is None: raise ValueError("Cannot store literal '%s' of type '%s'!" % (o, type(o)))
   return unparser(o), datatype

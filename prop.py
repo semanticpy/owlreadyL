@@ -957,11 +957,11 @@ def destroy_entity(e, undoable = False):
         elif (r == owl_equivalentproperty) or (r == owl_equivalentindividual):
           if o._equivalent_to._indirect:
             for o2 in o.equivalent_to._indirect: o2._equivalent_to._indirect = None
-            o._equivalent_to._indirect = None
+          o._equivalent_to = None
         elif r == owl_equivalentclass:
           if o.equivalent_to._indirect:
             for o2 in o._equivalent_to._indirect: o2._equivalent_to._indirect = None
-            o._equivalent_to._indirect = None
+          o._equivalent_to = None
           for Subclass in o.descendants(True, True): _FUNCTIONAL_FOR_CACHE.pop(Subclass, None)
           
         elif r == rdf_domain:
@@ -1121,7 +1121,7 @@ class IndividualValueList(CallbackListWithLanguage):
         
     elif self._Prop._owl_type == owl_data_property:
       for removed in old - new:
-        obj.namespace.world._del_data_triple_spod(obj.storid, self._Prop.storid, obj.namespace.world._to_rdf(removed)[0], None)
+        obj.namespace.world._del_data_triple_spod(obj.storid, self._Prop.storid, *obj.namespace.world._to_rdf(removed))
         
       for added in new - old:
         obj.namespace.ontology._add_data_triple_spod(obj.storid, self._Prop.storid, *obj.namespace.ontology._to_rdf(added))
@@ -1131,7 +1131,7 @@ class IndividualValueList(CallbackListWithLanguage):
         if hasattr(removed, "storid"):
           obj.namespace.world._del_obj_triple_spo(obj.storid, self._Prop.storid, removed.storid)
         else:
-          obj.namespace.world._del_data_triple_spod(obj.storid, self._Prop.storid, obj.namespace.world._to_rdf(removed)[0], None)
+          obj.namespace.world._del_data_triple_spod(obj.storid, self._Prop.storid, *obj.namespace.world._to_rdf(removed))
           
       for added in new - old:
         if hasattr(added, "storid"):

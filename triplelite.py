@@ -197,10 +197,11 @@ class Graph(BaseMainGraph):
       self.prop_fts = set()
       
       self.execute("""CREATE TABLE store (version INTEGER, current_blank INTEGER, current_resource INTEGER)""")
-      self.execute("""INSERT INTO store VALUES (10, 0, 300)""")
+      self.execute("""INSERT INTO store VALUES (11, 0, 300)""")
       self.execute("""CREATE TABLE objs (c INTEGER, s INTEGER, p INTEGER, o INTEGER)""")
       self.execute("""CREATE TABLE datas (c INTEGER, s INTEGER, p INTEGER, o BLOB, d INTEGER)""")
       self.execute("""CREATE VIEW quads AS SELECT c,s,p,o,NULL AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""")
+      self.execute("""CREATE VIEW quads2 AS SELECT c,s,p,o,'o' AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""") # AVoid using NULL because, in SQL, NULL != NULL.
       
       self.execute("""CREATE TABLE ontologies (c INTEGER PRIMARY KEY, iri TEXT, last_update DOUBLE)""")
       self.execute("""CREATE TABLE ontology_alias (iri TEXT, alias TEXT)""")
@@ -431,6 +432,12 @@ class Graph(BaseMainGraph):
         self.execute("""CREATE INDEX index_objs_c ON objs(c)""")
         self.execute("""CREATE INDEX index_datas_c ON datas(c)""")
         self.execute("""UPDATE store SET version=10""")
+        self.db.commit()
+        version += 1
+        
+      if version == 10:
+        self.execute("""CREATE VIEW quads2 AS SELECT c,s,p,o,'o' AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""") # AVoid using NULL because, in SQL, NULL != NULL.
+        self.execute("""UPDATE store SET version=11""")
         self.db.commit()
         version += 1
         
@@ -1149,9 +1156,90 @@ class SubGraph(BaseSubGraph):
           import owlready2
           raise owlready2.OwlReadyOntologyParsingError(*triples)
         
-    else:
-      return insert_objs, insert_datas, finish
+    return insert_objs, insert_datas, finish
+
+  def create_parse_func(self, filename = None, delete_existing_triples = True, datatype_attr = "http://www.w3.org/1999/02/22-rdf-syntax-ns#datatype"):
+    objs         = []
+    datas        = []
+    new_abbrevs  = []
+    
+    cur = self.db.cursor()
+    
+    if delete_existing_triples:
+      cur.execute("DELETE FROM objs WHERE c=?", (self.c,))
+      cur.execute("DELETE FROM datas WHERE c=?", (self.c,))
       
+    # Re-implement _abbreviate() for speed
+    abbrevs = {}
+    current_resource = max(self.execute("SELECT MAX(storid) FROM resources").fetchone()[0], 300) # First 300 values are reserved
+    def _abbreviate(iri):
+        nonlocal current_resource
+        storid = abbrevs.get(iri)
+        if not storid is None: return storid
+        r = cur.execute("SELECT storid FROM resources WHERE iri=? LIMIT 1", (iri,)).fetchone()
+        if r:
+          abbrevs[iri] = r[0]
+          return r[0]
+        current_resource += 1
+        storid = current_resource
+        new_abbrevs.append((storid, iri))
+        abbrevs[iri] = storid
+        return storid
+      
+    def insert_objs():
+      nonlocal objs, new_abbrevs
+      if owlready2.namespace._LOG_LEVEL: print("* OwlReady2 * Importing %s object triples from ontology %s ..." % (len(objs), self.onto._base_iri), file = sys.stderr)
+      cur.executemany("INSERT INTO resources VALUES (?,?)", new_abbrevs)
+      cur.executemany("INSERT OR IGNORE INTO objs VALUES (%s,?,?,?)" % self.c, objs)
+      objs        .clear()
+      new_abbrevs .clear()
+      
+    def insert_datas():
+      nonlocal datas, new_abbrevs
+      if owlready2.namespace._LOG_LEVEL: print("* OwlReady2 * Importing %s data triples from ontology %s ..." % (len(datas), self.onto._base_iri), file = sys.stderr)
+      cur.executemany("INSERT OR IGNORE INTO datas VALUES (%s,?,?,?,?)" % self.c, datas)
+      datas.clear()
+      
+    def on_prepare_obj(s, p, o):
+      if isinstance(s, str): s = _abbreviate(s)
+      if isinstance(o, str): o = _abbreviate(o)
+      objs.append((s, _abbreviate(p), o))
+      if len(objs) > 1000000: insert_objs()
+      
+    def on_prepare_data(s, p, o, d):
+      if isinstance(s, str): s = _abbreviate(s)
+      if d and (not d.startswith("@")): d = _abbreviate(d)
+      datas.append((s, _abbreviate(p), o, d or 0))
+      if len(datas) > 1000000: insert_datas()
+      
+      
+    def on_finish():
+      if filename: date = os.path.getmtime(filename)
+      else:        date = time.time()
+
+      insert_objs()
+      insert_datas()
+      
+      onto_base_iri = cur.execute("SELECT resources.iri FROM objs, resources WHERE objs.c=? AND objs.o=? AND resources.storid=objs.s LIMIT 1", (self.c, owl_ontology)).fetchone()
+      if onto_base_iri: onto_base_iri = onto_base_iri[0]
+      else:             onto_base_iri = ""
+      
+      if onto_base_iri.endswith("/"):
+        cur.execute("UPDATE ontologies SET last_update=?,iri=? WHERE c=?", (date, onto_base_iri, self.c,))
+      elif onto_base_iri:
+        onto_base_iri = self.parent.fix_base_iri(onto_base_iri, self.c)
+        cur.execute("UPDATE ontologies SET last_update=?,iri=? WHERE c=?", (date, onto_base_iri, self.c,))
+      else:
+        cur.execute("UPDATE ontologies SET last_update=? WHERE c=?", (date, self.c,))
+        
+      self.parent.select_abbreviate_method()
+      self.parent.analyze()
+      
+      return onto_base_iri
+    
+    
+    return objs, datas, on_prepare_obj, on_prepare_data, insert_objs, insert_datas, self.parent.new_blank_node, _abbreviate, on_finish
+
   def context_2_user_context(self, c): return self.parent.context_2_user_context(c)
  
   def add_ontology_alias(self, iri, alias):

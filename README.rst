@@ -712,11 +712,36 @@ version 2 - 0.41
 version 2 - 0.42
 ****************
 
-* Support GRAPH clauses in SPARQL queries
+* INCOMPATIBLE CHANGE: Consider literal with different language as different (e.g. locstr("Test", "en") != locstr("Test", "fr"))
+* Support GRAPH clauses in SPARQL SELECT queries
 * World now supports custom lock (e.g. World(lock = ...))
 * Bugfixes:
   - Fix World(enable_thread_parallelism = True) (was named enable_gevent)
+  - Fix blank nodes in rdflib_store
+  - Fix FILTER in SPARQL when the filter was just after a recursive query
+  - Fix recursive query in SPARQL involving variables in their right part
+  - Fix SPARQL query with annotations containing entities
+  - Fix property creation when using a Union in the '>>' syntax (e.g. class Prop((MyClass | MyOtherClass) >> str): pass)
+  - Fix UMLS extraction in PyMedTermino2
+  - Fix Class IRI with brackets (or other special characters) when writing RDF/XML file
     
+version 2 - 0.43
+****************
+
+* Bugfixes:
+  - Fix != operator on locstr
+
+version 2 - 0.44
+****************
+
+* New syntax for annotations on relation, e.g. AnnotatedRelation(s,p,o).comment = "abc" (the old syntax remains supported)
+* Optimize annotations on relations
+* Support GRAPH clauses in SPARQL INSERT queries
+* Bugfixes:
+  - Fix the update of equivalent_to after destroying a class
+  - Fix the update of annotations on class when modified with SPARQL queries
+  - Fix SPARQL GRAPH clause in SELECT queries when querying the graph as a variable and all triples are not inside the GRAPH clause
+
     
 Links
 -----
@@ -736,7 +761,7 @@ Contact "Jiba" Jean-Baptiste Lamy:
 
   <jean-baptiste.lamy *@* univ-paris13 *.* fr>
   LIMICS
-  Université Sorbonne Paris Nord, Sorbonne Université, INSERM
+  INSERM, Université Sorbonne Paris Nord, Sorbonne Université
   Bureau 149
   74 rue Marcel Cachin
   93017 BOBIGNY

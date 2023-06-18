@@ -72,7 +72,7 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
     elif isinstance(s, rdflib.term.BNode  ): s = self._bnode_2_owlready(s)
     if   isinstance(p, rdflib.term.URIRef ): p = self.triplelite._abbreviate(str(p))
     if   isinstance(o, rdflib.term.URIRef ): o = self.triplelite._abbreviate(str(o)); d = None
-    elif isinstance(o, rdflib.term.BNode  ): o = -int(o); d = None
+    elif isinstance(o, rdflib.term.BNode  ): o = self._bnode_2_owlready(o); d = None
     elif isinstance(o, rdflib.term.Literal):
       if o.language is None:
         if o.datatype:
@@ -108,7 +108,7 @@ class TripleLiteRDFlibStore(rdflib.store.Store):
       ontology = context.triplelite.onto
     else:
       ontology = None
-    self.world._add_triples_with_update(ontology, [self._rdflib_2_owlready(xxx_todo_changeme)])
+    self.world._add_quads_with_update(ontology, [(None, *self._rdflib_2_owlready(xxx_todo_changeme))])
     
   def remove(self, xxx_todo_changeme, context = None):
     self.world._del_triple_with_update(*self._rdflib_2_owlready(xxx_todo_changeme))
