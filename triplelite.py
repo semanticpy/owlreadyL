@@ -621,6 +621,8 @@ class Graph(BaseMainGraph):
     return -blank
     
   def _get_obj_triples_spo_spo(self, s, p, o):
+    # tuple( x is None for x in (s,p,o) )
+    # { (False, True, True): ("SELECT s,p,o FROM objs", (o,)) }
     if s is None:
       if p is None:
         if o is None: cur = self.execute("SELECT s,p,o FROM objs")
