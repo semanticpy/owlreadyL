@@ -28,6 +28,8 @@ from owlready2.driver import _guess_format, _save
 from owlready2.util import FTS, _LazyListMixin
 from owlready2.base import _universal_abbrev_2_iri
 
+from owlready2.triplelite_update import update_triplestore
+
 if   (sqlite3.sqlite_version == "3.40.0") or (sqlite3.sqlite_version == "3.41.2"):
   print("\nWarning: SQLite3 version 3.40.0 and 3.41.2 have huge performance regressions; please install version 3.41.1 or 3.42!\n", file = sys.stderr)
 
@@ -41,6 +43,7 @@ def all_combinations(l):
 
 
 class _Connexion(object):
+  """ A connexion to a SQLite database."""
   def __init__(self, pool, uri):
     self.pool = pool
     self.db   = sqlite3.connect(uri, check_same_thread = False, uri = True)
@@ -61,6 +64,7 @@ class _ConnexionPool(object):
     
 
 class Graph(BaseMainGraph):
+  """storing owlready2 graph as triples/quads in SQLite database as backend."""
   _SUPPORT_CLONING = True
   def __init__(self, filename, clone = None, exclusive = True, sqlite_tmp_dir = "", world = None, profiling = False, read_only = False, enable_thread_parallelism = False, lock = None):
     exists        = os.path.exists(filename) and os.path.getsize(filename) # BEFORE creating db!
@@ -127,6 +131,7 @@ class Graph(BaseMainGraph):
     else:
       self.db.execute("""PRAGMA temp_store = memory""")
 
+    # TODO: profiling might be moved to separate module
     if profiling:
       import time
       from collections import Counter
@@ -236,210 +241,8 @@ class Graph(BaseMainGraph):
         
       version = self.execute("SELECT version FROM store").fetchone()[0]
 
-      if version == 1:
-        print("* Owlready2 * Converting quadstore to internal format 2...", file = sys.stderr)
-        self.execute("""CREATE TABLE ontology_alias (iri TEXT, alias TEXT)""")
-        self.execute("""UPDATE store SET version=2""")
-        self.db.commit()
-        version += 1
-        
-      if version == 2:
-        print("* Owlready2 * Converting quadstore to internal format 3...", file = sys.stderr)
-        self.execute("""CREATE TABLE prop_fts (fts INTEGER PRIMARY KEY, storid TEXT)""")
-        self.execute("""UPDATE store SET version=3""")
-        self.db.commit()
-        version += 1
-        
-      if version == 3:
-        print("* Owlready2 * Converting quadstore to internal format 4 (this can take a while)...", file = sys.stderr)
-        self.execute("""CREATE TABLE objs (c INTEGER, s TEXT, p TEXT, o TEXT)""")
-        self.execute("""CREATE TABLE datas (c INTEGER, s TEXT, p TEXT, o BLOB, d TEXT)""")
-
-        objs  = []
-        datas = []
-        for c,s,p,o in self.execute("""SELECT c,s,p,o FROM quads"""):
-          if o.endswith('"'):
-            o, d = o.rsplit('"', 1)
-            o = o[1:]
-            if   d in {'H', 'N', 'R', 'O', 'J', 'I', 'M', 'P', 'K', 'Q', 'S', 'L'}: o = int(o)
-            elif d in {'U', 'X', 'V', 'W'}: o = float(o)
-            datas.append((c,s,p,o,d))
-          else:
-            objs.append((c,s,p,o))
-        self.db.executemany("INSERT INTO objs VALUES (?,?,?,?)",    objs)
-        self.db.executemany("INSERT INTO datas VALUES (?,?,?,?,?)", datas)
-        
-        self.execute("""DROP TABLE quads""")
-        self.execute("""DROP INDEX IF EXISTS index_quads_s """)
-        self.execute("""DROP INDEX IF EXISTS index_quads_o""")
-        self.execute("""CREATE VIEW quads AS SELECT c,s,p,o,NULL AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""")
-        self.execute("""CREATE INDEX index_objs_sp ON objs(s,p)""")
-        self.execute("""CREATE INDEX index_objs_po ON objs(p,o)""")
-        self.execute("""CREATE INDEX index_datas_sp ON datas(s,p)""")
-        self.execute("""CREATE INDEX index_datas_po ON datas(p,o)""")
-        
-        self.execute("""UPDATE store SET version=4""")
-        self.db.commit()
-        version += 1
-        
-      if version == 4:
-        print("* Owlready2 * Converting quadstore to internal format 5 (this can take a while)...", file = sys.stderr)
-        self.execute("""CREATE TABLE objs2 (c INTEGER, s INTEGER, p INTEGER, o INTEGER)""")
-        self.execute("""CREATE TABLE datas2 (c INTEGER, s INTEGER, p INTEGER, o BLOB, d INTEGER)""")
-        
-        _BASE_62 = { c : i for (i, c) in enumerate("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ") }
-        def _base_62_2_int(storid):
-          if storid.startswith("_"): sgn = -1; storid = storid[1:]
-          else:                      sgn =  1
-          r = 0
-          for (i, c) in enumerate(storid):
-            r += _BASE_62[c] * (62 ** (len(storid) - i - 1))
-          return sgn * r
-        
-        try:
-          self.execute("""CREATE TABLE resources2 (storid INTEGER PRIMARY KEY, iri TEXT) WITHOUT ROWID""")
-        except sqlite3.OperationalError: # Old SQLite3 does not support WITHOUT ROWID -- here it is just an optimization
-          self.execute("""CREATE TABLE resources2 (storid INTEGER PRIMARY KEY, iri TEXT)""")
-        l = []
-        for storid, iri in self.execute("""SELECT storid, iri FROM resources"""):
-          l.append((_base_62_2_int(storid), iri))
-        self.db.executemany("INSERT INTO resources2 VALUES (?,?)", l)
-        
-        l = []
-        for c,s,p,o in self.execute("""SELECT c,s,p,o FROM objs"""):
-          s = _base_62_2_int(s)
-          p = _base_62_2_int(p)
-          o = _base_62_2_int(o)
-          l.append((c,s,p,o))
-        self.db.executemany("INSERT INTO objs2 VALUES (?,?,?,?)", l)
-        
-        l = []
-        for c,s,p,o,d in self.execute("""SELECT c,s,p,o,d FROM datas"""):
-          s = _base_62_2_int(s)
-          p = _base_62_2_int(p)
-          if   not d:  d = 0
-          elif d.startswith("@"): pass
-          else:        d = _base_62_2_int(d)
-          l.append((c,s,p,o,d))
-        self.db.executemany("INSERT INTO datas2 VALUES (?,?,?,?,?)", l)
-        
-        self.execute("""DROP INDEX IF EXISTS index_resources_iri""")
-        self.execute("""DROP INDEX IF EXISTS index_quads_s""")
-        self.execute("""DROP INDEX IF EXISTS index_quads_o""")
-        self.execute("""DROP INDEX IF EXISTS index_objs_sp""")
-        self.execute("""DROP INDEX IF EXISTS index_objs_po""")
-        self.execute("""DROP INDEX IF EXISTS index_datas_sp""")
-        self.execute("""DROP INDEX IF EXISTS index_datas_po""")
-        self.execute("""DROP VIEW IF EXISTS quads""")
-        self.execute("""DROP TABLE resources""")
-        self.execute("""DROP TABLE objs""")
-        self.execute("""DROP TABLE datas""")
-        
-        self.execute("""ALTER TABLE resources2 RENAME TO resources""")
-        self.execute("""ALTER TABLE objs2 RENAME TO objs""")
-        self.execute("""ALTER TABLE datas2 RENAME TO datas""")
-        self.execute("""CREATE VIEW quads AS SELECT c,s,p,o,NULL AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""")
-        
-        self.execute("""CREATE UNIQUE INDEX index_resources_iri ON resources(iri)""")
-        self.execute("""CREATE INDEX index_objs_sp ON objs(s,p)""")
-        self.execute("""CREATE INDEX index_objs_po ON objs(p,o)""")
-        self.execute("""CREATE INDEX index_datas_sp ON datas(s,p)""")
-        self.execute("""CREATE INDEX index_datas_po ON datas(p,o)""")
-        
-        prop_fts  = { storid : fts for (fts, storid) in self.execute("""SELECT fts, storid FROM prop_fts;""") }
-        prop_fts2 = { _base_62_2_int(storid) : fts for (storid, fts) in prop_fts.items() }
-        for fts in prop_fts.values():
-          self.execute("""DROP TABLE fts_%s""" % fts)
-          self.execute("""DROP TRIGGER IF EXISTS fts_%s_after_insert""" % fts)
-          self.execute("""DROP TRIGGER IF EXISTS fts_%s_after_delete""" % fts)
-          self.execute("""DROP TRIGGER IF EXISTS fts_%s_after_update""" % fts)
-          
-        self.execute("""DROP TABLE prop_fts""")
-        self.execute("""CREATE TABLE prop_fts(storid INTEGER)""")
-        self.prop_fts = set()
-        for storid in prop_fts2: self.enable_full_text_search(storid)
-        
-        self.execute("""UPDATE store SET version=5""")
-        self.db.commit()
-        version += 1
-
-      if version == 5:
-        print("* Owlready2 * Converting quadstore to internal format 6 (this can take a while)...", file = sys.stderr)
-        self.execute("""DROP INDEX IF EXISTS index_objs_po""")
-        self.execute("""DROP INDEX IF EXISTS index_datas_po""")
-        self.execute("""CREATE INDEX index_objs_op ON objs(o,p)""")
-        self.execute("""CREATE INDEX index_datas_op ON datas(o,p)""")
-        
-        self.execute("""UPDATE store SET version=6""")
-        self.db.commit()
-        version += 1
-        
-      if version == 6:
-        print("* Owlready2 * Converting quadstore to internal format 7 (this can take a while)...", file = sys.stderr)
-        
-        prop_fts2 = { storid for (storid,) in self.execute("""SELECT storid FROM prop_fts;""") }
-        for prop_storid in prop_fts2:
-          self.execute("""DELETE FROM prop_fts WHERE storid = ?""", (prop_storid,))
-          self.execute("""DROP TABLE fts_%s""" % prop_storid)
-          self.execute("""DROP TRIGGER fts_%s_after_insert""" % prop_storid)
-          self.execute("""DROP TRIGGER fts_%s_after_delete""" % prop_storid)
-          self.execute("""DROP TRIGGER fts_%s_after_update""" % prop_storid)
-        self.prop_fts = set()
-        for prop_storid in prop_fts2: self.enable_full_text_search (prop_storid)
-        
-        self.execute("""UPDATE store SET version=7""")
-        self.db.commit()
-        version += 1
-        
-      if version == 7:
-        print("* Owlready2 * Converting quadstore to internal format 8...", file = sys.stderr)
-        
-        import owlready2.base
-        self.db.executemany("""INSERT INTO resources VALUES (?,?)""", [
-          (owlready2.base.swrl_variable, "http://www.w3.org/2003/11/swrl#Variable"),
-          (owlready2.base.swrl_imp,                  "http://www.w3.org/2003/11/swrl#Imp"),
-          (owlready2.base.swrl_body,                 "http://www.w3.org/2003/11/swrl#body"),
-          (owlready2.base.swrl_head,                 "http://www.w3.org/2003/11/swrl#head"),
-          (owlready2.base.swrl_class_atom,           "http://www.w3.org/2003/11/swrl#ClassAtom"),
-          (owlready2.base.swrl_class_predicate,      "http://www.w3.org/2003/11/swrl#classPredicate"),
-          (owlready2.base.swrl_dataprop_atom,        "http://www.w3.org/2003/11/swrl#DatavaluedPropertyAtom"),
-          (owlready2.base.swrl_objprop_atom,         "http://www.w3.org/2003/11/swrl#IndividualPropertyAtom"),
-          (owlready2.base.swrl_property_predicate,   "http://www.w3.org/2003/11/swrl#propertyPredicate"),
-          (owlready2.base.swrl_builtin_atom,         "http://www.w3.org/2003/11/swrl#BuiltinAtom"),
-          (owlready2.base.swrl_builtin,              "http://www.w3.org/2003/11/swrl#builtin"),
-          (owlready2.base.swrl_datarange_atom,       "http://www.w3.org/2003/11/swrl#DataRangeAtom"),
-          (owlready2.base.swrl_datarange,            "http://www.w3.org/2003/11/swrl#dataRange"),
-          (owlready2.base.swrl_argument1,            "http://www.w3.org/2003/11/swrl#argument1"),
-          (owlready2.base.swrl_argument2,            "http://www.w3.org/2003/11/swrl#argument2"),
-          (owlready2.base.swrl_arguments,            "http://www.w3.org/2003/11/swrl#arguments"),
-          (owlready2.base.swrl_equivalentindividual, "http://www.w3.org/2003/11/swrl#SameIndividualAtom"),
-          (owlready2.base.swrl_differentfrom,        "http://www.w3.org/2003/11/swrl#DifferentIndividualsAtom"),
-        ])
-        self.execute("""UPDATE store SET version=8""")
-        self.db.commit()
-        version += 1
-        
-      if version == 8:
-        print("* Owlready2 * Converting quadstore to internal format 9...", file = sys.stderr)
-        self.execute("""CREATE TABLE last_numbered_iri(prefix TEXT, i INTEGER)""")
-        self.execute("""CREATE INDEX index_last_numbered_iri ON last_numbered_iri(prefix)""")
-        self.execute("""UPDATE store SET version=9""")
-        self.db.commit()
-        version += 1
-        
-      if version == 9:
-        print("* Owlready2 * Converting quadstore to internal format 10...", file = sys.stderr)
-        self.execute("""CREATE INDEX index_objs_c ON objs(c)""")
-        self.execute("""CREATE INDEX index_datas_c ON datas(c)""")
-        self.execute("""UPDATE store SET version=10""")
-        self.db.commit()
-        version += 1
-        
-      if version == 10:
-        self.execute("""CREATE VIEW quads2 AS SELECT c,s,p,o,'o' AS d FROM objs UNION ALL SELECT c,s,p,o,d FROM datas""") # AVoid using NULL because, in SQL, NULL != NULL.
-        self.execute("""UPDATE store SET version=11""")
-        self.db.commit()
-        version += 1
+      if version < 11:
+        update_triplestore(self, world)      
         
       self.prop_fts = { storid for (storid,) in self.execute("""SELECT storid FROM prop_fts;""") }
       
@@ -1075,10 +878,9 @@ END;""" % (prop_storid, prop_storid, prop_storid,   prop_storid, prop_storid, pr
     self.execute("""DROP TRIGGER fts_%s_after_update""" % prop_storid)
     
 
-
-
     
 class SubGraph(BaseSubGraph):
+  """ TODO: please explain, what is this class for? """
   def __init__(self, parent, onto, c, db):
     BaseSubGraph.__init__(self, parent, onto)
     self.c      = c
