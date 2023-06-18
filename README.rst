@@ -1,14 +1,26 @@
-OwlreadyL
-=========
+OwlreadyXp
+===========
 
-OwlreadyL -  a light-weight version of owlready2, an OWL ontology development tool for python by Jean-Baptiste Lamy.
+OwlreadyXp -  an eXperimental version of owlready2, an OWL ontology development tool for python by Jean-Baptiste Lamy.
+
+
+This repository is intended to experimentally develop new features of owlready2 and is not intended to concurr with the original owlready2 code of Jean-Baptiste Lamy.  
+The code in this repository is not intended to be used in production.
+
+**The original owlready2 code of Jean-Baptiste Lamy is developed at:  https://bitbucket.org/jibalamy/owlready2**
+
 
 Features
 --------
 
- * owlready2 legacy code removed
+These are the features that are currently being developed in this repository:
+
  * higher modularisation
- * owlready2 essential core 
+ * removing owlready2 legacy code
+ * modern installer / build system / packages structure
+ * moving reasoner binaries to a separate repository
+ * building a generic reasoner interface (for supporting multiple reasoners)
+ * multiple quadstore backends (sqlite, virtuoso, oxigraph,, etc.)
  * improved documentation
 
 
